@@ -1,0 +1,108 @@
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Blockchain Basics</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Blockchain Basics</h1>
+
+<span itemprop="articleBody">A blockchain is like a set of county official record books.<div class="tooltip"><sup>1</sup><span class="tooltiptext">Of course, variations like private blockchains are also possible.</span></div> Records in the books are permanent and publicly available for anyone to read.  Cryptographic hashes make blockchains impossible<div class="tooltip"><sup>2</sup><span class="tooltiptext">Impossible as used here means terrifically improbable with current technology.</span></div> to change after they are established, and public-private key pairs make it easy to prove that the signature on a document with a public key was made by someone who knows the matching private key,<div class="tooltip"><sup>3</sup><span class="tooltiptext">Which is why it is very important to keep your private keys safe, and secret.</span></div> which is important for titles of ownership that get recorded in a blockchain.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="Hashes">Hashes</h2>
+<span itemprop="articleBody">A cryptographic hash converts data into a small digital signature.  An 8 byte hash has over 10<sup>77</sup> different possible hash values.<div class="tooltip"><sup>4</sup><span class="tooltiptext">There are about 10<sup>77</sup> millimeters in a light-year, a light year is 1600x the distance to Pluto.<br/>10<sup>77</sup> is a really big number.</span></div>  Cryptographic hashes are designed to make it as difficult as possible to find different data that has the exact same hash value.  Every block in a blockchain includes a hash of the whole block plus the hash of the previous block.  Any attempt to modify the contents of the block will modify its hash, and therefore the hash of every block after it in the chain, so a change would be easily noticed.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="GenesisBlock">The Genesis Block</h2>
+<span itemprop="articleBody">The first block in a blockchain is called the genesis block.  If you have read forward from the genesis block to any block in the chain, computing and checking hashes as you go, then you have validated the blockchain.  You don't have to keep a copy of the whole blockchain to be sure that nothing changes, just the last hash.  In the future, if someone tries to give you an altered blockchain, you will know just by checking its hashes up to the last one you knew, if the hashes are still valid and the last hash is still the same then the contents up to that point have not changed.  You don't have to keep a copy of the whole blockchain; only the hash is required to be sure all blocks before that hash have not changed.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="KeyPairs">Public-Private Key Pairs</h2>
+<span itemprop="articleBody">A public-private key pair is something you (ideally) make on your own computer, and you keep the private key secret.  When you publish the public key with data that you sign with your private key, other people can verify that you know the private key that goes with that public key.  This type of digital signature enables secure transfer of title in a public record, like a blockchain.  After initial title of something is declared in a blockchain with a public key and a signature from the matching private key, later blocks may include a transfer of title from the previously recorded public key to a new public key by including the private key signature on the transfer.  Transfers may merge and/or sub-divide property, this is how cryptocurrencies work.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="P2P">Peer to Peer Networks</h2>
+<span itemprop="articleBody">Blockchains are often implemented on peer to peer (P2P) or friend to friend (F2F) networks.  Unlike a county records office where all the official record books are stored in one place (hopefully backed up, these days), P2P networks connect a number of computers with no central server.  If any computer in a P2P network stops working, the rest of the network continues on fully functional.  Cryptographic hashes make it easy for these P2P networks to extend the blockchain, confident that no participant in the network can alter history without being detected.  Public-private key pairs make it possible for people to hold title on a blockchain with confidence that nobody can record a transfer of that title unless they know the private key which is required to do so.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="Cryptocurrency">Cryptocurrency</h2>
+<span itemprop="articleBody">Cryptocurrency is digital title to some fraction of usually nothing, recorded in a blockchain.  The genesis block in a blockchain usually establishes some rules about how title can be obtained and transferred, and then people who hold the private keys can start transferring their cryptocurrency back and forth with other people who have different public-private key pairs.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="AliceAndBob">Alice and Bob</h2
+<span itemprop="articleBody">Alice has some itcoins, <i>i.e.</i> title to some cryptocurrency in the itcoin blockchain.  She wants to give some of her itcoins to Bob.  Bob creates a public-private key pair, usually with wallet software that knows the itcoin rules and formats, and sends his public key to Alice.  Alice tells her wallet to transfer title of some of her itcoins to the public key provided by Bob using her private keys.  Alice's wallet prepares the transfer of title and sends it to the itcoin network to be included in the blockchain.  Once that transfer of title is recorded on the blockchain, Bob's public key has title to those itcoins and he can use the private keys stored in his wallet to transfer the itcoins to other people.  Nobody else can take Bob's itcoins without knowing his private key(s).</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="ProofOfWork">Proof of Work</h2>
+<span itemprop="articleBody">Bitcoin, and other blockchains like bitcoin, use a difficult cryptographic problem as part of the rules for recording blocks in the blockchain.  The more “miners” that work on the bitcoin blockchain, the more difficult the problem becomes so that only one new block can be produced for the blockchain approximately every ten minutes.  This scheme has provided robust security for the bitcoin blockchain for nearly ten years now, but it has a terrible cost in electricity.  It is estimated that bitcoin mining alone is presently consuming as much electricity as the entire country of Switzerland.<div class="tooltip"><sup>5</sup><span class="tooltiptext">Digiconomist <a href="https://digiconomist.net/bitcoin-energy-consumption">Bitcoin energy consumption</a> April 30<sup>th</sup> 2018.</span></div>  This is happening because miners are currently, collectively, earning almost 8 billion dollars a year from their mining efforts, but they are spending over 3 billion dollars a year in power consumption costs alone, just for Bitcoin.  With ~850 kWh of electricity (~$90 in Florida) consumed per transaction, proof of work does not look like the transaction settling technology of the future to me.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="TrustButVerify">Доверяй, но проверяй (Trust, but Verify)</h2>
+<span itemprop="articleBody">What Assign Onward <a href="Goals.html">aims</a> to <a href="Roadmap.html">do</a> is describe and demonstrate a blockchain <a href="Architecture.html">system</a> which supports secure cryptocurrency (title of shares) transactions without using proof of work for security.  It relies on cryptographic hashes, public-private key pair signatures, and underwriting of transactions.  End users transferring shares are not always experienced, and not always trustable.  They use underwriters who pledge their own shares to attempt to correctly record valid transactions in the blockchain, and if the transaction is correctly recorded the underwriters are rewarded with shares.  Chainmakers work with underwriters to efficiently and correctly extend the blockchain, and error checkers audit the process to ensure that the rules are being followed by everyone – rewarded from the underwriters' shares when invalid transactions or other rules violations have been signed by a private key connected to valid share title in the blockchain.<br/>
+Assign Onward uses underwriters with skin in the game<div class="tooltip"><sup>6</sup><span class="tooltiptext">Skin in the game: shares that can be lost if they promise something that is not true.</span></div> to do the work of validating transactions.  Error checkers are incentivized to check the validity of all transactions both by being awarded shares from private signatures used incorrectly,<div class="tooltip"><sup>7</sup><span class="tooltiptext">For example: if an underwriter attempts to double spend shares, those shares can be claimed by an error checker.</span></div> and by publishing their own “proof of validation” in the blockchain demonstrating that they have correctly validated a certain block in the chain.</span></span><br/>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-05-04">4 May 2018</span>
+
+</div>
+
+</body></html>

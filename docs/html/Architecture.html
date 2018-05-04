@@ -1,0 +1,159 @@
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Architecture</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Architecture</h1>
+
+<span itemprop="articleBody">
+
+<ul>
+<li>Actors</li>
+<ul><li>Users</li>
+    <ul><li>Assigners</li>
+        <li>Receivers</li>
+    </ul>
+    <li>Recorders</li>
+    <ul><li>Underwriters</li>
+        <li>Chainmakers</li>
+    </ul>
+    <li>Checkers</li>
+</ul>
+<li>Functional Components</li>
+<ul><li><a href="AssetOrganizer.html">Asset Organizer</a><div class="tooltip"><sup>1</sup><span class="tooltiptext">Analogous to common cryptocurrency wallet software.</span></div></li>
+    <li>UnderwriterBot</li>
+    <li>ChainmakerBot</li>
+    <li>ChainCheckerBot</li>
+    <li>NetworkCheckerBot</li>
+    <li>Communication Layer</li>
+</ul>
+<li>Data Structures</li>
+<ul><li>Identity<div class="tooltip"><sup>2</sup><span class="tooltiptext">a <a href="BlockchainBasics.html#KeyPairs">public key</a></span></div></li>
+    <li>Assignment Contract</li>
+    <li>Underwriting Contract</li>
+    <li>Block<div class="tooltip"><sup>3</sup><span class="tooltiptext">a possible new end of the blockchain.</span></div></li>
+    <li>Error Notice</li>
+</ul>
+</ul>
+
+</span></span>
+
+<h2>Actions<div class="tooltip"><sup>4</sup><span class="tooltiptext">User stories, or bot tales when the action only involves bots.</span></div></h2>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="Proposal">Assignment Proposal</h3>
+<span itemprop="articleBody">A user<div class="tooltip"><sup>5</sup><span class="tooltiptext">Assigner or Receiver</span></div> prepares a partial assignment contract using their Asset Organizer application.<div class="tooltip"><sup>6</sup><span class="tooltiptext">Asset organizer software may optionally contact one or more underwriters to obtain recent blockchain information.  The asset organizer at least retains relevant block information from the last recorded contract it received confirmation of (from an underwriter.)</span></div>  Then they communicate this to all parties to the contract for negotiation and acceptance.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="ProposalAcceptance">Acceptance of Assignment Proposal</h3>
+<span itemprop="articleBody">Once the assignment contract is valid (signed by all parties) it is ready to go to one or more underwriters.<div class="tooltip"><sup>7</sup><span class="tooltiptext">An assignment contract may specify underwriter actors and underwriting amounts, or may leave part or all of the underwriting open for any willing underwriter to consider.</span></div></span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="RequestForUnderwriting">Request for Underwriting</h3>
+<span itemprop="articleBody">Underwriters consider the assignment contract, if the recording bid is sufficient they proceed to assemble underwriting shares in accordance with the requirements of the assignment contract, and validate the sources of shares.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="AcceptanceForUnderwriting">Acceptance for Underwriting</h3>
+<span itemprop="articleBody">Once the underwriting contract<div class="tooltip"><sup>8</sup><span class="tooltiptext">which is a wrapper around the assignment contract</span></div> is signed by all sources of underwriting shares, it might be communicated to concerned asset organizers as notification<div class="tooltip"><sup>9</sup><span class="tooltiptext">paranoid asset organizers may stipulate that one or more parties to the assignment contract must sign off on the underwriting before the underwriting contract becomes a valid request for recording.  The only use case I am imagining for this at the moment is a large transaction which needs a long time horizon to successfully underwrite and record the parties to that contract might want to check the underwriting themselves before committing to a long time attempt to record.<hr/>Another potential use of Asset Organizer countersignature on underwriting proposals would be to put transactions out to the underwriter market for open bid, accepting the most attractive underwriting offer.</span></div> of acceptance for underwriting, but it certainly wants to be communicated to the chainmakers as a request for recording.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="RequestForRecording">Request for Recording</h3>
+<span itemprop="articleBody">Chainmakers consider the underwriting contract, most of the time it should have some residual value and be worth recording in the next block, but high traffic spikes or other tax incentive driven situations may lead to the underwriting contract not being included in the desired new block cycle(s).  When this is the case, underwriters must re-validate for double-spends and resubmit the updated underwriting contract for consideration by the chainmakers.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="NewBlockProposal">New Block Proposal</h3>
+<span itemprop="articleBody">Chainmakers attempt to construct new blocks with the highest possible residual value, which generally include the most underwriting contracts.  Proposed blocks are communicated to concerned underwriters.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="NewBlockApproval">New Block Approval</h3>
+<span itemprop="articleBody">Underwriters must then choose the best<div class="tooltip"><sup>10</sup><span class="tooltiptext">Generally speaking, the best new block is the one with the highest residual value, primarily because it has the best chance to be continued by the next block in the chain.</span></div> blocks to validate, countersign, and return to the chainmakers.  When a block is not countersigned by an underwriter, it loses the residual value of the associated underwriting contract.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="NewBlockPublication">New Block Publication</h3>
+<span itemprop="articleBody">Chainmakers then take their new blocks with the highest residual value, censor any underwriting contracts which were not fully countersigned<div class="tooltip"><sup>11</sup><span class="tooltiptext">Censored contracts shorten the block, lowering the per-byte tax, and a block which contains underwriting contracts which are not fully countersigned is invalid - and therefore of 0 value.</span></div> and publish them, attempting to be the most valuable next block in the chain so that subsequent blocks will chain to them.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="TransactionConfirmation">Transaction Confirmation</h3>
+<span itemprop="articleBody">Underwriters monitor new block publication and when their Asset Organizers' assignment contract has been included in the stable blockchain, they notify the Asset Organizers with a copy of the recording block.  Receivers of shares may then use that block, together with their associated private keys, to propose future assignment contracts.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="UnderwriterSignatureChecking">Underwriter Signature Checking</h3>
+<span itemprop="articleBody">Chain checkers<div class="tooltip"><sup>12</sup><span class="tooltiptext">Note that any functional component may also implement chain checker functionality, chainmakers are particularly well placed to catch errors before they are incorporated in the blockchain, but any application anywhere may find errors and report them to receive shares.</span></div> monitor any and all signed transactions.  When underwriters or chainmakers sign an incorrect contract<div class="tooltip"><sup>13</sup><span class="tooltiptext">Some examples: any source of underwritten or underwriting shares traces back to a double spend in the signed chain, timestamps out of sequence (indicating time-lying), invalid data format, incorrect checksums, etc.</span></div> errorcheckers may publish notice of error on the blockchain to claim shares from the underwriting.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h3 itemprop="articleSection" id="ChainChecking">Chain Checking</h3>
+<span itemprop="articleBody">During the course of their work, chain checkers end up validating many underwriting contracts.  When an chain checker validates all sources of shares in a given block and they were all confirmed as correct, the chain checker may post their own underwriting shares on a claim to collect part of the block validation bounty.<div class="tooltip"><sup>14</sup><span class="tooltiptext">A portion of every assignment contract shares are set aside for block validation, and this amount is shared among chain checkers.  If the chain checker makes a claim of "all good" and another chain checker finds them to be in error, the erroneous chain checker's underwriting shares may be claimed by the finder of the error.</span></div></span></span>
+
+<hr/>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="LoopClosure">Loop Closure</h2>
+<span itemprop="articleBody">Especially during development, but also possibly long term, when a transaction is considered and rejected, it may always be rejected with silence, but it may also be faster and more efficient to communicate a notice of rejection and reason why, possibly with suggested correction.  Like: recording bid too low, try this amount.</span></span>
+
+<hr/>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="Network">Network</h2>
+<span itemprop="articleBody">The network layer is generic, modular, allowing actors to communicate data structures during execution of actions.  Some communication is point to point (actor to actor) and several types of communication are broadcast: for instance to all chainmakers, or all interested underwriters.  Initial testing is anticipated to use <a href="https://www.rabbitmq.com/distributed.html">RabbitMQ</a>, but before widespread deployment, a F2F small world network, including some behavior monitoring for <a href="https://en.bitcoin.it/wiki/Weaknesses">bad actors</a> on the network, is desirable.  In support of behavior monitoring, it is anticipated that actors may adopt long-term unique ids (<a href="BlockchainBasics.html#KeyPairs">key pairs</a>) in support of good behavior rewarding algorithms.</span></span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-05-04">4 May 2018</span>
+
+</div>
+
+</body></html>

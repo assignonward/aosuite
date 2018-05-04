@@ -1,0 +1,87 @@
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Key Reuse</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Key Reuse</h1>
+
+<span itemprop="articleBody">
+
+<span itemprop="articleBody"><a href="BlockchainBasics.html#KeyPairs">Public-private key pairs</a> are used extensively in <a href="Architecture.html#ProposalAcceptance">contracts</a>.  The public key serves as a unique id, and the private key is what a share holder uses as proof of title to the shares.  The short story on key reuse is: <b>don't.</b>  In greater depth: A given public key should only show up as receiver of shares once<div class="tooltip"><sup>1</sup><span class="tooltiptext">While key reuse is just recommended against for some cryptocurrencies, for Assign Onward it is a requirement which, together with <a href="AtomicTransfers.html">atomic transfers</a> makes double spend checking easier, supporting the <a href="Goals.html">goal</a> of minimized real world cost of participation.</span></div> in <a href="BlockchainBasics.html#GenesisBlock">a</a> <a href="BlockchainBasics.html">blockchain</a>.<div class="tooltip"><sup>2</sup><span class="tooltiptext">the chances of competent key generation software accidentally making the same key pair twice is vanishingly small</span></div>  As a nod to practicality, since so many keys will show up in an active blockchain, the genesis block might place a limit like: no double use of keys to receive shares within the range of all sources of shares' blocks to the recording block, enabling underwriters and error checkers to more practically monitor the allowed/not allowed situation.<div class="tooltip"><sup>3</sup><span class="tooltiptext">this might also drive up the transaction cost when sourcing from shares very far back in the chain - it's a higher cost in shares, but should be easily offset by coin inflation.</span></div> Still, it is more than a <i>best practice</i> asset organizer software should <b>NOT</b> reuse key pairs.
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-05-04">4 May 2018</span>
+
+</div>
+
+</body></html>
+

@@ -1,0 +1,93 @@
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Asset Organizer</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Asset Organizer</h1>
+<span itemprop="articleBody">The Asset Organizer is the end user facing aspect of the Assign Onward software suite.  It organizes lists of secret keys and underwriter contact addresses, presents the user with summary data about the current state of the secret key titles (values in coins), and facilitates negotiation and execution of assignment contracts.  A user will likely have more than one Asset Organizer (desktop, cellphone, spouse's cellphone, [shudder] cloud copy), they can attempt to communicate with each other directly to update status, but the ultimate check of share title status comes when contacting an underwriter to verify on the blockchain.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="Secrets">Secrets</h2>
+<span itemprop="articleBody">All the usual secret keeping advice applies.  Some strategies specifically applicable to an asset organizer include: division of assets into multiple "accounts" with different passphrases which compartamentalizes for damage control in the event of passphrase "leaking," backups on multiple devices in multiple physical locations, long-lasting identities (public/private key pairs) on each wallet device so they can synchronize new assets securely, etc.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="ContactAddresses">Contact Addresses</h2>
+<span itemprop="articleBody">IP address to contact other asset organizers<div class="tooltip"><sup>1</sup><span class="tooltiptext">both shared accounts for off-chain sharing and others' accounts for on chain assignments</span></div> and underwriters at.  Usually will include long lasting public key ids as well as user facing name and other helpful information.</span></span>
+
+<span itemscope itemtype="http://schema.org/Article" itemref="_name1"><h2 itemprop="articleSection" id="BlockchainUpdates">Blockchain Updates</h2>
+<span itemprop="articleBody">By contacting an underwriter (who may<div class="tooltip"><sup>2</sup><span class="tooltiptext">Cool underwriters will remember your past business and absorb the cost of chain updates from past collected fees.  Hungry underwriters will do the cheap chain updates for free hoping to win your future business.  Commercial bank inspired underwriters will require an on-chain assignment of shares for every share status lookup, it's your choice who you want to do business with.</span></div> charge a fee) the asset organizer can mark assigned shares as gone and update current coin value for shares still held.  Asset organizers that communicate with each other can share updated status from a single underwriter contact.<div class="tooltip"><sup>3</sup><span class="tooltiptext">This does raise an interesting feature of information source tracking, which should be addressed in the network interface layer.</span></div></span></span>
+
+<br/>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-05-04">4 May 2018</span>
+
+</div>
+
+</body></html>

@@ -1,0 +1,87 @@
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Atomic Assignment</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Atomic Assignment</h1>
+
+
+<span itemprop="articleBody">Atomic Assignment refers to a rule: when title to shares is assigned, all the shares are assigned at one time.  This is not actually restrictive at all, because any assignment contract may have as many assigners and receivers as desired.<div class="tooltip"><sup>1</sup><span class="tooltiptext">up to a reasonable limit, perhaps about 1000, to prevent transaction spam from overtaxing the underwriters.</span></div> So, if (usually when) an assigner's source of shares has more shares than are needed for the transaction, the assigner provides a new public key to receive the excess shares in.</br>
+Among other things, this makes it simpler to verify no double spends: if an underwriter keeps a list of the private keys of all shares assigned in a range of blocks, then the absence of the source shares' public key in that range confirms that they have not been previously assigned.
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-05-04">4 May 2018</span>
+
+</div>
+
+</body></html>
+

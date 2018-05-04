@@ -1,0 +1,8 @@
+*.user
+*.ncb
+*.suo
+*.autosave
+/Debug
+/GeneratedFiles
+build
+Makefile
