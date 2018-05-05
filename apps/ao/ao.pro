@@ -54,7 +54,8 @@ SOURCES += \
     shares.cpp \
     underwriting.cpp \
     chainmaker.cpp \
-    pubkey.cpp
+    pubkey.cpp \
+    data128.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -65,7 +66,8 @@ HEADERS += \
     underwriting.h \
     chainmaker.h \
     pubkey.h \
-    bytecodes.h
+    bytecodes.h \
+    data128.h
 
 FORMS += \
         mainwindow.ui
