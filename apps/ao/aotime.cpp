@@ -24,11 +24,9 @@
 #include "aotime.h"
 #include <QDateTime>
 
-AOTime::AOTime( __int128 tm, QObject *parent) : QObject(parent)
+AOTime::AOTime( __int128 tm, QObject *parent) : Data128( tm, AO_TIME_RECORDED, parent )
 { if ( tm == 0 )
     set( now() );
-   else
-    set( tm );
 }
 
 /**
@@ -42,19 +40,19 @@ __int128 AOTime::now()
   return (sec << 64) + ((ms << 64)/1000);
 }
 
-__int128 AOTime::shiftUp64( __int128 v )
-{ return v << 64; }
+__int128 AOTime::shiftUp64( __int128 m )
+{ return m << 64; }
 
 /**
  * @brief AOTime::future
  * @return true if t is in the future
  */
 bool AOTime::future()
-{ return ( t > now() ); }
+{ return ( v > now() ); }
 
 /**
  * @brief AOTime::past
  * @return true if t is in the past
  */
 bool AOTime::past()
-{ return ( t < now() ); }
+{ return ( v < now() ); }

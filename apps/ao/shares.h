@@ -29,46 +29,17 @@
 #define SHARES_H
 
 #include <QObject>
-#include "bytecodes.h"
+#include "data128.h"
 
-class Shares : public QObject
+class Shares : public Data128
 {
-    Q_OBJECT
 public:
     explicit Shares( __int128 val = 0, QObject *p = nullptr);
-             Shares( const Shares &f, QObject *p = nullptr ) : QObject( p ? p : f.parent() ), n( f.n ) {}
-             Shares( const QByteArray &ba, QObject *p = nullptr );
-        void operator = ( const QByteArray &ba );
-        void operator = ( const   Shares &f ) { n = f.n; }
-        void operator = ( const __int128 &f ) { n = f;   }
-      Shares operator + ( const   Shares &f ) { Shares c(*this); c.n = n + f.n; return c; }
-      Shares operator + ( const __int128 &f ) { Shares c(*this); c.n = n + f;   return c; }
-      Shares operator - ( const   Shares &f ) { Shares c(*this); c.n = n - f.n; return c; }
-      Shares operator - ( const __int128 &f ) { Shares c(*this); c.n = n - f;   return c; }
-      Shares operator +=( const   Shares &f ) { n = n + f.n; return *this; }
-      Shares operator +=( const __int128 &f ) { n = n + f;   return *this; }
-      Shares operator -=( const   Shares &f ) { n = n - f.n; return *this; }
-      Shares operator -=( const __int128 &f ) { n = n - f;   return *this; }
-        bool operator ==( const   Shares &f ) { return (n == f.n); }
-        bool operator ==( const __int128 &f ) { return (n == f  ); }
-        bool operator !=( const   Shares &f ) { return (n != f.n); }
-        bool operator !=( const __int128 &f ) { return (n != f  ); }
-        bool operator <=( const   Shares &f ) { return (n <= f.n); }
-        bool operator <=( const __int128 &f ) { return (n <= f  ); }
-        bool operator >=( const   Shares &f ) { return (n >= f.n); }
-        bool operator >=( const __int128 &f ) { return (n >= f  ); }
-        bool operator < ( const   Shares &f ) { return (n <  f.n); }
-        bool operator < ( const __int128 &f ) { return (n <  f  ); }
-        bool operator > ( const   Shares &f ) { return (n >  f.n); }
-        bool operator > ( const __int128 &f ) { return (n >  f  ); }
-  QByteArray toByteArray( unsigned char code = AO_TRANSACTION_AMT );
+             Shares( const Shares &f, QObject *p = nullptr ) : Data128( f.v, AO_ASSIGNMENT_AMT, p ? p : f.parent() ) {}
 
 signals:
 
 public slots:
-
-private:
-  __int128 n;
 };
 
 #endif // SHARES_H
