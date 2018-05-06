@@ -1,5 +1,4 @@
-/*
- * MIT License
+/* MIT License
  *
  * Copyright (c) 2018 Assign Onward
  *
@@ -24,10 +23,12 @@
 #ifndef BYTECODES_H
 #define BYTECODES_H
 
-// The atomic chunks: fixed length, single byte checksum
-#define AO_CODE_MASK 0xF0
-#define AO_SIZE_MASK 0xE0
+#define AO_CODE_MASK  0xF0
+#define AO_SIZE_MASK  0xE0
+#define AO_FIXED_MASK 0x80
 
+// The atomic chunks:
+// First bit, when 0, means fixed length, single byte checksum
 // First 3 bits, when 001 means: this is a 18 byte chunk, one for the code, 16 for the data, one for the checkbyte
 #define AO_SIZE_18BYTES       0x20
 #define AO_TIME_CODE          0x20
@@ -48,12 +49,16 @@
 #define AO_PUBLIC_KEY2      0x42  // Two types of public keys, only one used at a time
 #define AO_PUBLIC_KEY3      0x43
 
-// First 2 bits, when 011 means: this is a 42 byte chunk, one for the code, 40 for the data (time+hash), one for the checkbyte
-#define AO_PAGEREF          0x60 // 8 bytes time + 32 bytes hash
+// First 2 bits, when 011 means: this is a 38 byte chunk, one for the code, 40 for the data (time+hash), one for the checkbyte
+#define AO_SIZE_38BYTES     0x60
+#define AO_PAGEREF          0x60 // 4 bytes chain depth + 32 bytes hash
 
 // First 2 bits, when 000 means: this is a 4 byte chunk, one for the code, 2 for the data, one for the checkbyte (generally a 16 bit int)
 #define AO_SIZE_4BYTES      0x00
 #define AO_LISTSIZE         0x00
+
+// Flag that somebody forgot to initialize the type
+#define AO_DATAFIXED_UNDEFINED 0x7F
 
 // Variable length items
 

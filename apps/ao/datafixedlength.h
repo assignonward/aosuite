@@ -22,23 +22,30 @@
  */
 // Assign Onward
 //
-// Shares represents a number of shares in a blockchain's share balance
+// DataFixedLength is the base class for objects which are byte arrays of fixed length.
 //
-#ifndef SHARES_H
-#define SHARES_H
+#ifndef DATAFIXEDLENGTH_H
+#define DATAFIXEDLENGTH_H
 
 #include <QObject>
-#include "data128.h"
+#include "bytecodes.h"
 
-class Shares : public Data128
+class DataFixedLength : public QObject
 {
+    Q_OBJECT
 public:
-    explicit Shares( __int128 val = 0, QObject *p = nullptr);
-             Shares( const Shares &f, QObject *p = nullptr ) : Data128( f.v, AO_ASSIGNMENT_AMT, p ? p : f.parent() ) {}
+    explicit DataFixedLength( unsigned char t = AO_DATAFIXED_UNDEFINED, QByteArray iba = QByteArray(), QObject *p = nullptr)  : QObject( p ), ba( iba ), typeCode( t ) {}
+             DataFixedLength( const DataFixedLength &d, QObject *p = nullptr ) : QObject( p ? p : d.parent() ), ba( d.ba ), typeCode( d.typeCode ) {}
+             DataFixedLength( const QByteArray &dba, QObject *p = nullptr );
+  QByteArray toByteArray();
+        void operator =  ( const QByteArray &dba );
+        void operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; }
+        bool operator == ( const DataFixedLength &d ) { return ba == d.ba; }
+        bool operator != ( const DataFixedLength &d ) { return ba != d.ba; }
 
-signals:
-
-public slots:
+protected:
+     QByteArray ba;       // generic data
+  unsigned char typeCode; // what kind of 128 bit integer is this?
 };
 
-#endif // SHARES_H
+#endif // DATAFIXEDLENGTH_H

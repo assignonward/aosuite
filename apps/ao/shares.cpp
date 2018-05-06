@@ -1,5 +1,4 @@
-/*
- * MIT License
+/* MIT License
  *
  * Copyright (c) 2018 Assign Onward
  *
@@ -26,4 +25,4 @@
 #include "shares.h"
 
 Shares::Shares( __int128 s, QObject *p )
-  : Data128( s, AO_ASSIGNMENT_AMT, p ) {}
+  : Data128( AO_ASSIGNMENT_AMT, s, p ) {}

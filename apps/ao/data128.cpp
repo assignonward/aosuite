@@ -1,5 +1,4 @@
-/*
- * MIT License
+/* MIT License
  *
  * Copyright (c) 2018 Assign Onward
  *
@@ -60,7 +59,8 @@ Data128::Data128( const QByteArray &ba, QObject *p ) : QObject(p)
 
 void Data128::operator = ( const QByteArray &ba )
 { Data128 temp( ba );
-  v = temp.v;
+  v        = temp.v;
+  typeCode = temp.typeCode;
   return;
 }
 

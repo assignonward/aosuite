@@ -1,5 +1,4 @@
-/*
- * MIT License
+/* MIT License
  *
  * Copyright (c) 2018 Assign Onward
  *
@@ -27,7 +26,8 @@
 #include <QObject>
 
 /**
- * @brief The PubKey class - unnecessary? QString wrapper.
+ * @brief The PubKey class - unnecessary? QByteArray wrapper.
+ *   future plans include compressing 64-33 and expanding 33-64
  */
 class PubKey : public QObject
 {

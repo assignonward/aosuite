@@ -1,5 +1,4 @@
-/*
- * MIT License
+/* MIT License
  *
  * Copyright (c) 2018 Assign Onward
  *
@@ -35,7 +34,7 @@ class Data128 : public QObject
 {
     Q_OBJECT
 public:
-    explicit Data128( __int128 d = 0, unsigned char t = AO_SHARES_UNDEFINED, QObject *p = nullptr) : QObject( p ), v( d ), typeCode( t ) {}
+    explicit Data128( unsigned char t = AO_SHARES_UNDEFINED, __int128 d = 0, QObject *p = nullptr) : QObject( p ), v( d ), typeCode( t ) {}
              Data128( const Data128 &d, QObject *p = nullptr ) : QObject( p ? p : d.parent() ), v( d.v ), typeCode( d.typeCode ) {}
              Data128( const QByteArray &ba, QObject *p = nullptr );
   QByteArray toByteArray();

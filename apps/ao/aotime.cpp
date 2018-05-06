@@ -1,5 +1,4 @@
-/*
- * MIT License
+/* MIT License
  *
  * Copyright (c) 2018 Assign Onward
  *
@@ -24,7 +23,7 @@
 #include "aotime.h"
 #include <QDateTime>
 
-AOTime::AOTime( __int128 tm, QObject *parent) : Data128( tm, AO_TIME_RECORDED, parent )
+AOTime::AOTime( __int128 tm, QObject *parent) : Data128( AO_TIME_RECORDED, tm, parent )
 { if ( tm == 0 )
     set( now() );
 }
