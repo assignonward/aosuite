@@ -38,4 +38,6 @@ private:
     uint64_t s[2];
 };
 
+extern Random rng; // Global object
+
 #endif // RANDOM_H

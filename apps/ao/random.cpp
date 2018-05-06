@@ -25,6 +25,8 @@
 // Good enough for the moment, and I prefer a specified
 // PRNG instead of relying on system libraries.
 
+Random rng; // Global object
+
 Random::Random( __int128 sd )
 { seed( sd ); }
 

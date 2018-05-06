@@ -56,7 +56,10 @@ SOURCES += \
     chainmaker.cpp \
     pubkey.cpp \
     data128.cpp \
-    datafixedlength.cpp
+    datafixedlength.cpp \
+    hash256.cpp \
+    salt256.cpp \
+    publickeyecdsa.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -69,7 +72,10 @@ HEADERS += \
     pubkey.h \
     bytecodes.h \
     data128.h \
-    datafixedlength.h
+    datafixedlength.h \
+    hash256.h \
+    salt256.h \
+    publickeyecdsa.h
 
 FORMS += \
         mainwindow.ui

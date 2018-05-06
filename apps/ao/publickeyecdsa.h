@@ -20,38 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-// Assign Onward
-//
-// The universal clock - Unix time in seconds since epoch, multiplied by 2^64
-//   - future plans include adding 32 bits of trivial quasi-random dither to break most ties
+#ifndef PUBLICKEYECDSA_H
+#define PUBLICKEYECDSA_H
 
-#ifndef AOTIME_H
-#define AOTIME_H
+#include "datafixedlength.h"
 
-#include "data128.h"
-
-// These AO constants need to be multiplied
-// by 2^64 after being loaded due to compiler
-// challenges handling 128 bit constants
-#define AO_SECOND  1
-#define AO_MINUTE (60 * AO_SECOND)
-#define AO_HOUR   (60 * AO_MINUTE)
-#define AO_DAY    (24 * AO_HOUR  )
-#define AO_WEEK   ( 7 * AO_DAY   )
-
-class AOTime : public Data128
+class PublicKeyECDSA : public DataFixedLength
 {
     Q_OBJECT
 public:
-       explicit AOTime( __int128 tm = 0, QObject *p = nullptr);
-                AOTime( const AOTime &tm, QObject *p = nullptr )
-                  : Data128( AO_TIME_RECORDED, tm.get(), p ? p : tm.parent() ) {}
-static __int128 now();
-static __int128 shiftUp64( __int128 m );
-       __int128 get() const { return v; }
-           void set( __int128 m ) { v = m; }
-           bool future();
-           bool past();
+       explicit PublicKeyECDSA( QObject *p = nullptr )
+                  : DataFixedLength( AO_PUBLIC_KEY2, QByteArray(), p ) {}
+                PublicKeyECDSA( const PublicKeyECDSA &k, QObject *p = nullptr )
+                  : DataFixedLength( AO_PUBLIC_KEY2, k.ba, p ? p : k.parent() ) {}
 };
 
-#endif // AOTIME_H
+#endif // PUBLICKEYECDSA_H

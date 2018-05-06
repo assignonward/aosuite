@@ -48,4 +48,5 @@ protected:
   unsigned char typeCode; // what kind of 128 bit integer is this?
 };
 
+
 #endif // DATAFIXEDLENGTH_H

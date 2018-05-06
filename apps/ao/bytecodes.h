@@ -45,7 +45,7 @@
 // First 2 bits, when 010 means: this is a 34 byte chunk, one for the code, 32 for the data (hash), one for the checkbyte
 #define AO_SIZE_34BYTES     0x40
 #define AO_HASH256          0x40
-#define AO_SALT             0x41
+#define AO_SALT256          0x41
 #define AO_PUBLIC_KEY2      0x42  // Two types of public keys, only one used at a time
 #define AO_PUBLIC_KEY3      0x43
 

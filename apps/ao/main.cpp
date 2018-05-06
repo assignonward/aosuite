@@ -22,6 +22,8 @@
  */
 #include "mainwindow.h"
 #include <QApplication>
+#include <QDateTime>
+#include "random.h"
 
 int main(int argc, char *argv[])
 {
@@ -31,6 +33,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("AssignOnward");
     QCoreApplication::setOrganizationDomain("assignonward.com");
     QCoreApplication::setApplicationName("AOAO");  // Assign Onward Asset Organizer
+
+    rng.seed( QDateTime::currentMSecsSinceEpoch() );
+    rng.rnd_uint64();
+    rng.rnd_uint64();
+    rng.rnd_uint64();
 
     MainWindow w;
     w.show();
