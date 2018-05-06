@@ -36,13 +36,13 @@ class DataFixedLength : public QObject
 public:
     explicit DataFixedLength( unsigned char t = AO_DATAFIXED_UNDEFINED, QByteArray iba = QByteArray(), QObject *p = nullptr)  : QObject( p ), ba( iba ), typeCode( t ) {}
              DataFixedLength( const DataFixedLength &d, QObject *p = nullptr ) : QObject( p ? p : d.parent() ), ba( d.ba ), typeCode( d.typeCode ) {}
-             DataFixedLength( const QByteArray &dba, QObject *p = nullptr );
-  QByteArray toByteArray();
-        void operator =  ( const QByteArray &dba );
+             DataFixedLength( const QByteArray &di, QObject *p = nullptr );
+  QByteArray toDataItem();
+        void operator =  ( const QByteArray &di );
         void operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; }
         bool operator == ( const DataFixedLength &d ) { return ba == d.ba; }
         bool operator != ( const DataFixedLength &d ) { return ba != d.ba; }
-  QByteArray get() { return ba; }
+  QByteArray get() { return ba; } // Just the meat, without typecode or checksum
         void set( QByteArray sba );
          int typeSize();
 

@@ -29,8 +29,7 @@ class Hash256 : public DataFixedLength
 {
     Q_OBJECT
 public:
-       explicit Hash256( QByteArray iba = QByteArray(), QObject *p = nullptr )
-                  : DataFixedLength( AO_HASH256, iba, p ) {}
+       explicit Hash256( QByteArray text = QByteArray(), QObject *p = nullptr );
                 Hash256( const Hash256 &h, QObject *p = nullptr )
                   : DataFixedLength( AO_HASH256, h.ba, p ? p : h.parent() ) {}
      QByteArray calculate( QByteArray text );

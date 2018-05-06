@@ -36,9 +36,9 @@ class Data128 : public QObject
 public:
     explicit Data128( unsigned char t = AO_SHARES_UNDEFINED, __int128 d = 0, QObject *p = nullptr) : QObject( p ), v( d ), typeCode( t ) {}
              Data128( const Data128 &d, QObject *p = nullptr ) : QObject( p ? p : d.parent() ), v( d.v ), typeCode( d.typeCode ) {}
-             Data128( const QByteArray &ba, QObject *p = nullptr );
-  QByteArray toByteArray();
-        void operator = ( const QByteArray &ba );
+             Data128( const QByteArray &di, QObject *p = nullptr );
+  QByteArray toDataItem();
+        void operator = ( const QByteArray &di );
         void operator = ( const  Data128 &d ) { v = d.v; }
         void operator = ( const __int128 &d ) { v = d;   }
      Data128 operator + ( const  Data128 &d ) { Data128 c(*this); c.v = v + d.v; return c; }

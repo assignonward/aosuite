@@ -24,23 +24,23 @@
 
 /**
  * @brief DataFixedLength::DataFixedLength
- * @param dba - typeCode, data, and checksum
+ * @param di - typeCode, data, and checksum
  * @param p - parent object
  */
-DataFixedLength::DataFixedLength( const QByteArray &dba, QObject *p ) : QObject( p )
-{ if ( dba.size() < 4 ) // Shortest fixed length serialized data type
+DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : QObject( p )
+{ if ( di.size() < 4 ) // Shortest fixed length serialized data type
     { // TODO: log an exception
       return;
     }
-  typeCode = dba.at(0);
+  typeCode = di.at(0);
   if (((( typeCode & AO_SIZE_MASK ) == AO_SIZE_34BYTES ) && ( ba.size() == 34 )) ||
       ((( typeCode & AO_SIZE_MASK ) == AO_SIZE_38BYTES ) && ( ba.size() == 38 )) )
     { unsigned char chk = typeCode;
-      for ( int i = 1 ; i < dba.size()-1 ; i++ )
-        { ba.append( dba.at(i) );
-          chk ^= dba.at(i);
+      for ( int i = 1 ; i < di.size()-1 ; i++ )
+        { ba.append( di.at(i) );
+          chk ^= di.at(i);
         }
-      if ( chk != dba.at( dba.size()-1 ) )
+      if ( chk != di.at( di.size()-1 ) )
         { // TODO: log an exception
           return;
         }
@@ -53,29 +53,29 @@ DataFixedLength::DataFixedLength( const QByteArray &dba, QObject *p ) : QObject(
 
 /**
  * @brief DataFixedLength::operator =  Assign value from a serialized bytearray
- * @param dba - serialized bytearray with typeCode and checksum
+ * @param di - serialized bytearray with typeCode and checksum
  */
-void DataFixedLength::operator = ( const QByteArray &dba )
-{ DataFixedLength temp( dba );
+void DataFixedLength::operator = ( const QByteArray &di )
+{ DataFixedLength temp( di );
   ba       = temp.ba;
   typeCode = temp.typeCode;
   return;
 }
 
 /**
- * @brief DataFixedLength::toByteArray
+ * @brief DataFixedLength::toDataItem
  * @return serialized byte array with type, data and checksum
  */
-QByteArray DataFixedLength::toByteArray()
-{ QByteArray sba;
+QByteArray DataFixedLength::toDataItem()
+{ QByteArray di;
   // if (( code & AO_FIXED_MASK ) != 0x00 )
   //   TODO: log a warning, maybe check closer for defined types, too.
   unsigned char chk = typeCode;
-  sba.append( typeCode );
+  di.append( typeCode );
   for ( int i = 0; i < ba.size(); i++ )
-    { sba.append( ba.at(i) ); chk ^= ba.at(i); }
-  sba.append( chk );
-  return sba;
+    { di.append( ba.at(i) ); chk ^= ba.at(i); }
+  di.append( chk );
+  return di;
 }
 
 /**

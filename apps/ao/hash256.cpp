@@ -21,4 +21,18 @@
  * SOFTWARE.
  */
 #include "hash256.h"
+#include <QCryptographicHash>
 
+/**
+ * @brief Hash256::Hash256 - constructor.
+ * @param text - text to hash, or empty.
+ * @param p - object parent, if any
+ */
+Hash256::Hash256( QByteArray text, QObject *p )
+        : DataFixedLength( AO_HASH256, QByteArray(), p )
+{ if ( text.size() < 1 )
+    return;
+  QCryptographicHash ho( QCryptographicHash::Sha256 );
+  ho.addData( text );
+  ba.append( ho.result() );
+}
