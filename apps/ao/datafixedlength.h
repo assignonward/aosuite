@@ -42,9 +42,12 @@ public:
         void operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; }
         bool operator == ( const DataFixedLength &d ) { return ba == d.ba; }
         bool operator != ( const DataFixedLength &d ) { return ba != d.ba; }
+  QByteArray get() { return ba; }
+        void set( QByteArray sba );
+         int typeSize();
 
 protected:
-     QByteArray ba;       // generic data
+     QByteArray ba;       // generic data, not including type or checksum
   unsigned char typeCode; // what kind of 128 bit integer is this?
 };
 

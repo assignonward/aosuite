@@ -33,6 +33,8 @@ public:
                   : DataFixedLength( AO_HASH256, iba, p ) {}
                 Hash256( const Hash256 &h, QObject *p = nullptr )
                   : DataFixedLength( AO_HASH256, h.ba, p ? p : h.parent() ) {}
+     QByteArray calculate( QByteArray text );
+           bool verify( QByteArray text );
 };
 
 #endif // HASH256_H

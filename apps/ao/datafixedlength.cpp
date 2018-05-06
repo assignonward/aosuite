@@ -78,3 +78,28 @@ QByteArray DataFixedLength::toByteArray()
   return sba;
 }
 
+/**
+ * @brief DataFixedLength::typeSize
+ * @return correct size for a serialized version of the byte array for the current typeCode,
+ *   or -1 if the typeCode doesn't have a defined fixed length.
+ */
+int DataFixedLength::typeSize()
+{ switch ( typeCode & AO_SIZE_MASK )
+    { case AO_SIZE_34BYTES: return 34;
+      case AO_SIZE_66BYTES: return 66;
+      case AO_SIZE_18BYTES: return 18;
+      case AO_SIZE_38BYTES: return 38;
+      case AO_SIZE_4BYTES : return 4 ;
+    }
+  return -1;
+}
+
+/**
+ * @brief DataFixedLength::set - if sba is the right size for typeCode, set ba = sba.
+ * @param sba - byte array to set
+ */
+void DataFixedLength::set( QByteArray sba )
+{ if ( sba.size() == (typeSize() - 2) )
+    ba = sba;
+  // TODO: log warning
+}
