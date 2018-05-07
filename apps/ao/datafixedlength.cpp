@@ -23,29 +23,27 @@
 #include "datafixedlength.h"
 
 /**
- * @brief DataFixedLength::DataFixedLength
+ * @brief DataFixedLength::DataFixedLength - constructor.
  * @param di - typeCode, data, and checksum
  * @param p - parent object
  */
 DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : QObject( p )
 { if ( di.size() < 4 ) // Shortest fixed length serialized data type
-    { // TODO: log an exception
+    { typeCode = AO_DATAFIXED_UNDEFINED;
+      // TODO: log an exception
       return;
     }
   typeCode = di.at(0);
-  if (((( typeCode & AO_SIZE_MASK ) == AO_SIZE_34BYTES ) && ( ba.size() == 34 )) ||
-      ((( typeCode & AO_SIZE_MASK ) == AO_SIZE_38BYTES ) && ( ba.size() == 38 )) )
-    { unsigned char chk = typeCode;
-      for ( int i = 1 ; i < di.size()-1 ; i++ )
-        { ba.append( di.at(i) );
-          chk ^= di.at(i);
-        }
-      if ( chk != di.at( di.size()-1 ) )
-        { // TODO: log an exception
-          return;
-        }
+  if ( di.size() < typeSize() )
+    { // TODO: log an exception
+      return;
     }
-   else
+  unsigned char chk = typeCode;
+  for ( int i = 1 ; i < di.size()-1 ; i++ )
+    { ba.append( di.at(i) );
+      chk ^= di.at(i);
+    }
+  if ( chk != di.at( di.size()-1 ) )
     { // TODO: log an exception
       return;
     }
@@ -80,11 +78,14 @@ QByteArray DataFixedLength::toDataItem()
 
 /**
  * @brief DataFixedLength::typeSize
- * @return correct size for a serialized version of the byte array for the current typeCode,
+ * @param tc - type code to interpret, or 0xFF (default) to use this object's typeCode
+ *  current typeCode,
  *   or -1 if the typeCode doesn't have a defined fixed length.
  */
-int DataFixedLength::typeSize()
-{ switch ( typeCode & AO_SIZE_MASK )
+int DataFixedLength::typeSize( unsigned char tc )
+{ if ( tc == 0xFF )
+    tc = typeCode;
+  switch ( tc & AO_SIZE_MASK )
     { case AO_SIZE_34BYTES: return 34;
       case AO_SIZE_66BYTES: return 66;
       case AO_SIZE_18BYTES: return 18;

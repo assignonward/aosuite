@@ -59,7 +59,8 @@ SOURCES += \
     datafixedlength.cpp \
     hash256.cpp \
     salt256.cpp \
-    publickeyecdsa.cpp
+    publickeyecdsa.cpp \
+    hash512.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -75,7 +76,8 @@ HEADERS += \
     datafixedlength.h \
     hash256.h \
     salt256.h \
-    publickeyecdsa.h
+    publickeyecdsa.h \
+    hash512.h
 
 FORMS += \
         mainwindow.ui

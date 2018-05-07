@@ -36,3 +36,25 @@ Hash256::Hash256( QByteArray text, QObject *p )
   ho.addData( text );
   ba.append( ho.result() );
 }
+
+/**
+ * @brief Hash256::calculate
+ * @param text
+ */
+Hash256 &Hash256::calculate( QByteArray text )
+{ QCryptographicHash ho( QCryptographicHash::Sha256 );
+  ho.addData( text );
+  ba = ho.result();
+  return *this;
+}
+
+/**
+ * @brief Hash256::verify
+ * @param text - check if this text matches the hash
+ * @return true if hash of text matches this hash
+ */
+bool Hash256::verify( QByteArray text )
+{ QCryptographicHash ho( QCryptographicHash::Sha256 );
+  ho.addData( text );
+  return (ho.result() == ba);
+}

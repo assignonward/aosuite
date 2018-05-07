@@ -20,20 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef HASH256_H
-#define HASH256_H
+#ifndef HASH512_H
+#define HASH512_H
 
 #include "datafixedlength.h"
 
-class Hash256 : public DataFixedLength
+class Hash512 : public DataFixedLength
 {
     Q_OBJECT
 public:
-       explicit  Hash256( QByteArray text = QByteArray(), QObject *p = nullptr );
-                 Hash256( const Hash256 &h, QObject *p = nullptr )
-                   : DataFixedLength( AO_HASH256, h.ba, p ? p : h.parent() ) { /* if ( h.typeCode != AO_HASH256 ) TODO: log error */ }
-        Hash256 &calculate( QByteArray text );
+       explicit  Hash512( QByteArray text = QByteArray(), QObject *p = nullptr );
+                 Hash512( const Hash512 &h, QObject *p = nullptr )
+                   : DataFixedLength( AO_HASH512, h.ba, p ? p : h.parent() ) { /* if ( h.typeCode != AO_HASH512 ) TODO: log error */ }
+        Hash512 &calculate( QByteArray text );
            bool  verify( QByteArray text );
 };
 
-#endif // HASH256_H
+#endif // HASH512_H

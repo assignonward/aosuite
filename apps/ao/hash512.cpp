@@ -20,20 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef HASH256_H
-#define HASH256_H
+#include "hash512.h"
+#include <QCryptographicHash>
 
-#include "datafixedlength.h"
+/**
+ * @brief Hash512::Hash512 - constructor.
+ * @param text - text to hash, or empty.
+ * @param p - object parent, if any
+ */
+Hash512::Hash512( QByteArray text, QObject *p )
+        : DataFixedLength( AO_HASH512, QByteArray(), p )
+{ if ( text.size() < 1 )
+    return;
+  QCryptographicHash ho( QCryptographicHash::Sha3_512 );
+  ho.addData( text );
+  ba.append( ho.result() );
+}
 
-class Hash256 : public DataFixedLength
-{
-    Q_OBJECT
-public:
-       explicit  Hash256( QByteArray text = QByteArray(), QObject *p = nullptr );
-                 Hash256( const Hash256 &h, QObject *p = nullptr )
-                   : DataFixedLength( AO_HASH256, h.ba, p ? p : h.parent() ) { /* if ( h.typeCode != AO_HASH256 ) TODO: log error */ }
-        Hash256 &calculate( QByteArray text );
-           bool  verify( QByteArray text );
-};
+/**
+ * @brief Hash512::calculate
+ * @param text
+ */
+Hash512 &Hash512::calculate( QByteArray text )
+{ QCryptographicHash ho( QCryptographicHash::Sha3_512);
+  ho.addData( text );
+  ba = ho.result();
+  return *this;
+}
 
-#endif // HASH256_H
+/**
+ * @brief Hash512::verify
+ * @param text - check if this text matches the hash
+ * @return true if hash of text matches this hash
+ */
+bool Hash512::verify( QByteArray text )
+{ QCryptographicHash ho( QCryptographicHash::Sha3_512);
+  ho.addData( text );
+  return (ho.result() == ba);
+}
