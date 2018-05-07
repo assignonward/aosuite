@@ -60,7 +60,8 @@ SOURCES += \
     hash256.cpp \
     salt256.cpp \
     publickeyecdsa.cpp \
-    hash512.cpp
+    hash512.cpp \
+    hash.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -77,7 +78,8 @@ HEADERS += \
     hash256.h \
     salt256.h \
     publickeyecdsa.h \
-    hash512.h
+    hash512.h \
+    hash.h
 
 FORMS += \
         mainwindow.ui
