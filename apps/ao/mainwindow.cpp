@@ -101,6 +101,7 @@ MainWindow::~MainWindow()
  *   [HASH] Hash of TRAN+AUTH+RECP+RECA+TREC performed by last recorder to accept
  *
  * ----------------------------
+ *   Optional forward linking database to be stored by underwriters/chainmakers:
  *
  *   <NEXT> Next transactions:
  *     <PART> List of each participant's next transaction
@@ -133,13 +134,17 @@ MainWindow::~MainWindow()
  *   All ledgers use the same UTC clock
  *   Coin amounts: AMT, PBAL, RBID
  *     are all signed 128 bit integer fractions of the "one coin"
+ *       Optionally, # of coins can float too, inflating when earned by
+ *       transaction processors.  Not my favorite idea, but maybe a good
+ *       way to "boot up" the ecosystem.
  *     givers show negative AMT
  *     receivers show positive AMT
  *     RBID is a 0 or positive amount
  *     PBAL is a 0 or positive amount
- *   KEY 2048 bit RSA? Lattice? https://arxiv.org/pdf/1710.10377.pdf
+ *   KEY 2048 bit RSA? Lattice? Public Key
  *   SIG  signatures? Lattice?
  *   HASH SHA what?  Lattice?
+ *
  *   Every KEY is associated with one, and only one, ledger ROOT
  *     even though it will appear in other ledgers when performing
  *     inter-ledger transfers, the KEY will always be associated
@@ -147,7 +152,7 @@ MainWindow::~MainWindow()
  *   PART participant lists are all in the same order
  *   PART participant lists must all be the same length
  *   Minimum participant list length: 2
- *   Maximum participant list length: 2048
+ *   Maximum participant list length: 2048 - keeping a lid on transaction spam
  *   Each participant KEY may only appear in the list one time.
  *   RCRD recorder lists are all in the same order
  *   RCRD recorder lists must all be the same length
@@ -522,6 +527,8 @@ MainWindow::~MainWindow()
  *   receivers of value coming from one or more givers of value.
  *   When a sub-ledger has given all its value, it is closed, done, will change no more.  It is now only referenced
  *   by child sub-ledgers which point to it as a source of value.
+ *     Update: Atomic assignment seems more attractive than subledgers and locks.  Underwriting is still a form
+ *     of time-locking shares, with the risk of loss if the underwriter is promising something that is false.
  *
  * We need to tackle the double-spend problem.  When value is given, that is what must be ensured as recorded in
  *   the public ledgers.  How is a receiver of value satisfied that their transaction has been advertised and
@@ -1824,6 +1831,15 @@ MainWindow::~MainWindow()
  *   and continue on.  Double-spends would require some kind of repair to avoid creation of shares (deflation of everyone
  *   elses' shares) after the merge.
  *
+ * Woven blockchains?
+ *   Some of the single-signature rules proposed would likely result in many chain-ends per cycle as different
+ *   underwriters and chainmakers failed to concur on the "best" next block for the chain.  Chainmakers from
+ *   the next cycle might "pick up the threads" of the separate chain-ends and weave them back together by
+ *   validating that doing so would not create any double spends.  This raises an interesting question for:
+ *   how does the residual value of a chain-end get divided among chainmakers who share it going forward in
+ *   this woven arrangement?  Needs analysis, but seems like "chainweaving" might be a good solution to the
+ *   problems raised by the otherwise seemingly good "single signature per timeslice" idea.
+ *
  **************************************************************************************************************************
  *
  *  Applications beyond value transfer:
@@ -1952,6 +1968,14 @@ MainWindow::~MainWindow()
  *   that is not in the "one true chain" _have_ now exposed themselves as colluding with the fork.  If the fork becomes the
  *   "one true chain" then they have lost nothing, but... that deeper following of the fork allows their pledged shares to be
  *   claimed by others in the "one true chain."  This feels powerful, very powerful.
+ *
+ *   Mix this with "chainweaving" by defining a fork as an alternate chain with a "double spend" of shares
+ *   when compared with this chain.  If there are no double spends, the split chains can be rewoven into one,
+ *   but as soon as one player spends the same funds on both chains, that is irreconcilable and one of the
+ *   chains is going to need to lose.  Meanwhile, if the doublespender was an underwriter or chainmaker,
+ *   their shares can be returned to the community on both chains due to rule-breaking.  The thornier problem
+ *   is to determine which fork should continue and which is declared invalid - possibly by a residual value
+ *   comparison.
  *
  * "with great power there must also come -- great responsibility!"  Marvel Comics Amazing Fantasy #15
  *
