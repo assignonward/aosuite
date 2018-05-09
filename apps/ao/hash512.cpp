@@ -29,7 +29,7 @@
  * @param p - object parent, if any
  */
 Hash512::Hash512( QByteArray text, QObject *p )
-        : DataFixedLength( AO_HASH512, QByteArray(), p )
+        : DataFixedLength( AO_HASH512, QByteArray(), p ), verified( false )
 { if ( text.size() < 1 )
     return;
   QCryptographicHash ho( QCryptographicHash::Sha3_512 );
@@ -45,6 +45,7 @@ Hash512 &Hash512::calculate( QByteArray text )
 { QCryptographicHash ho( QCryptographicHash::Sha3_512);
   ho.addData( text );
   ba = ho.result();
+  verified = true;
   return *this;
 }
 
@@ -56,5 +57,13 @@ Hash512 &Hash512::calculate( QByteArray text )
 bool Hash512::verify( QByteArray text )
 { QCryptographicHash ho( QCryptographicHash::Sha3_512);
   ho.addData( text );
-  return (ho.result() == ba);
+  verified = (ho.result() == ba);
+  return verified;
 }
+
+/**
+ * @brief Hash512::isValid
+ * @return true if the data is the correct size
+ */
+bool Hash512::isValid()
+{ return ((ba.size() == 64) && ( typeCode == AO_HASH512 )); }

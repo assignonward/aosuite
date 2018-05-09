@@ -39,7 +39,8 @@ DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : QObject( 
       return;
     }
   unsigned char chk = typeCode;
-  for ( int i = 1 ; i < di.size()-1 ; i++ )
+  qint32 end = typeSize() - 1;
+  for ( int i = 1 ; i < end ; i++ )
     { ba.append( di.at(i) );
       chk ^= di.at(i);
     }

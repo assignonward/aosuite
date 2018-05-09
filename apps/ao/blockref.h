@@ -20,25 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef HASH512_H
-#define HASH512_H
+#ifndef BLOCKREF_H
+#define BLOCKREF_H
 
-#include "datafixedlength.h"
+#include "aotime.h"
 
-class Hash512 : public DataFixedLength
+/**
+ * @brief The BlockRef class - identifies a block in the chain
+ */
+class BlockRef : public QObject
 {
     Q_OBJECT
 public:
-       explicit  Hash512( QByteArray text = QByteArray(), QObject *p = nullptr );
-                 Hash512( const Hash512 &h, QObject *p = nullptr )
-                   : DataFixedLength( AO_HASH512, h.ba, p ? p : h.parent() ), verified( false ) { /* if ( h.typeCode != AO_HASH512 ) TODO: log error */ }
-        Hash512 &calculate( QByteArray text );
-           bool  verify( QByteArray text );
-           bool  isValid();
-           bool  isVerified() { return verified; }
+    explicit  BlockRef( QObject *parent = nullptr) : QObject( parent ) {}
+              BlockRef( const BlockRef &r )
+                : QObject( r.parent() ), sequenceNumber( r.sequenceNumber ),
+                  proposalTime( r.proposalTime ), hash( r.hash ) {}
+      AOTime  time() { return proposalTime; }
+  QByteArray  toByteArray() { return QByteArray(); }
 
 private:
-  bool verified;
+     quint32 sequenceNumber; // sequence number in the chain (Genesis==0) this page is recorded in
+      AOTime proposalTime;   // time this block was proposed
+  QByteArray hash;           // Hash of block - redundant check
 };
 
-#endif // HASH512_H
+#endif // BLOCKREF_H

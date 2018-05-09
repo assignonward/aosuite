@@ -43,9 +43,10 @@
 // First 4 bits, when 0010 means: this is a 18 byte chunk, one for the code, 16 for the data, one for the checkbyte
 #define AO_SIZE_18BYTES       0x20
 #define AO_TIME_CODE          0x20
-#define AO_TIME_RECORDED    ( 0x00 | AO_TIME_CODE )
-#define AO_CLOSING_DEADLINE ( 0x01 | AO_TIME_CODE )
-#define AO_TIME_OF_SIG      ( 0x02 | AO_TIME_CODE )
+#define AO_TIME_OF_SIG              ( 0x00 | AO_TIME_CODE )
+#define AO_TIME_RECORDED            ( 0x01 | AO_TIME_CODE )
+#define AO_FINAL_RECORDING_DEADLINE ( 0x02 | AO_TIME_CODE )
+#define AO_PRERECORDING_DEADLINE    ( 0x03 | AO_TIME_CODE )
 
 #define AO_SHARES_CODE        0x28
 #define AO_ASSIGNMENT_AMT   ( 0x00 | AO_SHARES_CODE )
@@ -64,13 +65,14 @@
 
 // Variable length items
 
-// First 4 bits, when 1010 means: this is a long variable length byte array, 4 byte data size, followed by 4 byte checksum
+// First 4 bits, when 1010 means: this is a long variable length byte array, 3 byte data size, followed by 4 byte checksum
 #define AO_SIZE_LONGVARIABLE  0xA0
 #define AO_TRANSACTION        0xA0  // wrapper around the transaction data fields, which can come in any order
 #define AO_PARTICIPANT        0xA1  // wrapper around the participant data fields, which can come in any order
 #define AO_PARTICIPANT_LIST   0xA2  // starts with an AO_LISTSIZE, followed by that many participant objects
 #define AO_SIGNATURE_LIST     0xA3  // starts with an AO_LISTSIZE, followed by that many signature objects
 #define AO_NOTE               0xAA  // optional field in the participant item
+#define AO_VARLONG_INVALID    0xAF  // undefined long variable length data
 
 // First 4 bits, when 1110 means: this is a short variable length byte array, up to 255 bytes
 // Next byte tells the length of the following byte array

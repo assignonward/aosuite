@@ -20,25 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef HASH512_H
-#define HASH512_H
+#ifndef PAGEREF_H
+#define PAGEREF_H
 
-#include "datafixedlength.h"
+#include "aotime.h"
+#include "blockref.h"
+#include "datavarlenlong.h"
+#include "hash.h"
 
-class Hash512 : public DataFixedLength
+/**
+ * @brief The PageRef class - when the page is the chain-maker's signature page on
+ *   a block in the chain, then this is also a reference to a block and chain.
+ */
+class PageRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-       explicit  Hash512( QByteArray text = QByteArray(), QObject *p = nullptr );
-                 Hash512( const Hash512 &h, QObject *p = nullptr )
-                   : DataFixedLength( AO_HASH512, h.ba, p ? p : h.parent() ), verified( false ) { /* if ( h.typeCode != AO_HASH512 ) TODO: log error */ }
-        Hash512 &calculate( QByteArray text );
-           bool  verify( QByteArray text );
-           bool  isValid();
-           bool  isVerified() { return verified; }
+    explicit  PageRef( QObject *p = nullptr) : DataVarLenLong( AO_PAGEREF, QByteArray(), p ) {}
+              PageRef( const PageRef &r )
+                : DataVarLenLong( r.typeCode, r.ba, r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
+      AOTime  publicationTime() { return block.time(); }
+  QByteArray  toDataItem();
 
 private:
-  bool verified;
+    BlockRef block;           // block this page is recorded in
+      qint16 sequenceNumber;  // page's sequence number in the block
+        Hash hash;            // Hash of page - redundant check
 };
 
-#endif // HASH512_H
+#endif // PAGEREF_H

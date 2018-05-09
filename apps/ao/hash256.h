@@ -31,9 +31,14 @@ class Hash256 : public DataFixedLength
 public:
        explicit  Hash256( QByteArray text = QByteArray(), QObject *p = nullptr );
                  Hash256( const Hash256 &h, QObject *p = nullptr )
-                   : DataFixedLength( AO_HASH256, h.ba, p ? p : h.parent() ) { /* if ( h.typeCode != AO_HASH256 ) TODO: log error */ }
+                   : DataFixedLength( AO_HASH256, h.ba, p ? p : h.parent() ), verified( false ) { /* if ( h.typeCode != AO_HASH256 ) TODO: log error */ }
         Hash256 &calculate( QByteArray text );
            bool  verify( QByteArray text );
+           bool  isValid();
+           bool  isVerified() { return verified; }
+
+private:
+  bool verified;
 };
 
 #endif // HASH256_H

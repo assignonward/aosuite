@@ -20,37 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-// Assign Onward
-//
-// DataFixedLength is the base class for objects which are byte arrays of fixed length.
-//
-#ifndef DATAFIXEDLENGTH_H
-#define DATAFIXEDLENGTH_H
+#ifndef DATAVARLENLONG_H
+#define DATAVARLENLONG_H
 
 #include <QObject>
 #include "bytecodes.h"
 
-class DataFixedLength : public QObject
+class DataVarLenLong : public QObject
 {
     Q_OBJECT
 public:
-    explicit DataFixedLength( unsigned char t = AO_DATAFIXED_UNDEFINED, QByteArray iba = QByteArray(), QObject *p = nullptr )  : QObject( p ), ba( iba ), typeCode( t ) {}
-             DataFixedLength( const DataFixedLength &d, QObject *p = nullptr ) : QObject( p ? p : d.parent() ), ba( d.ba ), typeCode( d.typeCode ) {}
-             DataFixedLength( const QByteArray &di, QObject *p = nullptr );
+    explicit DataVarLenLong( unsigned char t = AO_VARLONG_INVALID, QByteArray iba = QByteArray(), QObject *p = nullptr )  : QObject( p ), ba( iba ), typeCode( t ) {}
+             DataVarLenLong( const DataVarLenLong &d, QObject *p = nullptr ) : QObject( p ? p : d.parent() ), ba( d.ba ), typeCode( d.typeCode ) {}
+             DataVarLenLong( const QByteArray &di, QObject *p = nullptr );
   QByteArray toDataItem();
         void operator =  ( const QByteArray &di );
-        void operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; }
-        bool operator == ( const DataFixedLength &d ) { return ba == d.ba; }
-        bool operator != ( const DataFixedLength &d ) { return ba != d.ba; }
+        void operator =  ( const DataVarLenLong &d ) { ba = d.ba; typeCode = d.typeCode; }
+        bool operator == ( const DataVarLenLong &d ) { return ba == d.ba; }
+        bool operator != ( const DataVarLenLong &d ) { return ba != d.ba; }
   QByteArray get() { return ba; } // Just the meat, without typecode or checksum
         void set( QByteArray sba );
-         int typeSize( unsigned char tc = 0xFF );
-virtual bool isValid() { return ( ( typeSize() - 2 ) == ba.size() ); }
 
 protected:
      QByteArray ba;       // generic data, not including type or checksum
-  unsigned char typeCode; // what kind of fixed length data is this?
+  unsigned char typeCode; // what kind of var length data is this?
 };
 
-
-#endif // DATAFIXEDLENGTH_H
+#endif // DATAVARLENLONG_H

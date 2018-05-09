@@ -42,6 +42,8 @@ public:
                    typeCode( d.typeCode ), hash256( d.hash256 ), hash512( d.hash512 ) {}
            Hash &calculate( QByteArray text );
            bool  verify( QByteArray text );
+           bool  isValid();
+           bool  isVerified();
      QByteArray  toDataItem();
 
 private:

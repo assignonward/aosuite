@@ -20,25 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef HASH512_H
-#define HASH512_H
+// Assign Onward
+//
+// A participant in a share assignment, either giver (negative amount) or
+//   receiver (positive amount).
+//
+// Must include a public key (participant ID)
+// Must include non-zero amount.
+// Negative amounts must:
+//   - point to a previous share assignment in this chain
+//     - promise no other assignment of those shares since their recording,
+//       through the time this assignment expires, or permanently if this assignment is recorded
+//   - exactly match the positive amount assigned to the public ID in that block-page-record
+//
 
-#include "datafixedlength.h"
+#include "participant.h"
 
-class Hash512 : public DataFixedLength
-{
-    Q_OBJECT
-public:
-       explicit  Hash512( QByteArray text = QByteArray(), QObject *p = nullptr );
-                 Hash512( const Hash512 &h, QObject *p = nullptr )
-                   : DataFixedLength( AO_HASH512, h.ba, p ? p : h.parent() ), verified( false ) { /* if ( h.typeCode != AO_HASH512 ) TODO: log error */ }
-        Hash512 &calculate( QByteArray text );
-           bool  verify( QByteArray text );
-           bool  isValid();
-           bool  isVerified() { return verified; }
 
-private:
-  bool verified;
-};
+Participant::Participant(QByteArray i, Shares a, QObject *p) : DataVarLenLong( AO_PARTICIPANT, QByteArray(), p )
+{ setId( i );
+  setAmount( a );
+  setMinUAmt( a ); // Default, can be adjusted - usually higher
+  // note to be set later if desired, usually empty.
+}
 
-#endif // HASH512_H
+Participant::Participant( const Participant &p ) : DataVarLenLong( p.typeCode, p.ba, p.parent() )
+{ id.setPublicKey( p.getId() );
+  amount  = p.getAmount();
+  minUAmt = p.getMinUAmt();
+  note    = p.getNote();
+}

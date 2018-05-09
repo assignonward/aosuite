@@ -24,27 +24,13 @@
 #include <QCryptographicHash>
 #include <QSettings>
 
-Participant::Participant(QByteArray i, Shares a, QObject *parent) : QObject(parent)
-{ setId( i );
-  setAmount( a );
-  setMinUAmt( a ); // Default, can be adjusted - usually higher
-  // note to be set later if desired, usually empty.
-}
-
-Participant::Participant( const Participant &p ) : QObject(p.parent())
-{ id.setPublicKey( p.getId() );
-  amount  = p.getAmount();
-  minUAmt = p.getMinUAmt();
-  note    = p.getNote();
-}
-
 /**
  * @brief Transaction::Transaction - describes the exchange of value
  * @param parent
  */
 Transaction::Transaction(QObject *parent) : QObject(parent)
 { // proposalTime.set( AOTime::now() );  Need to populate proposedChain, instead.
-  closingDeadline.set( proposalTime().get() + AOTime::shiftUp64( AO_DAY ) ); // default, TBD by wallet
+  finalRecordingDeadline.set( proposalTime().get() + AOTime::shiftUp64( AO_DAY ) ); // default, TBD by wallet
   randomizeSalt();
 }
 
@@ -79,7 +65,7 @@ bool Transaction::valid()
  *   Will want to add some additional sanity checks
  */
 bool Transaction::validTimeline()
-{ return ( closingDeadline.future() && proposalTime().past() ); }
+{ return ( finalRecordingDeadline.future() && proposalTime().past() ); }
 
 /**
  * @brief Transaction::validSum

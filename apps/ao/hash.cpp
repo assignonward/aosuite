@@ -117,4 +117,32 @@ bool Hash::verify( QByteArray text )
   return false;
 }
 
+/**
+ * @brief Hash::isValid
+ * @return true if the hash has the correct length of data
+ */
+bool Hash::isValid()
+{ switch ( typeCode )
+    { case AO_HASH256:
+        return hash256.isValid();
+      case AO_HASH512:
+        return hash512.isValid();
+    }
+  // TODO: log warning
+  return false;
+}
 
+/**
+ * @brief Hash::isVerified
+ * @return true if the hash has been verified to match a text, or calculated
+ */
+bool Hash::isVerified()
+{ switch ( typeCode )
+    { case AO_HASH256:
+        return hash256.isVerified();
+      case AO_HASH512:
+        return hash512.isVerified();
+    }
+  // TODO: log warning
+  return false;
+}

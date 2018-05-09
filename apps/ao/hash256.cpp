@@ -29,7 +29,7 @@
  * @param p - object parent, if any
  */
 Hash256::Hash256( QByteArray text, QObject *p )
-        : DataFixedLength( AO_HASH256, QByteArray(), p )
+        : DataFixedLength( AO_HASH256, QByteArray(), p ), verified( false )
 { if ( text.size() < 1 )
     return;
   QCryptographicHash ho( QCryptographicHash::Sha256 );
@@ -45,6 +45,7 @@ Hash256 &Hash256::calculate( QByteArray text )
 { QCryptographicHash ho( QCryptographicHash::Sha256 );
   ho.addData( text );
   ba = ho.result();
+  verified = true;
   return *this;
 }
 
@@ -56,5 +57,13 @@ Hash256 &Hash256::calculate( QByteArray text )
 bool Hash256::verify( QByteArray text )
 { QCryptographicHash ho( QCryptographicHash::Sha256 );
   ho.addData( text );
-  return (ho.result() == ba);
+  verified = (ho.result() == ba);
+  return verified;
 }
+
+/**
+ * @brief Hash256::isValid
+ * @return true if the data is the correct size
+ */
+bool Hash256::isValid()
+{ return ((ba.size() == 32) && ( typeCode == AO_HASH256 )); }

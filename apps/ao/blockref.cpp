@@ -20,25 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef HASH512_H
-#define HASH512_H
+#include "blockref.h"
 
-#include "datafixedlength.h"
-
-class Hash512 : public DataFixedLength
-{
-    Q_OBJECT
-public:
-       explicit  Hash512( QByteArray text = QByteArray(), QObject *p = nullptr );
-                 Hash512( const Hash512 &h, QObject *p = nullptr )
-                   : DataFixedLength( AO_HASH512, h.ba, p ? p : h.parent() ), verified( false ) { /* if ( h.typeCode != AO_HASH512 ) TODO: log error */ }
-        Hash512 &calculate( QByteArray text );
-           bool  verify( QByteArray text );
-           bool  isValid();
-           bool  isVerified() { return verified; }
-
-private:
-  bool verified;
-};
-
-#endif // HASH512_H
+// Nothing to do here, yet.
