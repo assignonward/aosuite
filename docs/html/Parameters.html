@@ -84,58 +84,71 @@
 </style>
 
 <meta charset="UTF-8"/>
-<title>Goals</title>
+<title>Parameters</title>
 </head>
 
 <body>
 <div class="page">
 <div class="zoom">
 
-<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Goals</h1>
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Parameters</h1>
 
-<span itemprop="articleBody">In rough order of priority:
+<span itemprop="articleBody">Parameters are ways of distinguishing one blockchain from another, making a particular 
+blockchain more or less suited to a particular purpose.
+<h2>Quick List</h2>
 
-<ul>
-<li>Secure</li>
-<ul><li>Establish un-alterable records, including records of title<div class="tooltip"><sup>1</sup><span class="tooltiptext">Title meaning: ownership of a number of shares which can be divided, or merged when assigning onward.</span></div></li>
-    <li>Assignment of title<div class="tooltip"><sup>2</sup><span class="tooltiptext">Assignment of title means recording a change of ownership of shares from the holder of one secret to the holder of a different secret.</span></div> can only be accomplished with a secret that need never be revealed</li>
-    <li>Resistant to malicious confusion of records</li>
-</ul>
-<li>Open, anyone can:</li>
-<ul><li>receive or assign title</li>
-    <ul><li>receive title under a secret that only they know</li>
-        <li>propose assignment of title to any secret known/controlled by another<div class="tooltip"><sup>3</sup><span class="tooltiptext">Assignment of title requires offer and acceptance, each identity (<a href="BlockchainBasics.html#KeyPairs">public key</a>) can only receive title once, therefore it is required that the holder of the private key accept assignment of title under their public key.</span></div></li>
+<ul><li>Starting shares outstanding</li>
+    <ul><li>Target share reduction rate</li>
     </ul>
-    <li>obtain all records</li>
-    <li>verify validity of all records</li>
-    <ul><li>title</li>
-        <ul><li>chain of title<div class="tooltip"><sup>4</sup><span class="tooltiptext">For any given title to shares, anyone can trace the source(s) of the shares back to the <a href="BlockchainBasics.html#GenesisBlock">genesis block</a>.</span></div></li>
-            <li>absence of double spend<div class="tooltip"><sup>5</sup><span class="tooltiptext">confirm that title has not been assigned from the record of initial receipt of title through to the recording of assignment of title.</span></div></li>
-        </ul>
-        <li>recording process</li>
-    </ul>
-    <li>participate in the recording process<div class="tooltip"><sup>6</sup><span class="tooltiptext">by running software that creates, validates, and proposes pages and blocks for inclusion in the <a href="BlockchainBasics.html">blockchain</a>.</span></div></li>
-    <li>examine the computer code that implements the system</li>
-</ul>
-<li>Accessible</li>
-<ul><li>simple, clearly expressed processes, not un-necessarily baffling</li>
-    <li>minimize real-world cost of participation in any part of the process</li>
-    <li>serve the users of the system, not the owners of the infrastructure</li>
-</ul>
-<li>Extensible</li>
-<ul><li>interoperability with other systems</li>
-    <li>designed for inclusion of or migration to new technologies when desired</li>
-    <li>tunable parameters to adjust to changing use conditions</li>
-</ul>
+    <li>Recording fees/taxes</li>
+    <li>Number of coins</li>
+    <li>Required underwriting ratios and durations</li>
+    <li>Longevity of shares after assignment</li>
 </ul>
 
-As with any non-trivial project, several goals are in opposition.  The unstated goal is to optimize tradeoffs making the system as valuable as possible to users.  Users are the value in the system, the system should return as much of that value as possible to them, encouraging wider adoption and increasing total value.
+<h2>Deeper Thoughts</h2>
 
-</span></span></div>
+<h3>Starting shares outstanding</h3>
+
+A big number, as big as is practical with the number of coins.  Number of shares held does not change unless they are assigned.
+
+<h4>Target share reduction rate</h4>
+
+Through recording fees/taxes, assignment invalidations and share assignment expirations, the number of shares outstanding drops over time.
+Fees/taxes can be modulated to target a specific share reduction rate over the long term, for instance a 5% annual reduction in shares
+outstanding which would cause a 5% annual increase in coins held for stationary share holdings.
+
+<h3>Recording fees/taxes</h3>
+
+To compensate the entities which make the system possible, and to discourage "block spam," there is a per-byte recording fee to publish a
+page to the blockchain, and other fees for activities which cost something to accomplish.  These fees should be quite low when compared
+to brick and mortar staffed by people institutions, but nonetheless they should be present both to compensate those who bear real world
+expense in making the system work, as well as to discourage unproductive behavior such as frivolous transactions or unnecessarily large
+records in the blockchain.
+
+Fee/taxes also fund error checking activity by providing incentive to record "everything looks good to me" notes in the chain.
+
+<h3>Number of coins</h3>
+
+The "human face" of value in the blockchain.  Originally envisioned as a static number, other implementations are of course possible.
+One possibility would be to stabilize interest rates at a target level by adjusting coins vs shares outstanding.
+
+<h3>Required underwriting ratios</h3>
+
+Underwriting is the carrot and stick all in one.  Carrot: charge fees for underwriting.  Carrot: error checkers can score big catching
+underwriters doing things wrong.  Stick: underwriters can lose their underwriting shares if they are caught doing things wrong.
+
+<h3>Longevity of shares after assignment</h3>
+
+One way of cleansing the system of abandoned shares, and a way to pay coin interest without transaction fees.
+
+</span></span>
+
+</div>
 
 <br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
 <span itemprop="name">Assign Onward</span></span></a><br/>
-<span itemprop="datePublished" content="2018-05-04"><div class="tooltip">4 May 2018<span class="tooltiptext">
+<span itemprop="datePublished" content="2018-05-09"><div class="tooltip">9 May 2018<span class="tooltiptext">
 MIT License
 <br/>
 Copyright (c) 2018 Assign Onward
