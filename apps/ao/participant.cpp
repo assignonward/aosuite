@@ -45,7 +45,7 @@ Participant::Participant(QByteArray i, Shares a, QObject *p) : DataVarLenLong( A
 }
 
 Participant::Participant( const Participant &p ) : DataVarLenLong( p.typeCode, p.ba, p.parent() )
-{ id.setPublicKey( p.getId() );
+{ id.set( p.getId() );
   amount  = p.getAmount();
   minUAmt = p.getMinUAmt();
   note    = p.getNote();

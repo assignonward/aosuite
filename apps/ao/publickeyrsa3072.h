@@ -20,24 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PUBLICKEYECDSA_H
-#define PUBLICKEYECDSA_H
+#ifndef PUBLICKEYRSA3072_H
+#define PUBLICKEYRSA3072_H
 
 #include "datafixedlength.h"
 
-class PublicKeyECDSA : public DataFixedLength
+class PublicKeyRsa3072 : public DataFixedLength
 {
     Q_OBJECT
 public:
-      explicit  PublicKeyECDSA( QObject *p = nullptr )
-                  : DataFixedLength( AO_PUB_ECDSA_KEY2, QByteArray(), p ) {}
-                PublicKeyECDSA( const PublicKeyECDSA &k, QObject *p = nullptr )
-                  : DataFixedLength( AO_PUB_ECDSA_KEY2, k.ba, p ? p : k.parent() ) {}
-                PublicKeyECDSA( const QByteArray &di, QObject *p = nullptr )
-                  : DataFixedLength( di, p ) {}
-    QByteArray  get() const;
-          void  set( QByteArray k );
-          void  clear() { ba.clear(); }
+   explicit  PublicKeyRsa3072( QObject *p = nullptr )
+               : DataFixedLength( AO_PUB_RSA3072_KEY, QByteArray(), p ) {}
+             PublicKeyRsa3072( const PublicKeyRsa3072 &k, QObject *p = nullptr )
+               : DataFixedLength( AO_PUB_RSA3072_KEY, k.ba, p ? p : k.parent() ) {}
+             PublicKeyRsa3072( const QByteArray &di, QObject *p = nullptr )
+               : DataFixedLength( di, p ) {}
+       void  clear() { ba.clear(); }
 };
 
-#endif // PUBLICKEYECDSA_H
+#endif // PUBLICKEYRSA3072_H

@@ -21,3 +21,37 @@
  * SOFTWARE.
  */
 #include "publickeyecdsa.h"
+
+/**
+ * @brief PublicKeyECDSA::get
+ * @return the key with the type code in front (standard 33 byte compressed format)
+ */
+QByteArray  PublicKeyECDSA::get() const
+{ QByteArray k;
+  switch ( typeCode )
+    { case AO_PUB_ECDSA_KEY2:
+      case AO_PUB_ECDSA_KEY3:
+        k.append( typeCode );
+        k.append( ba );
+    }
+  return k;
+}
+
+/**
+ * @brief PublicKeyECDSA::set
+ * @param k - 33 byte compressed key
+ */
+void  PublicKeyECDSA::set( QByteArray k )
+{ if ( k.size() != 33 )
+    { // TODO: log error
+      return;
+    }
+  switch ( k.at(0) )
+    { case AO_PUB_ECDSA_KEY2:
+      case AO_PUB_ECDSA_KEY3:
+        typeCode = k.at(0);
+        ba = k.mid(1);
+        return;
+    }
+  // TODO: log error
+}

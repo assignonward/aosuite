@@ -23,22 +23,22 @@
 #ifndef BYTECODES_H
 #define BYTECODES_H
 
-#define AO_CODE_MASK  0xF8
-#define AO_SIZE_MASK  0xF0
-#define AO_FIXED_MASK 0x80
+#define AO_CODE_MASK          0xF8
+#define AO_SIZE_MASK          0xF0
+#define AO_FIXED_MASK         0x80
 
 // The atomic chunks:
 // First bit, when 0, means fixed length, single byte checksum
 // First 4 bits, when 0000 means: this is a 34 byte chunk, one for the code, 32 for the data (hash), one for the checkbyte
-#define AO_SIZE_34BYTES     0x00
-#define AO_HASH256          0x00
-#define AO_SALT256          0x01
-#define AO_PUBLIC_KEY2      0x02  // Two types of public keys, only one used at a time
-#define AO_PUBLIC_KEY3      0x03
+#define AO_SIZE_34BYTES       0x00
+#define AO_HASH256            0x00
+#define AO_SALT256            0x01
+#define AO_PUB_ECDSA_KEY2     0x02  // Two types of public keys, only one used at a time
+#define AO_PUB_ECDSA_KEY3     0x03
 
 // First 4 bits, when 0001 means: this is a 66 byte chunk, one for the code, 32 for the data (hash), one for the checkbyte
-#define AO_SIZE_66BYTES     0x10
-#define AO_HASH512          0x10
+#define AO_SIZE_66BYTES       0x10
+#define AO_HASH512            0x10
 
 // First 4 bits, when 0010 means: this is a 18 byte chunk, one for the code, 16 for the data, one for the checkbyte
 #define AO_SIZE_18BYTES       0x20
@@ -55,13 +55,16 @@
 #define AO_SHARES_UNDEFINED ( 0x07 | AO_SHARES_CODE )
 
 // First 4 bits, when 0011 means: this is a 38 byte chunk, one for the code, 40 for the data (time+hash), one for the checkbyte
-#define AO_SIZE_38BYTES     0x30
-#define AO_PAGEREF          0x30 // 4 bytes chain depth + 32 bytes hash
+#define AO_SIZE_38BYTES       0x30
+#define AO_PAGEREF            0x30 // 4 bytes chain depth + 32 bytes hash
 
 // First 4 bits, when 0100 means: this is a 4 byte chunk, one for the code, 2 for the data, one for the checkbyte (generally a 16 bit int)
-#define AO_SIZE_4BYTES      0x40
-#define AO_LISTSIZE         0x40
+#define AO_SIZE_4BYTES        0x40
+#define AO_LISTSIZE           0x40
 
+// First 4 bits, when 0111 means: this is a 388 byte chunk, one for the code, 384 for the data, three for the checkbytes (generally an RSA3072 key)
+#define AO_SIZE_388BYTES        0x70
+#define AO_PUB_RSA3072_KEY    0x70
 
 // Variable length items
 

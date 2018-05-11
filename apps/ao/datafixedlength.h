@@ -42,7 +42,7 @@ public:
         void operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; }
         bool operator == ( const DataFixedLength &d ) { return ba == d.ba; }
         bool operator != ( const DataFixedLength &d ) { return ba != d.ba; }
-  QByteArray get() { return ba; } // Just the meat, without typecode or checksum
+  QByteArray get() const { return ba; } // Just the meat, without typecode or checksum
         void set( QByteArray sba );
          int typeSize( unsigned char tc = 0xFF );
 virtual bool isValid() { return ( ( typeSize() - 2 ) == ba.size() ); }

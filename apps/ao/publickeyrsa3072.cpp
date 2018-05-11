@@ -20,24 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PUBLICKEYECDSA_H
-#define PUBLICKEYECDSA_H
+#include "publickeyrsa3072.h"
 
-#include "datafixedlength.h"
-
-class PublicKeyECDSA : public DataFixedLength
-{
-    Q_OBJECT
-public:
-      explicit  PublicKeyECDSA( QObject *p = nullptr )
-                  : DataFixedLength( AO_PUB_ECDSA_KEY2, QByteArray(), p ) {}
-                PublicKeyECDSA( const PublicKeyECDSA &k, QObject *p = nullptr )
-                  : DataFixedLength( AO_PUB_ECDSA_KEY2, k.ba, p ? p : k.parent() ) {}
-                PublicKeyECDSA( const QByteArray &di, QObject *p = nullptr )
-                  : DataFixedLength( di, p ) {}
-    QByteArray  get() const;
-          void  set( QByteArray k );
-          void  clear() { ba.clear(); }
-};
-
-#endif // PUBLICKEYECDSA_H
+// Nothing here, yet

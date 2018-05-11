@@ -65,7 +65,8 @@ SOURCES += \
     participant.cpp \
     pageref.cpp \
     blockref.cpp \
-    datavarlenlong.cpp
+    datavarlenlong.cpp \
+    publickeyrsa3072.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -87,7 +88,8 @@ HEADERS += \
     participant.h \
     pageref.h \
     blockref.h \
-    datavarlenlong.h
+    datavarlenlong.h \
+    publickeyrsa3072.h
 
 FORMS += \
         mainwindow.ui

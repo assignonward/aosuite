@@ -39,11 +39,11 @@ class Participant : public DataVarLenLong
 public:
      explicit  Participant( QByteArray i, Shares a, QObject *parent = nullptr);
                Participant( const Participant &p );
-   QByteArray  getId()      const { return id.getPublicKey(); }
+   QByteArray  getId()      const { return id.get(); }
        Shares  getAmount()  const { return amount;  }
        Shares  getMinUAmt() const { return minUAmt; }
    QByteArray  getNote()    const { return note;    }
-         void  setId( QByteArray i )   { id.setPublicKey( i ); }
+         void  setId( QByteArray i )   { id.set( i ); }
          void  setAmount( Shares v )   { amount  = v; }
          void  setMinUAmt( Shares v )  { minUAmt = v; }
          void  setNote( QByteArray n ) { note    = n; }

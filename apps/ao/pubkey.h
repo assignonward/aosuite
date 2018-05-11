@@ -23,7 +23,8 @@
 #ifndef PUBKEY_H
 #define PUBKEY_H
 
-#include <QObject>
+#include "publickeyecdsa.h"
+#include "publickeyrsa3072.h"
 
 /**
  * @brief The PubKey class - unnecessary? QByteArray wrapper.
@@ -33,13 +34,17 @@ class PubKey : public QObject
 {
     Q_OBJECT
 public:
-    explicit  PubKey( QObject *parent = nullptr ) : QObject( parent ) {}
-              PubKey( const PubKey &p ) : QObject(p.parent()) { publicKey = p.getPublicKey(); }
-  QByteArray  getPublicKey() const { return publicKey; }
-        void  setPublicKey( const QByteArray k ) { publicKey = k; }
+    explicit  PubKey( unsigned char tc = AO_PUB_ECDSA_KEY2, QObject *p = nullptr );
+              PubKey( const QByteArray &di, QObject *p = nullptr );
+              PubKey( const PubKey &pk, QObject *p = nullptr ) : QObject( p ? p : pk.parent() ),
+                  typeCode( pk.typeCode ), publicKeyECDSA( pk.publicKeyECDSA ), publicKeyRsa3072( pk.publicKeyRsa3072 ) {}
+  QByteArray  get() const;
+        void  set( const QByteArray k );
 
 private:
-  QByteArray  publicKey;
+     unsigned char  typeCode;
+    PublicKeyECDSA  publicKeyECDSA;
+  PublicKeyRsa3072  publicKeyRsa3072;
 };
 
 #endif // PUBKEY_H
