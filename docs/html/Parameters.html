@@ -102,8 +102,13 @@ blockchain more or less suited to a particular purpose.
     </ul>
     <li>Recording fees/taxes</li>
     <li>Number of coins</li>
-    <li>Required underwriting ratios and durations</li>
-    <li>Longevity of shares after assignment</li>
+    <li>Required underwriting ratios</li>
+    <li>Times</li>
+    <ul><li>Block generation interval</li>
+        <li>Required underwriting durations</li>
+        <li>Contract timespan limits</li>
+        <li>Longevity of shares after assignment</li>
+    </ul>
 </ul>
 
 <h2>Deeper Thoughts</h2>
@@ -126,6 +131,8 @@ to brick and mortar staffed by people institutions, but nonetheless they should 
 expense in making the system work, as well as to discourage unproductive behavior such as frivolous transactions or unnecessarily large
 records in the blockchain.
 
+One tax for bytes in the recorded page, another tax for bytes in public keys (for the UTXO database).
+
 Fee/taxes also fund error checking activity by providing incentive to record "everything looks good to me" notes in the chain.
 
 <h3>Number of coins</h3>
@@ -138,7 +145,22 @@ One possibility would be to stabilize interest rates at a target level by adjust
 Underwriting is the carrot and stick all in one.  Carrot: charge fees for underwriting.  Carrot: error checkers can score big catching
 underwriters doing things wrong.  Stick: underwriters can lose their underwriting shares if they are caught doing things wrong.
 
-<h3>Longevity of shares after assignment</h3>
+<h3>Times</h3>
+
+<h4>Block generation interval</h4>
+
+Affects settling time for transactions, block size, and network dynamics.
+
+<h4>Required underwriting durations</h4>
+
+Needs to be long enough for error checkers to thoroughly verify assignments, signatures, etc. but not so long that underwriters must have a massive number of shares in order to
+do their job effectively.
+
+<h4>Contract timespan limits</h4>
+
+Max time between proposal and recording deadline.  Probably shorter time requirements for underwriters' page proposal validity assurances (time of transaction validation).
+
+<h4>Longevity of shares after assignment</h4>
 
 One way of cleansing the system of abandoned shares, and a way to pay coin interest without transaction fees.
 

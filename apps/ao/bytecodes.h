@@ -71,9 +71,11 @@
 // First 4 bits, when 1010 means: this is a long variable length byte array, 3 byte data size, followed by 4 byte checksum
 #define AO_SIZE_LONGVARIABLE  0xA0
 #define AO_TRANSACTION        0xA0  // wrapper around the transaction data fields, which can come in any order
-#define AO_PARTICIPANT        0xA1  // wrapper around the participant data fields, which can come in any order
-#define AO_PARTICIPANT_LIST   0xA2  // starts with an AO_LISTSIZE, followed by that many participant objects
-#define AO_SIGNATURE_LIST     0xA3  // starts with an AO_LISTSIZE, followed by that many signature objects
+#define AO_SHARE_SOURCE       0xA1  // wrapper around the participant data fields, which can come in any order
+#define AO_SHARE_RECEIVER     0xA2  // wrapper around the participant data fields, which can come in any order
+#define AO_PARTICIPANT        0xA3  // starts with an AO_LISTSIZE, followed by that many signature objects
+#define AO_PARTICIPANT_LIST   0xA4  // starts with an AO_LISTSIZE, followed by that many participant objects
+#define AO_SIGNATURE_LIST     0xA5  // starts with an AO_LISTSIZE, followed by that many signature objects
 #define AO_NOTE               0xAA  // optional field in the participant item
 #define AO_VARLONG_INVALID    0xAF  // undefined long variable length data
 
