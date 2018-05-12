@@ -38,6 +38,7 @@ public:
     QByteArray  get() const;
           void  set( QByteArray k );
           void  clear() { ba.clear(); }
+      //  bool  isValid() { return (ba.size() == 32); } could do more, this is handled in the parent class
 };
 
 #endif // PUBLICKEYECDSA_H

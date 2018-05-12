@@ -42,7 +42,11 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
-                  if ( sz > 0 )
+                  if ( sz <= 0 )
+                    { // TODO: log error
+                      return;
+                    }
+                   else
                     { switch ( items.at(0) ) // read valid items from the byte array, in any order
                         { case AO_TIME_RECORDED:
                             propTime = items;
@@ -65,6 +69,17 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
     }
 }
 
+/**
+ * @brief BlockRef::operator =
+ * @param di - data item to assign
+ */
+void BlockRef::operator = ( const QByteArray &di )
+{ BlockRef temp( di );
+  propTime = temp.propTime;
+  blkHash  = temp.blkHash;
+  typeCode = temp.typeCode;
+  return;
+}
 
 /**
  * @brief BlockRef::toDataItem
@@ -73,7 +88,8 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
 QByteArray  BlockRef::toDataItem()
 { QList<QByteArray> dil;
   dil.append( propTime.toDataItem() );
-  dil.append(  blkHash.toDataItem() );
+  if ( blkHash.isValid() )
+    dil.append(  blkHash.toDataItem() );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )

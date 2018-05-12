@@ -40,6 +40,7 @@ public:
                 : DataVarLenLong( AO_BLOCK_REF, QByteArray(), r.parent() ), propTime( r.propTime ), blkHash( r.blkHash ) {}
               BlockRef( const Hash &h, const AOTime t, QObject *p = nullptr )
                 : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p ), propTime( t ), blkHash( h ) {}
+        void  operator = ( const QByteArray &di );
       AOTime  time() { return propTime; }
         Hash  hash() { return  blkHash; }
         void  setTime( AOTime t ) { propTime = t; }

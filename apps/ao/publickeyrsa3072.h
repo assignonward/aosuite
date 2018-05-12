@@ -36,6 +36,8 @@ public:
              PublicKeyRsa3072( const QByteArray &di, QObject *p = nullptr )
                : DataFixedLength( di, p ) {}
        void  clear() { ba.clear(); }
+    // bool  isValid() { return (ba.size() == 384); }  could do more, this is handled in the parent class
+
 };
 
 #endif // PUBLICKEYRSA3072_H

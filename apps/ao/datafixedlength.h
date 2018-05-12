@@ -45,7 +45,7 @@ public:
         bool operator != ( const DataFixedLength &d ) { return ba != d.ba; }
   QByteArray get() const { return ba; } // Just the meat, without typecode or checksum
         void set( QByteArray sba );
-virtual bool isValid() { return ( ( typeSize() - 2 ) == ba.size() ); }
+virtual bool isValid() const { return ( ( typeSize() - 2 ) == ba.size() ); }
 
 protected:
      QByteArray ba;       // generic data, not including type or checksum

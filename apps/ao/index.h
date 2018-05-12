@@ -32,6 +32,7 @@ public:
     explicit Index( qint16 val = 0, QObject *p = nullptr );
              Index( const Index &f, QObject *p = nullptr )
                : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
+        void operator = ( const QByteArray &di ) { Data16::operator = ( di ); }
 };
 
 #endif // INDEX_H

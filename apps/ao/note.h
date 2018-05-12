@@ -32,6 +32,7 @@ public:
     explicit  Note( QByteArray ba = QByteArray(), QObject *p = nullptr ) : DataVarLenLong( AO_NOTE, ba, p ) {}
               Note( const Note &n, QObject *p = nullptr ) : DataVarLenLong( AO_NOTE, n.ba, p ? p : n.parent() ) {}
               qint32  size() { return ba.size(); }
+         void operator = ( const QByteArray &di ) { DataVarLenLong::operator = ( di ); }
 };
 
 #endif // NOTE_H

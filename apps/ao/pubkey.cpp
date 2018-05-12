@@ -87,6 +87,19 @@ QByteArray  PubKey::get() const
   return QByteArray();
 }
 
+bool  PubKey::isValid() const
+{ switch ( typeCode )
+    { case AO_PUB_ECDSA_KEY2:
+      case AO_PUB_ECDSA_KEY3:
+        return publicKeyECDSA.isValid();
+
+      case AO_PUB_RSA3072_KEY:
+        return publicKeyRsa3072.isValid();
+    }
+  // TODO: log error
+  return false;
+}
+
 /**
  * @brief PubKey::toDataItem
  * @return the key encapsulated as a data item
@@ -102,6 +115,18 @@ QByteArray  PubKey::toDataItem() const
     }
   // TODO: log error
   return QByteArray();
+}
+
+/**
+ * @brief PubKey::operator =
+ * @param di - data item to assign
+ */
+void PubKey::operator = ( const QByteArray &di )
+{ PubKey temp( di );
+  publicKeyECDSA   = temp.publicKeyECDSA;
+  publicKeyRsa3072 = temp.publicKeyRsa3072;
+  typeCode         = temp.typeCode;
+  return;
 }
 
 /**

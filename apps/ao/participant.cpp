@@ -36,6 +36,60 @@
 
 #include "participant.h"
 
+Participant::Participant( QByteArray di, QObject *p )
+  : DataVarLenLong( AO_PARTICIPANT, QByteArray(), p )
+{ // See if there's anything interesting in the data item
+  if ( di.size() > 0 )
+    { char tc = di.at(0);
+      if (( reinterpret_cast<typeCode_t &>( tc ) != AO_PARTICIPANT ) &&
+          ( reinterpret_cast<typeCode_t &>( tc ) != AO_PARTICIPANT_CF ))
+        { // TODO: log error
+          return;
+        }
+       else
+        { DataVarLenLong temp( di );          // It's our type
+          if ( temp.checksumValidated() )
+            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+              while ( items.size() > 0 )
+                { int sz = typeSize( items );
+                  if ( sz <= 0 )
+                    { // TODO: log error
+                      return;
+                    }
+                   else
+                    { char tc = items.at(0);
+                      switch ( reinterpret_cast<typeCode_t &>( tc ) ) // read valid items from the byte array, in any order
+                        { case AO_ASSIGNMENT_AMT:
+                            amount = items;
+                            break;
+
+                          case AO_PUB_ECDSA_KEY2:
+                          case AO_PUB_ECDSA_KEY3:
+                          case AO_PUB_RSA3072_KEY:
+                            key = items;
+                            break;
+
+                          case AO_PUB_RSA3072_ID:
+                            keyHash = items;
+
+                          case AO_PAGE_REF:
+                            page = items;
+
+                          case AO_NOTE:
+                            note = items;
+
+                          default:
+                            // TODO: log anomaly - unrecognized data type
+                            break;
+                        }
+                      items = items.mid( sz ); // move on to the next
+                    }
+                }
+            }
+        }
+    }
+}
+
 /**
  * @brief Participant::toDataItem
  * @param tc - type of data item to return, either long form for contract negotiation,
@@ -46,8 +100,10 @@ QByteArray Participant::toDataItem( typeCode_t tc )
 { QList<QByteArray> dil;
   switch ( typeCode )
     { case AO_PARTICIPANT:
-        dil.append( amount.toDataItem() );
-        dil.append( key.toDataItem() );
+        if ( amount != 0 )
+          dil.append( amount.toDataItem() );
+        if ( key.isValid() )
+          dil.append( key.toDataItem() );
         if ( amount < 0 )
           dil.append( page.toDataItem() );
         if ( note.size() > 0 )
@@ -55,8 +111,12 @@ QByteArray Participant::toDataItem( typeCode_t tc )
         break;
 
       case AO_PARTICIPANT_CF:
-        dil.append( amount.toDataItem() );
-        dil.append( key.getId() );
+        if ( amount != 0 )
+          dil.append( amount.toDataItem() );
+        if ( key.isValid() )
+          dil.append( key.getId() );
+         else if ( keyHash.isValid() )
+          dil.append( keyHash.toDataItem() );
         if ( note.size() > 0 )
           dil.append( note.toDataItem() );
         break;

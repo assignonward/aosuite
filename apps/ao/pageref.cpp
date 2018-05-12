@@ -22,7 +22,7 @@
  */
 #include "pageref.h"
 
-PageRef::PageRef( QByteArray di, QObject *p )
+PageRef::PageRef( const QByteArray &di, QObject *p )
   : DataVarLenLong( AO_PAGE_REF, QByteArray(), p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -37,8 +37,13 @@ PageRef::PageRef( QByteArray di, QObject *p )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
-                  if ( sz > 0 )
-                    { switch ( items.at(0) ) // read valid items from the byte array, in any order
+                  if ( sz <= 0 )
+                    { // TODO: log error
+                      return;
+                    }
+                   else
+                    { char tc = items.at(0);
+                      switch ( reinterpret_cast<typeCode_t &>( tc ) ) // read valid items from the byte array, in any order
                         { case AO_BLOCK_REF:
                             block = items;
                             break;
@@ -63,11 +68,26 @@ PageRef::PageRef( QByteArray di, QObject *p )
     }
 }
 
+/**
+ * @brief PageRef::operator =
+ * @param di - data item to assign
+ */
+void PageRef::operator = ( const QByteArray &di )
+{ PageRef temp( di );
+  block          = temp.block;
+  sequenceNumber = temp.sequenceNumber;
+  hash           = temp.hash;
+  typeCode       = temp.typeCode;
+  return;
+}
+
 QByteArray  PageRef::toDataItem()
 { QList<QByteArray> dil;
-  dil.append(          block.toDataItem() );
-  dil.append( sequenceNumber.toDataItem() );
-  dil.append(           hash.toDataItem() );
+  dil.append(            block.toDataItem() );
+  if ( sequenceNumber >= 0 )
+    dil.append( sequenceNumber.toDataItem() );
+  if ( hash.isValid() )
+    dil.append(           hash.toDataItem() );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )

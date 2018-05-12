@@ -31,7 +31,7 @@ DataItem::DataItem( typeCode_t tc, QObject *p ) : QObject(p), typeCode( tc )
  *  current typeCode,
  *   or -1 if the typeCode doesn't have a defined fixed length.
  */
-qint32 DataItem::typeSize( typeCode_t tc )
+qint32 DataItem::typeSize( typeCode_t tc ) const
 { if ( tc == AO_UNDEFINED_DATAITEM )
     tc = typeCode;
   switch ( tc & AO_SIZE_MASK )
@@ -49,7 +49,7 @@ qint32 DataItem::typeSize( typeCode_t tc )
  * @brief DataItem::typeSize
  * @param di - byte array to interpret size of the first item in
  */
-qint32 DataItem::typeSize( const QByteArray &di )
+qint32 DataItem::typeSize( const QByteArray &di ) const
 { if ( di.size() < 1 )
     return -1;
   typeCode_t tc = di.at(0);

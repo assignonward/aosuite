@@ -46,7 +46,7 @@ public:
        explicit AOTime( __int128 tm = 0, QObject *p = nullptr);
                 AOTime( const AOTime &tm, QObject *p = nullptr )
                   : Data128( AO_TIME_RECORDED, tm.get(), p ? p : tm.parent() ) {}
-                void operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
+           void operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
 
 static __int128 now();
 static __int128 shiftUp64( __int128 m );
