@@ -20,89 +20,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-#-------------------------------------------------
-#
-# Project created by QtCreator 2018-04-20T14:45:09
-#
-#-------------------------------------------------
 
-QT       += core gui
+include(../DataItems/DataItems.pri)
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT        += core gui widgets
+TARGET     = ao
+TEMPLATE   = app
+DEFINES   += QT_DEPRECATED_WARNINGS
+DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-TARGET   = ao
-TEMPLATE = app
+SOURCES   += main.cpp         \
+             mainwindow.cpp   \
+             random.cpp       \
+             transaction.cpp  \
+             underwriting.cpp \
+             chainmaker.cpp   \
+             participant.cpp  \
+             pageref.cpp      \
+             blockref.cpp
 
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which has been marked as deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+HEADERS   += mainwindow.h     \
+             random.h         \
+             transaction.h    \
+             underwriting.h   \
+             chainmaker.h     \
+             participant.h    \
+             pageref.h        \
+             blockref.h
 
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
-
-SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    random.cpp \
-    transaction.cpp \
-    aotime.cpp \
-    shares.cpp \
-    underwriting.cpp \
-    chainmaker.cpp \
-    pubkey.cpp \
-    data128.cpp \
-    datafixedlength.cpp \
-    hash256.cpp \
-    salt256.cpp \
-    publickeyecdsa.cpp \
-    hash512.cpp \
-    hash.cpp \
-    participant.cpp \
-    pageref.cpp \
-    blockref.cpp \
-    datavarlenlong.cpp \
-    publickeyrsa3072.cpp \
-    note.cpp \
-    dataitem.cpp \
-    data16.cpp \
-    index.cpp \
-    listsize.cpp
-
-HEADERS += \
-        mainwindow.h \
-    random.h \
-    transaction.h \
-    aotime.h \
-    shares.h \
-    underwriting.h \
-    chainmaker.h \
-    pubkey.h \
-    bytecodes.h \
-    data128.h \
-    datafixedlength.h \
-    hash256.h \
-    salt256.h \
-    publickeyecdsa.h \
-    hash512.h \
-    hash.h \
-    participant.h \
-    pageref.h \
-    blockref.h \
-    datavarlenlong.h \
-    publickeyrsa3072.h \
-    note.h \
-    dataitem.h \
-    data16.h \
-    index.h \
-    listsize.h
-
-FORMS += \
-        mainwindow.ui
+FORMS     += mainwindow.ui
 
 RESOURCES += resources.qrc
 
