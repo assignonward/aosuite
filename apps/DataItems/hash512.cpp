@@ -29,7 +29,7 @@
  * @param p - object parent, if any
  */
 Hash512::Hash512( QByteArray text, QObject *p )
-        : DataFixedLength( AO_HASH512, QByteArray(), p ), verified( false )
+        : DataFixedLength( AO_HASH512, p ), verified( false )
 { if ( text.size() < 1 )
     return;
   QCryptographicHash ho( QCryptographicHash::Sha3_512 );

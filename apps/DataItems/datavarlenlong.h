@@ -29,23 +29,25 @@ class DataVarLenLong : public DataItem
 {
     Q_OBJECT
 public:
-    explicit DataVarLenLong( typeCode_t tc = AO_VARLONG_INVALID, QByteArray iba = QByteArray(), QObject *p = nullptr )
-               : DataItem( tc, p ), ba( iba ), csVal( false ) {}
-             DataVarLenLong( const DataVarLenLong &d, QObject *p = nullptr )
-               : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ), csVal( d.csVal ) {}
-             DataVarLenLong( const QByteArray &di, QObject *p = nullptr );
+    explicit  DataVarLenLong( typeCode_t tc = AO_VARLONG_INVALID, QByteArray iba = QByteArray(), QObject *p = nullptr )
+                : DataItem( tc, p ), ba( iba ), csVal( false ) {}
+              DataVarLenLong( typeCode_t tc = AO_VARLONG_INVALID, QObject *p = nullptr )
+                : DataItem( tc, p ), csVal( false ) {}
+              DataVarLenLong( const DataVarLenLong &d, QObject *p = nullptr )
+                : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ), csVal( d.csVal ) {}
+              DataVarLenLong( const QByteArray &di, QObject *p = nullptr );
   virtual QByteArray toDataItem();
-        void operator =  ( const QByteArray &di );
-        void operator =  ( const DataVarLenLong &d ) { ba = d.ba; typeCode = d.typeCode; csVal = d.csVal; }
-        bool operator == ( const DataVarLenLong &d ) { return ba == d.ba; }
-        bool operator != ( const DataVarLenLong &d ) { return ba != d.ba; }
-  QByteArray get() const { return ba; } // Just the meat, without typecode or checksum
-        void set( QByteArray sba ) { ba = sba; }
-        bool checksumValidated() { return csVal; }
+        void  operator =  ( const QByteArray &di );
+        void  operator =  ( const DataVarLenLong &d ) { ba = d.ba; typeCode = d.typeCode; csVal = d.csVal; }
+        bool  operator == ( const DataVarLenLong &d ) { return ba == d.ba; }
+        bool  operator != ( const DataVarLenLong &d ) { return ba != d.ba; }
+  QByteArray  get() const { return ba; } // Just the meat, without typecode or checksum
+        void  set( QByteArray sba ) { ba = sba; }
+        bool  checksumValidated() { return csVal; }
 
 protected:
-     QByteArray ba;    // generic data, not including type or checksum
-           bool csVal; // has the checksum been validated (during a data item initialization, or assignment)?
+  QByteArray  ba;    // generic data, not including type or checksum
+        bool  csVal; // has the checksum been validated (during a data item initialization, or assignment)?
 };
 
 #endif // DATAVARLENLONG_H

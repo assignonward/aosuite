@@ -28,7 +28,7 @@
  * @param p - object parent, if any
  */
 ParticipantList::ParticipantList( const QByteArray &di, QObject *p )
-                   : DataVarLenLong( AO_PARTICIPANT_LIST, QByteArray(), p )
+                   : DataVarLenLong( AO_PARTICIPANT_LIST, p )
 { size = 0;
   // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -93,10 +93,33 @@ ListSize ParticipantList::append( const Participant &part )
 
 /**
  * @brief ParticipantList::toDataItem - serialize the list
+ * @param tc - type of data item to return, either long form for contract negotiation,
+ *   or compact form for recording in the blockchain
  * @return the serialized list, including a list size data item
  */
-QByteArray ParticipantList::toDataItem()
-{ // TODO: everything
-  return QByteArray();
+QByteArray ParticipantList::toDataItem( typeCode_t tc )
+{ QList<QByteArray> dil;
+  size = list.size();
+  dil.append( size.toDataItem() );
+  switch ( typeCode )
+    { case AO_PARTICIPANT_LIST:
+        foreach( Participant p, list )
+          dil.append( p.toDataItem( AO_PARTICIPANT ) );
+        break;
+
+      case AO_PARTICIPANT_LIST_CF:
+        foreach( Participant p, list )
+          dil.append( p.toDataItem( AO_PARTICIPANT_CF ) );
+        break;
+
+      default:
+        // TODO: log error
+        return QByteArray();
+    }
+  typeCode = tc;
+  ba.clear();
+  foreach( QByteArray a, dil )
+    ba.append( a );
+  return DataVarLenLong::toDataItem();
 }
 

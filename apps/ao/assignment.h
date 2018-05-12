@@ -20,24 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef TRANSACTION_H
-#define TRANSACTION_H
+#ifndef ASSIGNMENT_H
+#define ASSIGNMENT_H
 
 #include <QObject>
 #include "aotime.h"
 #include "blockref.h"
 #include "datavarlenlong.h"
-#include "shares.h"
 #include "pageref.h"
 #include "participantlist.h"
 #include "pubkey.h"
 #include "random.h"
+#include "shares.h"
 
-class Transaction : public QObject
+/**
+ * @brief The Assignment class - for negotiation and recording of a shares assignment contract
+ */
+class Assignment : public QObject
 {
     Q_OBJECT
 public:
-    explicit  Transaction(QObject *parent = nullptr);
+    explicit  Assignment(QObject *parent = nullptr);
       AOTime  proposalTime();
         void  randomizeSalt();
         bool  valid();
@@ -48,7 +51,7 @@ public:
 private:
              Random  rng;
          QByteArray  salt;
-            PageRef  proposedChain;          // Reference to the signature page of a recent block in the chain this transaction is proposed to be recorded on
+            PageRef  proposedChain;          // Reference to the signature page of a recent block in the chain this assignment is proposed to be recorded on
              AOTime  preRecordingDeadline;   // Multi-part contracts may file pre-records to establish that all parts have been recorded before finalizing actual recording (this field is not present for simple contracts)
              AOTime  finalRecordingDeadline; // When the final record is expected to be recorded in the chain
              Shares  recordingBid;           // Positive amount to bid for all underwriting, chain-making and recording taxes
@@ -71,7 +74,7 @@ private:
 /**
  * @brief The Authorization class - when
  *   complete and valid, contains a description of
- *   the basic transaction between all the participants
+ *   the basic assignment contract between all the participants
  *   without the underwriting and recording - only the RBID is specified
  *   which describes the maximum commission payable to
  *   the sum of all underwriters, chain-maker, and recording tax.
@@ -81,11 +84,11 @@ class Authorization : public QObject
     Q_OBJECT
 public:
     explicit Authorization( QObject *parent = nullptr) : QObject( parent ) {}
-             Authorization( Transaction t, QObject *parent = nullptr);
+             Authorization( Assignment t, QObject *parent = nullptr);
  QByteArray  toByteArray() { return QByteArray(); }
 
 private:
-      Transaction  tran;
+      Assignment  tran;
   QList<Signature> sig;  // Same length and order as the participants list in tran
 };
 
@@ -147,4 +150,4 @@ private:
  *
  */
 
-#endif // TRANSACTION_H
+#endif // ASSIGNMENT_H

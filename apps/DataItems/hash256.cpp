@@ -29,7 +29,7 @@
  * @param p - object parent, if any
  */
 Hash256::Hash256( QByteArray text, QObject *p )
-        : DataFixedLength( AO_HASH256, QByteArray(), p ), verified( false )
+        : DataFixedLength( AO_HASH256, p ), verified( false )
 { if ( text.size() < 1 )
     return;
   QCryptographicHash ho( QCryptographicHash::Sha256 );

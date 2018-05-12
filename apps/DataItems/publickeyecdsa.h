@@ -29,16 +29,16 @@ class PublicKeyECDSA : public DataFixedLength
 {
     Q_OBJECT
 public:
-      explicit  PublicKeyECDSA( QObject *p = nullptr )
-                  : DataFixedLength( AO_PUB_ECDSA_KEY2, QByteArray(), p ) {}
-                PublicKeyECDSA( const PublicKeyECDSA &k, QObject *p = nullptr )
-                  : DataFixedLength( AO_PUB_ECDSA_KEY2, k.ba, p ? p : k.parent() ) {}
-                PublicKeyECDSA( const QByteArray &di, QObject *p = nullptr )
-                  : DataFixedLength( di, p ) {}
-    QByteArray  get() const;
-          void  set( QByteArray k );
-          void  clear() { ba.clear(); }
-      //  bool  isValid() { return (ba.size() == 32); } could do more, this is handled in the parent class
+    explicit  PublicKeyECDSA( QObject *p = nullptr )
+                : DataFixedLength( AO_PUB_ECDSA_KEY2, p ) {}
+              PublicKeyECDSA( const PublicKeyECDSA &k, QObject *p = nullptr )
+                : DataFixedLength( AO_PUB_ECDSA_KEY2, k.ba, p ? p : k.parent() ) {}
+              PublicKeyECDSA( const QByteArray &di, QObject *p = nullptr )
+                : DataFixedLength( di, p ) {}
+  QByteArray  get() const;
+        void  set( QByteArray k );
+        void  clear() { ba.clear(); }
+    //  bool  isValid() { return (ba.size() == 32); } could do more, this is handled in the parent class
 };
 
 #endif // PUBLICKEYECDSA_H

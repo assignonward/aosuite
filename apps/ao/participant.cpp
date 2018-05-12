@@ -37,7 +37,7 @@
 #include "participant.h"
 
 Participant::Participant( QByteArray di, QObject *p )
-  : DataVarLenLong( AO_PARTICIPANT, QByteArray(), p )
+               : DataVarLenLong( AO_PARTICIPANT, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if (( typeCodeOf( di ) != AO_PARTICIPANT ) &&

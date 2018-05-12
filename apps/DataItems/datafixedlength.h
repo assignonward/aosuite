@@ -33,22 +33,24 @@ class DataFixedLength : public DataItem
 {
     Q_OBJECT
 public:
-    explicit DataFixedLength( typeCode_t tc = AO_DATAFIXED_UNDEFINED, QByteArray iba = QByteArray(), QObject *p = nullptr )
-               : DataItem( tc, p ), ba( iba ) {}
-             DataFixedLength( const DataFixedLength &d, QObject *p = nullptr )
-               : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ) {}
-             DataFixedLength( const QByteArray &di, QObject *p = nullptr );
-  QByteArray toDataItem() const;
-        void operator =  ( const QByteArray &di );
-        void operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; }
-        bool operator == ( const DataFixedLength &d ) { return ba == d.ba; }
-        bool operator != ( const DataFixedLength &d ) { return ba != d.ba; }
-  QByteArray get() const { return ba; } // Just the meat, without typecode or checksum
-        void set( QByteArray sba );
-virtual bool isValid() const { return ( ( typeSize() - 2 ) == ba.size() ); }
+    explicit  DataFixedLength( typeCode_t tc = AO_DATAFIXED_UNDEFINED, QByteArray iba = QByteArray(), QObject *p = nullptr )
+                : DataItem( tc, p ), ba( iba ) {}
+              DataFixedLength( typeCode_t tc = AO_DATAFIXED_UNDEFINED, QObject *p = nullptr )
+                : DataItem( tc, p ) {}
+              DataFixedLength( const DataFixedLength &d, QObject *p = nullptr )
+                : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ) {}
+              DataFixedLength( const QByteArray &di, QObject *p = nullptr );
+  QByteArray  toDataItem() const;
+        void  operator =  ( const QByteArray &di );
+        void  operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; }
+        bool  operator == ( const DataFixedLength &d ) { return ba == d.ba; }
+        bool  operator != ( const DataFixedLength &d ) { return ba != d.ba; }
+  QByteArray  get() const { return ba; } // Just the meat, without typecode or checksum
+        void  set( QByteArray sba );
+virtual bool  isValid() const { return ( ( typeSize() - 2 ) == ba.size() ); }
 
 protected:
-     QByteArray ba;       // generic data, not including type or checksum
+  QByteArray  ba;       // generic data, not including type or checksum
 };
 
 

@@ -20,28 +20,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "transaction.h"
+#include "assignment.h"
 #include <QCryptographicHash>
 #include <QSettings>
 
 /**
- * @brief Transaction::Transaction - describes the exchange of value
+ * @brief Assignment::Assignment - describes the exchange of value
  * @param parent
  */
-Transaction::Transaction(QObject *parent) : QObject(parent)
+Assignment::Assignment(QObject *parent) : QObject(parent)
 { // proposalTime.set( AOTime::now() );  Need to populate proposedChain, instead.
   finalRecordingDeadline.set( proposalTime().get() + AOTime::shiftUp64( AO_DAY ) ); // default, TBD by wallet
   randomizeSalt();
 }
 
-AOTime Transaction::proposalTime()
+AOTime Assignment::proposalTime()
 { return proposedChain.publicationTime(); }
 
 /**
- * @brief Transaction::randomizeSalt - using the last salt and
+ * @brief Assignment::randomizeSalt - using the last salt and
  *   the current time, come up with a new salt.
  */
-void Transaction::randomizeSalt()
+void Assignment::randomizeSalt()
 { QSettings setting;
   QByteArray ls = setting.value( "lastSalt" ).toByteArray();
   rng.seed( *((__int128 *)ls.data()) ^ AOTime::now() ); // LAME, but good enough for now.
@@ -53,25 +53,25 @@ void Transaction::randomizeSalt()
 }
 
 /**
- * @brief Transaction::valid
- * @return true if the transaction internal checks are all valid
+ * @brief Assignment::valid
+ * @return true if the Assignment internal checks are all valid
  */
-bool Transaction::valid()
+bool Assignment::valid()
 { return validSum() & validTimeline(); }
 
 /**
- * @brief Transaction::validTimeline
+ * @brief Assignment::validTimeline
  * @return true if the timeline is in-order
  *   Will want to add some additional sanity checks
  */
-bool Transaction::validTimeline()
+bool Assignment::validTimeline()
 { return ( finalRecordingDeadline.future() && proposalTime().past() ); }
 
 /**
- * @brief Transaction::validSum
+ * @brief Assignment::validSum
  * @return true if the give, take and bid sum correctly
  */
-bool Transaction::validSum()
+bool Assignment::validSum()
 { Shares total(0);
   foreach( Participant p, participants.list )
     total += p.getAmount();

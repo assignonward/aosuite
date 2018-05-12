@@ -43,17 +43,17 @@ class AOTime : public Data128
 {
     Q_OBJECT
 public:
-       explicit AOTime( __int128 tm = 0, QObject *p = nullptr);
-                AOTime( const AOTime &tm, QObject *p = nullptr )
-                  : Data128( AO_TIME_RECORDED, tm.get(), p ? p : tm.parent() ) {}
-           void operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
+       explicit  AOTime( __int128 tm = 0, QObject *p = nullptr);
+                 AOTime( const AOTime &tm, QObject *p = nullptr )
+                   : Data128( AO_TIME_RECORDED, tm.get(), p ? p : tm.parent() ) {}
+           void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
 
-static __int128 now();
-static __int128 shiftUp64( __int128 m );
-       __int128 get() const { return v; }
-           void set( __int128 m ) { v = m; }
-           bool future();
-           bool past();
+static __int128  now();
+static __int128  shiftUp64( __int128 m );
+       __int128  get() const { return v; }
+           void  set( __int128 m ) { v = m; }
+           bool  future();
+           bool  past();
 };
 
 #endif // AOTIME_H

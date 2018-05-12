@@ -29,26 +29,26 @@ TEMPLATE   = app
 DEFINES   += QT_DEPRECATED_WARNINGS
 DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES   += main.cpp         \
-             mainwindow.cpp   \
-             random.cpp       \
-             transaction.cpp  \
-             underwriting.cpp \
-             chainmaker.cpp   \
-             participant.cpp  \
-             pageref.cpp      \
-             blockref.cpp \
-    participantlist.cpp
+SOURCES   += main.cpp            \
+             mainwindow.cpp      \
+             random.cpp          \
+             blockref.cpp        \
+             pageref.cpp         \
+             participant.cpp     \
+             participantlist.cpp \
+             assignment.cpp      \
+             underwriting.cpp    \
+             chainmaker.cpp
 
-HEADERS   += mainwindow.h     \
-             random.h         \
-             transaction.h    \
-             underwriting.h   \
-             chainmaker.h     \
-             participant.h    \
-             pageref.h        \
-             blockref.h \
-    participantlist.h
+HEADERS   += mainwindow.h      \
+             random.h          \
+             blockref.h        \
+             pageref.h         \
+             participant.h     \
+             participantlist.h \
+             assignment.h      \
+             underwriting.h    \
+             chainmaker.h
 
 FORMS     += mainwindow.ui
 

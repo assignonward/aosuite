@@ -32,10 +32,10 @@
 class Shares : public Data128
 {
 public:
-    explicit Shares( __int128 val = 0, QObject *p = nullptr );
-             Shares( const Shares &f, QObject *p = nullptr )
-               : Data128( AO_ASSIGNMENT_AMT, f.v, p ? p : f.parent() ) {}
-        void operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
+    explicit  Shares( __int128 val = 0, QObject *p = nullptr );
+              Shares( const Shares &f, QObject *p = nullptr )
+                : Data128( AO_ASSIGNMENT_AMT, f.v, p ? p : f.parent() ) {}
+        void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
 };
 
 #endif // SHARES_H
