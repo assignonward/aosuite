@@ -35,6 +35,7 @@ public:
      explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
        qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
        qint32  typeSize( const QByteArray &di ) const;
+   typeCode_t  typeCodeOf( const QByteArray &di ) const;
 
 protected:
    typeCode_t  typeCode; // what kind of data item is this?

@@ -38,11 +38,11 @@ class Participant : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Participant( QObject *p = nullptr ) : DataVarLenLong( AO_PARTICIPANT, QByteArray(), p ) {}
+    explicit  Participant( QByteArray di = QByteArray(), QObject *p = nullptr );
               Participant( const Participant &r )
                 : DataVarLenLong( AO_PARTICIPANT, QByteArray(), r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ) {}
-              Participant( QByteArray di, QObject *p );
+        void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( typeCode_t tc = AO_PARTICIPANT );
   QByteArray  getId()      const { return key.getId(); }
       PubKey  getKey()     const { return key;         }

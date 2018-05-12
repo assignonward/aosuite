@@ -37,7 +37,8 @@ SOURCES   += main.cpp         \
              chainmaker.cpp   \
              participant.cpp  \
              pageref.cpp      \
-             blockref.cpp
+             blockref.cpp \
+    participantlist.cpp
 
 HEADERS   += mainwindow.h     \
              random.h         \
@@ -46,7 +47,8 @@ HEADERS   += mainwindow.h     \
              chainmaker.h     \
              participant.h    \
              pageref.h        \
-             blockref.h
+             blockref.h \
+    participantlist.h
 
 FORMS     += mainwindow.ui
 

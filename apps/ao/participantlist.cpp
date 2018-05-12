@@ -20,19 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "blockref.h"
+#include "participantlist.h"
 
 /**
- * @brief BlockRef::BlockRef - constructor
- * @param di - optional data item
- * @param p - optional parent object
+ * @brief ParticipantList::ParticipantList
+ * @param di - Data Item filled with a participant list
+ * @param p - object parent, if any
  */
-BlockRef::BlockRef( QByteArray di, QObject *p )
-  : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p )
-{ // See if there's anything interesting in the data item
+ParticipantList::ParticipantList( const QByteArray &di, QObject *p )
+                   : DataVarLenLong( AO_PARTICIPANT_LIST, QByteArray(), p )
+{ size = 0;
+  // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_BLOCK_REF )
-        { // TODO: log an error
+    { if (( typeCodeOf( di ) != AO_PARTICIPANT_LIST ) &&
+          ( typeCodeOf( di ) != AO_PARTICIPANT_LIST_CF ))
+        { // TODO: log error
           return;
         }
        else
@@ -46,14 +48,16 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
                       return;
                     }
                    else
-                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_TIME_RECORDED:
-                            propTime = items;
+                    { Participant part;
+                      switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                        { case AO_PARTICIPANT:
+                          case AO_PARTICIPANT_CF:
+                            part = items;
+                            list.append( part );
                             break;
 
-                          case AO_HASH256:
-                          case AO_HASH512:
-                            blkHash = items;
+                          case AO_LISTSIZE:
+                            size = items;
                             break;
 
                           default:
@@ -69,29 +73,30 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
 }
 
 /**
- * @brief BlockRef::operator =
- * @param di - data item to assign
+ * @brief ParticipantList::clear - empty the list and zero the item count
  */
-void BlockRef::operator = ( const QByteArray &di )
-{ BlockRef temp( di );
-  propTime = temp.propTime;
-  blkHash  = temp.blkHash;
-  typeCode = temp.typeCode;
-  return;
+void ParticipantList::clear()
+{ list.clear();
+  size = 0;
 }
 
 /**
- * @brief BlockRef::toDataItem
- * @return data item with the BlockRef contents
+ * @brief ParticipantList::append
+ * @param part - participant to add to list
+ * @return size of the list after appending
  */
-QByteArray  BlockRef::toDataItem()
-{ QList<QByteArray> dil;
-  dil.append( propTime.toDataItem() );
-  if ( blkHash.isValid() )
-    dil.append(  blkHash.toDataItem() );
-  // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
-  return DataVarLenLong::toDataItem();
+ListSize ParticipantList::append( const Participant &part )
+{ list.append( part );
+  size = list.size();
+  return size;
 }
+
+/**
+ * @brief ParticipantList::toDataItem - serialize the list
+ * @return the serialized list, including a list size data item
+ */
+QByteArray ParticipantList::toDataItem()
+{ // TODO: everything
+  return QByteArray();
+}
+

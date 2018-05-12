@@ -20,20 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef INDEX_H
-#define INDEX_H
+#ifndef PARTICIPANTLIST_H
+#define PARTICIPANTLIST_H
 
-#include "data16.h"
+#include "participant.h"
+#include "listsize.h"
 
-class Index : public Data16
+class ParticipantList : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit Index( qint16 val = 0, QObject *p = nullptr );
-             Index( const Index &f, QObject *p = nullptr )
-               : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
-        void operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
-        void operator = ( const qint16    &val ) { Data16::operator = ( val ); }
+    explicit  ParticipantList( const QByteArray &di = QByteArray(), QObject *p = nullptr );
+  QByteArray  toDataItem();
+        void  clear();
+    ListSize  append( const Participant &part );
+
+  QList<Participant> list; // public so assignment contracts and signature lists may access it directly
+private:
+           ListSize  size; // Used primarily as a check during serialization and deserialization
 };
 
-#endif // INDEX_H
+#endif // PARTICIPANTLIST_H

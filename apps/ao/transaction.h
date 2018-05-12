@@ -29,7 +29,7 @@
 #include "datavarlenlong.h"
 #include "shares.h"
 #include "pageref.h"
-#include "participant.h"
+#include "participantlist.h"
 #include "pubkey.h"
 #include "random.h"
 
@@ -52,7 +52,7 @@ private:
              AOTime  preRecordingDeadline;   // Multi-part contracts may file pre-records to establish that all parts have been recorded before finalizing actual recording (this field is not present for simple contracts)
              AOTime  finalRecordingDeadline; // When the final record is expected to be recorded in the chain
              Shares  recordingBid;           // Positive amount to bid for all underwriting, chain-making and recording taxes
-  QList<Participant> participants;
+    ParticipantList  participants;
 };
 
 class Signature : public QObject

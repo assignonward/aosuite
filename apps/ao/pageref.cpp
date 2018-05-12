@@ -26,8 +26,7 @@ PageRef::PageRef( const QByteArray &di, QObject *p )
   : DataVarLenLong( AO_PAGE_REF, QByteArray(), p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { char tc = di.at(0);
-      if ( reinterpret_cast<typeCode_t &>( tc ) != AO_PAGE_REF )
+    { if ( typeCodeOf( di ) != AO_PAGE_REF )
         { // TODO: log error
           return;
         }
@@ -42,8 +41,7 @@ PageRef::PageRef( const QByteArray &di, QObject *p )
                       return;
                     }
                    else
-                    { char tc = items.at(0);
-                      switch ( reinterpret_cast<typeCode_t &>( tc ) ) // read valid items from the byte array, in any order
+                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
                         { case AO_BLOCK_REF:
                             block = items;
                             break;

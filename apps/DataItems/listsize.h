@@ -32,6 +32,9 @@ public:
     explicit ListSize( qint16 val = 0, QObject *p = nullptr );
              ListSize( const ListSize &f, QObject *p = nullptr )
                : Data16( AO_LISTSIZE, f.v, p ? p : f.parent() ) {}
+        void operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
+        void operator = ( const qint16    &val ) { Data16::operator = ( val ); }
+
 };
 
 #endif // LISTSIZE_H

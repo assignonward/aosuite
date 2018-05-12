@@ -73,7 +73,7 @@ bool Transaction::validTimeline()
  */
 bool Transaction::validSum()
 { Shares total(0);
-  foreach( Participant p, participants )
+  foreach( Participant p, participants.list )
     total += p.getAmount();
   return ( recordingBid == total );
 }

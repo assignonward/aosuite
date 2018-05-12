@@ -126,7 +126,6 @@ void PubKey::operator = ( const QByteArray &di )
   publicKeyECDSA   = temp.publicKeyECDSA;
   publicKeyRsa3072 = temp.publicKeyRsa3072;
   typeCode         = temp.typeCode;
-  return;
 }
 
 /**

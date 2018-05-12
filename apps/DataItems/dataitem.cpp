@@ -66,3 +66,15 @@ qint32 DataItem::typeSize( const QByteArray &di ) const
     }
   return typeSize( tc );
 }
+
+/**
+ * @brief DataItem::typeCodeOf
+ * @param di - data item to interpret
+ * @return typecode of the passed data item
+ */
+typeCode_t DataItem::typeCodeOf( const QByteArray &di ) const
+{ if ( di.size() < 1 )
+    return AO_UNDEFINED_DATAITEM;
+  char tc = di.at(0);
+  return reinterpret_cast<typeCode_t &>( tc );
+}

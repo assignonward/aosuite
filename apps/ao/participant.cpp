@@ -40,9 +40,8 @@ Participant::Participant( QByteArray di, QObject *p )
   : DataVarLenLong( AO_PARTICIPANT, QByteArray(), p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { char tc = di.at(0);
-      if (( reinterpret_cast<typeCode_t &>( tc ) != AO_PARTICIPANT ) &&
-          ( reinterpret_cast<typeCode_t &>( tc ) != AO_PARTICIPANT_CF ))
+    { if (( typeCodeOf( di ) != AO_PARTICIPANT ) &&
+          ( typeCodeOf( di ) != AO_PARTICIPANT_CF ))
         { // TODO: log error
           return;
         }
@@ -57,8 +56,7 @@ Participant::Participant( QByteArray di, QObject *p )
                       return;
                     }
                    else
-                    { char tc = items.at(0);
-                      switch ( reinterpret_cast<typeCode_t &>( tc ) ) // read valid items from the byte array, in any order
+                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
                         { case AO_ASSIGNMENT_AMT:
                             amount = items;
                             break;
@@ -89,6 +87,21 @@ Participant::Participant( QByteArray di, QObject *p )
         }
     }
 }
+
+/**
+ * @brief Participant::operator =
+ * @param di - data item to assign from
+ */
+void Participant::operator = ( const QByteArray &di )
+{ Participant temp( di );
+  amount   = temp.amount;
+  key      = temp.key;
+  keyHash  = temp.keyHash;
+  page     = temp.page;
+  note     = temp.note;
+  typeCode = temp.typeCode;
+}
+
 
 /**
  * @brief Participant::toDataItem

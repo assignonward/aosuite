@@ -38,6 +38,7 @@ public:
               PubKey( const QByteArray &di, QObject *p = nullptr );
               PubKey( const PubKey &pk, QObject *p = nullptr ) : QObject( p ? p : pk.parent() ),
                   typeCode( pk.typeCode ), publicKeyECDSA( pk.publicKeyECDSA ), publicKeyRsa3072( pk.publicKeyRsa3072 ) {}
+        void  operator = ( const PubKey &k ) { typeCode = k.typeCode; publicKeyECDSA = k.publicKeyECDSA; publicKeyRsa3072 = k.publicKeyRsa3072; }
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem() const;
   QByteArray  get() const;
