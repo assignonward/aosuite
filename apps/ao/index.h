@@ -20,33 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PAGEREF_H
-#define PAGEREF_H
+#ifndef INDEX_H
+#define INDEX_H
 
-#include "aotime.h"
-#include "blockref.h"
-#include "datavarlenlong.h"
-#include "hash.h"
-#include "index.h"
+#include "data16.h"
 
-/**
- * @brief The PageRef class - when the page is the chain-maker's signature page on
- *   a block in the chain, then this is also a reference to a block and chain.
- */
-class PageRef : public DataVarLenLong
+class Index : public Data16
 {
     Q_OBJECT
 public:
-    explicit  PageRef( QObject *p = nullptr) : DataVarLenLong( AO_PAGEREF, QByteArray(), p ) {}
-              PageRef( const PageRef &r )
-                : DataVarLenLong( r.typeCode, r.ba, r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
-      AOTime  publicationTime() { return block.time(); }
-  QByteArray  toDataItem();
-
-private:
-    BlockRef block;           // block this page is recorded in
-       Index sequenceNumber;  // page's sequence number in the block
-        Hash hash;            // Hash of page - redundant check
+    explicit Index( qint16 val = 0, QObject *p = nullptr );
+             Index( const Index &f, QObject *p = nullptr )
+               : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
 };
 
-#endif // PAGEREF_H
+#endif // INDEX_H

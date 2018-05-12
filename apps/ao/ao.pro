@@ -68,7 +68,10 @@ SOURCES += \
     datavarlenlong.cpp \
     publickeyrsa3072.cpp \
     note.cpp \
-    dataitem.cpp
+    dataitem.cpp \
+    data16.cpp \
+    index.cpp \
+    listsize.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -93,7 +96,10 @@ HEADERS += \
     datavarlenlong.h \
     publickeyrsa3072.h \
     note.h \
-    dataitem.h
+    dataitem.h \
+    data16.h \
+    index.h \
+    listsize.h
 
 FORMS += \
         mainwindow.ui

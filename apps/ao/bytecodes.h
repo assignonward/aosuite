@@ -63,6 +63,7 @@
 // First 4 bits, when 0100 means: this is a 4 byte chunk, one for the code, 2 for the data, one for the checkbyte (generally a 16 bit int)
 #define AO_SIZE_4BYTES         0x40
 #define AO_LISTSIZE            0x40
+#define AO_INDEX               0x41
 
 // First 4 bits, when 0111 means: this is a 388 byte chunk, one for the code, 384 for the data, three for the checkbytes (generally an RSA3072 key)
 #define AO_SIZE_388BYTES       0x70
@@ -80,6 +81,7 @@
 #define AO_SIGNATURE_LIST      0xA5  // starts with an AO_LISTSIZE, followed by that many signature objects
 #define AO_NOTE                0xAA  // optional field in the participant item
 #define AO_BLOCK_REF           0xAB  // reference to a block
+#define AO_PAGE_REF            0xAC  // reference to a page in a block
 #define AO_VARLONG_INVALID     0xBF  // undefined long variable length data
 
 // First 4 bits, when 1110 means: this is a short variable length byte array, up to 255 bytes

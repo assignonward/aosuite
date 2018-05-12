@@ -53,9 +53,9 @@ public:
 
 private:
       Shares  amount;  // Negative for givers, positive for receivers, 0 is invalid
-      PubKey  key;
+      PubKey  key;     // Full public key, suitable for checking signatures
+        Hash  keyHash; // Hash of the public key, not always suitable to check signatures, but good enough for unique Id
      PageRef  page;    // Reference for givers
-    BlockRef  block;   // Reference for givers
         Note  note;    // Arbitrary data to record with the transaction
 };
 

@@ -20,33 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PAGEREF_H
-#define PAGEREF_H
+#include "listsize.h"
 
-#include "aotime.h"
-#include "blockref.h"
-#include "datavarlenlong.h"
-#include "hash.h"
-#include "index.h"
-
-/**
- * @brief The PageRef class - when the page is the chain-maker's signature page on
- *   a block in the chain, then this is also a reference to a block and chain.
- */
-class PageRef : public DataVarLenLong
-{
-    Q_OBJECT
-public:
-    explicit  PageRef( QObject *p = nullptr) : DataVarLenLong( AO_PAGEREF, QByteArray(), p ) {}
-              PageRef( const PageRef &r )
-                : DataVarLenLong( r.typeCode, r.ba, r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
-      AOTime  publicationTime() { return block.time(); }
-  QByteArray  toDataItem();
-
-private:
-    BlockRef block;           // block this page is recorded in
-       Index sequenceNumber;  // page's sequence number in the block
-        Hash hash;            // Hash of page - redundant check
-};
-
-#endif // PAGEREF_H
+ListSize::ListSize( qint16 val, QObject *p )
+  : Data16( AO_LISTSIZE, val, p ) {}

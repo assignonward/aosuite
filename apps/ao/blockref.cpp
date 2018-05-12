@@ -32,7 +32,11 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { char tc = di.at(0);
-      if ( reinterpret_cast<typeCode_t &>( tc ) == AO_BLOCK_REF )
+      if ( reinterpret_cast<typeCode_t &>( tc ) != AO_BLOCK_REF )
+        { // TODO: log an error
+          return;
+        }
+       else
         { DataVarLenLong temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
@@ -53,17 +57,12 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
                             // TODO: log anomaly - unrecognized data type
                             break;
                         }
-                      items = items.mid( sz );
+                      items = items.mid( sz ); // move on to the next
                     }
                 }
             }
         }
-       else
-        { // TODO: log an error
-          return;
-        }
     }
-
 }
 
 

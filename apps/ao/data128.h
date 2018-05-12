@@ -33,7 +33,7 @@ class Data128 : public DataItem
 {
     Q_OBJECT
 public:
-    explicit Data128( typeCode_t tc = AO_SHARES_UNDEFINED, __int128 d = 0, QObject *p = nullptr)
+    explicit Data128( typeCode_t tc = AO_SHARES_UNDEFINED, __int128 d = 0, QObject *p = nullptr )
                : DataItem( tc, p ), v( d ) {}
              Data128( const Data128 &d, QObject *p = nullptr )
                : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}

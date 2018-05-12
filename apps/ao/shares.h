@@ -27,18 +27,14 @@
 #ifndef SHARES_H
 #define SHARES_H
 
-#include <QObject>
 #include "data128.h"
 
 class Shares : public Data128
 {
 public:
-    explicit Shares( __int128 val = 0, QObject *p = nullptr);
-             Shares( const Shares &f, QObject *p = nullptr ) : Data128( AO_ASSIGNMENT_AMT, f.v, p ? p : f.parent() ) {}
-
-signals:
-
-public slots:
+    explicit Shares( __int128 val = 0, QObject *p = nullptr );
+             Shares( const Shares &f, QObject *p = nullptr )
+               : Data128( AO_ASSIGNMENT_AMT, f.v, p ? p : f.parent() ) {}
 };
 
 #endif // SHARES_H

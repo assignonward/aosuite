@@ -22,16 +22,56 @@
  */
 #include "pageref.h"
 
+PageRef::PageRef( QByteArray di, QObject *p )
+  : DataVarLenLong( AO_PAGE_REF, QByteArray(), p )
+{ // See if there's anything interesting in the data item
+  if ( di.size() > 0 )
+    { char tc = di.at(0);
+      if ( reinterpret_cast<typeCode_t &>( tc ) != AO_PAGE_REF )
+        { // TODO: log error
+          return;
+        }
+       else
+        { DataVarLenLong temp( di );          // It's our type
+          if ( temp.checksumValidated() )
+            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+              while ( items.size() > 0 )
+                { int sz = typeSize( items );
+                  if ( sz > 0 )
+                    { switch ( items.at(0) ) // read valid items from the byte array, in any order
+                        { case AO_BLOCK_REF:
+                            block = items;
+                            break;
+
+                          case AO_INDEX:
+                            sequenceNumber = items;
+                            break;
+
+                          case AO_HASH256:
+                          case AO_HASH512:
+                            hash = items;
+
+                          default:
+                            // TODO: log anomaly - unrecognized data type
+                            break;
+                        }
+                      items = items.mid( sz ); // move on to the next
+                    }
+                }
+            }
+        }
+    }
+}
+
 QByteArray  PageRef::toDataItem()
-{ QList<QByteArray> items;
-  if ( hash.isValid() )
-    items.append( hash.toDataItem() );
-
-  // TODO: randomize list
+{ QList<QByteArray> dil;
+  dil.append(          block.toDataItem() );
+  dil.append( sequenceNumber.toDataItem() );
+  dil.append(           hash.toDataItem() );
+  // TODO: randomize order of dil
   ba.clear();
-  foreach( QByteArray it, items )
-    ba.append( it );
-
+  foreach( QByteArray a, dil )
+    ba.append( a );
   return DataVarLenLong::toDataItem();
 }
 

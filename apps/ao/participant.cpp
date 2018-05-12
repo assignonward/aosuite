@@ -49,9 +49,7 @@ QByteArray Participant::toDataItem( typeCode_t tc )
         dil.append( amount.toDataItem() );
         dil.append( key.toDataItem() );
         if ( amount < 0 )
-          { dil.append( page.toDataItem() );
-            dil.append( block.toDataItem() );
-          }
+          dil.append( page.toDataItem() );
         if ( note.size() > 0 )
           dil.append( note.toDataItem() );
         break;
