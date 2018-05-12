@@ -66,7 +66,9 @@ SOURCES += \
     pageref.cpp \
     blockref.cpp \
     datavarlenlong.cpp \
-    publickeyrsa3072.cpp
+    publickeyrsa3072.cpp \
+    note.cpp \
+    dataitem.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -89,7 +91,12 @@ HEADERS += \
     pageref.h \
     blockref.h \
     datavarlenlong.h \
-    publickeyrsa3072.h
+    publickeyrsa3072.h \
+    note.h \
+    dataitem.h
 
 FORMS += \
         mainwindow.ui
+
+RESOURCES += resources.qrc
+

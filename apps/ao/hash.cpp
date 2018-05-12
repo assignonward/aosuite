@@ -27,7 +27,7 @@
  * @param tc - type code defaults to SHA2-256
  * @param p - object parent, if any
  */
-Hash::Hash( unsigned char tc, QObject *p ) : QObject( p )
+Hash::Hash( typeCode_t tc, QObject *p ) : QObject( p )
 { switch ( tc )
     { case AO_HASH256: // valid type codes for Hash
       case AO_HASH512:

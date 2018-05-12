@@ -20,33 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PUBKEY_H
-#define PUBKEY_H
+#ifndef NOTE_H
+#define NOTE_H
 
-#include "publickeyecdsa.h"
-#include "publickeyrsa3072.h"
+#include "datavarlenlong.h"
 
-/**
- * @brief The PubKey class - unnecessary? QByteArray wrapper.
- *   future plans include compressing 64-33 and expanding 33-64
- */
-class PubKey : public QObject
+class Note : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  PubKey( typeCode_t tc = AO_PUB_ECDSA_KEY2, QObject *p = nullptr );
-              PubKey( const QByteArray &di, QObject *p = nullptr );
-              PubKey( const PubKey &pk, QObject *p = nullptr ) : QObject( p ? p : pk.parent() ),
-                  typeCode( pk.typeCode ), publicKeyECDSA( pk.publicKeyECDSA ), publicKeyRsa3072( pk.publicKeyRsa3072 ) {}
-  QByteArray  toDataItem() const;
-  QByteArray  get() const;
-  QByteArray  getId() const;
-        void  set( const QByteArray k );
-
-private:
-        typeCode_t  typeCode;
-    PublicKeyECDSA  publicKeyECDSA;
-  PublicKeyRsa3072  publicKeyRsa3072;
+    explicit  Note( QByteArray ba = QByteArray(), QObject *p = nullptr ) : DataVarLenLong( AO_NOTE, ba, p ) {}
+              Note( const Note &n, QObject *p = nullptr ) : DataVarLenLong( AO_NOTE, n.ba, p ? p : n.parent() ) {}
+              qint32  size() { return ba.size(); }
 };
 
-#endif // PUBKEY_H
+#endif // NOTE_H

@@ -21,13 +21,14 @@
  * SOFTWARE.
  */
 #include "pubkey.h"
+#include "hash.h"
 
 /**
  * @brief PubKey::PubKey
  * @param tc - type code defaults to ECDSA 2
  * @param p - object parent, if any
  */
-PubKey::PubKey( unsigned char tc, QObject *p ) : QObject( p )
+PubKey::PubKey( typeCode_t tc, QObject *p ) : QObject( p )
 { switch ( tc )
     { case AO_PUB_ECDSA_KEY2: // valid type codes for PubKey
       case AO_PUB_ECDSA_KEY3:
@@ -81,6 +82,43 @@ QByteArray  PubKey::get() const
 
       case AO_PUB_RSA3072_KEY:
         return publicKeyRsa3072.get();
+    }
+  // TODO: log error
+  return QByteArray();
+}
+
+/**
+ * @brief PubKey::toDataItem
+ * @return the key encapsulated as a data item
+ */
+QByteArray  PubKey::toDataItem() const
+{ switch ( typeCode )
+    { case AO_PUB_ECDSA_KEY2:
+      case AO_PUB_ECDSA_KEY3:
+        return publicKeyECDSA.toDataItem();
+
+      case AO_PUB_RSA3072_KEY:
+        return publicKeyRsa3072.toDataItem();
+    }
+  // TODO: log error
+  return QByteArray();
+}
+
+/**
+ * @brief PubKey::getId
+ * @return a data item containing either the key itself for short keys like ECDSA,
+ *   or a hash of the key for longer keys.
+ */
+QByteArray  PubKey::getId() const
+{ switch ( typeCode )
+    { case AO_PUB_ECDSA_KEY2:
+      case AO_PUB_ECDSA_KEY3:
+        return publicKeyECDSA.toDataItem();
+
+      case AO_PUB_RSA3072_KEY:
+        Hash256 hid( publicKeyRsa3072.get() );
+        DataFixedLength did( AO_PUB_RSA3072_ID, hid.get() );
+        return did.toDataItem();
     }
   // TODO: log error
   return QByteArray();

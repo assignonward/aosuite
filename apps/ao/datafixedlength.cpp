@@ -27,7 +27,7 @@
  * @param di - typeCode, data, and checksum
  * @param p - parent object
  */
-DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : QObject( p )
+DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { if ( di.size() < 4 ) // Shortest fixed length serialized data type
     { typeCode = AO_DATAFIXED_UNDEFINED;
       // TODO: log an exception
@@ -65,7 +65,7 @@ void DataFixedLength::operator = ( const QByteArray &di )
  * @brief DataFixedLength::toDataItem
  * @return serialized byte array with type, data and checksum
  */
-QByteArray DataFixedLength::toDataItem()
+QByteArray DataFixedLength::toDataItem() const
 { QByteArray di;
   // if (( code & AO_FIXED_MASK ) != 0x00 )
   //   TODO: log a warning, maybe check closer for defined types, too.
@@ -75,25 +75,6 @@ QByteArray DataFixedLength::toDataItem()
     { di.append( ba.at(i) ); chk ^= ba.at(i); }
   di.append( chk );
   return di;
-}
-
-/**
- * @brief DataFixedLength::typeSize
- * @param tc - type code to interpret, or 0xFF (default) to use this object's typeCode
- *  current typeCode,
- *   or -1 if the typeCode doesn't have a defined fixed length.
- */
-int DataFixedLength::typeSize( unsigned char tc )
-{ if ( tc == 0xFF )
-    tc = typeCode;
-  switch ( tc & AO_SIZE_MASK )
-    { case AO_SIZE_34BYTES: return 34;
-      case AO_SIZE_66BYTES: return 66;
-      case AO_SIZE_18BYTES: return 18;
-      case AO_SIZE_38BYTES: return 38;
-      case AO_SIZE_4BYTES : return 4 ;
-    }
-  return -1;
 }
 
 /**

@@ -27,7 +27,7 @@
  * @param di - data item for initialization
  * @param p - object parent, if any.
  */
-Data128::Data128( const QByteArray &di, QObject *p ) : QObject(p)
+Data128::Data128( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { v = 0;
   if ( di.size() < 18 )
     { // TODO: log an exception

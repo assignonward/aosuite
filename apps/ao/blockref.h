@@ -24,25 +24,31 @@
 #define BLOCKREF_H
 
 #include "aotime.h"
+#include "bytecodes.h"
+#include "datavarlenlong.h"
+#include "hash.h"
 
 /**
  * @brief The BlockRef class - identifies a block in the chain
  */
-class BlockRef : public QObject
+class BlockRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  BlockRef( QObject *parent = nullptr) : QObject( parent ) {}
+    explicit  BlockRef( QByteArray di = QByteArray(), QObject *p = nullptr );
               BlockRef( const BlockRef &r )
-                : QObject( r.parent() ), sequenceNumber( r.sequenceNumber ),
-                  proposalTime( r.proposalTime ), hash( r.hash ) {}
-      AOTime  time() { return proposalTime; }
-  QByteArray  toByteArray() { return QByteArray(); }
+                : DataVarLenLong( AO_BLOCK_REF, QByteArray(), r.parent() ), propTime( r.propTime ), blkHash( r.blkHash ) {}
+              BlockRef( const Hash &h, const AOTime t, QObject *p = nullptr )
+                : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p ), propTime( t ), blkHash( h ) {}
+      AOTime  time() { return propTime; }
+        Hash  hash() { return  blkHash; }
+        void  setTime( AOTime t ) { propTime = t; }
+        void  setHash(   Hash h ) {  blkHash = h; }
+  QByteArray  toDataItem();
 
 private:
-     quint32 sequenceNumber; // sequence number in the chain (Genesis==0) this page is recorded in
-      AOTime proposalTime;   // time this block was proposed
-  QByteArray hash;           // Hash of block - redundant check
+      AOTime  propTime;  // time this block was proposed (should fit it into a specific time-layer)
+        Hash  blkHash;   // Whole block hash signature (unique ID)
 };
 
 #endif // BLOCKREF_H

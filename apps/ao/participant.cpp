@@ -36,17 +36,43 @@
 
 #include "participant.h"
 
+/**
+ * @brief Participant::toDataItem
+ * @param tc - type of data item to return, either long form for contract negotiation,
+ *   or compact form for recording in the blockchain
+ * @return data item in the requested form
+ */
+QByteArray Participant::toDataItem( typeCode_t tc )
+{ QList<QByteArray> dil;
+  switch ( typeCode )
+    { case AO_PARTICIPANT:
+        dil.append( amount.toDataItem() );
+        dil.append( key.toDataItem() );
+        if ( amount < 0 )
+          { dil.append( page.toDataItem() );
+            dil.append( block.toDataItem() );
+          }
+        if ( note.size() > 0 )
+          dil.append( note.toDataItem() );
+        break;
 
-Participant::Participant(QByteArray i, Shares a, QObject *p) : DataVarLenLong( AO_PARTICIPANT, QByteArray(), p )
-{ setId( i );
-  setAmount( a );
-  setMinUAmt( a ); // Default, can be adjusted - usually higher
-  // note to be set later if desired, usually empty.
+      case AO_PARTICIPANT_CF:
+        dil.append( amount.toDataItem() );
+        dil.append( key.getId() );
+        if ( note.size() > 0 )
+          dil.append( note.toDataItem() );
+        break;
+
+      default:
+        // TODO: log error
+        return QByteArray();
+    }
+  // TODO: randomize order of dil
+  typeCode = tc;
+  ba.clear();
+  foreach( QByteArray a, dil )
+    ba.append( a );
+  return DataVarLenLong::toDataItem();
 }
 
-Participant::Participant( const Participant &p ) : DataVarLenLong( p.typeCode, p.ba, p.parent() )
-{ id.set( p.getId() );
-  amount  = p.getAmount();
-  minUAmt = p.getMinUAmt();
-  note    = p.getNote();
-}
+

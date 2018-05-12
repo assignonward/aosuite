@@ -20,33 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PUBKEY_H
-#define PUBKEY_H
+#ifndef DATAITEM_H
+#define DATAITEM_H
 
-#include "publickeyecdsa.h"
-#include "publickeyrsa3072.h"
+#include <QObject>
+#include "bytecodes.h"
 
-/**
- * @brief The PubKey class - unnecessary? QByteArray wrapper.
- *   future plans include compressing 64-33 and expanding 33-64
- */
-class PubKey : public QObject
+#define typeCode_t unsigned char
+
+class DataItem : public QObject
 {
     Q_OBJECT
 public:
-    explicit  PubKey( typeCode_t tc = AO_PUB_ECDSA_KEY2, QObject *p = nullptr );
-              PubKey( const QByteArray &di, QObject *p = nullptr );
-              PubKey( const PubKey &pk, QObject *p = nullptr ) : QObject( p ? p : pk.parent() ),
-                  typeCode( pk.typeCode ), publicKeyECDSA( pk.publicKeyECDSA ), publicKeyRsa3072( pk.publicKeyRsa3072 ) {}
-  QByteArray  toDataItem() const;
-  QByteArray  get() const;
-  QByteArray  getId() const;
-        void  set( const QByteArray k );
+     explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
+       qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM );
+       qint32  typeSize( const QByteArray &di );
 
-private:
-        typeCode_t  typeCode;
-    PublicKeyECDSA  publicKeyECDSA;
-  PublicKeyRsa3072  publicKeyRsa3072;
+protected:
+   typeCode_t  typeCode; // what kind of data item is this?
 };
 
-#endif // PUBKEY_H
+#endif // DATAITEM_H

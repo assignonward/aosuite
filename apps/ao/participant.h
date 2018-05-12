@@ -26,35 +26,37 @@
 #define PARTICIPANT_H
 
 #include "datavarlenlong.h"
+#include "note.h"
 #include "pageref.h"
 #include "pubkey.h"
 #include "shares.h"
 
 /**
- * @brief The Participant class - describes a participant's role in an Assignment contract
+ * @brief The Participant class - identifies a source or recipient of shares
  */
 class Participant : public DataVarLenLong
 {
     Q_OBJECT
 public:
-     explicit  Participant( QByteArray i, Shares a, QObject *parent = nullptr);
-               Participant( const Participant &p );
-   QByteArray  getId()      const { return id.get(); }
-       Shares  getAmount()  const { return amount;  }
-       Shares  getMinUAmt() const { return minUAmt; }
-   QByteArray  getNote()    const { return note;    }
-         void  setId( QByteArray i )   { id.set( i ); }
-         void  setAmount( Shares v )   { amount  = v; }
-         void  setMinUAmt( Shares v )  { minUAmt = v; }
-         void  setNote( QByteArray n ) { note    = n; }
-   QByteArray  toByteArray() { return QByteArray(); }
+    explicit  Participant( QObject *p = nullptr ) : DataVarLenLong( AO_PARTICIPANT, QByteArray(), p ) {}
+              Participant( const Participant &r )
+                : DataVarLenLong( AO_PARTICIPANT, QByteArray(), r.parent() ),
+                  amount( r.amount ), key( r.key ), page( r.page ), block( r.block ), note( r.note ) {}
+  QByteArray  toDataItem( typeCode_t tc = AO_PARTICIPANT );
+  QByteArray  getId()      const { return key.getId(); }
+      PubKey  getKey()     const { return key;         }
+      Shares  getAmount()  const { return amount;      }
+  QByteArray  getNote()    const { return note.get();  }
+        void  setId( QByteArray i )   { key.set( i );  }
+        void  setAmount( Shares v )   { amount = v;  /* TODO: log error for 0 */ }
+        void  setNote( QByteArray n ) { note.set( n ); }
 
 private:
-     PageRef  page;    // Reference to a page in a block in the chain, for givers in the transaction
-      PubKey  id;      // Public Key, corresponding to the private key used for signing
-      Shares  amount;  // Positive for receivers, negative for givers
-      Shares  minUAmt; // Positive, minimum acceptable amount for underwriting
-  QByteArray  note;    // Arbitrary data to record with the transaction
+      Shares  amount;  // Negative for givers, positive for receivers, 0 is invalid
+      PubKey  key;
+     PageRef  page;    // Reference for givers
+    BlockRef  block;   // Reference for givers
+        Note  note;    // Arbitrary data to record with the transaction
 };
 
 #endif // PARTICIPANT_H

@@ -27,8 +27,9 @@
  * @param di - typecode, 3 bytes size, data, 4 bytes checksum
  * @param p - parent object
  */
-DataVarLenLong::DataVarLenLong( const QByteArray &di, QObject *p ) : QObject( p )
-{ if ( di.size() < 8 ) // Shortest valid varlenlong serialized data (1 type + 3 length + 0 data + 4 checksum)
+DataVarLenLong::DataVarLenLong( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+{ csVal = false;
+  if ( di.size() < 8 ) // Shortest valid varlenlong serialized data (1 type + 3 length + 0 data + 4 checksum)
     { typeCode = AO_VARLONG_INVALID;
       // TODO: log an exception
       return;
@@ -57,6 +58,7 @@ DataVarLenLong::DataVarLenLong( const QByteArray &di, QObject *p ) : QObject( p 
       { // TODO: log an exception
         return;
       }
+  csVal = true;
 }
 
 /**
@@ -67,6 +69,7 @@ void DataVarLenLong::operator = ( const QByteArray &di )
 { DataVarLenLong temp( di );
   ba       = temp.ba;
   typeCode = temp.typeCode;
+  csVal    = temp.csVal;
   return;
 }
 
@@ -97,3 +100,4 @@ QByteArray DataVarLenLong::toDataItem()
   di.append( chk );
   return di;
 }
+

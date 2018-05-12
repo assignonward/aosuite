@@ -27,15 +27,16 @@
 #ifndef DATA128_H
 #define DATA128_H
 
-#include <QObject>
-#include "bytecodes.h"
+#include "dataitem.h"
 
-class Data128 : public QObject
+class Data128 : public DataItem
 {
     Q_OBJECT
 public:
-    explicit Data128( unsigned char t = AO_SHARES_UNDEFINED, __int128 d = 0, QObject *p = nullptr) : QObject( p ), v( d ), typeCode( t ) {}
-             Data128( const Data128 &d, QObject *p = nullptr ) : QObject( p ? p : d.parent() ), v( d.v ), typeCode( d.typeCode ) {}
+    explicit Data128( typeCode_t tc = AO_SHARES_UNDEFINED, __int128 d = 0, QObject *p = nullptr)
+               : DataItem( tc, p ), v( d ) {}
+             Data128( const Data128 &d, QObject *p = nullptr )
+               : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
              Data128( const QByteArray &di, QObject *p = nullptr );
   QByteArray toDataItem();
         void operator = ( const QByteArray &di );
@@ -64,7 +65,6 @@ public:
 
 protected:
        __int128 v;        // generic value
-  unsigned char typeCode; // what kind of 128 bit integer is this?
 };
 
 #endif // DATA128_H

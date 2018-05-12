@@ -29,6 +29,7 @@
 #ifndef HASH_H
 #define HASH_H
 
+#include "datavarlenlong.h"
 #include "hash256.h"
 #include "hash512.h"
 
@@ -36,10 +37,11 @@ class Hash : public QObject
 {
     Q_OBJECT
 public:
-       explicit  Hash( unsigned char tc = AO_HASH256, QObject *p = nullptr );
+       explicit  Hash( typeCode_t tc = AO_HASH256, QObject *p = nullptr );
                  Hash( const QByteArray &di, QObject *p = nullptr );
                  Hash( const Hash &d, QObject *p = nullptr ) : QObject( p ? p : d.parent() ),
                    typeCode( d.typeCode ), hash256( d.hash256 ), hash512( d.hash512 ) {}
+           void  operator = ( const Hash &h ) { typeCode = h.typeCode; hash256 = h.hash256; hash512 = h.hash512; }
            Hash &calculate( QByteArray text );
            bool  verify( QByteArray text );
            bool  isValid();
@@ -47,7 +49,7 @@ public:
      QByteArray  toDataItem();
 
 private:
-  unsigned char  typeCode;
+     typeCode_t  typeCode;
         Hash256  hash256;
         Hash512  hash512;
 };

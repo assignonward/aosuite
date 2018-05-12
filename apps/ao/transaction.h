@@ -33,41 +33,6 @@
 #include "pubkey.h"
 #include "random.h"
 
-
-/**
- * @brief The ShareSource class - identifies a source of shares
- */
-class ShareSource : public DataVarLenLong
-{
-    Q_OBJECT
-public:
-    explicit  ShareSource( QObject *p = nullptr) : DataVarLenLong( AO_SHARE_SOURCE, QByteArray(), p ) {}
-              ShareSource( const ShareSource &r )
-                : DataVarLenLong( AO_SHARE_SOURCE, QByteArray(), r.parent() ),
-                  amount( r.amount ), giverId( r.giverId ), page( r.page ), block( r.block ) {}
-  QByteArray  toDataItem() { return QByteArray(); }
-
-private:
-    Shares amount;
-    PubKey giverId;
-   PageRef page;
-  BlockRef block;
-};
-
-class ShareReceiver : public DataVarLenLong
-{
-    Q_OBJECT
-public:
-    explicit  ShareReceiver( QObject *p = nullptr) : DataVarLenLong( AO_SHARE_RECEIVER, QByteArray(), p ) {}
-              ShareReceiver( const ShareReceiver &r ) : DataVarLenLong( AO_SHARE_RECEIVER, QByteArray(), r.parent() ),
-                amount( r.amount ), receiverId( r.receiverId ) {}
-  QByteArray  toDataItem() { return QByteArray(); }
-
-private:
-    Shares  amount;
-    PubKey  receiverId;
-};
-
 class Transaction : public QObject
 {
     Q_OBJECT
@@ -88,7 +53,6 @@ private:
              AOTime  finalRecordingDeadline; // When the final record is expected to be recorded in the chain
              Shares  recordingBid;           // Positive amount to bid for all underwriting, chain-making and recording taxes
   QList<Participant> participants;
-  QList<ShareSource> sources;
 };
 
 class Signature : public QObject

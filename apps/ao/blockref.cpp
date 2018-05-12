@@ -22,4 +22,62 @@
  */
 #include "blockref.h"
 
-// Nothing to do here, yet.
+/**
+ * @brief BlockRef::BlockRef - constructor
+ * @param di - optional data item
+ * @param p - optional parent object
+ */
+BlockRef::BlockRef( QByteArray di, QObject *p )
+  : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p )
+{ // See if there's anything interesting in the data item
+  if ( di.size() > 0 )
+    { char tc = di.at(0);
+      if ( reinterpret_cast<typeCode_t &>( tc ) == AO_BLOCK_REF )
+        { DataVarLenLong temp( di );          // It's our type
+          if ( temp.checksumValidated() )
+            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+              while ( items.size() > 0 )
+                { int sz = typeSize( items );
+                  if ( sz > 0 )
+                    { switch ( items.at(0) ) // read valid items from the byte array, in any order
+                        { case AO_TIME_RECORDED:
+                            propTime = items;
+                            break;
+
+                          case AO_HASH256:
+                          case AO_HASH512:
+                            blkHash = items;
+                            break;
+
+                          default:
+                            // TODO: log anomaly - unrecognized data type
+                            break;
+                        }
+                      items = items.mid( sz );
+                    }
+                }
+            }
+        }
+       else
+        { // TODO: log an error
+          return;
+        }
+    }
+
+}
+
+
+/**
+ * @brief BlockRef::toDataItem
+ * @return data item with the BlockRef contents
+ */
+QByteArray  BlockRef::toDataItem()
+{ QList<QByteArray> dil;
+  dil.append( propTime.toDataItem() );
+  dil.append(  blkHash.toDataItem() );
+  // TODO: randomize order of dil
+  ba.clear();
+  foreach( QByteArray a, dil )
+    ba.append( a );
+  return DataVarLenLong::toDataItem();
+}
