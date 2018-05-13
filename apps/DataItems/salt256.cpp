@@ -23,8 +23,11 @@
 #include "salt256.h"
 #include "random.h"
 
-Salt256::Salt256( QObject *p )
+Salt256::Salt256( const QByteArray &iba, QObject *p )
            : DataFixedLength( AO_SALT256, p )
-{ while ( ba.size() < 32 )
-    ba.append( rng.rnd_uint64() );
+{ if ( iba.size() == 32 )
+    ba = iba;
+   else
+    while ( ba.size() < 32 )
+      ba.append( rng.rnd_uint64() );
 }

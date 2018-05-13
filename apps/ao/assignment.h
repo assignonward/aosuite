@@ -31,16 +31,17 @@
 #include "participantlist.h"
 #include "pubkey.h"
 #include "random.h"
+#include "salt256.h"
 #include "shares.h"
 
 /**
  * @brief The Assignment class - for negotiation and recording of a shares assignment contract
  */
-class Assignment : public QObject
+class Assignment : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Assignment(QObject *parent = nullptr);
+    explicit  Assignment(const QByteArray &di = QByteArray(), QObject *p = nullptr);
       AOTime  proposalTime();
         void  randomizeSalt();
         bool  valid();
@@ -50,11 +51,10 @@ public:
 
 private:
              Random  rng;
-         QByteArray  salt;
-            PageRef  proposedChain;          // Reference to the signature page of a recent block in the chain this assignment is proposed to be recorded on
-             AOTime  preRecordingDeadline;   // Multi-part contracts may file pre-records to establish that all parts have been recorded before finalizing actual recording (this field is not present for simple contracts)
-             AOTime  finalRecordingDeadline; // When the final record is expected to be recorded in the chain
-             Shares  recordingBid;           // Positive amount to bid for all underwriting, chain-making and recording taxes
+            Salt256  salt;
+            PageRef  proposedChain;     // Reference to the signature page of a recent block in the chain this assignment is proposed to be recorded on
+             AOTime  recordingDeadline; // When the assignment contract is expected to be recorded in the chain
+             Shares  recordingBid;      // Positive amount to bid for all underwriting and recording taxes
     ParticipantList  participants;
 };
 
@@ -63,7 +63,7 @@ class Signature : public QObject
     Q_OBJECT
 public:
     explicit  Signature( AOTime t, QObject *parent = nullptr)
-        : QObject( parent ), timeOfSignature( t ) {}
+                : QObject( parent ), timeOfSignature( t ) {}
   QByteArray  toByteArray() { return QByteArray(); }
 
 private:
@@ -84,7 +84,7 @@ class Authorization : public QObject
     Q_OBJECT
 public:
     explicit Authorization( QObject *parent = nullptr) : QObject( parent ) {}
-             Authorization( Assignment t, QObject *parent = nullptr);
+ //            Authorization( Assignment t, QObject *parent = nullptr);
  QByteArray  toByteArray() { return QByteArray(); }
 
 private:

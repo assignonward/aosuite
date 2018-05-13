@@ -26,12 +26,57 @@
 
 /**
  * @brief Assignment::Assignment - describes the exchange of value
- * @param parent
+ * @param di - optional data item
+ * @param p - object parent
  */
-Assignment::Assignment(QObject *parent) : QObject(parent)
-{ // proposalTime.set( AOTime::now() );  Need to populate proposedChain, instead.
-  finalRecordingDeadline.set( proposalTime().get() + AOTime::shiftUp64( AO_DAY ) ); // default, TBD by wallet
-  randomizeSalt();
+Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong(AO_ASSIGNMENT, p)
+{ // See if there's anything interesting in the data item
+  if ( di.size() > 0 )
+    { if ( typeCodeOf( di ) != AO_ASSIGNMENT )
+        { // TODO: log an error
+          return;
+        }
+       else
+        { DataVarLenLong temp( di );          // It's our type
+          if ( temp.checksumValidated() )
+            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+              while ( items.size() > 0 )
+                { int sz = typeSize( items );
+                  if ( sz <= 0 )
+                    { // TODO: log error
+                      return;
+                    }
+                   else
+                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                        { case AO_SALT256:
+                            // salt = items;
+                            break;
+
+                          case AO_PAGE_REF:
+                            proposedChain = items;
+                            break;
+
+                          case AO_RECORDING_DEADLINE:
+                            recordingDeadline = items;
+                            break;
+
+                          case AO_RECORDING_BID:
+                            recordingBid = items;
+
+                          case AO_PARTICIPANT_LIST:
+                          case AO_PARTICIPANT_LIST_CF:
+                            participants = items;
+
+                          default:
+                            // TODO: log anomaly - unrecognized data type
+                            break;
+                        }
+                      items = items.mid( sz ); // move on to the next
+                    }
+                }
+            }
+        }
+    }
 }
 
 AOTime Assignment::proposalTime()
@@ -45,11 +90,11 @@ void Assignment::randomizeSalt()
 { QSettings setting;
   QByteArray ls = setting.value( "lastSalt" ).toByteArray();
   rng.seed( *((__int128 *)ls.data()) ^ AOTime::now() ); // LAME, but good enough for now.
-  QByteArray ba;
-  while ( ba.length() < 32 )
-    ba.append( rng.rnd_uint64() & 0xFF );
-  salt = QCryptographicHash::hash( ba, QCryptographicHash::Sha3_256 );
-  setting.setValue( "lastSalt", salt );
+  QByteArray a;
+  while ( a.length() < 32 )
+    a.append( rng.rnd_uint64() & 0xFF );
+  // salt = QCryptographicHash::hash( a, QCryptographicHash::Sha3_256 );
+  // setting.setValue( "lastSalt", salt );
 }
 
 /**
@@ -65,7 +110,7 @@ bool Assignment::valid()
  *   Will want to add some additional sanity checks
  */
 bool Assignment::validTimeline()
-{ return ( finalRecordingDeadline.future() && proposalTime().past() ); }
+{ return ( recordingDeadline.future() && proposalTime().past() ); }
 
 /**
  * @brief Assignment::validSum

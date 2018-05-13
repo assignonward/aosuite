@@ -29,9 +29,7 @@ class Salt256 : public DataFixedLength
 {
     Q_OBJECT
 public:
-    explicit  Salt256( QObject *p = nullptr );
-              Salt256( QByteArray iba = QByteArray(), QObject *p = nullptr )
-                : DataFixedLength( AO_SALT256, iba, p ) {}
+    explicit  Salt256( const QByteArray &iba = QByteArray(), QObject *p = nullptr );
               Salt256( const Salt256 &h, QObject *p = nullptr )
                 : DataFixedLength( AO_SALT256, h.ba, p ? p : h.parent() ) {}
 };

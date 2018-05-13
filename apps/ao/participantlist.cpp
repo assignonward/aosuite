@@ -92,6 +92,17 @@ ListSize ParticipantList::append( const Participant &part )
 }
 
 /**
+ * @brief ParticipantList::operator =
+ * @param di - data item to assign from
+ */
+void  ParticipantList::operator = ( const QByteArray &di )
+{ ParticipantList temp( di );
+  list     = temp.list;
+  size     = temp.size;
+  typeCode = temp.typeCode;
+}
+
+/**
  * @brief ParticipantList::toDataItem - serialize the list
  * @param tc - type of data item to return, either long form for contract negotiation,
  *   or compact form for recording in the blockchain

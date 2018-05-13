@@ -38,7 +38,7 @@ class PageRef : public DataVarLenLong
     Q_OBJECT
 public:
     explicit  PageRef( QObject *p = nullptr )
-                : DataVarLenLong( AO_PAGEREF, QByteArray(), p ) {}
+                : DataVarLenLong( AO_PAGE_REF, QByteArray(), p ) {}
               PageRef( const PageRef &r )
                 : DataVarLenLong( r.typeCode, r.ba, r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
               PageRef( const QByteArray &di, QObject *p = nullptr );

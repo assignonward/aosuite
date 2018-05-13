@@ -31,6 +31,7 @@ class ParticipantList : public DataVarLenLong
     Q_OBJECT
 public:
     explicit  ParticipantList( const QByteArray &di = QByteArray(), QObject *p = nullptr );
+        void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( typeCode_t tc );
         void  clear();
     ListSize  append( const Participant &part );

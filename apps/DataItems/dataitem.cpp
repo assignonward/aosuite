@@ -35,11 +35,10 @@ qint32 DataItem::typeSize( typeCode_t tc ) const
 { if ( tc == AO_UNDEFINED_DATAITEM )
     tc = typeCode;
   switch ( tc & AO_SIZE_MASK )
-    { case AO_SIZE_34BYTES : return  34;
-      case AO_SIZE_66BYTES : return  66;
+    { case AO_SIZE_4BYTES  : return   4;
       case AO_SIZE_18BYTES : return  18;
-      case AO_SIZE_38BYTES : return  38;
-      case AO_SIZE_4BYTES  : return   4;
+      case AO_SIZE_34BYTES : return  34;
+      case AO_SIZE_66BYTES : return  66;
       case AO_SIZE_388BYTES: return 388;
     }
   return -1;
