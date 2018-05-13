@@ -33,8 +33,8 @@
 #define AO_SIZE_34BYTES        0x00
 #define AO_HASH256             0x00
 #define AO_SALT256             0x01
-#define AO_PUB_ECDSA_KEY2      0x02  // Two types of public keys, only one used at a time
-#define AO_PUB_ECDSA_KEY3      0x03
+#define AO_ECDSA_PUB_KEY2      0x02  // Two types of public keys, only one used at a time
+#define AO_ECDSA_PUB_KEY3      0x03
 #define AO_PUB_RSA3072_ID      0x07  // Hash256 of the key itself, reducing size to 1/12th
 
 // First 4 bits, when 0001 means: this is a 66 byte chunk, one for the code, 32 for the data (hash), one for the checkbyte
@@ -47,7 +47,6 @@
 #define AO_TIME_OF_SIG             ( 0x00 | AO_TIME_CODE )
 #define AO_TIME_RECORDED           ( 0x01 | AO_TIME_CODE )
 #define AO_RECORDING_DEADLINE      ( 0x02 | AO_TIME_CODE )
-#define AO_PRERECORDING_DEADLINE   ( 0x03 | AO_TIME_CODE )
 #define AO_UNDERWRITING_EXPIRATION ( 0x04 | AO_TIME_CODE )
 
 #define AO_SHARES_CODE         0x28
@@ -62,7 +61,8 @@
 
 // First 4 bits, when 0111 means: this is a 388 byte chunk, one for the code, 384 for the data, three for the checkbytes (generally an RSA3072 key)
 #define AO_SIZE_388BYTES       0x70
-#define AO_PUB_RSA3072_KEY     0x70
+#define AO_RSA3072_PUB_KEY     0x70
+#define AO_RSA3072_SIG         0x71  // Just the signature
 
 // Variable length items
 
@@ -77,13 +77,14 @@
 #define AO_NOTE                0xAA  // optional field in the participant item
 #define AO_BLOCK_REF           0xAB  // reference to a block
 #define AO_PAGE_REF            0xAC  // reference to a page in a block
+#define AO_SIG_WITH_TIME       0xAE  // contains time of signature, and the signature itself
 
 // First 4 bits, when 1110 means: this is a short variable length byte array, up to 255 bytes
 // Next byte tells the length of the following byte array
 // Next bytes are the byte array
-// Last byte is the checkbyte - total length 3+length of data
+// Last two bytes are checkbytes - total length 4+length of data
 #define AO_SIZE_VARLENSHORT    0xE0
-#define AO_ECDSA_SIG           0xE0  // starts with 8 bytes for time of signature, followed by the ECDSA signature itself
+#define AO_ECDSA_SIG           0xE0  // just the ECDSA signature itself
 
 // Flag that somebody forgot to initialize the type
 #define AO_UNDEFINED_DATAITEM  0xFF

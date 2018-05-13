@@ -30,9 +30,9 @@ class PublicKeyECDSA : public DataFixedLength
     Q_OBJECT
 public:
     explicit  PublicKeyECDSA( QObject *p = nullptr )
-                : DataFixedLength( AO_PUB_ECDSA_KEY2, p ) {}
+                : DataFixedLength( AO_ECDSA_PUB_KEY2, p ) {}
               PublicKeyECDSA( const PublicKeyECDSA &k, QObject *p = nullptr )
-                : DataFixedLength( AO_PUB_ECDSA_KEY2, k.ba, p ? p : k.parent() ) {}
+                : DataFixedLength( AO_ECDSA_PUB_KEY2, k.ba, p ? p : k.parent() ) {}
               PublicKeyECDSA( const QByteArray &di, QObject *p = nullptr )
                 : DataFixedLength( di, p ) {}
   QByteArray  get() const;

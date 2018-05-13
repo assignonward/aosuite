@@ -58,19 +58,6 @@ private:
     ParticipantList  participants;
 };
 
-class Signature : public QObject
-{
-    Q_OBJECT
-public:
-    explicit  Signature( AOTime t, QObject *parent = nullptr)
-                : QObject( parent ), timeOfSignature( t ) {}
-  QByteArray  toByteArray() { return QByteArray(); }
-
-private:
-      AOTime timeOfSignature;
-  QByteArray signature;
-};
-
 /**
  * @brief The Authorization class - when
  *   complete and valid, contains a description of
@@ -88,8 +75,8 @@ public:
  QByteArray  toByteArray() { return QByteArray(); }
 
 private:
-      Assignment  tran;
-  QList<Signature> sig;  // Same length and order as the participants list in tran
+       Assignment  tran;
+//  QList<SignatureWithTime> sigs;  // Same length and order as the participants list in tran
 };
 
 /* A structure to hold:

@@ -29,8 +29,8 @@
 QByteArray  PublicKeyECDSA::get() const
 { QByteArray k;
   switch ( typeCode )
-    { case AO_PUB_ECDSA_KEY2:
-      case AO_PUB_ECDSA_KEY3:
+    { case AO_ECDSA_PUB_KEY2:
+      case AO_ECDSA_PUB_KEY3:
         k.append( typeCode );
         k.append( ba );
     }
@@ -47,8 +47,8 @@ void  PublicKeyECDSA::set( QByteArray k )
       return;
     }
   switch ( k.at(0) )
-    { case AO_PUB_ECDSA_KEY2:
-      case AO_PUB_ECDSA_KEY3:
+    { case AO_ECDSA_PUB_KEY2:
+      case AO_ECDSA_PUB_KEY3:
         typeCode = k.at(0);
         ba = k.mid(1);
         return;

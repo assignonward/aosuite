@@ -22,8 +22,7 @@
  */
 #include "pageref.h"
 
-PageRef::PageRef( const QByteArray &di, QObject *p )
-           : DataVarLenLong( AO_PAGE_REF, p )
+PageRef::PageRef( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_PAGE_REF, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_PAGE_REF )

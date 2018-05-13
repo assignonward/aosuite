@@ -29,7 +29,7 @@
  * @param di - optional data item
  * @param p - object parent
  */
-Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong(AO_ASSIGNMENT, p)
+Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSIGNMENT, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_ASSIGNMENT )

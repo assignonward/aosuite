@@ -27,8 +27,7 @@
  * @param di - Data Item filled with a participant list
  * @param p - object parent, if any
  */
-ParticipantList::ParticipantList( const QByteArray &di, QObject *p )
-                   : DataVarLenLong( AO_PARTICIPANT_LIST, p )
+ParticipantList::ParticipantList( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_PARTICIPANT_LIST, p )
 { size = 0;
   // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -38,7 +37,8 @@ ParticipantList::ParticipantList( const QByteArray &di, QObject *p )
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { typeCode = typeCodeOf( di );
+          DataVarLenLong temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )

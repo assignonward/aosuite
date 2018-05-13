@@ -30,9 +30,9 @@ class PublicKeyRsa3072 : public DataFixedLength
     Q_OBJECT
 public:
     explicit  PublicKeyRsa3072( QObject *p = nullptr )
-                : DataFixedLength( AO_PUB_RSA3072_KEY, p ) {}
+                : DataFixedLength( AO_RSA3072_PUB_KEY, p ) {}
               PublicKeyRsa3072( const PublicKeyRsa3072 &k, QObject *p = nullptr )
-                : DataFixedLength( AO_PUB_RSA3072_KEY, k.ba, p ? p : k.parent() ) {}
+                : DataFixedLength( AO_RSA3072_PUB_KEY, k.ba, p ? p : k.parent() ) {}
               PublicKeyRsa3072( const QByteArray &di, QObject *p = nullptr )
                 : DataFixedLength( di, p ) {}
         void  clear() { ba.clear(); }

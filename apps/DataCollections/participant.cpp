@@ -36,8 +36,7 @@
 
 #include "participant.h"
 
-Participant::Participant( QByteArray di, QObject *p )
-               : DataVarLenLong( AO_PARTICIPANT, p )
+Participant::Participant( QByteArray di, QObject *p ) : DataVarLenLong( AO_PARTICIPANT, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if (( typeCodeOf( di ) != AO_PARTICIPANT ) &&
@@ -46,7 +45,8 @@ Participant::Participant( QByteArray di, QObject *p )
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { typeCode = typeCodeOf( di );
+          DataVarLenLong temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -61,9 +61,9 @@ Participant::Participant( QByteArray di, QObject *p )
                             amount = items;
                             break;
 
-                          case AO_PUB_ECDSA_KEY2:
-                          case AO_PUB_ECDSA_KEY3:
-                          case AO_PUB_RSA3072_KEY:
+                          case AO_ECDSA_PUB_KEY2:
+                          case AO_ECDSA_PUB_KEY3:
+                          case AO_RSA3072_PUB_KEY:
                             key = items;
                             break;
 

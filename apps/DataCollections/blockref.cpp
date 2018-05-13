@@ -27,8 +27,7 @@
  * @param di - optional data item
  * @param p - optional parent object
  */
-BlockRef::BlockRef( QByteArray di, QObject *p )
-            : DataVarLenLong( AO_BLOCK_REF, p )
+BlockRef::BlockRef( QByteArray di, QObject *p ) : DataVarLenLong( AO_BLOCK_REF, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_BLOCK_REF )

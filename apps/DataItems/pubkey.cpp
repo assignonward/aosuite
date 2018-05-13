@@ -30,9 +30,9 @@
  */
 PubKey::PubKey( typeCode_t tc, QObject *p ) : DataItem( tc, p )
 { switch ( tc )
-    { case AO_PUB_ECDSA_KEY2: // valid type codes for PubKey
-      case AO_PUB_ECDSA_KEY3:
-      case AO_PUB_RSA3072_KEY:
+    { case AO_ECDSA_PUB_KEY2: // valid type codes for PubKey
+      case AO_ECDSA_PUB_KEY3:
+      case AO_RSA3072_PUB_KEY:
         typeCode = tc;
         break;
       default:
@@ -62,14 +62,14 @@ PubKey::PubKey( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATA
       return;
     }
   switch ( typeCodeOf( di ) )
-    { case AO_PUB_ECDSA_KEY2:
-      case AO_PUB_ECDSA_KEY3:
+    { case AO_ECDSA_PUB_KEY2:
+      case AO_ECDSA_PUB_KEY3:
         typeCode = di.at(0);
         publicKeyECDSA = PublicKeyECDSA( di, this );
         break;
 
-      case AO_PUB_RSA3072_KEY:
-        typeCode = AO_PUB_RSA3072_KEY;
+      case AO_RSA3072_PUB_KEY:
+        typeCode = AO_RSA3072_PUB_KEY;
         publicKeyRsa3072 = PublicKeyRsa3072( di, this );
         break;
 
@@ -85,11 +85,11 @@ PubKey::PubKey( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATA
  */
 QByteArray  PubKey::get() const
 { switch ( typeCode )
-    { case AO_PUB_ECDSA_KEY2:
-      case AO_PUB_ECDSA_KEY3:
+    { case AO_ECDSA_PUB_KEY2:
+      case AO_ECDSA_PUB_KEY3:
         return publicKeyECDSA.get();
 
-      case AO_PUB_RSA3072_KEY:
+      case AO_RSA3072_PUB_KEY:
         return publicKeyRsa3072.get();
     }
   // TODO: log error
@@ -98,11 +98,11 @@ QByteArray  PubKey::get() const
 
 bool  PubKey::isValid() const
 { switch ( typeCode )
-    { case AO_PUB_ECDSA_KEY2:
-      case AO_PUB_ECDSA_KEY3:
+    { case AO_ECDSA_PUB_KEY2:
+      case AO_ECDSA_PUB_KEY3:
         return publicKeyECDSA.isValid();
 
-      case AO_PUB_RSA3072_KEY:
+      case AO_RSA3072_PUB_KEY:
         return publicKeyRsa3072.isValid();
     }
   // TODO: log error
@@ -115,11 +115,11 @@ bool  PubKey::isValid() const
  */
 QByteArray  PubKey::toDataItem() const
 { switch ( typeCode )
-    { case AO_PUB_ECDSA_KEY2:
-      case AO_PUB_ECDSA_KEY3:
+    { case AO_ECDSA_PUB_KEY2:
+      case AO_ECDSA_PUB_KEY3:
         return publicKeyECDSA.toDataItem();
 
-      case AO_PUB_RSA3072_KEY:
+      case AO_RSA3072_PUB_KEY:
         return publicKeyRsa3072.toDataItem();
     }
   // TODO: log error
@@ -144,11 +144,11 @@ void PubKey::operator = ( const QByteArray &di )
  */
 QByteArray  PubKey::getId() const
 { switch ( typeCode )
-    { case AO_PUB_ECDSA_KEY2:
-      case AO_PUB_ECDSA_KEY3:
+    { case AO_ECDSA_PUB_KEY2:
+      case AO_ECDSA_PUB_KEY3:
         return publicKeyECDSA.toDataItem();
 
-      case AO_PUB_RSA3072_KEY:
+      case AO_RSA3072_PUB_KEY:
         Hash256 hid( publicKeyRsa3072.get() );
         DataFixedLength did( AO_PUB_RSA3072_ID, hid.get() );
         return did.toDataItem();
