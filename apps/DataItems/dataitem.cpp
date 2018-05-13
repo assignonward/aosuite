@@ -34,7 +34,11 @@ DataItem::DataItem( typeCode_t tc, QObject *p ) : QObject(p), typeCode( tc )
 qint32 DataItem::typeSize( typeCode_t tc ) const
 { if ( tc == AO_UNDEFINED_DATAITEM )
     tc = typeCode;
-  switch ( tc & AO_SIZE_MASK )
+  return typeSizeTable( tc );
+}
+
+qint32 DataItem::typeSizeTable( typeCode_t tc )
+{ switch ( tc & AO_SIZE_MASK )
     { case AO_SIZE_4BYTES  : return   4;
       case AO_SIZE_18BYTES : return  18;
       case AO_SIZE_34BYTES : return  34;
@@ -63,7 +67,7 @@ qint32 DataItem::typeSize( const QByteArray &di ) const
           return -1;
         return (qint32)di.at(1);
     }
-  return typeSize( tc );
+  return typeSizeTable( tc );
 }
 
 /**
@@ -71,7 +75,7 @@ qint32 DataItem::typeSize( const QByteArray &di ) const
  * @param di - data item to interpret
  * @return typecode of the passed data item
  */
-typeCode_t DataItem::typeCodeOf( const QByteArray &di ) const
+typeCode_t DataItem::typeCodeOf( const QByteArray &di )
 { if ( di.size() < 1 )
     return AO_UNDEFINED_DATAITEM;
   char tc = di.at(0);

@@ -30,8 +30,7 @@
 DataVarLenLong::DataVarLenLong( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { csVal = false;
   if ( di.size() < 8 ) // Shortest valid varlenlong serialized data (1 type + 3 length + 0 data + 4 checksum)
-    { typeCode = AO_VARLONG_INVALID;
-      // TODO: log an exception
+    { // TODO: log an exception
       return;
     }
   typeCode = di.at(0);

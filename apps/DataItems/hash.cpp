@@ -27,15 +27,15 @@
  * @param tc - type code defaults to SHA2-256
  * @param p - object parent, if any
  */
-Hash::Hash( typeCode_t tc, QObject *p ) : QObject( p )
+Hash::Hash( typeCode_t tc, QObject *p ) : DataItem( tc, p )
 { switch ( tc )
     { case AO_HASH256: // valid type codes for Hash
       case AO_HASH512:
-        typeCode = tc;
+        // Nothing to do here...
         break;
       default:
         // TODO: log error
-        typeCode = AO_DATAFIXED_UNDEFINED;
+        typeCode = AO_UNDEFINED_DATAITEM;
     }
 }
 
@@ -44,13 +44,12 @@ Hash::Hash( typeCode_t tc, QObject *p ) : QObject( p )
  * @param di - data item to construct from
  * @param p - object parent, if any
  */
-Hash::Hash( const QByteArray &di, QObject *p ) : QObject( p )
+Hash::Hash( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { if ( di.size() < 4 )
     { // TODO: log error
-      typeCode = AO_DATAFIXED_UNDEFINED;
       return;
     }
-  switch ( di.at(0) )
+  switch ( typeCodeOf( di ) )
     { case AO_HASH256:
         typeCode = AO_HASH256;
         hash256 = Hash256( di, this );
@@ -63,7 +62,7 @@ Hash::Hash( const QByteArray &di, QObject *p ) : QObject( p )
 
       default:
         // TODO: log error
-        typeCode = AO_DATAFIXED_UNDEFINED;
+        typeCode = AO_UNDEFINED_DATAITEM;
     }
 }
 

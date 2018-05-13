@@ -29,8 +29,7 @@
  */
 DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { if ( di.size() < 4 ) // Shortest fixed length serialized data type
-    { typeCode = AO_DATAFIXED_UNDEFINED;
-      // TODO: log an exception
+    { // TODO: log an exception
       return;
     }
   typeCode = di.at(0);

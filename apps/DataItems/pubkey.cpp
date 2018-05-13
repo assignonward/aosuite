@@ -28,7 +28,7 @@
  * @param tc - type code defaults to ECDSA 2
  * @param p - object parent, if any
  */
-PubKey::PubKey( typeCode_t tc, QObject *p ) : QObject( p )
+PubKey::PubKey( typeCode_t tc, QObject *p ) : DataItem( tc, p )
 { switch ( tc )
     { case AO_PUB_ECDSA_KEY2: // valid type codes for PubKey
       case AO_PUB_ECDSA_KEY3:
@@ -37,8 +37,18 @@ PubKey::PubKey( typeCode_t tc, QObject *p ) : QObject( p )
         break;
       default:
         // TODO: log error
-        typeCode = AO_DATAFIXED_UNDEFINED;
+        typeCode = AO_UNDEFINED_DATAITEM;
     }
+}
+
+/**
+ * @brief PubKey::PubKey - copy constructor
+ * @param pk - source key
+ * @param p - alternate parentage
+ */
+PubKey::PubKey( const PubKey &pk, QObject *p ) : DataItem( pk.typeCode, p ? p : pk.parent() )
+{ publicKeyECDSA   = pk.publicKeyECDSA;
+  publicKeyRsa3072 = pk.publicKeyRsa3072;
 }
 
 /**
@@ -46,13 +56,12 @@ PubKey::PubKey( typeCode_t tc, QObject *p ) : QObject( p )
  * @param di - data item
  * @param p - object parent, if any
  */
-PubKey::PubKey( const QByteArray &di, QObject *p ) : QObject( p )
+PubKey::PubKey( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { if ( di.size() < 34 )
     { // TODO: log error
-      typeCode = AO_DATAFIXED_UNDEFINED;
       return;
     }
-  switch ( di.at(0) )
+  switch ( typeCodeOf( di ) )
     { case AO_PUB_ECDSA_KEY2:
       case AO_PUB_ECDSA_KEY3:
         typeCode = di.at(0);
@@ -66,7 +75,7 @@ PubKey::PubKey( const QByteArray &di, QObject *p ) : QObject( p )
 
       default:
         // TODO: log error
-        typeCode = AO_DATAFIXED_UNDEFINED;
+        typeCode = AO_UNDEFINED_DATAITEM;
     }
 }
 

@@ -23,6 +23,7 @@
 #ifndef PUBKEY_H
 #define PUBKEY_H
 
+#include "dataitem.h"
 #include "publickeyecdsa.h"
 #include "publickeyrsa3072.h"
 
@@ -30,14 +31,13 @@
  * @brief The PubKey class - unnecessary? QByteArray wrapper.
  *   future plans include compressing 64-33 and expanding 33-64
  */
-class PubKey : public QObject
+class PubKey : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  PubKey( typeCode_t tc = AO_PUB_ECDSA_KEY2, QObject *p = nullptr );
+    explicit  PubKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
               PubKey( const QByteArray &di, QObject *p = nullptr );
-              PubKey( const PubKey &pk, QObject *p = nullptr ) : QObject( p ? p : pk.parent() ),
-                  typeCode( pk.typeCode ), publicKeyECDSA( pk.publicKeyECDSA ), publicKeyRsa3072( pk.publicKeyRsa3072 ) {}
+              PubKey( const PubKey &pk, QObject *p = nullptr );
         void  operator = ( const PubKey &k ) { typeCode = k.typeCode; publicKeyECDSA = k.publicKeyECDSA; publicKeyRsa3072 = k.publicKeyRsa3072; }
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem() const;
@@ -47,7 +47,6 @@ public:
         bool  isValid() const;
 
 private:
-        typeCode_t  typeCode;
     PublicKeyECDSA  publicKeyECDSA;
   PublicKeyRsa3072  publicKeyRsa3072;
 };

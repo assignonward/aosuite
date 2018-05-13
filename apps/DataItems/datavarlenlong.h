@@ -29,9 +29,9 @@ class DataVarLenLong : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  DataVarLenLong( typeCode_t tc = AO_VARLONG_INVALID, QByteArray iba = QByteArray(), QObject *p = nullptr )
+    explicit  DataVarLenLong( typeCode_t tc = AO_UNDEFINED_DATAITEM, QByteArray iba = QByteArray(), QObject *p = nullptr )
                 : DataItem( tc, p ), ba( iba ), csVal( false ) {}
-              DataVarLenLong( typeCode_t tc = AO_VARLONG_INVALID, QObject *p = nullptr )
+              DataVarLenLong( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
                 : DataItem( tc, p ), csVal( false ) {}
               DataVarLenLong( const DataVarLenLong &d, QObject *p = nullptr )
                 : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ), csVal( d.csVal ) {}

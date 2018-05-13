@@ -54,7 +54,6 @@
 #define AO_ASSIGNMENT_AMT    ( 0x00 | AO_SHARES_CODE )
 #define AO_UNDERWRITING_AMT  ( 0x01 | AO_SHARES_CODE )
 #define AO_RECORDING_BID     ( 0x02 | AO_SHARES_CODE )
-#define AO_SHARES_UNDEFINED  ( 0x07 | AO_SHARES_CODE )
 
 // First 4 bits, when 0100 means: this is a 4 byte chunk, one for the code, 2 for the data, one for the checkbyte (generally a 16 bit int)
 #define AO_SIZE_4BYTES         0x40
@@ -78,7 +77,6 @@
 #define AO_NOTE                0xAA  // optional field in the participant item
 #define AO_BLOCK_REF           0xAB  // reference to a block
 #define AO_PAGE_REF            0xAC  // reference to a page in a block
-#define AO_VARLONG_INVALID     0xBF  // undefined long variable length data
 
 // First 4 bits, when 1110 means: this is a short variable length byte array, up to 255 bytes
 // Next byte tells the length of the following byte array
@@ -88,8 +86,6 @@
 #define AO_ECDSA_SIG           0xE0  // starts with 8 bytes for time of signature, followed by the ECDSA signature itself
 
 // Flag that somebody forgot to initialize the type
-#define AO_DATAFIXED_UNDEFINED 0x7F
-
 #define AO_UNDEFINED_DATAITEM  0xFF
 
 #endif // BYTECODES_H
