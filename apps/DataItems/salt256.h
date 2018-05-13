@@ -32,6 +32,7 @@ public:
     explicit  Salt256( const QByteArray &iba = QByteArray(), QObject *p = nullptr );
               Salt256( const Salt256 &h, QObject *p = nullptr )
                 : DataFixedLength( AO_SALT256, h.ba, p ? p : h.parent() ) {}
+        void  operator = ( const QByteArray &di );
 };
 
 #endif // SALT256_H

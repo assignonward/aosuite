@@ -49,7 +49,7 @@ Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong(AO_ASS
                    else
                     { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
                         { case AO_SALT256:
-                            // salt = items;
+                            salt = items;
                             break;
 
                           case AO_PAGE_REF:

@@ -31,3 +31,9 @@ Salt256::Salt256( const QByteArray &iba, QObject *p )
     while ( ba.size() < 32 )
       ba.append( rng.rnd_uint64() );
 }
+
+void Salt256::operator = ( const QByteArray &di )
+{ Salt256 temp( di );
+  ba       = temp.ba;
+  typeCode = temp.typeCode;
+}
