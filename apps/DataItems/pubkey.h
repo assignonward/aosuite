@@ -28,8 +28,7 @@
 #include "publickeyrsa3072.h"
 
 /**
- * @brief The PubKey class - unnecessary? QByteArray wrapper.
- *   future plans include compressing 64-33 and expanding 33-64
+ * @brief The PubKey class - multi-container for various types of public keys
  */
 class PubKey : public DataItem
 {
@@ -38,7 +37,7 @@ public:
     explicit  PubKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
               PubKey( const QByteArray &di, QObject *p = nullptr );
               PubKey( const PubKey &pk, QObject *p = nullptr );
-        void  operator = ( const PubKey &k ) { typeCode = k.typeCode; publicKeyECDSA = k.publicKeyECDSA; publicKeyRsa3072 = k.publicKeyRsa3072; }
+        void  operator = ( const PubKey &k ) { typeCode = k.typeCode; publicKeyEcdsa = k.publicKeyEcdsa; publicKeyRsa3072 = k.publicKeyRsa3072; }
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem() const;
   QByteArray  get() const;
@@ -47,7 +46,7 @@ public:
         bool  isValid() const;
 
 private:
-    PublicKeyECDSA  publicKeyECDSA;
+    PublicKeyEcdsa  publicKeyEcdsa;
   PublicKeyRsa3072  publicKeyRsa3072;
 };
 

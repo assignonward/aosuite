@@ -23,17 +23,22 @@
 #ifndef SIGRSA3072_H
 #define SIGRSA3072_H
 
-#include <QObject>
+#include "datafixedlength.h"
 
-class SigRsa3072 : public QObject
+class SigRsa3072 : public DataFixedLength
 {
     Q_OBJECT
 public:
-    explicit SigRsa3072(QObject *parent = nullptr);
-
-signals:
-
-public slots:
+    explicit  SigRsa3072( QObject *p = nullptr )
+                : DataFixedLength( AO_RSA3072_SIG, p ) {}
+              SigRsa3072( const SigRsa3072 &s, QObject *p = nullptr )
+                : DataFixedLength( AO_RSA3072_SIG, s.ba, p ? p : s.parent() ) {}
+              SigRsa3072( const QByteArray &di, QObject *p = nullptr )
+                : DataFixedLength( di, p ) {}
+  QByteArray  get() const { return ba; }
+        void  set( QByteArray s ) { ba = s; }
+        void  clear() { ba.clear(); }
+    //  bool  isValid() { return (ba.size() == 32); } could do more, this is handled in the parent class
 };
 
 #endif // SIGRSA3072_H

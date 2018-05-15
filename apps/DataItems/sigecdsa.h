@@ -23,17 +23,22 @@
 #ifndef SIGECDSA_H
 #define SIGECDSA_H
 
-#include <QObject>
+#include "datavarlenshort.h"
 
-class SigEcdsa : public QObject
+class SigEcdsa : public DataVarLenShort
 {
     Q_OBJECT
 public:
-    explicit SigEcdsa(QObject *parent = nullptr);
-
-signals:
-
-public slots:
+    explicit  SigEcdsa( QObject *p = nullptr )
+                : DataVarLenShort( AO_ECDSA_SIG, p ) {}
+              SigEcdsa( const SigEcdsa &s, QObject *p = nullptr )
+                : DataVarLenShort( AO_ECDSA_SIG, s.ba, p ? p : s.parent() ) {}
+              SigEcdsa( const QByteArray &di, QObject *p = nullptr )
+                : DataVarLenShort( di, p ) {}
+  QByteArray  get() const { return ba; }
+        void  set( QByteArray s ) { ba = s; }
+        void  clear() { ba.clear(); }
+    //  bool  isValid() { return (ba.size() == 32); } could do more, this is handled in the parent class
 };
 
 #endif // SIGECDSA_H

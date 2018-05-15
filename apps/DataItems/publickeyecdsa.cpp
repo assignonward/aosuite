@@ -26,7 +26,7 @@
  * @brief PublicKeyECDSA::get
  * @return the key with the type code in front (standard 33 byte compressed format)
  */
-QByteArray  PublicKeyECDSA::get() const
+QByteArray  PublicKeyEcdsa::get() const
 { QByteArray k;
   switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
@@ -41,7 +41,7 @@ QByteArray  PublicKeyECDSA::get() const
  * @brief PublicKeyECDSA::set
  * @param k - 33 byte compressed key
  */
-void  PublicKeyECDSA::set( QByteArray k )
+void  PublicKeyEcdsa::set( QByteArray k )
 { if ( k.size() != 33 )
     { // TODO: log error
       return;

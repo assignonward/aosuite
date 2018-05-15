@@ -25,15 +25,15 @@
 
 #include "datafixedlength.h"
 
-class PublicKeyECDSA : public DataFixedLength
+class PublicKeyEcdsa : public DataFixedLength
 {
     Q_OBJECT
 public:
-    explicit  PublicKeyECDSA( QObject *p = nullptr )
+    explicit  PublicKeyEcdsa( QObject *p = nullptr )
                 : DataFixedLength( AO_ECDSA_PUB_KEY2, p ) {}
-              PublicKeyECDSA( const PublicKeyECDSA &k, QObject *p = nullptr )
+              PublicKeyEcdsa( const PublicKeyEcdsa &k, QObject *p = nullptr )
                 : DataFixedLength( AO_ECDSA_PUB_KEY2, k.ba, p ? p : k.parent() ) {}
-              PublicKeyECDSA( const QByteArray &di, QObject *p = nullptr )
+              PublicKeyEcdsa( const QByteArray &di, QObject *p = nullptr )
                 : DataFixedLength( di, p ) {}
   QByteArray  get() const;
         void  set( QByteArray k );

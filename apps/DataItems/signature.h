@@ -23,17 +23,29 @@
 #ifndef SIGNATURE_H
 #define SIGNATURE_H
 
-#include <QObject>
+#include "dataitem.h"
+#include "sigecdsa.h"
+#include "sigrsa3072.h"
 
-class Signature : public QObject
+/**
+ * @brief The Signature class - multi-container for various types of signatures
+ *   of course, a signature type must correspond to the PubKey type to validate.
+ */
+class Signature : public DataItem
 {
     Q_OBJECT
 public:
-    explicit Signature(QObject *parent = nullptr);
+    explicit  Signature( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
+              Signature( const QByteArray &di, QObject *p = nullptr );
+              Signature( const Signature &s, QObject *p = nullptr );
+        void  operator = ( const Signature &s ) { typeCode = s.typeCode; sigEcdsa = s.sigEcdsa; sigRsa3072 = s.sigRsa3072; }
+        void  operator = ( const QByteArray &di );
+  QByteArray  toDataItem() const;
+  QByteArray  get() const;
 
-signals:
-
-public slots:
+private:
+    SigEcdsa  sigEcdsa;
+  SigRsa3072  sigRsa3072;
 };
 
 #endif // SIGNATURE_H
