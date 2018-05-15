@@ -28,7 +28,8 @@
  * @param p - object parent, if any.
  */
 Data128::Data128( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
-{ v = 0;
+{ csVal = false;
+  v = 0;
   if ( di.size() < 18 )
     { // TODO: log an exception
       return;
@@ -57,8 +58,10 @@ Data128::Data128( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DA
   chk ^= u.d[13] = di.at(14);
   chk ^= u.d[14] = di.at(15);
   chk ^= u.d[15] = di.at(16);
-  // if ( chk != ba.at(17) )
-  //   TODO: log a warning
+  if ( chk == di.at(17) )
+    csVal = true;
+   // else
+   // TODO: log a warning
   v = u.i;
 }
 
@@ -70,6 +73,7 @@ void Data128::operator = ( const QByteArray &di )
 { Data128 temp( di );
   v        = temp.v;
   typeCode = temp.typeCode;
+  csVal    = temp.csVal;
   return;
 }
 
@@ -77,7 +81,7 @@ void Data128::operator = ( const QByteArray &di )
  * @brief Data128::toDataItem
  * @return byte array starting with type code, followed by 128 bit data and 8 bit checksum.
  */
-QByteArray Data128::toDataItem()
+QByteArray Data128::toDataItem() const
 { QByteArray di;
   union _128_in_8s
     {      __int128 i;

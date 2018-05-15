@@ -42,7 +42,7 @@ public:
               DataFixedLength( const QByteArray &di, QObject *p = nullptr );
   QByteArray  toDataItem() const;
         void  operator =  ( const QByteArray &di );
-        void  operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; }
+        void  operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; csVal = d.csVal; }
         bool  operator == ( const DataFixedLength &d ) { return ba == d.ba; }
         bool  operator != ( const DataFixedLength &d ) { return ba != d.ba; }
   QByteArray  get() const { return ba; } // Just the meat, without typecode or checksum

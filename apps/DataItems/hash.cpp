@@ -70,7 +70,7 @@ Hash::Hash( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM
  * @brief Hash::toDataItem
  * @return Data Item representing this hash
  */
-QByteArray Hash::toDataItem()
+QByteArray Hash::toDataItem() const
 { switch ( typeCode )
     { case AO_HASH256:
         return hash256.toDataItem();

@@ -38,10 +38,10 @@ public:
               Data128( const Data128 &d, QObject *p = nullptr )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data128( const QByteArray &di, QObject *p = nullptr );
-  QByteArray  toDataItem();
+  QByteArray  toDataItem() const;
         void  operator = ( const QByteArray &di );
-        void  operator = ( const  Data128 &d ) { v = d.v; }
-        void  operator = ( const __int128 &d ) { v = d;   }
+        void  operator = ( const  Data128 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
+        void  operator = ( const __int128 &d ) { v = d; }
      Data128  operator + ( const  Data128 &d ) { Data128 c(*this); c.v = v + d.v; return c; }
      Data128  operator + ( const __int128 &d ) { Data128 c(*this); c.v = v + d;   return c; }
      Data128  operator - ( const  Data128 &d ) { Data128 c(*this); c.v = v - d.v; return c; }

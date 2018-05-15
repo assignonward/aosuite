@@ -22,7 +22,8 @@
  */
 #include "dataitem.h"
 
-DataItem::DataItem( typeCode_t tc, QObject *p ) : QObject(p), typeCode( tc )
+DataItem::DataItem( typeCode_t tc, QObject *p )
+            : QObject(p), typeCode( tc ), csVal( false )
 {}
 
 /**

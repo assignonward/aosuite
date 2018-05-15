@@ -22,6 +22,8 @@
 #
 
 INCLUDEPATH += $${PWD}
+INCLUDEPATH += /usr/include
+LIBS        += -lgpgme -lgcrypt -ldl -lgpg-error
 
 SOURCES     += $${PWD}/dataitem.cpp         \
                $${PWD}/data16.cpp           \

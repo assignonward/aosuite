@@ -28,7 +28,8 @@
  * @param p - parent object
  */
 DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
-{ if ( di.size() < 4 ) // Shortest fixed length serialized data type
+{ csVal = false;
+  if ( di.size() < 4 ) // Shortest fixed length serialized data type
     { // TODO: log an exception
       return;
     }
@@ -43,10 +44,10 @@ DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : DataItem(
     { ba.append( di.at(i) );
       chk ^= di.at(i);
     }
-  if ( chk != di.at( di.size()-1 ) )
-    { // TODO: log an exception
-      return;
-    }
+  if ( chk == di.at( di.size()-1 ) )
+    csVal = true;
+  // else
+  // TODO: log an exception
 }
 
 /**
@@ -57,6 +58,7 @@ void DataFixedLength::operator = ( const QByteArray &di )
 { DataFixedLength temp( di );
   ba       = temp.ba;
   typeCode = temp.typeCode;
+  csVal    = temp.csVal;
   return;
 }
 
@@ -82,6 +84,9 @@ QByteArray DataFixedLength::toDataItem() const
  */
 void DataFixedLength::set( QByteArray sba )
 { if ( sba.size() == (typeSize() - 2) )
-    ba = sba;
+    { ba    = sba;
+      csVal = true;
+    }
+  // else
   // TODO: log warning
 }

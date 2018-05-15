@@ -35,10 +35,10 @@ public:
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data16( const QByteArray &di, QObject *p = nullptr );
     explicit  Data16(QObject *parent = nullptr);
-  QByteArray  toDataItem();
+  QByteArray  toDataItem() const;
         void  operator = ( const QByteArray &di );
-        void  operator = ( const Data16 &d ) { v = d.v; }
-        void  operator = ( const qint16 &d ) { v = d;   }
+        void  operator = ( const Data16 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
+        void  operator = ( const qint16 &d ) { v = d; }
       Data16  operator + ( const Data16 &d ) { Data16 c(*this); c.v = v + d.v; return c; }
       Data16  operator + ( const qint16 &d ) { Data16 c(*this); c.v = v + d;   return c; }
       Data16  operator - ( const Data16 &d ) { Data16 c(*this); c.v = v - d.v; return c; }

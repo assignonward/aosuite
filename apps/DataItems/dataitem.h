@@ -37,9 +37,12 @@ public:
              qint32  typeSize( const QByteArray &di ) const;
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const QByteArray &di );
+               bool  checksumValidated() const { return csVal; }
+ virtual QByteArray  toDataItem() const { return QByteArray(); } // Implemented in all child classes
 
 protected:
   typeCode_t  typeCode; // what kind of data item is this?
+        bool  csVal; // has the checksum been validated (during a data item initialization, or assignment)?
 };
 
 #endif // DATAITEM_H

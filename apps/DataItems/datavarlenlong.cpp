@@ -76,7 +76,7 @@ void DataVarLenLong::operator = ( const QByteArray &di )
  * @brief DataVarLenLong::toDataItem
  * @return serialized bytearray with typeCode, size, data and checksum
  */
-QByteArray DataVarLenLong::toDataItem()
+QByteArray DataVarLenLong::toDataItem() const
 { QByteArray di;
   di.append( typeCode );
   qint32 size = ba.size();

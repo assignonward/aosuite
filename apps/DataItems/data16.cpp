@@ -28,7 +28,8 @@
  * @param p - object parent, if any.
  */
 Data16::Data16( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
-{ v = 0;
+{ csVal = false;
+  v = 0;
   if ( di.size() < 4 )
     { // TODO: log an exception
       return;
@@ -43,8 +44,10 @@ Data16::Data16( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATA
   //   TODO: log a warning
   chk ^= u.d[ 0] = di.at( 1);
   chk ^= u.d[ 1] = di.at( 2);
-  // if ( chk != ba.at(3) )
-  //   TODO: log a warning
+  if ( chk == di.at(3) )
+    csVal = true;
+  // else
+  // TODO: log a warning
   v = u.i;
 }
 
@@ -56,6 +59,7 @@ void Data16::operator = ( const QByteArray &di )
 { Data16 temp( di );
   v        = temp.v;
   typeCode = temp.typeCode;
+  csVal    = temp.csVal;
   return;
 }
 
@@ -63,7 +67,7 @@ void Data16::operator = ( const QByteArray &di )
  * @brief Data16::toDataItem
  * @return byte array starting with type code, followed by 16 bit data and 8 bit checksum.
  */
-QByteArray Data16::toDataItem()
+QByteArray Data16::toDataItem() const
 { QByteArray di;
   union _16_in_8s
     {        qint16 i;
