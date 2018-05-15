@@ -27,12 +27,12 @@ SOURCES     += $${PWD}/blockref.cpp        \
                $${PWD}/pageref.cpp         \
                $${PWD}/participant.cpp     \
                $${PWD}/participantlist.cpp \
-               $${PWD}/assignment.cpp \
-    $$PWD/signaturewithtime.cpp
+               $${PWD}/signature.cpp       \
+               $${PWD}/assignment.cpp
 
 HEADERS     += $${PWD}/blockref.h        \
                $${PWD}/pageref.h         \
                $${PWD}/participant.h     \
                $${PWD}/participantlist.h \
-               $${PWD}/assignment.h \
-    $$PWD/signaturewithtime.h
+               $${PWD}/signature.h       \
+               $${PWD}/assignment.h

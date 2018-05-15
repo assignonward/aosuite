@@ -41,11 +41,10 @@ SOURCES     += $${PWD}/dataitem.cpp         \
                $${PWD}/publickeyecdsa.cpp   \
                $${PWD}/publickeyrsa3072.cpp \
                $${PWD}/salt256.cpp          \
-               $${PWD}/note.cpp \
-    $$PWD/signature.cpp \
-    $$PWD/sigecdsa.cpp \
-    $$PWD/sigrsa3072.cpp \
-    $$PWD/datavarlenshort.cpp
+               $${PWD}/note.cpp             \
+               $${PWD}/sigecdsa.cpp         \
+               $${PWD}/sigrsa3072.cpp       \
+               $${PWD}/datavarlenshort.cpp
 
 HEADERS     += $${PWD}/bytecodes.h        \
                $${PWD}/dataitem.h         \
@@ -64,8 +63,7 @@ HEADERS     += $${PWD}/bytecodes.h        \
                $${PWD}/publickeyecdsa.h   \
                $${PWD}/publickeyrsa3072.h \
                $${PWD}/salt256.h          \
-               $${PWD}/note.h \
-    $$PWD/signature.h \
-    $$PWD/sigecdsa.h \
-    $$PWD/sigrsa3072.h \
-    $$PWD/datavarlenshort.h
+               $${PWD}/note.h             \
+               $${PWD}/sigecdsa.h         \
+               $${PWD}/sigrsa3072.h       \
+               $${PWD}/datavarlenshort.h

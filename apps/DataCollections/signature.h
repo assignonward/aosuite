@@ -23,7 +23,8 @@
 #ifndef SIGNATURE_H
 #define SIGNATURE_H
 
-#include "dataitem.h"
+#include "aotime.h"
+#include "datavarlenlong.h"
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
 
@@ -31,19 +32,27 @@
  * @brief The Signature class - multi-container for various types of signatures
  *   of course, a signature type must correspond to the PubKey type to validate.
  */
-class Signature : public DataItem
+class Signature : public DataVarLenLong
 {
     Q_OBJECT
 public:
     explicit  Signature( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
               Signature( const QByteArray &di, QObject *p = nullptr );
               Signature( const Signature &s, QObject *p = nullptr );
-        void  operator = ( const Signature &s ) { typeCode = s.typeCode; sigEcdsa = s.sigEcdsa; sigRsa3072 = s.sigRsa3072; }
+        void  operator = ( const Signature &s ) { sigType = s.sigType; sigEcdsa = s.sigEcdsa; sigRsa3072 = s.sigRsa3072; sigTime = s.sigTime; }
         void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem() const;
-  QByteArray  get() const;
+  QByteArray  toDataItem();
+  QByteArray  getSig() const;
+        void  setSig( const QByteArray &s, typeCode_t tc = AO_UNDEFINED_DATAITEM );
+      AOTime  getTime() const { return sigTime; }
+        void  setTime( const AOTime &t ) { sigTime = t; }
+  typeCode_t  getType() const { return sigType; }
 
 private:
+  // Every signature has a time of signing
+      AOTime  sigTime;
+  // Only one of these types of signatures is used at a time
+  typeCode_t  sigType;
     SigEcdsa  sigEcdsa;
   SigRsa3072  sigRsa3072;
 };

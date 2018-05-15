@@ -33,6 +33,7 @@
 #include "random.h"
 #include "salt256.h"
 #include "shares.h"
+#include "signature.h"
 
 /**
  * @brief The Assignment class - for negotiation and recording of a shares assignment contract
@@ -75,8 +76,8 @@ public:
  QByteArray  toByteArray() { return QByteArray(); }
 
 private:
-       Assignment  tran;
-//  QList<SignatureWithTime> sigs;  // Same length and order as the participants list in tran
+         Assignment  tran;
+    QList<Signature> sigs;  // Same length and order as the participants list in tran
 };
 
 /* A structure to hold:
