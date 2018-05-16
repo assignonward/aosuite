@@ -46,6 +46,7 @@ public:
         void  setTime( AOTime t ) { propTime = t; }
         void  setHash(   Hash h ) {  blkHash = h; }
   QByteArray  toDataItem();
+        bool  isValid() { return propTime.past() && blkHash.isValid(); }
 
 private:
       AOTime  propTime;  // time this block was proposed (should fit it into a specific time-layer)

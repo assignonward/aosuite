@@ -45,6 +45,7 @@ public:
         void  operator = ( const QByteArray &di );
       AOTime  publicationTime() { return block.time(); }
   QByteArray  toDataItem();
+        bool  isValid() { return block.isValid(); }
 
 private:
     BlockRef block;           // block this page is recorded in

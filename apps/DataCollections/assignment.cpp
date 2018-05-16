@@ -37,7 +37,8 @@ Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong( AO_AS
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { randomizeSalt();                    // Incase it is not yet created
+          DataVarLenLong temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -62,10 +63,16 @@ Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong( AO_AS
 
                           case AO_RECORDING_BID:
                             recordingBid = items;
+                            break;
+
+                          case AO_NOTE:
+                            note = items;
+                            break;
 
                           case AO_PARTICIPANT_LIST:
                           case AO_PARTICIPANT_LIST_CF:
                             participants = items;
+                            break;
 
                           default:
                             // TODO: log anomaly - unrecognized data type
@@ -77,6 +84,39 @@ Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong( AO_AS
             }
         }
     }
+}
+
+void Assignment::operator = ( const QByteArray &di )
+{ Assignment temp( di );
+  salt              = temp.salt;
+  proposedChain     = temp.proposedChain;
+  recordingDeadline = temp.recordingDeadline;
+  recordingBid      = temp.recordingBid;
+  note              = temp.note;
+  participants      = temp.participants;
+  typeCode          = temp.typeCode;
+  return;
+}
+
+QByteArray  Assignment::toDataItem()
+{ QList<QByteArray> dil;
+  if ( salt.isValid() )
+    dil.append( salt.toDataItem() );
+  if ( proposedChain.isValid() )
+    dil.append( proposedChain.toDataItem() );
+  if ( recordingDeadline.future() )
+    dil.append( recordingDeadline.toDataItem() );
+  if ( recordingBid >= 0 )
+    dil.append( recordingBid.toDataItem() );
+  if ( note.size() > 0 )
+    dil.append( note.toDataItem() );
+  if ( participants.listSize() > 0 )
+    dil.append( participants.toDataItem() );
+  // TODO: randomize order of dil
+  ba.clear();
+  foreach( QByteArray a, dil )
+    ba.append( a );
+  return DataVarLenLong::toDataItem();
 }
 
 AOTime Assignment::proposalTime()

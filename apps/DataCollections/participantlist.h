@@ -32,9 +32,10 @@ class ParticipantList : public DataVarLenLong
 public:
     explicit  ParticipantList( const QByteArray &di = QByteArray(), QObject *p = nullptr );
         void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( typeCode_t tc );
+  QByteArray  toDataItem( typeCode_t tc = AO_PARTICIPANT_LIST );
         void  clear();
     ListSize  append( const Participant &part );
+      qint32  listSize() { return list.size(); }
 
   QList<Participant> list; // public so assignment contracts and signature lists may access it directly
 private:
