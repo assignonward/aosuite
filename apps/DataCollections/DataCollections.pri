@@ -29,7 +29,8 @@ SOURCES     += $${PWD}/blockref.cpp        \
                $${PWD}/participantlist.cpp \
                $${PWD}/signature.cpp       \
                $${PWD}/assignment.cpp \
-    $$PWD/recorder.cpp
+    $$PWD/recorder.cpp \
+    $$PWD/organizer.cpp
 
 HEADERS     += $${PWD}/blockref.h        \
                $${PWD}/pageref.h         \
@@ -37,4 +38,5 @@ HEADERS     += $${PWD}/blockref.h        \
                $${PWD}/participantlist.h \
                $${PWD}/signature.h       \
                $${PWD}/assignment.h \
-    $$PWD/recorder.h
+    $$PWD/recorder.h \
+    $$PWD/organizer.h

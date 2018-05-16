@@ -78,7 +78,8 @@
 #define AO_BLOCK_REF           0xAB  // reference to a block
 #define AO_PAGE_REF            0xAC  // reference to a page in a block
 #define AO_SIG_WITH_TIME       0xAE  // contains time of signature, and the signature itself
-#define AO_RECORDER            0xB9  // collection of data to describe a Rcorder entity
+#define AO_ORGANIZER           0xB8  // collection of data to describe an Organizer entity
+#define AO_RECORDER            0xB9  // collection of data to describe a Recorder entity
 #define AO_NETADDRESS          0xBA  // string with an IP4, IP6 or FQDN address, optionally with :port number
 
 // First 4 bits, when 1110 means: this is a short variable length byte array, up to 255 bytes
