@@ -71,8 +71,6 @@
 #define AO_ASSIGNMENT          0xA0  // wrapper around the assignment data fields, which can come in any order
 #define AO_PARTICIPANT         0xA1  // wrapper around the participant data fields, which can come in any order
 #define AO_PARTICIPANT_CF      0xA2  // wrapper around the compact form participant data fields, which can come in any order
-#define AO_PARTICIPANT_LIST    0xA3  // starts with an AO_LISTSIZE, followed by that many participant objects
-#define AO_PARTICIPANT_LIST_CF 0xA4  // starts with an AO_LISTSIZE, followed by that many participant objects in compact form
 #define AO_SIGNATURE_LIST      0xA5  // starts with an AO_LISTSIZE, followed by that many signature objects
 #define AO_AUTHORIZATION       0xA6  // an assignment, fully countersigned by all parties to the assignment
 #define AO_NOTE                0xAA  // optional field in the participant item

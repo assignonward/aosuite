@@ -27,8 +27,10 @@
 #include "aotime.h"
 #include "blockref.h"
 #include "datavarlenlong.h"
+#include "listsize.h"
+#include "note.h"
 #include "pageref.h"
-#include "participantlist.h"
+#include "participant.h"
 #include "pubkey.h"
 #include "random.h"
 #include "salt256.h"
@@ -62,7 +64,8 @@ private:
              AOTime  recordingDeadline; // When the assignment contract is expected to be recorded in the chain
              Shares  recordingBid;      // Positive amount to bid for all underwriting and recording taxes
                Note  note;              // top level note, applies to all participants whereas participant level notes may only apply to that participant
-    ParticipantList  participants;
+           ListSize  nParticipants;
+  QList<Participant> participants;
 };
 
 /**
@@ -86,8 +89,8 @@ public:
 
 private:
          Assignment  assignment;
-    QList<Signature> sigs;      // Same length and order as the participants list in tran
-           ListSize  listSize;  // Used primarily as a check during serialization and deserialization
+    QList<Signature> sigs;   // Same length and order as the participants list in tran
+           ListSize  nSigs;  // Used primarily as a check during serialization and deserialization
 };
 
 /* A structure to hold:

@@ -48,7 +48,8 @@ Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong( AO_AS
                       return;
                     }
                    else
-                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                    { Participant part;
+                      switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
                         { case AO_SALT256:
                             salt = items;
                             break;
@@ -69,9 +70,14 @@ Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong( AO_AS
                             note = items;
                             break;
 
-                          case AO_PARTICIPANT_LIST:
-                          case AO_PARTICIPANT_LIST_CF:
-                            participants = items;
+                          case AO_PARTICIPANT:
+                          case AO_PARTICIPANT_CF:
+                            part = items;
+                            participants.append( part );
+                            break;
+
+                          case AO_LISTSIZE:
+                            nParticipants = items;
                             break;
 
                           default:
@@ -94,6 +100,7 @@ void Assignment::operator = ( const QByteArray &di )
   recordingBid      = temp.recordingBid;
   note              = temp.note;
   participants      = temp.participants;
+  nParticipants     = temp.nParticipants;
   typeCode          = temp.typeCode;
   return;
 }
@@ -110,8 +117,11 @@ QByteArray  Assignment::toDataItem()
     dil.append( recordingBid.toDataItem() );
   if ( note.size() > 0 )
     dil.append( note.toDataItem() );
-  if ( participants.listSize() > 0 )
-    dil.append( participants.toDataItem() );
+  if ( participants.size() > 0 )
+    foreach( Participant p, participants )
+      dil.append( p.toDataItem() );
+  nParticipants = participants.size();
+  dil.append( nParticipants.toDataItem() );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
@@ -158,7 +168,7 @@ bool Assignment::validTimeline()
  */
 bool Assignment::validSum()
 { Shares total(0);
-  foreach( Participant p, participants.list )
+  foreach( Participant p, participants )
     total += p.getAmount();
   return ( recordingBid == total );
 }
@@ -195,7 +205,7 @@ Authorization::Authorization(const QByteArray &di, QObject *p) : DataVarLenLong(
                             break;
 
                           case AO_LISTSIZE:
-                            listSize = items;
+                            nSigs = items;
                             break;
 
                           default:
@@ -212,10 +222,10 @@ Authorization::Authorization(const QByteArray &di, QObject *p) : DataVarLenLong(
 
 void Authorization::operator = ( const QByteArray &di )
 { Authorization temp( di );
-  assignment        = temp.assignment;
-  sigs              = temp.sigs;
-  listSize          = temp.listSize;
-  typeCode          = temp.typeCode;
+  assignment     = temp.assignment;
+  sigs           = temp.sigs;
+  nSigs          = temp.nSigs;
+  typeCode       = temp.typeCode;
   return;
 }
 
@@ -225,7 +235,8 @@ QByteArray  Authorization::toDataItem()
   if ( sigs.size() > 0 )
     foreach( Signature s, sigs )
       dil.append( s.toDataItem() );
-  dil.append( listSize.toDataItem() );
+  nSigs = sigs.size();
+  dil.append( nSigs.toDataItem() );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )

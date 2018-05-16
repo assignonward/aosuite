@@ -23,20 +23,18 @@
 
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/blockref.cpp        \
-               $${PWD}/pageref.cpp         \
-               $${PWD}/participant.cpp     \
-               $${PWD}/participantlist.cpp \
-               $${PWD}/signature.cpp       \
-               $${PWD}/assignment.cpp \
-    $$PWD/recorder.cpp \
-    $$PWD/organizer.cpp
+SOURCES     += $${PWD}/blockref.cpp    \
+               $${PWD}/pageref.cpp     \
+               $${PWD}/participant.cpp \
+               $${PWD}/signature.cpp   \
+               $${PWD}/assignment.cpp  \
+               $${PWD}/recorder.cpp    \
+               $${PWD}/organizer.cpp
 
-HEADERS     += $${PWD}/blockref.h        \
-               $${PWD}/pageref.h         \
-               $${PWD}/participant.h     \
-               $${PWD}/participantlist.h \
-               $${PWD}/signature.h       \
-               $${PWD}/assignment.h \
-    $$PWD/recorder.h \
-    $$PWD/organizer.h
+HEADERS     += $${PWD}/blockref.h    \
+               $${PWD}/pageref.h     \
+               $${PWD}/participant.h \
+               $${PWD}/signature.h   \
+               $${PWD}/assignment.h  \
+               $${PWD}/recorder.h    \
+               $${PWD}/organizer.h
