@@ -162,3 +162,73 @@ bool Assignment::validSum()
     total += p.getAmount();
   return ( recordingBid == total );
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+Authorization::Authorization(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSIGNMENT, p )
+{ // See if there's anything interesting in the data item
+  if ( di.size() > 0 )
+    { if ( typeCodeOf( di ) != AO_AUTHORIZATION )
+        { // TODO: log an error
+          return;
+        }
+       else
+        { DataVarLenLong temp( di );          // It's our type
+          if ( temp.checksumValidated() )
+            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+              while ( items.size() > 0 )
+                { int sz = typeSize( items );
+                  if ( sz <= 0 )
+                    { // TODO: log error
+                      return;
+                    }
+                   else
+                    { Signature sig;
+                      switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                        { case AO_ASSIGNMENT:
+                            assignment = items;
+                            break;
+
+                          case AO_SIG_WITH_TIME:
+                            sig = items;
+                            sigs.append( sig );
+                            break;
+
+                          case AO_LISTSIZE:
+                            listSize = items;
+                            break;
+
+                          default:
+                            // TODO: log anomaly - unrecognized data type
+                            break;
+                        }
+                      items = items.mid( sz ); // move on to the next
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Authorization::operator = ( const QByteArray &di )
+{ Authorization temp( di );
+  assignment        = temp.assignment;
+  sigs              = temp.sigs;
+  listSize          = temp.listSize;
+  typeCode          = temp.typeCode;
+  return;
+}
+
+QByteArray  Authorization::toDataItem()
+{ QList<QByteArray> dil;
+  dil.append( assignment.toDataItem() );
+  if ( sigs.size() > 0 )
+    foreach( Signature s, sigs )
+      dil.append( s.toDataItem() );
+  dil.append( listSize.toDataItem() );
+  // TODO: randomize order of dil
+  ba.clear();
+  foreach( QByteArray a, dil )
+    ba.append( a );
+  return DataVarLenLong::toDataItem();
+}

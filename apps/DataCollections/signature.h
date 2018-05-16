@@ -25,6 +25,7 @@
 
 #include "aotime.h"
 #include "datavarlenlong.h"
+#include "index.h"
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
 
@@ -39,7 +40,7 @@ public:
     explicit  Signature( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
               Signature( const QByteArray &di, QObject *p = nullptr );
               Signature( const Signature &s, QObject *p = nullptr );
-        void  operator = ( const Signature &s ) { sigType = s.sigType; sigEcdsa = s.sigEcdsa; sigRsa3072 = s.sigRsa3072; sigTime = s.sigTime; }
+        void  operator = ( const Signature &s ) { sigType = s.sigType; sigEcdsa = s.sigEcdsa; sigRsa3072 = s.sigRsa3072; sigTime = s.sigTime; index = s.index; }
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem();
   QByteArray  getSig() const;
@@ -47,6 +48,8 @@ public:
       AOTime  getTime() const { return sigTime; }
         void  setTime( const AOTime &t ) { sigTime = t; }
   typeCode_t  getType() const { return sigType; }
+       Index  getIndex() const { return index; }
+        void  setIndex( const Index &i ) { index = i; }
 
 private:
   // Every signature has a time of signing
@@ -55,6 +58,8 @@ private:
   typeCode_t  sigType;
     SigEcdsa  sigEcdsa;
   SigRsa3072  sigRsa3072;
+  // Index, used in Authorizations to match to index numbers in the participant list
+       Index  index;
 };
 
 #endif // SIGNATURE_H

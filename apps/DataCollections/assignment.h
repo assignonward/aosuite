@@ -42,9 +42,9 @@ class Assignment : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Assignment(const QByteArray &di = QByteArray(), QObject *p = nullptr);
-              Assignment( const Assignment &a )
-                : DataVarLenLong( AO_ASSIGNMENT, a.parent() ), salt( a.salt ), proposedChain( a.proposedChain ),
+    explicit  Assignment( const QByteArray &di = QByteArray(), QObject *p = nullptr );
+              Assignment( const Assignment &a, QObject *p = nullptr )
+                : DataVarLenLong( AO_ASSIGNMENT, p ? p : a.parent() ), salt( a.salt ), proposedChain( a.proposedChain ),
                   recordingDeadline( a.recordingDeadline ), recordingBid( a.recordingBid ), note( a.note ),
                   participants( a.participants ) {}
         void  operator = ( const QByteArray &di );
@@ -73,17 +73,21 @@ private:
  *   which describes the maximum commission payable to
  *   the sum of all underwriters, chain-maker, and recording tax.
  */
-class Authorization : public QObject
+class Authorization : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit Authorization( QObject *parent = nullptr) : QObject( parent ) {}
- //            Authorization( Assignment t, QObject *parent = nullptr);
- QByteArray  toByteArray() { return QByteArray(); }
+    explicit Authorization( const QByteArray &di = QByteArray(), QObject *p = nullptr );
+             Authorization( const Authorization &a, QObject *p = nullptr )
+               : DataVarLenLong( AO_AUTHORIZATION, p ? p : a.parent() ),
+                 assignment( a.assignment ), sigs( a.sigs ) {}
+       void  operator = ( const QByteArray &di );
+ QByteArray  toDataItem();
 
 private:
-         Assignment  tran;
-    QList<Signature> sigs;  // Same length and order as the participants list in tran
+         Assignment  assignment;
+    QList<Signature> sigs;      // Same length and order as the participants list in tran
+           ListSize  listSize;  // Used primarily as a check during serialization and deserialization
 };
 
 /* A structure to hold:

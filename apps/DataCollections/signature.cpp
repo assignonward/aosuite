@@ -30,6 +30,7 @@
 Signature::Signature( typeCode_t tc, QObject *p )
   : DataVarLenLong( tc, p )
 { typeCode = AO_SIG_WITH_TIME;
+  index = -1;
   switch ( tc )
     { case AO_ECDSA_SIG: // valid type codes for Signature
       case AO_RSA3072_SIG:
@@ -52,6 +53,7 @@ Signature::Signature( const Signature &s, QObject *p )
   sigType    = s.sigType;
   sigEcdsa   = s.sigEcdsa;
   sigRsa3072 = s.sigRsa3072;
+  index      = s.index;
 }
 
 /**
@@ -94,6 +96,10 @@ Signature::Signature( const QByteArray &di, QObject *p )
                             sigType    = AO_RSA3072_SIG;
                             break;
 
+                          case AO_INDEX:
+                            index = items;
+                            break;
+                                                  break;
                           default:
                             // TODO: log anomaly - unrecognized data type
                             break;
@@ -116,6 +122,7 @@ void Signature::operator = ( const QByteArray &di )
   typeCode   = temp.typeCode;
   sigEcdsa   = temp.sigEcdsa;
   sigRsa3072 = temp.sigRsa3072;
+  index      = temp.index;
 }
 
 /**
@@ -134,6 +141,8 @@ QByteArray  Signature::toDataItem()
           dil.append( sigRsa3072.toDataItem() );
           break;
       }
+  if ( index >= 0 )
+    dil.append( index.toDataItem() );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )

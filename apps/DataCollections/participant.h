@@ -41,7 +41,7 @@ public:
     explicit  Participant( QByteArray di = QByteArray(), QObject *p = nullptr );
               Participant( const Participant &r )
                 : DataVarLenLong( AO_PARTICIPANT, QByteArray(), r.parent() ),
-                  amount( r.amount ), key( r.key ), page( r.page ), note( r.note ) {}
+                  amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( typeCode_t tc = AO_PARTICIPANT );
   QByteArray  getId()      const { return key.getId(); }
@@ -51,6 +51,8 @@ public:
         void  setId( QByteArray i )   { key.set( i );  }
         void  setAmount( Shares v )   { amount = v;  /* TODO: log error for 0 */ }
         void  setNote( QByteArray n ) { note.set( n ); }
+       Index  getIndex() const { return index; }
+        void  setIndex( const Index &i ) { index = i; }
 
 private:
       Shares  amount;  // Negative for givers, positive for receivers, 0 is invalid
@@ -58,6 +60,7 @@ private:
         Hash  keyHash; // Hash of the public key, not always suitable to check signatures, but good enough for unique Id
      PageRef  page;    // Reference for givers
         Note  note;    // Arbitrary data to record with the transaction
+       Index  index;   // When part of a participant list, this is the index number (starting with 0)
 };
 
 #endif // PARTICIPANT_H

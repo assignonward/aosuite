@@ -38,6 +38,7 @@
 
 Participant::Participant( QByteArray di, QObject *p ) : DataVarLenLong( AO_PARTICIPANT, p )
 { // See if there's anything interesting in the data item
+  index = -1;
   if ( di.size() > 0 )
     { if (( typeCodeOf( di ) != AO_PARTICIPANT ) &&
           ( typeCodeOf( di ) != AO_PARTICIPANT_CF ))
@@ -76,6 +77,9 @@ Participant::Participant( QByteArray di, QObject *p ) : DataVarLenLong( AO_PARTI
                           case AO_NOTE:
                             note = items;
 
+                          case AO_INDEX:
+                            index = items;
+
                           default:
                             // TODO: log anomaly - unrecognized data type
                             break;
@@ -99,6 +103,7 @@ void Participant::operator = ( const QByteArray &di )
   keyHash  = temp.keyHash;
   page     = temp.page;
   note     = temp.note;
+  index    = temp.index;
   typeCode = temp.typeCode;
 }
 
@@ -121,6 +126,8 @@ QByteArray Participant::toDataItem( typeCode_t tc )
           dil.append( page.toDataItem() );
         if ( note.size() > 0 )
           dil.append( note.toDataItem() );
+        if ( index > -1 )
+          dil.append( index.toDataItem() );
         break;
 
       case AO_PARTICIPANT_CF:
@@ -132,6 +139,8 @@ QByteArray Participant::toDataItem( typeCode_t tc )
           dil.append( keyHash.toDataItem() );
         if ( note.size() > 0 )
           dil.append( note.toDataItem() );
+        if ( index > -1 )
+          dil.append( index.toDataItem() );
         break;
 
       default:

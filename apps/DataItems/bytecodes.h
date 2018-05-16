@@ -74,6 +74,7 @@
 #define AO_PARTICIPANT_LIST    0xA3  // starts with an AO_LISTSIZE, followed by that many participant objects
 #define AO_PARTICIPANT_LIST_CF 0xA4  // starts with an AO_LISTSIZE, followed by that many participant objects in compact form
 #define AO_SIGNATURE_LIST      0xA5  // starts with an AO_LISTSIZE, followed by that many signature objects
+#define AO_AUTHORIZATION       0xA6  // an assignment, fully countersigned by all parties to the assignment
 #define AO_NOTE                0xAA  // optional field in the participant item
 #define AO_BLOCK_REF           0xAB  // reference to a block
 #define AO_PAGE_REF            0xAC  // reference to a page in a block
