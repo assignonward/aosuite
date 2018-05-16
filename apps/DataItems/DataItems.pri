@@ -44,7 +44,8 @@ SOURCES     += $${PWD}/dataitem.cpp         \
                $${PWD}/note.cpp             \
                $${PWD}/sigecdsa.cpp         \
                $${PWD}/sigrsa3072.cpp       \
-               $${PWD}/datavarlenshort.cpp
+               $${PWD}/datavarlenshort.cpp \
+    $$PWD/netaddress.cpp
 
 HEADERS     += $${PWD}/bytecodes.h        \
                $${PWD}/dataitem.h         \
@@ -66,4 +67,5 @@ HEADERS     += $${PWD}/bytecodes.h        \
                $${PWD}/note.h             \
                $${PWD}/sigecdsa.h         \
                $${PWD}/sigrsa3072.h       \
-               $${PWD}/datavarlenshort.h
+               $${PWD}/datavarlenshort.h \
+    $$PWD/netaddress.h

@@ -28,11 +28,13 @@ SOURCES     += $${PWD}/blockref.cpp        \
                $${PWD}/participant.cpp     \
                $${PWD}/participantlist.cpp \
                $${PWD}/signature.cpp       \
-               $${PWD}/assignment.cpp
+               $${PWD}/assignment.cpp \
+    $$PWD/recorder.cpp
 
 HEADERS     += $${PWD}/blockref.h        \
                $${PWD}/pageref.h         \
                $${PWD}/participant.h     \
                $${PWD}/participantlist.h \
                $${PWD}/signature.h       \
-               $${PWD}/assignment.h
+               $${PWD}/assignment.h \
+    $$PWD/recorder.h
