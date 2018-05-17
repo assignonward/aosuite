@@ -20,37 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PAGEREF_H
-#define PAGEREF_H
+#ifndef GENESISREF_H
+#define GENESISREF_H
 
-#include "aotime.h"
-#include "blockref.h"
+#include "bytecodes.h"
 #include "datavarlenlong.h"
 #include "hash.h"
-#include "index.h"
 
 /**
- * @brief The PageRef class - when the page is the chain-maker's signature page on
- *   a block in the chain, then this is also a reference to a block and chain.
+ * @brief The GenesisRef class - identifies a chain
  */
-class PageRef : public DataVarLenLong
+class GenesisRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  PageRef( QObject *p = nullptr )
-                : DataVarLenLong( AO_PAGE_REF, QByteArray(), p ) {}
-              PageRef( const PageRef &r )
-                : DataVarLenLong( r.typeCode, r.ba, r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
-              PageRef( const QByteArray &di, QObject *p = nullptr );
+    explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = nullptr );
+              GenesisRef( const GenesisRef &r )
+                : DataVarLenLong( AO_GENESIS_REF, QByteArray(), r.parent() ),
+                  hash( r.hash ) {}
+              GenesisRef( const Hash &g, QObject *p = nullptr )
+                : DataVarLenLong( AO_GENESIS_REF, QByteArray(), p ),
+                  hash( g ) {}
         void  operator = ( const QByteArray &di );
-      AOTime  publicationTime() { return block.getTime(); }
+        Hash  getHash()    const { return  hash; }
+        void  setHash( const Hash &h ) { hash = h; }
   QByteArray  toDataItem();
-        bool  isValid() { return block.isValid(); }
+        bool  isValid() { return hash.isValid(); }
 
 private:
-    BlockRef block;           // block this page is recorded in
-       Index sequenceNumber;  // page's sequence number in the block
-        Hash hash;            // Hash of page - redundant check
+        Hash  hash;   // hash signature (unique ID) of the genesis block
+        // To come: chain property descriptors, tax rates, etc.
 };
 
-#endif // PAGEREF_H
+#endif // BLOCKREF_H

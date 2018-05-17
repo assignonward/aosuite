@@ -20,17 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "blockref.h"
+#include "genesisref.h"
 
 /**
- * @brief BlockRef::BlockRef - constructor
+ * @brief GenesisRef::GenesisRef - constructor
  * @param di - optional data item
  * @param p - optional parent object
  */
-BlockRef::BlockRef( QByteArray di, QObject *p ) : DataVarLenLong( AO_BLOCK_REF, p )
+GenesisRef::GenesisRef( QByteArray di, QObject *p ) : DataVarLenLong( AO_GENESIS_REF, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_BLOCK_REF )
+    { if ( typeCodeOf( di ) != AO_GENESIS_REF )
         { // TODO: log an error
           return;
         }
@@ -46,17 +46,9 @@ BlockRef::BlockRef( QByteArray di, QObject *p ) : DataVarLenLong( AO_BLOCK_REF, 
                     }
                    else
                     { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_TIME_RECORDED:
-                            propTime = items;
-                            break;
-
-                          case AO_HASH256:
+                        { case AO_HASH256:
                           case AO_HASH512:
-                            blkHash = items;
-                            break;
-
-                          case AO_GENESIS_REF:
-                            genesis = items;
+                            hash = items;
                             break;
 
                           default:
@@ -72,29 +64,24 @@ BlockRef::BlockRef( QByteArray di, QObject *p ) : DataVarLenLong( AO_BLOCK_REF, 
 }
 
 /**
- * @brief BlockRef::operator =
+ * @brief GenesisRef::operator =
  * @param di - data item to assign
  */
-void BlockRef::operator = ( const QByteArray &di )
-{ BlockRef temp( di );
-  propTime = temp.propTime;
-  blkHash  = temp.blkHash;
-  genesis  = temp.genesis;
+void GenesisRef::operator = ( const QByteArray &di )
+{ GenesisRef temp( di );
+  hash     = temp.hash;
   typeCode = temp.typeCode;
   return;
 }
 
 /**
- * @brief BlockRef::toDataItem
+ * @brief GenesisRef::toDataItem
  * @return data item with the BlockRef contents
  */
-QByteArray  BlockRef::toDataItem()
+QByteArray  GenesisRef::toDataItem()
 { QList<QByteArray> dil;
-  dil.append( propTime.toDataItem() );
-  if ( blkHash.isValid() )
-    dil.append( blkHash.toDataItem() );
-  if ( genesis.isValid() )
-    dil.append( genesis.toDataItem() );
+  if ( hash.isValid() )
+    dil.append( hash.toDataItem() );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )

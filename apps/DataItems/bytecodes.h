@@ -76,6 +76,7 @@
 #define AO_NOTE                0xAA  // optional field in the participant item
 #define AO_BLOCK_REF           0xAB  // reference to a block
 #define AO_PAGE_REF            0xAC  // reference to a page in a block
+#define AO_GENESIS_REF         0xAD  // reference to a genesis block (chain)
 #define AO_SIG_WITH_TIME       0xAE  // contains time of signature, and the signature itself
 #define AO_ORGANIZER           0xB8  // collection of data to describe an Organizer entity
 #define AO_RECORDER            0xB9  // collection of data to describe a Recorder entity

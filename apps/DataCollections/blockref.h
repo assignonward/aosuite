@@ -26,6 +26,7 @@
 #include "aotime.h"
 #include "bytecodes.h"
 #include "datavarlenlong.h"
+#include "genesisref.h"
 #include "hash.h"
 
 /**
@@ -37,20 +38,25 @@ class BlockRef : public DataVarLenLong
 public:
     explicit  BlockRef( QByteArray di = QByteArray(), QObject *p = nullptr );
               BlockRef( const BlockRef &r )
-                : DataVarLenLong( AO_BLOCK_REF, QByteArray(), r.parent() ), propTime( r.propTime ), blkHash( r.blkHash ) {}
-              BlockRef( const Hash &h, const AOTime t, QObject *p = nullptr )
-                : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p ), propTime( t ), blkHash( h ) {}
+                : DataVarLenLong( AO_BLOCK_REF, QByteArray(), r.parent() ),
+                  propTime( r.propTime ), blkHash( r.blkHash ), genesis( r.genesis ) {}
+              BlockRef( const Hash &h, const AOTime t, const GenesisRef &r, QObject *p = nullptr )
+                : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p ),
+                  propTime( t ), blkHash( h ), genesis( r ) {}
         void  operator = ( const QByteArray &di );
-      AOTime  time() { return propTime; }
-        Hash  hash() { return  blkHash; }
-        void  setTime( AOTime t ) { propTime = t; }
-        void  setHash(   Hash h ) {  blkHash = h; }
+      AOTime  getTime()    const { return propTime; }
+        Hash  getHash()    const { return  blkHash; }
+  GenesisRef  getGenesis() const { return  genesis; }
+        void  setTime( const AOTime &t )        { propTime = t; }
+        void  setHash( const Hash &h )          {  blkHash = h; }
+        void  setGenesis( const GenesisRef &r ) {  genesis = r; }
   QByteArray  toDataItem();
-        bool  isValid() { return propTime.past() && blkHash.isValid(); }
+        bool  isValid() { return propTime.past() && blkHash.isValid() && genesis.isValid(); }
 
 private:
       AOTime  propTime;  // time this block was proposed (should fit it into a specific time-layer)
         Hash  blkHash;   // Whole block hash signature (unique ID)
+  GenesisRef  genesis;   // the genesis block (chain ID)
 };
 
 #endif // BLOCKREF_H
