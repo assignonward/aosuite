@@ -28,6 +28,7 @@
 #include "datavarlenlong.h"
 #include "genesisref.h"
 #include "hash.h"
+#include "sharesout.h"
 
 /**
  * @brief The BlockRef class - identifies a block in the chain
@@ -39,22 +40,25 @@ public:
     explicit  BlockRef( QByteArray di = QByteArray(), QObject *p = nullptr );
               BlockRef( const BlockRef &r )
                 : DataVarLenLong( AO_BLOCK_REF, QByteArray(), r.parent() ),
-                  propTime( r.propTime ), blkHash( r.blkHash ), genesis( r.genesis ) {}
-              BlockRef( const Hash &h, const AOTime t, const GenesisRef &r, QObject *p = nullptr )
+                  propTime( r.propTime ), shOut( r.shOut ), blkHash( r.blkHash ), genesis( r.genesis ) {}
+              BlockRef( const Hash &h, const AOTime t, const SharesOut &s, const GenesisRef &r, QObject *p = nullptr )
                 : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p ),
-                  propTime( t ), blkHash( h ), genesis( r ) {}
+                  propTime( t ), shOut( s ), blkHash( h ), genesis( r ) {}
         void  operator = ( const QByteArray &di );
       AOTime  getTime()    const { return propTime; }
         Hash  getHash()    const { return  blkHash; }
+   SharesOut  getShOut()   const { return    shOut; }
   GenesisRef  getGenesis() const { return  genesis; }
         void  setTime( const AOTime &t )        { propTime = t; }
         void  setHash( const Hash &h )          {  blkHash = h; }
+        void  setShOut( const SharesOut &s )    {    shOut = s; }
         void  setGenesis( const GenesisRef &r ) {  genesis = r; }
   QByteArray  toDataItem();
         bool  isValid() { return propTime.past() && blkHash.isValid() && genesis.isValid(); }
 
 private:
       AOTime  propTime;  // time this block was proposed (should fit it into a specific time-layer)
+   SharesOut  shOut;     // shares outstanding after this block is recorded
         Hash  blkHash;   // Whole block hash signature (unique ID)
   GenesisRef  genesis;   // the genesis block (chain ID)
 };

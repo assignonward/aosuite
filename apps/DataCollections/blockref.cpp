@@ -59,6 +59,10 @@ BlockRef::BlockRef( QByteArray di, QObject *p ) : DataVarLenLong( AO_BLOCK_REF, 
                             genesis = items;
                             break;
 
+                          case AO_SHARES_OUT:
+                            shOut = items;
+                            break;
+
                           default:
                             // TODO: log anomaly - unrecognized data type
                             break;
@@ -79,6 +83,7 @@ void BlockRef::operator = ( const QByteArray &di )
 { BlockRef temp( di );
   propTime = temp.propTime;
   blkHash  = temp.blkHash;
+  shOut    = temp.shOut;
   genesis  = temp.genesis;
   typeCode = temp.typeCode;
   return;
@@ -93,6 +98,8 @@ QByteArray  BlockRef::toDataItem()
   dil.append( propTime.toDataItem() );
   if ( blkHash.isValid() )
     dil.append( blkHash.toDataItem() );
+  if ( shOut > 0 )
+    dil.append( shOut.toDataItem() );
   if ( genesis.isValid() )
     dil.append( genesis.toDataItem() );
   // TODO: randomize order of dil

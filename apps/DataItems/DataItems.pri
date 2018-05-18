@@ -34,6 +34,7 @@ SOURCES     += $${PWD}/dataitem.cpp         \
                $${PWD}/listsize.cpp         \
                $${PWD}/aotime.cpp           \
                $${PWD}/shares.cpp           \
+               $${PWD}/sharesout.cpp        \
                $${PWD}/hash.cpp             \
                $${PWD}/hash256.cpp          \
                $${PWD}/hash512.cpp          \
@@ -57,6 +58,7 @@ HEADERS     += $${PWD}/bytecodes.h        \
                $${PWD}/listsize.h         \
                $${PWD}/aotime.h           \
                $${PWD}/shares.h           \
+               $${PWD}/sharesout.h        \
                $${PWD}/hash.h             \
                $${PWD}/hash256.h          \
                $${PWD}/hash512.h          \

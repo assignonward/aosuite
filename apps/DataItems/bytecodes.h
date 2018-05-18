@@ -53,6 +53,7 @@
 #define AO_ASSIGNMENT_AMT    ( 0x00 | AO_SHARES_CODE )
 #define AO_UNDERWRITING_AMT  ( 0x01 | AO_SHARES_CODE )
 #define AO_RECORDING_BID     ( 0x02 | AO_SHARES_CODE )
+#define AO_SHARES_OUT        ( 0x03 | AO_SHARES_CODE )
 
 // First 4 bits, when 0100 means: this is a 4 byte chunk, one for the code, 2 for the data, one for the checkbyte (generally a 16 bit int)
 #define AO_SIZE_4BYTES         0x40

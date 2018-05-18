@@ -32,7 +32,8 @@
 class Shares : public Data128
 {
 public:
-    explicit  Shares( __int128 val = 0, QObject *p = nullptr );
+    explicit  Shares( __int128 val = 0, QObject *p = nullptr )
+                : Data128( AO_ASSIGNMENT_AMT, val, p ) {}
               Shares( const Shares &f, QObject *p = nullptr )
                 : Data128( AO_ASSIGNMENT_AMT, f.v, p ? p : f.parent() ) {}
         void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
