@@ -92,16 +92,24 @@ void SharesRef::operator = ( const QByteArray &di )
 
 QByteArray  SharesRef::toDataItem( bool cf )
 { QList<QByteArray> dil;
-  if ( page.isValid() )
-    dil.append( page.toDataItem(cf) );
-  if ( seqNum >= 0 )
-    dil.append( seqNum.toDataItem(cf) );
-  if ( key.isValid() )
-    dil.append( key.toDataItem(cf) );
-  if ( keyHash.isValid() )
-    dil.append( keyHash.toDataItem(cf) );
-  if ( amount > 0 )
-    dil.append( amount.toDataItem(cf) );
+  if ( !cf )
+    { if ( page.isValid() )
+        dil.append( page.toDataItem(false) );
+      if ( seqNum >= 0 )
+        dil.append( seqNum.toDataItem(false) );
+      if ( key.isValid() )
+        dil.append( key.toDataItem(false) );
+      if ( keyHash.isValid() )
+        dil.append( keyHash.toDataItem(false) );
+      if ( amount > 0 )
+        dil.append( amount.toDataItem(false) );
+    }
+   else // Compact/chain form only needs the keyId
+    { if ( keyHash.isValid() )
+        dil.append( keyHash.toDataItem(true) );
+       else if ( key.isValid() )
+        dil.append( key.getId(true) );
+    }
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )

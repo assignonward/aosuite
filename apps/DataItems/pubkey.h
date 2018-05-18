@@ -41,7 +41,7 @@ public:
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false ) const;
   QByteArray  get() const;
-  QByteArray  getId() const;
+  QByteArray  getId( bool cf = true ) const;
         void  set( const QByteArray k );
         bool  isValid() const;
 

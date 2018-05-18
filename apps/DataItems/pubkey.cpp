@@ -144,16 +144,16 @@ void PubKey::operator = ( const QByteArray &di )
  * @return a data item containing either the key itself for short keys like ECDSA,
  *   or a hash of the key for longer keys.
  */
-QByteArray  PubKey::getId() const
+QByteArray  PubKey::getId( bool cf ) const
 { switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
-        return publicKeyEcdsa.toDataItem();
+        return publicKeyEcdsa.toDataItem(cf);
 
       case AO_RSA3072_PUB_KEY:
         Hash256 hid( publicKeyRsa3072.get() );
         DataFixedLength did( AO_PUB_RSA3072_ID, hid.get() );
-        return did.toDataItem();
+        return did.toDataItem(cf);
     }
   // TODO: log error
   return QByteArray();

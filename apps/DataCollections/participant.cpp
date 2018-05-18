@@ -137,7 +137,7 @@ QByteArray Participant::toDataItem( bool cf )
         if ( amount != 0 )
           dil.append( amount.toDataItem(true) );
         if ( key.isValid() )
-          dil.append( key.getId() );
+          dil.append( key.getId(true) );
          else if ( keyHash.isValid() )
           dil.append( keyHash.toDataItem(true) );
         if ( note.size() > 0 )
