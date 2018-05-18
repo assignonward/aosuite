@@ -78,6 +78,7 @@
 #define AO_PAGE_REF            0xAC  // reference to a page in a block
 #define AO_GENESIS_REF         0xAD  // reference to a genesis block (chain)
 #define AO_SIG_WITH_TIME       0xAE  // contains time of signature, and the signature itself
+#define AO_SHARES_REF          0xAF  // reference to shares on a page
 #define AO_ORGANIZER           0xB8  // collection of data to describe an Organizer entity
 #define AO_RECORDER            0xB9  // collection of data to describe a Recorder entity
 #define AO_NETADDRESS          0xBA  // string with an IP4, IP6 or FQDN address, optionally with :port number
