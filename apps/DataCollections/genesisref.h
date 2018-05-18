@@ -44,7 +44,7 @@ public:
         void  operator = ( const QByteArray &di );
         Hash  getHash()    const { return  hash; }
         void  setHash( const Hash &h ) { hash = h; }
-  QByteArray  toDataItem();
+  QByteArray  toDataItem( bool cf = false );
         bool  isValid() { return hash.isValid(); }
 
 private:

@@ -105,28 +105,28 @@ void Assignment::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  Assignment::toDataItem()
+QByteArray  Assignment::toDataItem( bool cf )
 { QList<QByteArray> dil;
   if ( salt.isValid() )
-    dil.append( salt.toDataItem() );
+    dil.append( salt.toDataItem(cf) );
   if ( proposedChain.isValid() )
-    dil.append( proposedChain.toDataItem() );
+    dil.append( proposedChain.toDataItem(cf) );
   if ( recordingDeadline.future() )
-    dil.append( recordingDeadline.toDataItem() );
+    dil.append( recordingDeadline.toDataItem(cf) );
   if ( recordingBid >= 0 )
-    dil.append( recordingBid.toDataItem() );
+    dil.append( recordingBid.toDataItem(cf) );
   if ( note.size() > 0 )
-    dil.append( note.toDataItem() );
+    dil.append( note.toDataItem(cf) );
   if ( participants.size() > 0 )
     foreach( Participant p, participants )
-      dil.append( p.toDataItem() );
+      dil.append( p.toDataItem(cf) );
   nParticipants = participants.size();
-  dil.append( nParticipants.toDataItem() );
+  dil.append( nParticipants.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem();
+  return DataVarLenLong::toDataItem(cf);
 }
 
 AOTime Assignment::proposalTime()
@@ -229,17 +229,17 @@ void Authorization::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  Authorization::toDataItem()
+QByteArray  Authorization::toDataItem( bool cf )
 { QList<QByteArray> dil;
-  dil.append( assignment.toDataItem() );
+  dil.append( assignment.toDataItem(cf) );
   if ( sigs.size() > 0 )
     foreach( Signature s, sigs )
-      dil.append( s.toDataItem() );
+      dil.append( s.toDataItem(cf) );
   nSigs = sigs.size();
-  dil.append( nSigs.toDataItem() );
+  dil.append( nSigs.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem();
+  return DataVarLenLong::toDataItem(cf);
 }

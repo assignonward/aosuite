@@ -35,7 +35,7 @@ public:
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data16( const QByteArray &di, QObject *p = nullptr );
     explicit  Data16(QObject *parent = nullptr);
-  QByteArray  toDataItem() const;
+  QByteArray  toDataItem( bool cf = false ) const;
         void  operator = ( const QByteArray &di );
         void  operator = ( const Data16 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
         void  operator = ( const qint16 &d ) { v = d; }

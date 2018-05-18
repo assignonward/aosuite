@@ -53,7 +53,7 @@ public:
         void  setHash( const Hash &h )          {  blkHash = h; }
         void  setShOut( const SharesOut &s )    {    shOut = s; }
         void  setGenesis( const GenesisRef &r ) {  genesis = r; }
-  QByteArray  toDataItem();
+  QByteArray  toDataItem( bool cf = false );
         bool  isValid() { return propTime.past() && blkHash.isValid() && genesis.isValid(); }
 
 private:

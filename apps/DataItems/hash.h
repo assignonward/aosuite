@@ -42,7 +42,7 @@ public:
               Hash( const Hash &d, QObject *p = nullptr )
                 : DataItem( d.typeCode, p ? p : d.parent() ), hash256( d.hash256 ), hash512( d.hash512 ) {}
         void  operator = ( const Hash &h ) { typeCode = h.typeCode; hash256 = h.hash256; hash512 = h.hash512; }
-  QByteArray  toDataItem() const;
+  QByteArray  toDataItem( bool cf = false ) const;
         Hash &calculate( QByteArray text );
         bool  verify( QByteArray text );
         bool  isValid();

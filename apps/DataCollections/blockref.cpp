@@ -91,20 +91,21 @@ void BlockRef::operator = ( const QByteArray &di )
 
 /**
  * @brief BlockRef::toDataItem
+ * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-QByteArray  BlockRef::toDataItem()
+QByteArray  BlockRef::toDataItem( bool cf )
 { QList<QByteArray> dil;
-  dil.append( propTime.toDataItem() );
+  dil.append( propTime.toDataItem(cf) );
   if ( blkHash.isValid() )
-    dil.append( blkHash.toDataItem() );
+    dil.append( blkHash.toDataItem(cf) );
   if ( shOut > 0 )
-    dil.append( shOut.toDataItem() );
+    dil.append( shOut.toDataItem(cf) );
   if ( genesis.isValid() )
-    dil.append( genesis.toDataItem() );
+    dil.append( genesis.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem();
+  return DataVarLenLong::toDataItem(cf);
 }

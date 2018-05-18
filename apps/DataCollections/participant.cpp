@@ -110,37 +110,40 @@ void Participant::operator = ( const QByteArray &di )
 
 /**
  * @brief Participant::toDataItem
- * @param tc - type of data item to return, either long form for contract negotiation,
- *   or compact form for recording in the blockchain
+ * @param cf - compact (or chain) form
  * @return data item in the requested form
  */
-QByteArray Participant::toDataItem( typeCode_t tc )
+QByteArray Participant::toDataItem( bool cf )
 { QList<QByteArray> dil;
+  if ( cf )
+    typeCode = AO_PARTICIPANT_CF;
+   else if ( typeCode == AO_PARTICIPANT_CF )
+    cf = true;
   switch ( typeCode )
     { case AO_PARTICIPANT:
         if ( amount != 0 )
-          dil.append( amount.toDataItem() );
+          dil.append( amount.toDataItem(false) );
         if ( key.isValid() )
-          dil.append( key.toDataItem() );
+          dil.append( key.toDataItem(false) );
         if ( amount < 0 )
-          dil.append( page.toDataItem() );
+          dil.append( page.toDataItem(false) );
         if ( note.size() > 0 )
-          dil.append( note.toDataItem() );
+          dil.append( note.toDataItem(false) );
         if ( index > -1 )
-          dil.append( index.toDataItem() );
+          dil.append( index.toDataItem(false) );
         break;
 
       case AO_PARTICIPANT_CF:
         if ( amount != 0 )
-          dil.append( amount.toDataItem() );
+          dil.append( amount.toDataItem(true) );
         if ( key.isValid() )
           dil.append( key.getId() );
          else if ( keyHash.isValid() )
-          dil.append( keyHash.toDataItem() );
+          dil.append( keyHash.toDataItem(true) );
         if ( note.size() > 0 )
-          dil.append( note.toDataItem() );
+          dil.append( note.toDataItem(true) );
         if ( index > -1 )
-          dil.append( index.toDataItem() );
+          dil.append( index.toDataItem(true) );
         break;
 
       default:
@@ -148,11 +151,10 @@ QByteArray Participant::toDataItem( typeCode_t tc )
         return QByteArray();
     }
   // TODO: randomize order of dil
-  typeCode = tc;
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem();
+  return DataVarLenLong::toDataItem(cf);
 }
 
 

@@ -78,17 +78,17 @@ void PageRef::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  PageRef::toDataItem()
+QByteArray  PageRef::toDataItem( bool cf )
 { QList<QByteArray> dil;
-  dil.append(            block.toDataItem() );
+  dil.append(            block.toDataItem(cf) );
   if ( sequenceNumber >= 0 )
-    dil.append( sequenceNumber.toDataItem() );
+    dil.append( sequenceNumber.toDataItem(cf) );
   if ( hash.isValid() )
-    dil.append(           hash.toDataItem() );
+    dil.append(           hash.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem();
+  return DataVarLenLong::toDataItem(cf);
 }
 

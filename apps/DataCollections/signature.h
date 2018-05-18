@@ -42,7 +42,7 @@ public:
               Signature( const Signature &s, QObject *p = nullptr );
         void  operator = ( const Signature &s ) { sigType = s.sigType; sigEcdsa = s.sigEcdsa; sigRsa3072 = s.sigRsa3072; sigTime = s.sigTime; index = s.index; }
         void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem();
+  QByteArray  toDataItem( bool cf = false );
   QByteArray  getSig() const;
         void  setSig( const QByteArray &s, typeCode_t tc = AO_UNDEFINED_DATAITEM );
       AOTime  getTime() const { return sigTime; }

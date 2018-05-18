@@ -44,7 +44,7 @@ public:
               PageRef( const QByteArray &di, QObject *p = nullptr );
         void  operator = ( const QByteArray &di );
       AOTime  publicationTime() { return block.getTime(); }
-  QByteArray  toDataItem();
+  QByteArray  toDataItem( bool cf = false );
         bool  isValid() { return block.isValid(); }
 
 private:

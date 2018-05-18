@@ -72,10 +72,11 @@ void DataVarLenShort::operator = ( const QByteArray &di )
 
 /**
  * @brief DataVarLenShort::toDataItem
+ * @param cf - compact (or chain) form, no difference at this level - unused
  * @return serialized bytearray with typeCode, size, data and checksum
  */
-QByteArray DataVarLenShort::toDataItem() const
-{ QByteArray di;
+QByteArray DataVarLenShort::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
   di.append( typeCode );
   qint32 size = ba.size();
   if ( size > 0xFF )

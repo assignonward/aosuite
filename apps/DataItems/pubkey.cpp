@@ -112,16 +112,17 @@ bool  PubKey::isValid() const
 
 /**
  * @brief PubKey::toDataItem
+ * @param cf - compact (or chain) form, passed on to children
  * @return the key encapsulated as a data item
  */
-QByteArray  PubKey::toDataItem() const
+QByteArray  PubKey::toDataItem( bool cf ) const
 { switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
-        return publicKeyEcdsa.toDataItem();
+        return publicKeyEcdsa.toDataItem(cf);
 
       case AO_RSA3072_PUB_KEY:
-        return publicKeyRsa3072.toDataItem();
+        return publicKeyRsa3072.toDataItem(cf);
     }
   // TODO: log error
   return QByteArray();

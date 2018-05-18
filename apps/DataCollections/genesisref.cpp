@@ -76,15 +76,16 @@ void GenesisRef::operator = ( const QByteArray &di )
 
 /**
  * @brief GenesisRef::toDataItem
+ * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-QByteArray  GenesisRef::toDataItem()
+QByteArray  GenesisRef::toDataItem( bool cf )
 { QList<QByteArray> dil;
   if ( hash.isValid() )
-    dil.append( hash.toDataItem() );
+    dil.append( hash.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem();
+  return DataVarLenLong::toDataItem(cf);
 }

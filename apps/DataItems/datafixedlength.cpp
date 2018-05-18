@@ -64,10 +64,11 @@ void DataFixedLength::operator = ( const QByteArray &di )
 
 /**
  * @brief DataFixedLength::toDataItem
+ * @param cf - compact (or chain) form, no difference at this level - unused
  * @return serialized byte array with type, data and checksum
  */
-QByteArray DataFixedLength::toDataItem() const
-{ QByteArray di;
+QByteArray DataFixedLength::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
   // if (( code & AO_FIXED_MASK ) != 0x00 )
   //   TODO: log a warning, maybe check closer for defined types, too.
   unsigned char chk = typeCode;

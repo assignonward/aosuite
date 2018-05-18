@@ -74,10 +74,11 @@ void DataVarLenLong::operator = ( const QByteArray &di )
 
 /**
  * @brief DataVarLenLong::toDataItem
+ * @param cf - compact (or chain) form, no difference at this level - unused
  * @return serialized bytearray with typeCode, size, data and checksum
  */
-QByteArray DataVarLenLong::toDataItem() const
-{ QByteArray di;
+QByteArray DataVarLenLong::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
   di.append( typeCode );
   qint32 size = ba.size();
   di.append(( size & 0xFF0000 ) >> 16 );

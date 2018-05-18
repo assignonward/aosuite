@@ -43,7 +43,7 @@ public:
                 : DataVarLenLong( AO_PARTICIPANT, QByteArray(), r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
         void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( typeCode_t tc = AO_PARTICIPANT );
+  QByteArray  toDataItem( bool cf = false );
   QByteArray  getId()      const { return key.getId(); }
       PubKey  getKey()     const { return key;         }
       Shares  getAmount()  const { return amount;      }

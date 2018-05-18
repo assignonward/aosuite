@@ -38,7 +38,7 @@ public:
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const QByteArray &di );
                bool  checksumValidated() const { return csVal; }
- virtual QByteArray  toDataItem() const { return QByteArray(); } // Implemented in all child classes
+ virtual QByteArray  toDataItem( bool cf = false ) const { (void)cf; return QByteArray(); } // Implemented in all child classes
 
 protected:
   typeCode_t  typeCode; // what kind of data item is this?

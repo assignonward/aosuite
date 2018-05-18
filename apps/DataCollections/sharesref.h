@@ -44,7 +44,7 @@ public:
                   page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
               SharesRef( const QByteArray &di, QObject *p = nullptr );
         void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem();
+  QByteArray  toDataItem( bool cf = false );
         bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
 
 private:

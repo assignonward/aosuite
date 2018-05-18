@@ -68,14 +68,15 @@ Hash::Hash( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM
 
 /**
  * @brief Hash::toDataItem
+ * @param cf - compact (or chain) form, passed on to children
  * @return Data Item representing this hash
  */
-QByteArray Hash::toDataItem() const
+QByteArray Hash::toDataItem( bool cf ) const
 { switch ( typeCode )
     { case AO_HASH256:
-        return hash256.toDataItem();
+        return hash256.toDataItem(cf);
       case AO_HASH512:
-        return hash512.toDataItem();
+        return hash512.toDataItem(cf);
     }
   // TODO: log warning
   return QByteArray();

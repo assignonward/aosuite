@@ -90,22 +90,22 @@ void SharesRef::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  SharesRef::toDataItem()
+QByteArray  SharesRef::toDataItem( bool cf )
 { QList<QByteArray> dil;
   if ( page.isValid() )
-    dil.append( page.toDataItem() );
+    dil.append( page.toDataItem(cf) );
   if ( seqNum >= 0 )
-    dil.append( seqNum.toDataItem() );
+    dil.append( seqNum.toDataItem(cf) );
   if ( key.isValid() )
-    dil.append( key.toDataItem() );
+    dil.append( key.toDataItem(cf) );
   if ( keyHash.isValid() )
-    dil.append( keyHash.toDataItem() );
+    dil.append( keyHash.toDataItem(cf) );
   if ( amount > 0 )
-    dil.append( amount.toDataItem() );
+    dil.append( amount.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem();
+  return DataVarLenLong::toDataItem(cf);
 }
 

@@ -39,7 +39,7 @@ public:
               PubKey( const PubKey &pk, QObject *p = nullptr );
         void  operator = ( const PubKey &k ) { typeCode = k.typeCode; publicKeyEcdsa = k.publicKeyEcdsa; publicKeyRsa3072 = k.publicKeyRsa3072; }
         void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem() const;
+  QByteArray  toDataItem( bool cf = false ) const;
   QByteArray  get() const;
   QByteArray  getId() const;
         void  set( const QByteArray k );

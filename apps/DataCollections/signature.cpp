@@ -127,27 +127,28 @@ void Signature::operator = ( const QByteArray &di )
 
 /**
  * @brief Signature::toDataItem
+ * @param cf - compact (or chain) form?  Pass along to children.
  * @return the signature and time encapsulated as a data item
  */
-QByteArray  Signature::toDataItem()
+QByteArray  Signature::toDataItem( bool cf )
 { QList<QByteArray> dil;
-  dil.append( sigTime.toDataItem() );
+  dil.append( sigTime.toDataItem(cf) );
   switch ( sigType )
       { case AO_ECDSA_SIG:
-          dil.append( sigEcdsa.toDataItem() );
+          dil.append( sigEcdsa.toDataItem(cf) );
           break;
 
         case AO_RSA3072_SIG:
-          dil.append( sigRsa3072.toDataItem() );
+          dil.append( sigRsa3072.toDataItem(cf) );
           break;
       }
   if ( index >= 0 )
-    dil.append( index.toDataItem() );
+    dil.append( index.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem();
+  return DataVarLenLong::toDataItem(cf);
 }
 
 /**

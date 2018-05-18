@@ -65,10 +65,11 @@ void Data16::operator = ( const QByteArray &di )
 
 /**
  * @brief Data16::toDataItem
+ * @param cf - compact (or chain) form, no difference at this level - unused
  * @return byte array starting with type code, followed by 16 bit data and 8 bit checksum.
  */
-QByteArray Data16::toDataItem() const
-{ QByteArray di;
+QByteArray Data16::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
   union _16_in_8s
     {        qint16 i;
       unsigned char d[2];

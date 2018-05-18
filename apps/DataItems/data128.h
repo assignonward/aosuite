@@ -38,7 +38,7 @@ public:
               Data128( const Data128 &d, QObject *p = nullptr )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data128( const QByteArray &di, QObject *p = nullptr );
-  QByteArray  toDataItem() const;
+  QByteArray  toDataItem( bool cf = false ) const;
         void  operator = ( const QByteArray &di );
         void  operator = ( const  Data128 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
         void  operator = ( const __int128 &d ) { v = d; }

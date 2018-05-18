@@ -79,10 +79,11 @@ void Data128::operator = ( const QByteArray &di )
 
 /**
  * @brief Data128::toDataItem
+ * @param cf - compact (or chain) form, no difference at this level - unused
  * @return byte array starting with type code, followed by 128 bit data and 8 bit checksum.
  */
-QByteArray Data128::toDataItem() const
-{ QByteArray di;
+QByteArray Data128::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
   union _128_in_8s
     {      __int128 i;
       unsigned char d[16];

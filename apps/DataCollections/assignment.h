@@ -50,7 +50,7 @@ public:
                   recordingDeadline( a.recordingDeadline ), recordingBid( a.recordingBid ), note( a.note ),
                   participants( a.participants ) {}
         void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem();
+  QByteArray  toDataItem( bool cf = false );
       AOTime  proposalTime();
         void  randomizeSalt();
         bool  valid();
@@ -85,7 +85,7 @@ public:
                : DataVarLenLong( AO_AUTHORIZATION, p ? p : a.parent() ),
                  assignment( a.assignment ), sigs( a.sigs ) {}
        void  operator = ( const QByteArray &di );
- QByteArray  toDataItem();
+ QByteArray  toDataItem( bool cf = false );
 
 private:
          Assignment  assignment;
