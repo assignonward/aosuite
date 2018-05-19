@@ -24,6 +24,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "assets.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,11 +35,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit  MainWindow(QWidget *parent = 0);
+             ~MainWindow();
+        void  closeEvent(QCloseEvent *event);
+        void  restoreConfig();
+        void  saveConfig();
 
 private:
     Ui::MainWindow *ui;
+            Assets  assets;
 };
 
 #endif // MAINWINDOW_H

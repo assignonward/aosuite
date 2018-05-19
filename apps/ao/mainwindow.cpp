@@ -22,17 +22,41 @@
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
+{ ui->setupUi(this);
+  restoreConfig();
 }
 
 MainWindow::~MainWindow()
-{
-    delete ui;
+{ delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{ saveConfig();
+  QApplication::processEvents( QEventLoop::AllEvents,100 );
+  QMainWindow::closeEvent(event);
+}
+
+void MainWindow::restoreConfig()
+{ QSettings settings;
+  restoreGeometry( settings.value( "geometry" ).toByteArray() );
+  restoreState   ( settings.value( "state"    ).toByteArray() );
+  assets =         settings.value( "assets"   ).toByteArray();
+}
+
+/**
+ * @brief MainWindow::saveConfig - in addition to the window size and
+ *   placement saved in MainWinCommon, this app is also saving the splitter state.
+ */
+void MainWindow::saveConfig()
+{ QSettings settings;
+  settings.setValue( "geometry", saveGeometry()      );
+  settings.setValue( "state"   , saveState()         );
+  settings.setValue( "assets"  , assets.toDataItem() );
 }
 
 /**********************************************************************

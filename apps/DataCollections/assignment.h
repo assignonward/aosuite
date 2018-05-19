@@ -58,7 +58,6 @@ public:
         bool  validTimeline();
 
 private:
-             Random  rng;
             Salt256  salt;
             PageRef  proposedChain;     // Reference to the signature page of a recent block in the chain this assignment is proposed to be recorded on
              AOTime  recordingDeadline; // When the assignment contract is expected to be recorded in the chain
