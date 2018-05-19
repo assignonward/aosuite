@@ -20,24 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef RANDOM_H
-#define RANDOM_H
-#include <stdint.h>
+#include "mainwindow.h"
+#include <QApplication>
+#include <QDateTime>
+#include "random.h"
 
-class Random
+int main(int argc, char *argv[])
 {
-public:
-           Random( __int128 seed = 42 );
-     void  seed( __int128 seed );
- uint64_t  rnd_uint64();
-  int64_t  rnd_int64();
-    float  rnd_float( float min, float max );
+    QApplication a(argc, argv);
 
-private:
-    /* The state must be seeded so that it is not all zero */
-    uint64_t s[2];
-};
+    // Set names for QSettings use
+    QCoreApplication::setOrganizationName("AssignOnward");
+    QCoreApplication::setOrganizationDomain("assignonward.com");
+    QCoreApplication::setApplicationName("AORecorder");  // Assign Onward Recorder
 
-extern Random rng; // Global object
+    rng.seed( QDateTime::currentMSecsSinceEpoch() );
+    rng.rnd_uint64();
+    rng.rnd_uint64();
+    rng.rnd_uint64();
 
-#endif // RANDOM_H
+    MainWindow w;
+    w.show();
+
+    return a.exec();
+}
