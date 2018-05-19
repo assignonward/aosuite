@@ -14,8 +14,8 @@
    <string>Assign Onward Recorder</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../ao/resources.qrc">
-    <normaloff>:/icons/AO.png</normaloff>:/icons/AO.png</iconset>
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/Recorder.png</normaloff>:/icons/Recorder.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -157,7 +157,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../ao/resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

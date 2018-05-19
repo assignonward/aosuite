@@ -21,5 +21,5 @@
 # SOFTWARE.
 #
 TEMPLATE = subdirs
-SUBDIRS += ao recorder
+SUBDIRS += ao recorder genesisMaker
 
