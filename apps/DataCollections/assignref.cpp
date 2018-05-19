@@ -20,18 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "organizer.h"
+#include "assignref.h"
 
-Organizer::Organizer( QByteArray di, QObject *p ) : DataVarLenLong( AO_ORGANIZER, p )
+AssignRef::AssignRef( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_ASSIGN_REF, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_ORGANIZER )
+    { if ( typeCodeOf( di ) != AO_ASSIGN_REF )
         { // TODO: log error
           return;
         }
        else
-        { typeCode = typeCodeOf( di );
-          DataVarLenLong temp( di );          // It's our type
+        { DataVarLenLong temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -42,14 +41,27 @@ Organizer::Organizer( QByteArray di, QObject *p ) : DataVarLenLong( AO_ORGANIZER
                     }
                    else
                     { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_ECDSA_PUB_KEY2:
-                          case AO_ECDSA_PUB_KEY3:
-                          case AO_RSA3072_PUB_KEY:
-                            pubKey = items;
+                        { case AO_PAGE_REF:
+                            page = items;
                             break;
 
-                          case AO_NOTE:
-                            note = items;
+                          case AO_INDEX:
+                            seqNum = items;
+                            break;
+
+                          case AO_ECDSA_PUB_KEY2:
+                          case AO_ECDSA_PUB_KEY3:
+                          case AO_RSA3072_PUB_KEY:
+                            key = items;
+                            break;
+
+                          case AO_PUB_RSA3072_ID:
+                            keyHash = items;
+                            break;
+
+                          case AO_ASSIGNMENT_AMT:
+                            amount = items;
+                            break;
 
                           default:
                             // TODO: log anomaly - unrecognized data type
@@ -62,3 +74,46 @@ Organizer::Organizer( QByteArray di, QObject *p ) : DataVarLenLong( AO_ORGANIZER
         }
     }
 }
+
+/**
+ * @brief AssignRef::operator =
+ * @param di - data item to assign
+ */
+void AssignRef::operator = ( const QByteArray &di )
+{ AssignRef temp( di );
+  page     = temp.page;
+  seqNum   = temp.seqNum;
+  key      = temp.key;
+  keyHash  = temp.keyHash;
+  amount   = temp.amount;
+  typeCode = temp.typeCode;
+  return;
+}
+
+QByteArray  AssignRef::toDataItem( bool cf )
+{ QList<QByteArray> dil;
+  if ( !cf )
+    { if ( page.isValid() )
+        dil.append( page.toDataItem(false) );
+      if ( seqNum >= 0 )
+        dil.append( seqNum.toDataItem(false) );
+      if ( key.isValid() )
+        dil.append( key.toDataItem(false) );
+      if ( keyHash.isValid() )
+        dil.append( keyHash.toDataItem(false) );
+      if ( amount > 0 )
+        dil.append( amount.toDataItem(false) );
+    }
+   else // Compact/chain form only needs the keyId
+    { if ( keyHash.isValid() )
+        dil.append( keyHash.toDataItem(true) );
+       else if ( key.isValid() )
+        dil.append( key.getId(true) );
+    }
+  // TODO: randomize order of dil
+  ba.clear();
+  foreach( QByteArray a, dil )
+    ba.append( a );
+  return DataVarLenLong::toDataItem(cf);
+}
+

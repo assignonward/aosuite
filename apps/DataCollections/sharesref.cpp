@@ -63,6 +63,20 @@ SharesRef::SharesRef( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_SH
                             amount = items;
                             break;
 
+                          case AO_SHARE_STATE:
+                            shareState = items;
+                            break;
+
+                          case AO_TIME_RECORDED:
+                          case AO_RECORDING_DEADLINE:
+                          case AO_UNDERWRITING_EXPIRATION:
+                            lockExp = items;
+                            break;
+
+                          case AO_ASSIGN_REF:
+                            assignRef = items;
+                            break;
+
                           default:
                             // TODO: log anomaly - unrecognized data type
                             break;
@@ -81,12 +95,15 @@ SharesRef::SharesRef( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_SH
  */
 void SharesRef::operator = ( const QByteArray &di )
 { SharesRef temp( di );
-  page     = temp.page;
-  seqNum   = temp.seqNum;
-  key      = temp.key;
-  keyHash  = temp.keyHash;
-  amount   = temp.amount;
-  typeCode = temp.typeCode;
+  page       = temp.page;
+  seqNum     = temp.seqNum;
+  key        = temp.key;
+  keyHash    = temp.keyHash;
+  amount     = temp.amount;
+  shareState = temp.shareState;
+  lockExp    = temp.lockExp;
+  assignRef  = temp.assignRef;
+  typeCode   = temp.typeCode;
   return;
 }
 
@@ -103,12 +120,25 @@ QByteArray  SharesRef::toDataItem( bool cf )
         dil.append( keyHash.toDataItem(false) );
       if ( amount > 0 )
         dil.append( amount.toDataItem(false) );
+      if (( shareState == AOSS_REC_LOCKED ) ||
+          ( shareState == AOSS_UND_LOCKED ))
+        { if ( lockExp.past() )
+            { shareState == AOSS_AVAILABLE; }
+           else
+            { dil.append( lockExp.toDataItem(false) ); }
+        }
+      if ( shareState != AOSS_UNKNOWN )
+        dil.append( shareState.toDataItem(false) );
+      if ( assignRef.isValid() )
+        dil.append( assignRef.toDataItem(false) );
     }
-   else // Compact/chain form only needs the keyId
+   else // Compact/chain form only needs the keyId and amount
     { if ( keyHash.isValid() )
         dil.append( keyHash.toDataItem(true) );
        else if ( key.isValid() )
         dil.append( key.getId(true) );
+      if ( amount > 0 )
+        dil.append( amount.toDataItem(true) );
     }
   // TODO: randomize order of dil
   ba.clear();

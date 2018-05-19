@@ -22,5 +22,4 @@
  */
 #include "listsize.h"
 
-ListSize::ListSize( qint16 val, QObject *p )
-  : Data16( AO_LISTSIZE, val, p ) {}
+// Nothing here

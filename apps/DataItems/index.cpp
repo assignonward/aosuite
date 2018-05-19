@@ -22,5 +22,4 @@
  */
 #include "index.h"
 
-Index::Index( qint16 val, QObject *p )
-  : Data16( AO_INDEX, val, p ) {}
+// Nothing here

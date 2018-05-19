@@ -20,28 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef RECORDER_H
-#define RECORDER_H
+#ifndef SHARESTATE_H
+#define SHARESTATE_H
 
-#include "datavarlenlong.h"
-#include "netaddress.h"
-#include "note.h"
-#include "pubkey.h"
+#include "data8.h"
 
-class Recorder : public DataVarLenLong
+#define AOSS_ASSIGNED_AWAY 0
+#define AOSS_UNKNOWN       1
+#define AOSS_REC_LOCKED    2  // Locked while attempting to record an assignment
+#define AOSS_UND_LOCKED    4  // Locked for underwriting contract
+#define AOSS_AVAILABLE     7
+
+class ShareState : public Data8
 {
     Q_OBJECT
 public:
-    explicit  Recorder( QByteArray di = QByteArray(), QObject *p = nullptr );
-              Recorder( const Recorder &r )
-                : DataVarLenLong( AO_RECORDER, QByteArray(), r.parent() ),
-                  netAddress( r.netAddress ), note( r.note ), pubKey( r.pubKey ) {}
-        void  operator = ( const QByteArray &di );
-
-private:
-    NetAddress  netAddress;
-          Note  note;
-        PubKey  pubKey;     // Optional, secure ID of the recorder
+    explicit  ShareState( qint8 val = 0, QObject *p = nullptr )
+                : Data8( AO_SHARE_STATE, val, p ) { v = AOSS_UNKNOWN; }
+              ShareState( const ShareState &f, QObject *p = nullptr )
+                : Data8( AO_SHARE_STATE, f.v, p ? p : f.parent() ) { v = AOSS_UNKNOWN; }
+        void  operator = ( const QByteArray &di ) { Data8::operator = ( di  ); }
+        void  operator = ( const qint8     &val ) { Data8::operator = ( val ); }
+       qint8  getState() const { return v; }
+        void  setState( const qint8 &s ) { v = s; }
 };
 
-#endif // RECORDER_H
+#endif // SHARESTATE_H

@@ -20,21 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef INDEX_H
-#define INDEX_H
+#ifndef ASSETS_H
+#define ASSETS_H
 
-#include "data16.h"
+#include <QObject>
+#include "organizer.h"
+#include "recorder.h"
+#include "sharesref.h"
 
-class Index : public Data16
+/**
+ * @brief The Assets class - collections of valuable information
+ *   for the Asset Organizer.  Includes shares records and contact info.
+ */
+class Assets : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Index( qint16 val = 0, QObject *p = nullptr )
-                : Data16( AO_INDEX, val, p ) {}
-              Index( const Index &f, QObject *p = nullptr )
-                : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
-        void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
-        void  operator = ( const qint16    &val ) { Data16::operator = ( val ); }
+    explicit  Assets( const QByteArray &di = QByteArray(), QObject *p = nullptr );
+              Assets( const Assets &a, QObject *p = nullptr )
+                : DataVarLenLong( AO_ASSETS, p ? p : a.parent() ), organizers( a.organizers ),
+                  recorders( a.recorders ), sharesRefs( a.sharesRefs ) {}
+        void  operator = ( const QByteArray &di );
+  QByteArray  toDataItem( bool cf = false );
+
+private:
+    QList<Organizer> organizers;
+     QList<Recorder> recorders;
+    QList<SharesRef> sharesRefs;
 };
 
-#endif // INDEX_H
+#endif // ASSETS_H

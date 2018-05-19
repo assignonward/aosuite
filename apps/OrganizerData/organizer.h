@@ -20,21 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef INDEX_H
-#define INDEX_H
+#ifndef ORGANIZER_H
+#define ORGANIZER_H
 
-#include "data16.h"
+#include "datavarlenlong.h"
+#include "note.h"
+#include "pubkey.h"
 
-class Index : public Data16
+class Organizer : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Index( qint16 val = 0, QObject *p = nullptr )
-                : Data16( AO_INDEX, val, p ) {}
-              Index( const Index &f, QObject *p = nullptr )
-                : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
-        void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
-        void  operator = ( const qint16    &val ) { Data16::operator = ( val ); }
+    explicit  Organizer( QByteArray di = QByteArray(), QObject *p = nullptr );
+              Organizer( const Organizer &o )
+                : DataVarLenLong( AO_ORGANIZER, QByteArray(), o.parent() ),
+                  note( o.note ), pubKey( o.pubKey ) {}
+        void  operator = ( const QByteArray &di );
+  QByteArray  toDataItem( bool cf = false );
+
+private:
+        Note  note;
+      PubKey  pubKey;     // Optional, secure ID of the Organizer
 };
 
-#endif // INDEX_H
+#endif // ORGANIZER_H

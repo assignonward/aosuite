@@ -21,24 +21,24 @@
 # SOFTWARE.
 #
 
+include(../DataItems/DataItems.pri)
+
 INCLUDEPATH += $${PWD}
 
 SOURCES     += $${PWD}/assignment.cpp  \
+               $${PWD}/assignref.cpp   \
                $${PWD}/blockref.cpp    \
                $${PWD}/genesisref.cpp  \
-               $${PWD}/organizer.cpp   \
                $${PWD}/pageref.cpp     \
                $${PWD}/participant.cpp \
-               $${PWD}/recorder.cpp    \
                $${PWD}/sharesref.cpp   \
                $${PWD}/signature.cpp
 
 HEADERS     += $${PWD}/assignment.h  \
+               $${PWD}/assignref.h   \
                $${PWD}/blockref.h    \
                $${PWD}/genesisref.h  \
                $${PWD}/pageref.h     \
-               $${PWD}/organizer.h   \
                $${PWD}/participant.h \
-               $${PWD}/recorder.h    \
                $${PWD}/sharesref.h   \
                $${PWD}/signature.h

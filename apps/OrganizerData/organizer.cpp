@@ -20,12 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "recorder.h"
+#include "organizer.h"
 
-Recorder::Recorder( QByteArray di, QObject *p ) : DataVarLenLong( AO_RECORDER, p )
+Organizer::Organizer( QByteArray di, QObject *p ) : DataVarLenLong( AO_ORGANIZER, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_RECORDER )
+    { if ( typeCodeOf( di ) != AO_ORGANIZER )
         { // TODO: log error
           return;
         }
@@ -42,11 +42,7 @@ Recorder::Recorder( QByteArray di, QObject *p ) : DataVarLenLong( AO_RECORDER, p
                     }
                    else
                     { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_NETADDRESS:
-                            netAddress = items;
-                            break;
-
-                          case AO_ECDSA_PUB_KEY2:
+                        { case AO_ECDSA_PUB_KEY2:
                           case AO_ECDSA_PUB_KEY3:
                           case AO_RSA3072_PUB_KEY:
                             pubKey = items;
@@ -65,4 +61,25 @@ Recorder::Recorder( QByteArray di, QObject *p ) : DataVarLenLong( AO_RECORDER, p
             }
         }
     }
+}
+
+void Organizer::operator = ( const QByteArray &di )
+{ Organizer temp( di );
+  note     = temp.note;
+  pubKey   = temp.pubKey;
+  typeCode = temp.typeCode;
+  return;
+}
+
+QByteArray  Organizer::toDataItem( bool cf )
+{ QList<QByteArray> dil;
+  if ( note.size() > 0 )
+    dil.append( note.toDataItem(cf) );
+  if ( pubKey.isValid() )
+    dil.append( pubKey.toDataItem(cf) );
+  // TODO: randomize order of dil
+  ba.clear();
+  foreach( QByteArray a, dil )
+    ba.append( a );
+  return DataVarLenLong::toDataItem(cf);
 }

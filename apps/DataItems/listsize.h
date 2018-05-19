@@ -29,7 +29,8 @@ class ListSize : public Data16
 {
     Q_OBJECT
 public:
-    explicit  ListSize( qint16 val = 0, QObject *p = nullptr );
+    explicit  ListSize( qint16 val = 0, QObject *p = nullptr )
+                : Data16( AO_LISTSIZE, val, p ) {}
               ListSize( const ListSize &f, QObject *p = nullptr )
                 : Data16( AO_LISTSIZE, f.v, p ? p : f.parent() ) {}
         void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }

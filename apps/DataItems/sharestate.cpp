@@ -20,26 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef ORGANIZER_H
-#define ORGANIZER_H
+#include "sharestate.h"
 
-#include "datavarlenlong.h"
-#include "note.h"
-#include "pubkey.h"
-
-class Organizer : public DataVarLenLong
-{
-    Q_OBJECT
-public:
-    explicit  Organizer( QByteArray di = QByteArray(), QObject *p = nullptr );
-              Organizer( const Organizer &o )
-                : DataVarLenLong( AO_ORGANIZER, QByteArray(), o.parent() ),
-                  note( o.note ), pubKey( o.pubKey ) {}
-        void  operator = ( const QByteArray &di );
-
-private:
-          Note  note;
-        PubKey  pubKey;     // Optional, secure ID of the Organizer
-};
-
-#endif // ORGANIZER_H
+// Nothing here

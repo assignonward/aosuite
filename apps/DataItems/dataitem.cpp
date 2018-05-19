@@ -40,7 +40,8 @@ qint32 DataItem::typeSize( typeCode_t tc ) const
 
 qint32 DataItem::typeSizeTable( typeCode_t tc )
 { switch ( tc & AO_SIZE_MASK )
-    { case AO_SIZE_4BYTES  : return   4;
+    { case AO_SIZE_3BYTES  : return   3;
+      case AO_SIZE_4BYTES  : return   4;
       case AO_SIZE_18BYTES : return  18;
       case AO_SIZE_34BYTES : return  34;
       case AO_SIZE_66BYTES : return  66;

@@ -21,26 +21,14 @@
 # SOFTWARE.
 #
 
-include(../OrganizerData/OrganizerData.pri)
+include(../DataCollections/DataCollections.pri)
 
-QT        += core gui widgets
-TARGET     = ao
-TEMPLATE   = app
-DEFINES   += QT_DEPRECATED_WARNINGS
-DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+INCLUDEPATH += $${PWD}
 
-SOURCES   += main.cpp            \
-             mainwindow.cpp      \
-             random.cpp          \
-             underwriting.cpp    \
-             chainmaker.cpp
+SOURCES     += $${PWD}/assets.cpp    \
+               $${PWD}/organizer.cpp \
+               $${PWD}/recorder.cpp
 
-HEADERS   += mainwindow.h      \
-             random.h          \
-             underwriting.h    \
-             chainmaker.h
-
-FORMS     += mainwindow.ui
-
-RESOURCES += resources.qrc
-
+HEADERS     += $${PWD}/assets.h    \
+               $${PWD}/organizer.h \
+               $${PWD}/recorder.h

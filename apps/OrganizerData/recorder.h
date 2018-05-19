@@ -20,21 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef INDEX_H
-#define INDEX_H
+#ifndef RECORDER_H
+#define RECORDER_H
 
-#include "data16.h"
+#include "datavarlenlong.h"
+#include "netaddress.h"
+#include "note.h"
+#include "pubkey.h"
 
-class Index : public Data16
+class Recorder : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Index( qint16 val = 0, QObject *p = nullptr )
-                : Data16( AO_INDEX, val, p ) {}
-              Index( const Index &f, QObject *p = nullptr )
-                : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
-        void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
-        void  operator = ( const qint16    &val ) { Data16::operator = ( val ); }
+    explicit  Recorder( QByteArray di = QByteArray(), QObject *p = nullptr );
+              Recorder( const Recorder &r )
+                : DataVarLenLong( AO_RECORDER, QByteArray(), r.parent() ),
+                  netAddress( r.netAddress ), note( r.note ), pubKey( r.pubKey ) {}
+        void  operator = ( const QByteArray &di );
+  QByteArray  toDataItem( bool cf = false );
+
+private:
+  NetAddress  netAddress;
+        Note  note;
+      PubKey  pubKey;     // Optional, secure ID of the recorder
 };
 
-#endif // INDEX_H
+#endif // RECORDER_H

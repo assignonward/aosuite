@@ -26,15 +26,18 @@ INCLUDEPATH += /usr/include
 LIBS        += -lgpgme -lgcrypt -ldl -lgpg-error
 
 SOURCES     += $${PWD}/dataitem.cpp         \
+               $${PWD}/data8.cpp            \
                $${PWD}/data16.cpp           \
                $${PWD}/data128.cpp          \
                $${PWD}/datafixedlength.cpp  \
                $${PWD}/datavarlenlong.cpp   \
+               $${PWD}/datavarlenshort.cpp  \
                $${PWD}/index.cpp            \
                $${PWD}/listsize.cpp         \
                $${PWD}/aotime.cpp           \
                $${PWD}/shares.cpp           \
                $${PWD}/sharesout.cpp        \
+               $${PWD}/sharestate.cpp       \
                $${PWD}/hash.cpp             \
                $${PWD}/hash256.cpp          \
                $${PWD}/hash512.cpp          \
@@ -45,20 +48,22 @@ SOURCES     += $${PWD}/dataitem.cpp         \
                $${PWD}/note.cpp             \
                $${PWD}/sigecdsa.cpp         \
                $${PWD}/sigrsa3072.cpp       \
-               $${PWD}/datavarlenshort.cpp \
-    $$PWD/netaddress.cpp
+               $${PWD}/netaddress.cpp
 
 HEADERS     += $${PWD}/bytecodes.h        \
                $${PWD}/dataitem.h         \
+               $${PWD}/data8.h            \
                $${PWD}/data16.h           \
                $${PWD}/data128.h          \
                $${PWD}/datafixedlength.h  \
                $${PWD}/datavarlenlong.h   \
+               $${PWD}/datavarlenshort.h  \
                $${PWD}/index.h            \
                $${PWD}/listsize.h         \
                $${PWD}/aotime.h           \
                $${PWD}/shares.h           \
                $${PWD}/sharesout.h        \
+               $${PWD}/sharestate.h       \
                $${PWD}/hash.h             \
                $${PWD}/hash256.h          \
                $${PWD}/hash512.h          \
@@ -69,5 +74,4 @@ HEADERS     += $${PWD}/bytecodes.h        \
                $${PWD}/note.h             \
                $${PWD}/sigecdsa.h         \
                $${PWD}/sigrsa3072.h       \
-               $${PWD}/datavarlenshort.h \
-    $$PWD/netaddress.h
+               $${PWD}/netaddress.h

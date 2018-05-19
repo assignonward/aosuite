@@ -43,9 +43,9 @@ class AOTime : public Data128
 {
     Q_OBJECT
 public:
-       explicit  AOTime( __int128 tm = 0, QObject *p = nullptr);
+       explicit  AOTime( __int128 tm = 0, typeCode_t typ = AO_TIME_RECORDED, QObject *p = nullptr );
                  AOTime( const AOTime &tm, QObject *p = nullptr )
-                   : Data128( AO_TIME_RECORDED, tm.get(), p ? p : tm.parent() ) {}
+                   : Data128( tm.typeCode, tm.get(), p ? p : tm.parent() ) {}
            void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
 
 static __int128  now();

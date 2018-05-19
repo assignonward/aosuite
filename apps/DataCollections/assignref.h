@@ -20,21 +20,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef INDEX_H
-#define INDEX_H
+#ifndef ASSIGNREF_H
+#define ASSIGNREF_H
 
-#include "data16.h"
+#include "datavarlenlong.h"
+#include "index.h"
+#include "pageref.h"
+#include "pubkey.h"
+#include "shares.h"
 
-class Index : public Data16
+/**
+ * @brief The AssignRef class - refers to a record of shares assigned,
+ *   on a page, in a block, in a chain.
+ */
+class AssignRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Index( qint16 val = 0, QObject *p = nullptr )
-                : Data16( AO_INDEX, val, p ) {}
-              Index( const Index &f, QObject *p = nullptr )
-                : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
-        void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
-        void  operator = ( const qint16    &val ) { Data16::operator = ( val ); }
+    explicit  AssignRef( const QByteArray &di = QByteArray(), QObject *p = nullptr );
+              AssignRef( const AssignRef &r )
+                : DataVarLenLong( r.typeCode, r.ba, r.parent() ),
+                  page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
+        void  operator = ( const QByteArray &di );
+  QByteArray  toDataItem( bool cf = false );
+        bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
+
+private:
+     PageRef  page;    // page these shares are recorded on
+       Index  seqNum;  // share assignment sequence number in the page
+      PubKey  key;     // Id (public key) of shares
+        Hash  keyHash; // Id (hashed public key) of shares
+      Shares  amount;  // amount of shares assigned
 };
 
-#endif // INDEX_H
+#endif // ASSIGNREF_H

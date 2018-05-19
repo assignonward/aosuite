@@ -55,6 +55,10 @@
 #define AO_RECORDING_BID     ( 0x02 | AO_SHARES_CODE )
 #define AO_SHARES_OUT        ( 0x03 | AO_SHARES_CODE )
 
+// First 4 bits, when 0011 means: this is a 3 byte chunk, one for the code, 1 for the data, one for the checkbyte (generally an 8 bit int)
+#define AO_SIZE_3BYTES         0x30
+#define AO_SHARE_STATE         0x30
+
 // First 4 bits, when 0100 means: this is a 4 byte chunk, one for the code, 2 for the data, one for the checkbyte (generally a 16 bit int)
 #define AO_SIZE_4BYTES         0x40
 #define AO_LISTSIZE            0x40
@@ -74,12 +78,14 @@
 #define AO_PARTICIPANT_CF      0xA2  // wrapper around the compact form participant data fields, which can come in any order
 #define AO_SIGNATURE_LIST      0xA5  // starts with an AO_LISTSIZE, followed by that many signature objects
 #define AO_AUTHORIZATION       0xA6  // an assignment, fully countersigned by all parties to the assignment
+#define AO_ASSIGN_REF          0xA7  // reference to shares assigned away on a page
 #define AO_NOTE                0xAA  // optional field in the participant item
 #define AO_BLOCK_REF           0xAB  // reference to a block
 #define AO_PAGE_REF            0xAC  // reference to a page in a block
 #define AO_GENESIS_REF         0xAD  // reference to a genesis block (chain)
 #define AO_SIG_WITH_TIME       0xAE  // contains time of signature, and the signature itself
 #define AO_SHARES_REF          0xAF  // reference to shares on a page
+#define AO_ASSETS              0xB0  // collection of assets - the asset organizer database
 #define AO_ORGANIZER           0xB8  // collection of data to describe an Organizer entity
 #define AO_RECORDER            0xB9  // collection of data to describe a Recorder entity
 #define AO_NETADDRESS          0xBA  // string with an IP4, IP6 or FQDN address, optionally with :port number

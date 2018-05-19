@@ -23,11 +23,13 @@
 #ifndef SHARESREF_H
 #define SHARESREF_H
 
+#include "assignref.h"
 #include "datavarlenlong.h"
 #include "index.h"
 #include "pageref.h"
 #include "pubkey.h"
 #include "shares.h"
+#include "sharestate.h"
 
 /**
  * @brief The SharesRef class - refers to a record of shares received,
@@ -37,22 +39,24 @@ class SharesRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  SharesRef( QObject *p = nullptr )
-                : DataVarLenLong( AO_SHARES_REF, QByteArray(), p ) {}
+    explicit  SharesRef( const QByteArray &di = QByteArray(), QObject *p = nullptr );
               SharesRef( const SharesRef &r )
                 : DataVarLenLong( r.typeCode, r.ba, r.parent() ),
-                  page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
-              SharesRef( const QByteArray &di, QObject *p = nullptr );
+                  page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ),
+                  amount( r.amount ), shareState( r.shareState ), lockExp( r.lockExp ), assignRef( r.assignRef ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );
         bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
 
 private:
-     PageRef  page;    // page these shares are recorded on
-       Index  seqNum;  // shares sequence number in the page
-      PubKey  key;     // Id (public key) of shares
-        Hash  keyHash; // Id (hashed public key) of shares
-      Shares  amount;  // amount of shares recorded
+     PageRef  page;       // page these shares are recorded on
+       Index  seqNum;     // shares sequence number in the page
+      PubKey  key;        // Id (public key) of shares
+        Hash  keyHash;    // Id (hashed public key) of shares
+      Shares  amount;     // amount of shares recorded
+  ShareState  shareState; // available, or other?
+      AOTime  lockExp;    // if the state is locked, when does the lock expire?
+   AssignRef  assignRef;  // if these shares have been assigned away, this is the optional record of when/where
 };
 
 #endif // SHARESREF_H
