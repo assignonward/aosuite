@@ -22,6 +22,7 @@
 #
 
 include(../OrganizerData/OrganizerData.pri)
+include(../Random/Random.pri)
 
 QT        += core gui widgets
 TARGET     = ao
@@ -31,12 +32,10 @@ DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs de
 
 SOURCES   += main.cpp            \
              mainwindow.cpp      \
-             random.cpp          \
              underwriting.cpp    \
              chainmaker.cpp
 
 HEADERS   += mainwindow.h      \
-             random.h          \
              underwriting.h    \
              chainmaker.h
 
