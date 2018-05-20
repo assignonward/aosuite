@@ -20,34 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef ASSETS_H
-#define ASSETS_H
+#ifndef KEYPAIR_H
+#define KEYPAIR_H
 
-#include "keypair.h"
-#include "organizer.h"
-#include "recorder.h"
-#include "sharesref.h"
+#include "datavarlenlong.h"
+#include "prikey.h"
+#include "pubkey.h"
 
 /**
- * @brief The Assets class - collections of valuable information
- *   for the Asset Organizer.  Includes shares records and contact info.
+ * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
  */
-class Assets : public DataVarLenLong
+class KeyPair : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Assets( const QByteArray &di = QByteArray(), QObject *p = nullptr );
-              Assets( const Assets &a, QObject *p = nullptr )
-                : DataVarLenLong( AO_ASSETS, p ? p : a.parent() ), organizers( a.organizers ),
-                  recorders( a.recorders ), sharesRefs( a.sharesRefs ), keyPairs( a.keyPairs ) {}
+    explicit  KeyPair( QByteArray di = QByteArray(), QObject *p = nullptr );
+              KeyPair( const KeyPair &k )
+                : DataVarLenLong( AO_KEYPAIR, QByteArray(), k.parent() ),
+                  pubKey( k.pubKey ), priKey( k.priKey ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );
+        bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
 
 private:
-    QList<Organizer> organizers;
-     QList<Recorder> recorders;
-    QList<SharesRef> sharesRefs;
-      QList<KeyPair> keyPairs;     // Previously unused key pairs, for quick access
+      PubKey  pubKey;
+      PriKey  priKey;
 };
 
-#endif // ASSETS_H
+#endif // KEYPAIR_H

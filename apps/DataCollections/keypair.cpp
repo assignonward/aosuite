@@ -20,17 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "assets.h"
+#include "keypair.h"
 
 /**
- * @brief Assets::Assets - collections of shares and contact info
+ * @brief KeyPair::KeyPair - constructor
  * @param di - optional data item
- * @param p - object parent
+ * @param p - optional parent object
  */
-Assets::Assets(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSETS, p )
+KeyPair::KeyPair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEYPAIR, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_ASSETS )
+    { if ( typeCodeOf( di ) != AO_KEYPAIR )
         { // TODO: log an error
           return;
         }
@@ -45,29 +45,16 @@ Assets::Assets(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSETS, p 
                       return;
                     }
                    else
-                    { Organizer org;
-                      Recorder rec;
-                      SharesRef shr;
-                      KeyPair kpr;
-                      switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_ORGANIZER:
-                            org = items;
-                            organizers.append( org );
+                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                        { case AO_ECDSA_PUB_KEY2:
+                          case AO_ECDSA_PUB_KEY3:
+                          case AO_RSA3072_PUB_KEY:
+                            pubKey = items;
                             break;
 
-                          case AO_RECORDER:
-                            rec = items;
-                            recorders.append( rec );
-                            break;
-
-                          case AO_SHARES_REF:
-                            shr = items;
-                            sharesRefs.append( shr );
-                            break;
-
-                          case AO_KEYPAIR:
-                            kpr = items;
-                            keyPairs.append( kpr );
+                          case AO_ECDSA_PRI_KEY:
+                          case AO_RSA3072_PRI_KEY:
+                            priKey = items;
                             break;
 
                           default:
@@ -82,33 +69,32 @@ Assets::Assets(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSETS, p 
     }
 }
 
-void Assets::operator = ( const QByteArray &di )
-{ Assets temp( di );
-  organizers = temp.organizers;
-  recorders  = temp.recorders;
-  sharesRefs = temp.sharesRefs;
-  keyPairs   = temp.keyPairs;
-  typeCode   = temp.typeCode;
+/**
+ * @brief KeyPair::operator =
+ * @param di - data item to assign
+ */
+void KeyPair::operator = ( const QByteArray &di )
+{ KeyPair temp( di );
+  pubKey   = temp.pubKey;
+  priKey   = temp.priKey;
+  typeCode = temp.typeCode;
   return;
 }
 
-QByteArray  Assets::toDataItem( bool cf )
-{ QList<QByteArray> dil; (void)cf;  // unused in this context, always false
-  if ( organizers.size() > 0 )
-    foreach( Organizer o, organizers )
-      dil.append( o.toDataItem(false) );
-  if ( recorders.size() > 0 )
-    foreach( Recorder r, recorders )
-      dil.append( r.toDataItem(false) );
-  if ( sharesRefs.size() > 0 )
-    foreach( SharesRef s, sharesRefs )
-      dil.append( s.toDataItem(false) );
-  if ( keyPairs.size() > 0 )
-    foreach( KeyPair k, keyPairs )
-      dil.append( k.toDataItem(false) );
+/**
+ * @brief KeyPair::toDataItem
+ * @param cf - compact (or chain) form?  Pass along to children.
+ * @return data item with the BlockRef contents
+ */
+QByteArray  KeyPair::toDataItem( bool cf )
+{ QList<QByteArray> dil;
+  if ( pubKey.isValid() )
+    dil.append( pubKey.toDataItem(cf) );
+  if ( priKey.isValid() )
+    dil.append( priKey.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem(false);
+  return DataVarLenLong::toDataItem(cf);
 }

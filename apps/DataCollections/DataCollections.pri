@@ -32,7 +32,8 @@ SOURCES     += $${PWD}/assignment.cpp  \
                $${PWD}/pageref.cpp     \
                $${PWD}/participant.cpp \
                $${PWD}/sharesref.cpp   \
-               $${PWD}/signature.cpp
+               $${PWD}/signature.cpp \
+    $$PWD/keypair.cpp
 
 HEADERS     += $${PWD}/assignment.h  \
                $${PWD}/assignref.h   \
@@ -41,4 +42,5 @@ HEADERS     += $${PWD}/assignment.h  \
                $${PWD}/pageref.h     \
                $${PWD}/participant.h \
                $${PWD}/sharesref.h   \
-               $${PWD}/signature.h
+               $${PWD}/signature.h \
+    $$PWD/keypair.h
