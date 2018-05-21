@@ -45,9 +45,9 @@ public:
 
 private:
     QList<Organizer> organizers;
-     QList<Recorder> recorders;
+    QList< Recorder> recorders;
     QList<SharesRef> sharesRefs;
-      QList<KeyPair> keyPairs;     // Previously unused key pairs, for quick access
+    QList<  KeyPair> keyPairs;     // Previously unused key pairs, for quick access
 };
 
 #endif // ASSETS_H
