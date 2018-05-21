@@ -29,13 +29,13 @@ class DataVarLenLong : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  DataVarLenLong( typeCode_t tc = AO_UNDEFINED_DATAITEM, QByteArray iba = QByteArray(), QObject *p = nullptr )
+    explicit  DataVarLenLong( typeCode_t tc = AO_UNDEFINED_DATAITEM, QByteArray iba = QByteArray(), QObject *p = NULL )
                 : DataItem( tc, p ), ba( iba ) {}
-              DataVarLenLong( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
+              DataVarLenLong( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
                 : DataItem( tc, p ) {}
-              DataVarLenLong( const DataVarLenLong &d, QObject *p = nullptr )
+              DataVarLenLong( const DataVarLenLong &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ) {}
-              DataVarLenLong( const QByteArray &di, QObject *p = nullptr );
+              DataVarLenLong( const QByteArray &di, QObject *p = NULL );
   virtual QByteArray toDataItem( bool cf = false ) const;
         void  operator =  ( const QByteArray &di );
         void  operator =  ( const DataVarLenLong &d ) { ba = d.ba; typeCode = d.typeCode; csVal = d.csVal; }

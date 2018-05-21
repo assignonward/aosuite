@@ -44,8 +44,8 @@ class Assignment : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Assignment( const QByteArray &di = QByteArray(), QObject *p = nullptr );
-              Assignment( const Assignment &a, QObject *p = nullptr )
+    explicit  Assignment( const QByteArray &di = QByteArray(), QObject *p = NULL );
+              Assignment( const Assignment &a, QObject *p = NULL )
                 : DataVarLenLong( AO_ASSIGNMENT, p ? p : a.parent() ), salt( a.salt ), proposedChain( a.proposedChain ),
                   recordingDeadline( a.recordingDeadline ), recordingBid( a.recordingBid ), note( a.note ),
                   participants( a.participants ) {}
@@ -79,8 +79,8 @@ class Authorization : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit Authorization( const QByteArray &di = QByteArray(), QObject *p = nullptr );
-             Authorization( const Authorization &a, QObject *p = nullptr )
+    explicit Authorization( const QByteArray &di = QByteArray(), QObject *p = NULL );
+             Authorization( const Authorization &a, QObject *p = NULL )
                : DataVarLenLong( AO_AUTHORIZATION, p ? p : a.parent() ),
                  assignment( a.assignment ), sigs( a.sigs ) {}
        void  operator = ( const QByteArray &di );

@@ -29,7 +29,7 @@ class ChainMaker : public QObject
 {
     Q_OBJECT
 public:
-    explicit ChainMaker(QObject *p = nullptr);
+    explicit ChainMaker(QObject *p = NULL);
 
 signals:
 

@@ -29,12 +29,12 @@ class Data8 : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  Data8( typeCode_t tc = AO_UNDEFINED_DATAITEM, qint8 d = 0, QObject *p = nullptr )
+    explicit  Data8( typeCode_t tc = AO_UNDEFINED_DATAITEM, qint8 d = 0, QObject *p = NULL )
                 : DataItem( tc, p ), v( d ) {}
-              Data8( const Data8 &d, QObject *p = nullptr )
+              Data8( const Data8 &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
-              Data8( const QByteArray &di, QObject *p = nullptr );
-    explicit  Data8(QObject *parent = nullptr);
+              Data8( const QByteArray &di, QObject *p = NULL );
+    explicit  Data8(QObject *parent = NULL);
   QByteArray  toDataItem( bool cf = false ) const;
         void  operator = ( const QByteArray &di );
         void  operator = ( const Data8 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }

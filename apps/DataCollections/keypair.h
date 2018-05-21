@@ -34,7 +34,7 @@ class KeyPair : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  KeyPair( QByteArray di = QByteArray(), QObject *p = nullptr );
+    explicit  KeyPair( QByteArray di = QByteArray(), QObject *p = NULL );
               KeyPair( const KeyPair &k )
                 : DataVarLenLong( AO_KEYPAIR, QByteArray(), k.parent() ),
                   pubKey( k.pubKey ), priKey( k.priKey ) {}

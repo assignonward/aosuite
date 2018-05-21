@@ -37,9 +37,9 @@ class Hash : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  Hash( typeCode_t tc = AO_HASH256, QObject *p = nullptr );
-              Hash( const QByteArray &di, QObject *p = nullptr );
-              Hash( const Hash &d, QObject *p = nullptr )
+    explicit  Hash( typeCode_t tc = AO_HASH256, QObject *p = NULL );
+              Hash( const QByteArray &di, QObject *p = NULL );
+              Hash( const Hash &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), hash256( d.hash256 ), hash512( d.hash512 ) {}
         void  operator = ( const Hash &h ) { typeCode = h.typeCode; hash256 = h.hash256; hash512 = h.hash512; }
   QByteArray  toDataItem( bool cf = false ) const;

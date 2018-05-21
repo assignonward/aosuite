@@ -38,7 +38,7 @@ class Participant : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Participant( QByteArray di = QByteArray(), QObject *p = nullptr );
+    explicit  Participant( QByteArray di = QByteArray(), QObject *p = NULL );
               Participant( const Participant &r )
                 : DataVarLenLong( AO_PARTICIPANT, QByteArray(), r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}

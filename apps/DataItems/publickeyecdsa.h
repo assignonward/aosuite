@@ -29,11 +29,11 @@ class PublicKeyEcdsa : public DataFixedLength
 {
     Q_OBJECT
 public:
-    explicit  PublicKeyEcdsa( QObject *p = nullptr )
+    explicit  PublicKeyEcdsa( QObject *p = NULL )
                 : DataFixedLength( AO_ECDSA_PUB_KEY2, p ) {}
-              PublicKeyEcdsa( const PublicKeyEcdsa &k, QObject *p = nullptr )
+              PublicKeyEcdsa( const PublicKeyEcdsa &k, QObject *p = NULL )
                 : DataFixedLength( AO_ECDSA_PUB_KEY2, k.ba, p ? p : k.parent() ) {}
-              PublicKeyEcdsa( const QByteArray &di, QObject *p = nullptr )
+              PublicKeyEcdsa( const QByteArray &di, QObject *p = NULL )
                 : DataFixedLength( di, p ) {}
   QByteArray  get() const;
         void  set( QByteArray k );

@@ -37,7 +37,7 @@ class AssignRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  AssignRef( const QByteArray &di = QByteArray(), QObject *p = nullptr );
+    explicit  AssignRef( const QByteArray &di = QByteArray(), QObject *p = NULL );
               AssignRef( const AssignRef &r )
                 : DataVarLenLong( r.typeCode, r.ba, r.parent() ),
                   page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}

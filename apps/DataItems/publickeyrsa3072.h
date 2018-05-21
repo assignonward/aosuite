@@ -29,11 +29,11 @@ class PublicKeyRsa3072 : public DataFixedLength
 {
     Q_OBJECT
 public:
-    explicit  PublicKeyRsa3072( QObject *p = nullptr )
+    explicit  PublicKeyRsa3072( QObject *p = NULL )
                 : DataFixedLength( AO_RSA3072_PUB_KEY, p ) {}
-              PublicKeyRsa3072( const PublicKeyRsa3072 &k, QObject *p = nullptr )
+              PublicKeyRsa3072( const PublicKeyRsa3072 &k, QObject *p = NULL )
                 : DataFixedLength( AO_RSA3072_PUB_KEY, k.ba, p ? p : k.parent() ) {}
-              PublicKeyRsa3072( const QByteArray &di, QObject *p = nullptr )
+              PublicKeyRsa3072( const QByteArray &di, QObject *p = NULL )
                 : DataFixedLength( di, p ) {}
         void  clear() { ba.clear(); }
      // bool  isValid() { return (ba.size() == 384); }  could do more, this is handled in the parent class

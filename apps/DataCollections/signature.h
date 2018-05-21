@@ -37,9 +37,9 @@ class Signature : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Signature( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
-              Signature( const QByteArray &di, QObject *p = nullptr );
-              Signature( const Signature &s, QObject *p = nullptr );
+    explicit  Signature( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
+              Signature( const QByteArray &di, QObject *p = NULL );
+              Signature( const Signature &s, QObject *p = NULL );
         void  operator = ( const Signature &s ) { sigType = s.sigType; sigEcdsa = s.sigEcdsa; sigRsa3072 = s.sigRsa3072; sigTime = s.sigTime; index = s.index; }
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

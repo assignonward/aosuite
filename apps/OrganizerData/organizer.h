@@ -31,7 +31,7 @@ class Organizer : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Organizer( QByteArray di = QByteArray(), QObject *p = nullptr );
+    explicit  Organizer( QByteArray di = QByteArray(), QObject *p = NULL );
               Organizer( const Organizer &o )
                 : DataVarLenLong( AO_ORGANIZER, QByteArray(), o.parent() ),
                   note( o.note ), pubKey( o.pubKey ) {}

@@ -39,7 +39,7 @@ class SharesRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  SharesRef( const QByteArray &di = QByteArray(), QObject *p = nullptr );
+    explicit  SharesRef( const QByteArray &di = QByteArray(), QObject *p = NULL );
               SharesRef( const SharesRef &r )
                 : DataVarLenLong( r.typeCode, r.ba, r.parent() ),
                   page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ),

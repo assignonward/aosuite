@@ -29,8 +29,8 @@ class NetAddress : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  NetAddress( QByteArray ba = QByteArray(), QObject *p = nullptr ) : DataVarLenLong( AO_NETADDRESS, ba, p ) {}
-              NetAddress( const NetAddress &n, QObject *p = nullptr ) : DataVarLenLong( AO_NETADDRESS, n.ba, p ? p : n.parent() ) {}
+    explicit  NetAddress( QByteArray ba = QByteArray(), QObject *p = NULL ) : DataVarLenLong( AO_NETADDRESS, ba, p ) {}
+              NetAddress( const NetAddress &n, QObject *p = NULL ) : DataVarLenLong( AO_NETADDRESS, n.ba, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
         void  operator = ( const QByteArray &di ) { DataVarLenLong::operator = ( di ); }
 };

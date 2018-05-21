@@ -29,11 +29,11 @@ class SigEcdsa : public DataVarLenShort
 {
     Q_OBJECT
 public:
-    explicit  SigEcdsa( QObject *p = nullptr )
+    explicit  SigEcdsa( QObject *p = NULL )
                 : DataVarLenShort( AO_ECDSA_SIG, p ) {}
-              SigEcdsa( const SigEcdsa &s, QObject *p = nullptr )
+              SigEcdsa( const SigEcdsa &s, QObject *p = NULL )
                 : DataVarLenShort( AO_ECDSA_SIG, s.ba, p ? p : s.parent() ) {}
-              SigEcdsa( const QByteArray &di, QObject *p = nullptr )
+              SigEcdsa( const QByteArray &di, QObject *p = NULL )
                 : DataVarLenShort( di, p ) {}
   QByteArray  get() const { return ba; }
         void  set( QByteArray s ) { ba = s; }

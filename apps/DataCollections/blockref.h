@@ -37,11 +37,11 @@ class BlockRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  BlockRef( QByteArray di = QByteArray(), QObject *p = nullptr );
+    explicit  BlockRef( QByteArray di = QByteArray(), QObject *p = NULL );
               BlockRef( const BlockRef &r )
                 : DataVarLenLong( AO_BLOCK_REF, QByteArray(), r.parent() ),
                   propTime( r.propTime ), shOut( r.shOut ), blkHash( r.blkHash ), genesis( r.genesis ) {}
-              BlockRef( const Hash &h, const AOTime t, const SharesOut &s, const GenesisRef &r, QObject *p = nullptr )
+              BlockRef( const Hash &h, const AOTime t, const SharesOut &s, const GenesisRef &r, QObject *p = NULL )
                 : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p ),
                   propTime( t ), shOut( s ), blkHash( h ), genesis( r ) {}
         void  operator = ( const QByteArray &di );

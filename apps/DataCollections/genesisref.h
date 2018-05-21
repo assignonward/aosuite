@@ -34,11 +34,11 @@ class GenesisRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = nullptr );
+    explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
               GenesisRef( const GenesisRef &r )
                 : DataVarLenLong( AO_GENESIS_REF, QByteArray(), r.parent() ),
                   hash( r.hash ) {}
-              GenesisRef( const Hash &g, QObject *p = nullptr )
+              GenesisRef( const Hash &g, QObject *p = NULL )
                 : DataVarLenLong( AO_GENESIS_REF, QByteArray(), p ),
                   hash( g ) {}
         void  operator = ( const QByteArray &di );

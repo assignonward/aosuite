@@ -77,7 +77,7 @@ class Underwriting : public QObject
 {
     Q_OBJECT
 public:
-    explicit Underwriting(QObject *p = nullptr);
+    explicit Underwriting(QObject *p = NULL);
 
 private:
     Authorization auth;

@@ -34,9 +34,9 @@ class PriKey : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  PriKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
-              PriKey( const QByteArray &di, QObject *p = nullptr );
-              PriKey( const PriKey &pk, QObject *p = nullptr );
+    explicit  PriKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
+              PriKey( const QByteArray &di, QObject *p = NULL );
+              PriKey( const PriKey &pk, QObject *p = NULL );
         void  operator = ( const PriKey &k ) { typeCode = k.typeCode; privateKeyEcdsa = k.privateKeyEcdsa; privateKeyRsa3072 = k.privateKeyRsa3072; }
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false ) const;

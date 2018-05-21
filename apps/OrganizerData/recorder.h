@@ -32,7 +32,7 @@ class Recorder : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Recorder( QByteArray di = QByteArray(), QObject *p = nullptr );
+    explicit  Recorder( QByteArray di = QByteArray(), QObject *p = NULL );
               Recorder( const Recorder &r )
                 : DataVarLenLong( AO_RECORDER, QByteArray(), r.parent() ),
                   netAddress( r.netAddress ), note( r.note ), pubKey( r.pubKey ) {}

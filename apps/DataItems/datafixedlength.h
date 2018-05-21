@@ -33,13 +33,13 @@ class DataFixedLength : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  DataFixedLength( typeCode_t tc = AO_UNDEFINED_DATAITEM, QByteArray iba = QByteArray(), QObject *p = nullptr )
+    explicit  DataFixedLength( typeCode_t tc = AO_UNDEFINED_DATAITEM, QByteArray iba = QByteArray(), QObject *p = NULL )
                 : DataItem( tc, p ), ba( iba ) {}
-              DataFixedLength( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
+              DataFixedLength( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
                 : DataItem( tc, p ) {}
-              DataFixedLength( const DataFixedLength &d, QObject *p = nullptr )
+              DataFixedLength( const DataFixedLength &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ) {}
-              DataFixedLength( const QByteArray &di, QObject *p = nullptr );
+              DataFixedLength( const QByteArray &di, QObject *p = NULL );
   QByteArray  toDataItem( bool cf = false ) const;
         void  operator =  ( const QByteArray &di );
         void  operator =  ( const DataFixedLength &d ) { ba = d.ba; typeCode = d.typeCode; csVal = d.csVal; }

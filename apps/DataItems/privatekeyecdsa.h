@@ -29,11 +29,11 @@ class PrivateKeyEcdsa : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  PrivateKeyEcdsa( QObject *p = nullptr )
+    explicit  PrivateKeyEcdsa( QObject *p = NULL )
                 : DataVarLenLong( AO_ECDSA_PRI_KEY, p ) {}
-              PrivateKeyEcdsa( const PrivateKeyEcdsa &k, QObject *p = nullptr )
+              PrivateKeyEcdsa( const PrivateKeyEcdsa &k, QObject *p = NULL )
                 : DataVarLenLong( AO_ECDSA_PRI_KEY, k.ba, p ? p : k.parent() ) {}
-              PrivateKeyEcdsa( const QByteArray &di, QObject *p = nullptr )
+              PrivateKeyEcdsa( const QByteArray &di, QObject *p = NULL )
                 : DataVarLenLong( di, p ) {}
         void  clear() { ba.clear(); }
         bool  isValid() const { return (ba.size() > 0); } // TODO: really check

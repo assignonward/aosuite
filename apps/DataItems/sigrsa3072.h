@@ -29,11 +29,11 @@ class SigRsa3072 : public DataFixedLength
 {
     Q_OBJECT
 public:
-    explicit  SigRsa3072( QObject *p = nullptr )
+    explicit  SigRsa3072( QObject *p = NULL )
                 : DataFixedLength( AO_RSA3072_SIG, p ) {}
-              SigRsa3072( const SigRsa3072 &s, QObject *p = nullptr )
+              SigRsa3072( const SigRsa3072 &s, QObject *p = NULL )
                 : DataFixedLength( AO_RSA3072_SIG, s.ba, p ? p : s.parent() ) {}
-              SigRsa3072( const QByteArray &di, QObject *p = nullptr )
+              SigRsa3072( const QByteArray &di, QObject *p = NULL )
                 : DataFixedLength( di, p ) {}
   QByteArray  get() const { return ba; }
         void  set( QByteArray s ) { ba = s; }

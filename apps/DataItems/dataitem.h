@@ -32,7 +32,7 @@ class DataItem : public QObject
 {
     Q_OBJECT
 public:
-           explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
+           explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
              qint32  typeSize( const QByteArray &di ) const;
   static     qint32  typeSizeTable( typeCode_t tc );

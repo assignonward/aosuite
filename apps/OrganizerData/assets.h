@@ -36,8 +36,8 @@ class Assets : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Assets( const QByteArray &di = QByteArray(), QObject *p = nullptr );
-              Assets( const Assets &a, QObject *p = nullptr )
+    explicit  Assets( const QByteArray &di = QByteArray(), QObject *p = NULL );
+              Assets( const Assets &a, QObject *p = NULL )
                 : DataVarLenLong( AO_ASSETS, p ? p : a.parent() ), organizers( a.organizers ),
                   recorders( a.recorders ), sharesRefs( a.sharesRefs ), keyPairs( a.keyPairs ) {}
         void  operator = ( const QByteArray &di );

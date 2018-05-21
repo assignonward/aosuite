@@ -29,12 +29,12 @@ class Data16 : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  Data16( typeCode_t tc = AO_UNDEFINED_DATAITEM, qint16 d = 0, QObject *p = nullptr )
+    explicit  Data16( typeCode_t tc = AO_UNDEFINED_DATAITEM, qint16 d = 0, QObject *p = NULL )
                 : DataItem( tc, p ), v( d ) {}
-              Data16( const Data16 &d, QObject *p = nullptr )
+              Data16( const Data16 &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
-              Data16( const QByteArray &di, QObject *p = nullptr );
-    explicit  Data16(QObject *parent = nullptr);
+              Data16( const QByteArray &di, QObject *p = NULL );
+    explicit  Data16(QObject *parent = NULL);
   QByteArray  toDataItem( bool cf = false ) const;
         void  operator = ( const QByteArray &di );
         void  operator = ( const Data16 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
