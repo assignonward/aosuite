@@ -23,6 +23,7 @@
 
 INCLUDEPATH += $${PWD}
 INCLUDEPATH += /usr/include
+# sudo apt-get install libgpgme11-dev libgcrypt11-dev
 LIBS        += -lgpgme -lgcrypt -ldl -lgpg-error
 
 SOURCES     += $${PWD}/dataitem.cpp          \
