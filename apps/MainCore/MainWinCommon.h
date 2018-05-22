@@ -20,32 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINWINCOMMON_H
+#define MAINWINCOMMON_H
 
-#include "assets.h"
-#include "genesisForm.h"
-#include "MainWinCommon.h"
-#include "ui_mainwindow.h"
+#include <QMainWindow>
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public MainWinCommon
+class MainWinCommon : public QMainWindow
 {
     Q_OBJECT
-
 public:
-    explicit  MainWindow(QWidget *parent = 0);
-             ~MainWindow();
-        void  closeEvent(QCloseEvent *event);
-        void  restoreConfig();
-        void  saveConfig();
+        explicit  MainWinCommon(QWidget *parent = NULL );
+                 ~MainWinCommon();
+            void  closeEvent(QCloseEvent *event);
+            void  restoreConfig();
+            void  saveConfig();
 
-private:
-    Ui::MainWindow *ui;
-            Assets  assets;
+signals:
+
+public slots:
+            void  additionalInstanceStarted();
 };
 
-#endif // MAINWINDOW_H
+#endif // MAINWINCOMMON_H

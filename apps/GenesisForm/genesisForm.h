@@ -20,32 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef GENESISFORM_H
+#define GENESISFORM_H
 
-#include "assets.h"
-#include "genesisForm.h"
-#include "MainWinCommon.h"
-#include "ui_mainwindow.h"
+#include <QtGui>
+#include "ui_genesisForm.h"
 
 namespace Ui {
-class MainWindow;
+class GenesisForm;
 }
 
-class MainWindow : public MainWinCommon
+class GenesisForm : public QScrollArea
 {
     Q_OBJECT
 
 public:
-    explicit  MainWindow(QWidget *parent = 0);
-             ~MainWindow();
-        void  closeEvent(QCloseEvent *event);
-        void  restoreConfig();
-        void  saveConfig();
-
-private:
-    Ui::MainWindow *ui;
-            Assets  assets;
+  explicit  GenesisForm( QWidget *cw );
+           ~GenesisForm();
+public:
+    Ui::GenesisForm *ui;
 };
 
-#endif // MAINWINDOW_H
+#endif // RABBITFORM_H

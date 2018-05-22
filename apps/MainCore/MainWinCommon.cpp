@@ -20,32 +20,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include "assets.h"
-#include "genesisForm.h"
+#include <QApplication>
+#include <QSettings>
+#include "appname.h"
 #include "MainWinCommon.h"
-#include "ui_mainwindow.h"
 
-namespace Ui {
-class MainWindow;
+MainWinCommon::MainWinCommon(QWidget *parent)
+  : QMainWindow(parent)
+{
 }
 
-class MainWindow : public MainWinCommon
+MainWinCommon::~MainWinCommon()
 {
-    Q_OBJECT
+}
 
-public:
-    explicit  MainWindow(QWidget *parent = 0);
-             ~MainWindow();
-        void  closeEvent(QCloseEvent *event);
-        void  restoreConfig();
-        void  saveConfig();
+void  MainWinCommon::closeEvent(QCloseEvent *event)
+{ saveConfig();
+  QApplication::processEvents( QEventLoop::AllEvents,100 );
+  QMainWindow::closeEvent(event);
+}
 
-private:
-    Ui::MainWindow *ui;
-            Assets  assets;
-};
 
-#endif // MAINWINDOW_H
+void MainWinCommon::additionalInstanceStarted()
+{ qWarning( "Attempt to start a second instance of " APPNAME );
+}
+
+void MainWinCommon::restoreConfig()
+{ QSettings settings;
+  restoreGeometry( settings.value( "geometry" ).toByteArray() );
+  restoreState   ( settings.value( "state"    ).toByteArray() );
+}
+
+void MainWinCommon::saveConfig()
+{ QSettings settings;
+  settings.setValue( "geometry", saveGeometry() );
+  settings.setValue( "state"   , saveState()    );
+}
+

@@ -21,22 +21,23 @@
 # SOFTWARE.
 #
 
-include(../MainCore/MainCore.pri)
-include(../OrganizerData/OrganizerData.pri)
-include(../GenesisForm/GenesisForm.pri)
+QT          += core gui widgets
+TEMPLATE     = app
 
-QT        += core gui widgets
-TARGET     = genesisMaker
-TEMPLATE   = app
-DEFINES   += QT_DEPRECATED_WARNINGS
-DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+DEPTH = ../..
+include($${DEPTH}/qamqp.pri)
+INCLUDEPATH += $${QAMQP_INCLUDEPATH}
+LIBS        += -L$${DEPTH}/src $${QAMQP_LIBS}
+macx:CONFIG -= app_bundle
 
-SOURCES   += mainwindow.cpp
+include(../SingleApplication/singleapplication.pri)
+DEFINES     += QAPPLICATION_CLASS=QApplication
 
-HEADERS   += appname.h    \
-             mainwindow.h
+include(../Random/Random.pri)
 
-FORMS     += mainwindow.ui
+INCLUDEPATH += $${PWD}
 
-RESOURCES += resources.qrc
+SOURCES     += $${PWD}/main.cpp \
+               $${PWD}/MainWinCommon.cpp
 
+HEADERS     += $${PWD}/MainWinCommon.h

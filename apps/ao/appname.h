@@ -20,27 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "mainwindow.h"
-#include <QApplication>
-#include <QDateTime>
-#include "random.h"
+#ifndef APPNAME_H
+#define APPNAME_H
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
+#define APPNAME_SHORT "AOAO"
+#define APPNAME "Assign Onward Asset Organizer"
 
-    // Set names for QSettings use
-    QCoreApplication::setOrganizationName("AssignOnward");
-    QCoreApplication::setOrganizationDomain("assignonward.com");
-    QCoreApplication::setApplicationName("AOGenesisMaker");  // Assign Onward Genesis Block Maker
-
-    rng.seed( QDateTime::currentMSecsSinceEpoch() );
-    rng.rnd_uint64();
-    rng.rnd_uint64();
-    rng.rnd_uint64();
-
-    MainWindow w;
-    w.show();
-
-    return a.exec();
-}
+#endif // APPNAME_H

@@ -29,7 +29,7 @@ class DataVarLenLong : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  DataVarLenLong( typeCode_t tc = AO_UNDEFINED_DATAITEM, QByteArray iba = QByteArray(), QObject *p = NULL )
+    explicit  DataVarLenLong( typeCode_t tc, QByteArray iba, QObject *p = NULL )
                 : DataItem( tc, p ), ba( iba ) {}
               DataVarLenLong( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
                 : DataItem( tc, p ) {}
@@ -43,6 +43,7 @@ public:
         bool  operator != ( const DataVarLenLong &d ) { return ba != d.ba; }
   QByteArray  get() const { return ba; } // Just the meat, without typecode or checksum
         void  set( QByteArray sba ) { ba = sba; }
+      qint32  size() const { return ba.size(); }
 
 protected:
   QByteArray  ba;    // generic data, not including type or checksum

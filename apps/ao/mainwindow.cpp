@@ -25,7 +25,7 @@
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+    MainWinCommon(parent),
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
   restoreConfig();
@@ -41,22 +41,24 @@ void MainWindow::closeEvent(QCloseEvent *event)
   QMainWindow::closeEvent(event);
 }
 
+/**
+ * @brief MainWindow::restoreConfig - in addition to the window size and
+ *   placement saved in MainWinCommon, this app is also restoring assets.
+ */
 void MainWindow::restoreConfig()
-{ QSettings settings;
-  restoreGeometry( settings.value( "geometry" ).toByteArray() );
-  restoreState   ( settings.value( "state"    ).toByteArray() );
-  assets =         settings.value( "assets"   ).toByteArray();
+{ MainWinCommon::restoreConfig();
+  QSettings settings;
+  assets = settings.value( "assets" ).toByteArray();
 }
 
 /**
  * @brief MainWindow::saveConfig - in addition to the window size and
- *   placement saved in MainWinCommon, this app is also saving the splitter state.
+ *   placement saved in MainWinCommon, this app is also saving assets.
  */
 void MainWindow::saveConfig()
-{ QSettings settings;
-  settings.setValue( "geometry", saveGeometry()      );
-  settings.setValue( "state"   , saveState()         );
-  settings.setValue( "assets"  , assets.toDataItem() );
+{ MainWinCommon::saveConfig();
+  QSettings settings;
+  settings.setValue( "assets", assets.toDataItem() );
 }
 
 /**********************************************************************

@@ -20,27 +20,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "mainwindow.h"
 #include <QApplication>
 #include <QDateTime>
+#include <QSettings>
+#include "appname.h"
+#include "mainwindow.h"
 #include "random.h"
+#include "singleapplication.h"
+
+using namespace std;
+
+MainWindow *mw;
+
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{ switch (type)
+    { default:
+      case QtDebugMsg:
+        // TODO: log a debug message QString(context.file), context.line, msg
+        break;
+      case QtInfoMsg:
+        // TODO: log an info message QString(context.file), context.line, msg
+        break;
+      case QtWarningMsg:
+        // TODO: log a warning message QString(context.file), context.line, msg
+        break;
+      case QtCriticalMsg:
+        // TODO: log a critical message QString(context.file), context.line, msg
+        break;
+      case QtFatalMsg:
+        // TODO: log a fatal message QString(context.file), context.line, msg
+        abort();
+    }
+  (void)context; (void)msg;
+}
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
+    SingleApplication app(argc, argv);
     // Set names for QSettings use
     QCoreApplication::setOrganizationName("AssignOnward");
     QCoreApplication::setOrganizationDomain("assignonward.com");
-    QCoreApplication::setApplicationName("AORecorder");  // Assign Onward Recorder
+    QCoreApplication::setApplicationName( APPNAME_SHORT );
+    QSettings::setDefaultFormat(QSettings::IniFormat);
 
     rng.seed( QDateTime::currentMSecsSinceEpoch() );
     rng.rnd_uint64();
     rng.rnd_uint64();
     rng.rnd_uint64();
 
-    MainWindow w;
-    w.show();
-
-    return a.exec();
+    mw = new MainWindow();
+    // qInstallMessageHandler(myMessageOutput);
+    QObject::connect( &app, &SingleApplication::instanceStarted, mw, &MainWindow::additionalInstanceStarted );
+    mw->show();
+    int r = app.exec();
+    // qInstallMessageHandler( 0 );
+    return r;
 }

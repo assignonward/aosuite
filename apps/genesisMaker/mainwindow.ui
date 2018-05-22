@@ -36,6 +36,11 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <widget class="QWidget" name="genesisTab">
+       <attribute name="title">
+        <string>Genesis Block</string>
+       </attribute>
+      </widget>
       <widget class="QWidget" name="coins">
        <attribute name="title">
         <string>Coins</string>

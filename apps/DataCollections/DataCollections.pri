@@ -25,22 +25,24 @@ include(../DataItems/DataItems.pri)
 
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/assignment.cpp  \
-               $${PWD}/assignref.cpp   \
-               $${PWD}/blockref.cpp    \
-               $${PWD}/genesisref.cpp  \
-               $${PWD}/pageref.cpp     \
-               $${PWD}/participant.cpp \
-               $${PWD}/sharesref.cpp   \
-               $${PWD}/signature.cpp \
-    $$PWD/keypair.cpp
+SOURCES     += $${PWD}/assignment.cpp   \
+               $${PWD}/assignref.cpp    \
+               $${PWD}/blockref.cpp     \
+               $${PWD}/genesisref.cpp   \
+               $${PWD}/keypair.cpp      \
+               $${PWD}/keyvaluepair.cpp \
+               $${PWD}/pageref.cpp      \
+               $${PWD}/participant.cpp  \
+               $${PWD}/sharesref.cpp    \
+               $${PWD}/signature.cpp
 
-HEADERS     += $${PWD}/assignment.h  \
-               $${PWD}/assignref.h   \
-               $${PWD}/blockref.h    \
-               $${PWD}/genesisref.h  \
-               $${PWD}/pageref.h     \
-               $${PWD}/participant.h \
-               $${PWD}/sharesref.h   \
-               $${PWD}/signature.h \
-    $$PWD/keypair.h
+HEADERS     += $${PWD}/assignment.h   \
+               $${PWD}/assignref.h    \
+               $${PWD}/blockref.h     \
+               $${PWD}/genesisref.h   \
+               $${PWD}/keypair.h      \
+               $${PWD}/keyvaluepair.h \
+               $${PWD}/pageref.h      \
+               $${PWD}/participant.h  \
+               $${PWD}/sharesref.h    \
+               $${PWD}/signature.h

@@ -20,32 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include "assets.h"
 #include "genesisForm.h"
-#include "MainWinCommon.h"
-#include "ui_mainwindow.h"
 
-namespace Ui {
-class MainWindow;
+GenesisForm::GenesisForm( QWidget *cw ) :
+    QScrollArea(cw),
+    ui(new Ui::GenesisForm)
+{ ui->setupUi(this);
+  new QVBoxLayout( cw );
+  cw->layout()->addWidget( this );
 }
 
-class MainWindow : public MainWinCommon
-{
-    Q_OBJECT
-
-public:
-    explicit  MainWindow(QWidget *parent = 0);
-             ~MainWindow();
-        void  closeEvent(QCloseEvent *event);
-        void  restoreConfig();
-        void  saveConfig();
-
-private:
-    Ui::MainWindow *ui;
-            Assets  assets;
-};
-
-#endif // MAINWINDOW_H
+GenesisForm::~GenesisForm()
+{ delete ui; }

@@ -89,6 +89,8 @@
 #define AO_ECDSA_PRI_KEY       0xB1  // private key
 #define AO_RSA3072_PRI_KEY     0xB2  // private key
 #define AO_KEYPAIR             0xB3  // matching public/private key pair
+#define AO_KEYVALUEPAIR        0xB4  // arbitrary key and value
+#define AO_LONGBYTEARRAY       0xB5  // arbitrary data
 #define AO_ORGANIZER           0xB8  // collection of data to describe an Organizer entity
 #define AO_RECORDER            0xB9  // collection of data to describe a Recorder entity
 #define AO_NETADDRESS          0xBA  // string with an IP4, IP6 or FQDN address, optionally with :port number
@@ -99,6 +101,7 @@
 // Last two bytes are checkbytes - total length 4+length of data
 #define AO_SIZE_VARLENSHORT    0xE0
 #define AO_ECDSA_SIG           0xE0  // just the ECDSA signature itself
+#define AO_SHORTBYTEARRAY      0xE4  // arbitrary data
 
 // Flag that somebody forgot to initialize the type
 #define AO_UNDEFINED_DATAITEM  0xFF

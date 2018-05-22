@@ -20,32 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef APPNAME_H
+#define APPNAME_H
 
-#include "assets.h"
-#include "genesisForm.h"
-#include "MainWinCommon.h"
-#include "ui_mainwindow.h"
+#define APPNAME_SHORT "AOGM"
+#define APPNAME "Assign Onward Genesis Block Maker"
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public MainWinCommon
-{
-    Q_OBJECT
-
-public:
-    explicit  MainWindow(QWidget *parent = 0);
-             ~MainWindow();
-        void  closeEvent(QCloseEvent *event);
-        void  restoreConfig();
-        void  saveConfig();
-
-private:
-    Ui::MainWindow *ui;
-            Assets  assets;
-};
-
-#endif // MAINWINDOW_H
+#endif // APPNAME_H

@@ -20,32 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef KEYVALUEPAIR_H
+#define KEYVALUEPAIR_H
 
-#include "assets.h"
-#include "genesisForm.h"
-#include "MainWinCommon.h"
-#include "ui_mainwindow.h"
+#include "datavarlenlong.h"
+#include "datavarlenshort.h"
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public MainWinCommon
+/**
+ * @brief The KeyValuePair class - A (short) arbitrary length key and a
+ *   (long) arbitrary length value
+ */
+class KeyValuePair : public DataVarLenLong
 {
     Q_OBJECT
-
 public:
-    explicit  MainWindow(QWidget *parent = 0);
-             ~MainWindow();
-        void  closeEvent(QCloseEvent *event);
-        void  restoreConfig();
-        void  saveConfig();
+    explicit  KeyValuePair( QByteArray di = QByteArray(), QObject *p = NULL );
+              KeyValuePair( const KeyValuePair &k )
+                : DataVarLenLong( AO_KEYVALUEPAIR, k.parent() ),
+                  key( k.key ), value( k.value ) {}
+        void  operator = ( const QByteArray &di );
+  QByteArray  toDataItem( bool cf = false );
 
 private:
-    Ui::MainWindow *ui;
-            Assets  assets;
+    DataVarLenShort  key;
+     DataVarLenLong  value;
 };
 
-#endif // MAINWINDOW_H
+#endif // KEYVALUEPAIR_H

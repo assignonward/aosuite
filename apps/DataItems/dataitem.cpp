@@ -22,10 +22,6 @@
  */
 #include "dataitem.h"
 
-DataItem::DataItem( typeCode_t tc, QObject *p )
-            : QObject(p), typeCode( tc ), csVal( false )
-{}
-
 /**
  * @brief DataItem::typeSize
  * @param tc - type code to interpret, or 0xFF (default) to use this object's typeCode

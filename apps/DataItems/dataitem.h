@@ -32,14 +32,16 @@ class DataItem : public QObject
 {
     Q_OBJECT
 public:
-           explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
+           explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
+                       : QObject(p), typeCode( tc ), csVal( false ) {}
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
              qint32  typeSize( const QByteArray &di ) const;
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const QByteArray &di );
                bool  checksumValidated() const { return csVal; }
  virtual QByteArray  toDataItem( bool cf = false ) const { (void)cf; return QByteArray(); } // Implemented in all child classes
-
+         typeCode_t  getTypeCode() const { return typeCode; }
+               void  setTypeCode( const typeCode_t &tc ) { typeCode = tc; }
 protected:
   typeCode_t  typeCode; // what kind of data item is this?
         bool  csVal; // has the checksum been validated (during a data item initialization, or assignment)?

@@ -1,5 +1,3 @@
-# MIT License
-#
 # Copyright (c) 2018 Assign Onward
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,22 +19,18 @@
 # SOFTWARE.
 #
 
-include(../MainCore/MainCore.pri)
-include(../OrganizerData/OrganizerData.pri)
-include(../GenesisForm/GenesisForm.pri)
+QT          += core gui widgets
 
-QT        += core gui widgets
-TARGET     = genesisMaker
-TEMPLATE   = app
-DEFINES   += QT_DEPRECATED_WARNINGS
-DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+CONFIG      += c++11
 
-SOURCES   += mainwindow.cpp
+DEFINES     += QAMQP_DEBUG=Y
 
-HEADERS   += appname.h    \
-             mainwindow.h
+INCLUDEPATH += $${PWD}
 
-FORMS     += mainwindow.ui
+SOURCES     += $${PWD}/genesisForm.cpp
 
-RESOURCES += resources.qrc
+HEADERS     += $${PWD}/genesisForm.h
 
+FORMS       += $${PWD}/genesisForm.ui
+
+RESOURCES   += $${PWD}/genesisFormResources.qrc
