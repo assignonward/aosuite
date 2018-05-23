@@ -20,17 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "keyvaluepair.h"
+#include "authorization.h"
 
 /**
- * @brief KeyValuePair::KeyValuePair - constructor
- * @param di - optional data item
- * @param p - optional parent object
+ * @brief Authorization::Authorization - signatures on an assignment
+ * @param di - data item to populate this object from, optional
+ * @param p - parent, if any
  */
-KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEYPAIR, p )
+Authorization::Authorization(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSIGNMENT, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_KEYVALUEPAIR )
+    { if ( typeCodeOf( di ) != AO_AUTHORIZATION )
         { // TODO: log an error
           return;
         }
@@ -45,17 +45,25 @@ KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEY
                       return;
                     }
                    else
-                    { DataVarLenLong dvll;
-                      typeCode_t tc = typeCodeOf( items ); // read valid items from the byte array, in any order
-                      if ( tc == AO_SHORTBYTEARRAY )
-                        key = items;
-                       else if (( tc & AO_VARSIZE_MASK ) == AO_SIZE_VARLENLONG )
-                        { dvll = items;
-                          value = dvll;
+                    { Signature sig;
+                      switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                        { case AO_ASSIGNMENT:
+                            assignment = items;
+                            break;
+
+                          case AO_SIG_WITH_TIME:
+                            sig = items;
+                            sigs.append( sig );
+                            break;
+
+                          case AO_LISTSIZE:
+                            nSigs = items;
+                            break;
+
+                          default:
+                            // TODO: log anomaly - unrecognized data type
+                            break;
                         }
-                      // else cover other types...
-                      // else
-                      // TODO: log anomaly - unrecognized data type
                       items = items.mid( sz ); // move on to the next
                     }
                 }
@@ -64,29 +72,23 @@ KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEY
     }
 }
 
-/**
- * @brief KeyValuePair::operator =
- * @param di - data item to assign
- */
-void KeyValuePair::operator = ( const QByteArray &di )
-{ KeyValuePair temp( di );
-  key      = temp.key;
-  value    = temp.value;
-  typeCode = temp.typeCode;
+void Authorization::operator = ( const QByteArray &di )
+{ Authorization temp( di );
+  assignment     = temp.assignment;
+  sigs           = temp.sigs;
+  nSigs          = temp.nSigs;
+  typeCode       = temp.typeCode;
   return;
 }
 
-/**
- * @brief KeyValuePair::toDataItem
- * @param cf - compact (or chain) form?  Pass along to children.
- * @return data item with the BlockRef contents
- */
-QByteArray  KeyValuePair::toDataItem( bool cf )
+QByteArray  Authorization::toDataItem( bool cf )
 { QList<QByteArray> dil;
-  if ( key.size() > 0 )
-    dil.append( key.toDataItem(cf) );
-  if ( value.getTypeCode() != AO_UNDEFINED_DATAITEM )
-    dil.append( value.toDataItem(cf) );
+  dil.append( assignment.toDataItem(cf) );
+  if ( sigs.size() > 0 )
+    foreach( Signature s, sigs )
+      dil.append( s.toDataItem(cf) );
+  nSigs = sigs.size();
+  dil.append( nSigs.toDataItem(cf) );
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )

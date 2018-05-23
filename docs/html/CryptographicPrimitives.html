@@ -84,31 +84,26 @@
 </style>
 
 <meta charset="UTF-8"/>
-<title>Assign Onward</title>
+<title>Cryptographic Primitives</title>
 </head>
 
 <body>
 <div class="page">
 <div class="zoom">
 
-<h1>Assign Onward: Whitepapers</h1>
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Cryptographic Primitives</h1>
 
-<ul><li><a href="BlockchainBasics.html">Blockchain Basics</a></li>
-    <li><a href="CorePrinciples.html">Core Principles</a></li>
-    <li><a href="Goals.html">Goals</a></li>
-    <li><a href="Roadmap.html">Roadmap</a></li>
-    <ul><li><a href="AssetOrganizer.html">Asset Organizer</a></li>
-        <li><a href="AssignmentRecorder.html">Assignment Recorder</a></li>
-    </ul>
-    <li><a href="Applications.html">Applications</a></li>
-</ul>
+<span itemprop="articleBody">
 
+The two (primary) cryptographic tools used in creation of the blockchain are <a href="BlockchainBasics.html#KeyPairs">public-private key pairs</a> and <a href="BlockchainBasics.html#Hashes">hashes</a>.  Many different algorithms can be used to implement these concepts, a small subset of avaialble algorithms will be implemented by the Assign Onward suite of applications - starting with 256 bit ECDSA and 3072 bit RSA for signatures, and SHA2-256 and SHA3-512 for hashes.  The key point of "baking in" multiple cryptographic primitives to the protocols is having the structure to easily accomodate new cryptographic primitives when it becomes necessary, for instance: before Quantum computers become a practical method of breaking the current technology.  Algorithms considered Quantum ready today have considerably longer public key sizes, and so are unattractive while they are not needed, but at some point in the (anticipated to be near) future the larger key size will be a good trade for security against quantum breaking of the share title secrets.
 
+</span>
 
 </div>
-<br/><span itemprop="author" itemscope itemtype="http://schema.org/Person">
-<span itemprop="name">Assign Onward</span></span><br/>
-<span itemprop="datePublished" content="2018-05-04"><div class="tooltip">4 May 2018<span class="tooltiptext">
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-05-22"><div class="tooltip">22 May 2018<span class="tooltiptext">
 MIT License
 <br/>
 Copyright (c) 2018 Assign Onward
@@ -131,5 +126,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 </span></div></span>
+
 </div>
+
 </body></html>
+

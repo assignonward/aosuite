@@ -22,7 +22,6 @@
 #
 
 include(../MainCore/MainCore.pri)
-include(../OrganizerData/OrganizerData.pri)
 
 QT        += core gui widgets
 TARGET     = recorder

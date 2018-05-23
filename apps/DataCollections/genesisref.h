@@ -23,9 +23,7 @@
 #ifndef GENESISREF_H
 #define GENESISREF_H
 
-#include "bytecodes.h"
-#include "datavarlenlong.h"
-#include "hash.h"
+#include "genesisblock.h"
 
 /**
  * @brief The GenesisRef class - identifies a chain
@@ -34,22 +32,20 @@ class GenesisRef : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
-              GenesisRef( const GenesisRef &r )
-                : DataVarLenLong( AO_GENESIS_REF, QByteArray(), r.parent() ),
-                  hash( r.hash ) {}
-              GenesisRef( const Hash &g, QObject *p = NULL )
-                : DataVarLenLong( AO_GENESIS_REF, QByteArray(), p ),
-                  hash( g ) {}
-        void  operator = ( const QByteArray &di );
-        Hash  getHash()    const { return  hash; }
-        void  setHash( const Hash &h ) { hash = h; }
-  QByteArray  toDataItem( bool cf = false );
-        bool  isValid() { return hash.isValid(); }
+      explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
+                GenesisRef( const GenesisRef &r )
+                  : DataVarLenLong( AO_GENESIS_REF, QByteArray(), r.parent() ),
+                    hash( r.hash ) {}
+          void  operator = ( const QByteArray &di );
+          Hash  getHash()    const { return  hash; }
+          void  setHash( const Hash &h ) { hash = h; }
+    QByteArray  toDataItem( bool cf = false );
+          bool  isValid() { return hash.isValid(); }
+      DataItem  getProp( const ByteArrayShort &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
 
 private:
-        Hash  hash;   // hash signature (unique ID) of the genesis block
-        // To come: chain property descriptors, tax rates, etc.
+           Hash  hash;         // hash signature (unique ID) of the genesis block
+    PropertyMap  properties;  // Collection of properties that describe the chain
 };
 
-#endif // BLOCKREF_H
+#endif // GENESISREF_H

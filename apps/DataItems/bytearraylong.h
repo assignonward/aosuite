@@ -20,35 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEPAIR_H
-#define KEYVALUEPAIR_H
+#ifndef BYTEARRAYLONG_H
+#define BYTEARRAYLONG_H
 
-#include "bytearrayshort.h"
 #include "datavarlenlong.h"
 
-/**
- * @brief The KeyValuePair class - A (short) arbitrary length key and a
- *   (long) arbitrary length value
- */
-class KeyValuePair : public DataVarLenLong
+class ByteArrayLong : public DataVarLenLong
 {
     Q_OBJECT
-public  :
-    explicit  KeyValuePair( QByteArray di = QByteArray(), QObject *p = NULL );
-                KeyValuePair( const KeyValuePair &k )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, k.parent() ),
-                    key( k.key ), value( k.value ) {}
-                KeyValuePair( const ByteArrayShort &k, const DataItem &v, QObject *p = NULL )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, p ),
-                    key( k ), value( v ) {}
-          void  operator = ( const QByteArray &di );
-    QByteArray  toDataItem( bool cf = false );
-ByteArrayShort  getKey() const { return key; }
-      DataItem  getValue() const { return value; }
-
-private:
-    ByteArrayShort  key;
-          DataItem  value;
+public:
+    explicit  ByteArrayLong( QByteArray ba = QByteArray(), QObject *p = NULL )
+                : DataVarLenLong( AO_LONGBYTEARRAY, ba, p ) {}
+              ByteArrayLong( const ByteArrayLong &n, QObject *p = NULL )
+                : DataVarLenLong( AO_LONGBYTEARRAY, n.ba, p ? p : n.parent() ) {}
+      qint32  size() { return ba.size(); }
+        void  operator = ( const QByteArray &di ) { DataVarLenLong::operator = ( di ); }
 };
 
-#endif // KEYVALUEPAIR_H
+#endif // BYTEARRAYLONG_H

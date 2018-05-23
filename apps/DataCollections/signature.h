@@ -29,6 +29,18 @@
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
 
+// https://www.gnupg.org/documentation/manuals/gcrypt/Cryptographic-Functions.html
+// Function: gcry_error_t gcry_pk_verify (gcry_sexp_t sig, gcry_sexp_t data, gcry_sexp_t pkey)
+// This is used to check whether the signature sig matches the data. The public key pkey must
+// be provided to perform this verification. This function is similar in its parameters to
+// gcry_pk_sign with the exceptions that the public key is used instead of the private key and
+// that no signature is created but a signature, in a format as created by gcry_pk_sign, is
+// passed to the function in sig.
+//
+// The result is 0 for success (i.e. the data matches the signature), or an error code where
+// the most relevant code is GCRY_ERR_BAD_SIGNATURE to indicate that the signature does not
+// match the provided data.
+
 /**
  * @brief The Signature class - multi-container for various types of signatures
  *   of course, a signature type must correspond to the PubKey type to validate.

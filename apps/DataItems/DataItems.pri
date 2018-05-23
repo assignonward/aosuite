@@ -26,22 +26,23 @@ INCLUDEPATH += /usr/include
 # sudo apt-get install libgpgme11-dev libgcrypt11-dev
 LIBS        += -lgpgme -lgcrypt -ldl -lgpg-error
 
-SOURCES     += $${PWD}/dataitem.cpp          \
+SOURCES     += $${PWD}/aotime.cpp            \
+               $${PWD}/bytearraylong.cpp     \
+               $${PWD}/bytearrayshort.cpp    \
+               $${PWD}/dataitem.cpp          \
                $${PWD}/data8.cpp             \
                $${PWD}/data16.cpp            \
                $${PWD}/data128.cpp           \
                $${PWD}/datafixedlength.cpp   \
                $${PWD}/datavarlenlong.cpp    \
                $${PWD}/datavarlenshort.cpp   \
-               $${PWD}/index.cpp             \
-               $${PWD}/listsize.cpp          \
-               $${PWD}/aotime.cpp            \
-               $${PWD}/shares.cpp            \
-               $${PWD}/sharesout.cpp         \
-               $${PWD}/sharestate.cpp        \
                $${PWD}/hash.cpp              \
                $${PWD}/hash256.cpp           \
                $${PWD}/hash512.cpp           \
+               $${PWD}/index.cpp             \
+               $${PWD}/listsize.cpp          \
+               $${PWD}/netaddress.cpp        \
+               $${PWD}/note.cpp              \
                $${PWD}/prikey.cpp            \
                $${PWD}/privatekeyecdsa.cpp   \
                $${PWD}/privatekeyrsa3072.cpp \
@@ -49,12 +50,15 @@ SOURCES     += $${PWD}/dataitem.cpp          \
                $${PWD}/publickeyecdsa.cpp    \
                $${PWD}/publickeyrsa3072.cpp  \
                $${PWD}/salt256.cpp           \
-               $${PWD}/note.cpp              \
+               $${PWD}/shares.cpp            \
+               $${PWD}/sharesout.cpp         \
+               $${PWD}/sharestate.cpp        \
                $${PWD}/sigecdsa.cpp          \
-               $${PWD}/sigrsa3072.cpp        \
-               $${PWD}/netaddress.cpp
+               $${PWD}/sigrsa3072.cpp
 
-HEADERS     += $${PWD}/bytecodes.h         \
+HEADERS     += $${PWD}/aotime.h            \
+               $${PWD}/bytearraylong.h     \
+               $${PWD}/bytearrayshort.h    \
                $${PWD}/dataitem.h          \
                $${PWD}/data8.h             \
                $${PWD}/data16.h            \
@@ -62,15 +66,13 @@ HEADERS     += $${PWD}/bytecodes.h         \
                $${PWD}/datafixedlength.h   \
                $${PWD}/datavarlenlong.h    \
                $${PWD}/datavarlenshort.h   \
-               $${PWD}/index.h             \
-               $${PWD}/listsize.h          \
-               $${PWD}/aotime.h            \
-               $${PWD}/shares.h            \
-               $${PWD}/sharesout.h         \
-               $${PWD}/sharestate.h        \
                $${PWD}/hash.h              \
                $${PWD}/hash256.h           \
                $${PWD}/hash512.h           \
+               $${PWD}/index.h             \
+               $${PWD}/listsize.h          \
+               $${PWD}/netaddress.h        \
+               $${PWD}/note.h              \
                $${PWD}/prikey.h            \
                $${PWD}/privatekeyecdsa.h   \
                $${PWD}/privatekeyrsa3072.h \
@@ -78,7 +80,8 @@ HEADERS     += $${PWD}/bytecodes.h         \
                $${PWD}/publickeyecdsa.h    \
                $${PWD}/publickeyrsa3072.h  \
                $${PWD}/salt256.h           \
-               $${PWD}/note.h              \
+               $${PWD}/shares.h            \
+               $${PWD}/sharesout.h         \
+               $${PWD}/sharestate.h        \
                $${PWD}/sigecdsa.h          \
-               $${PWD}/sigrsa3072.h        \
-               $${PWD}/netaddress.h
+               $${PWD}/sigrsa3072.h

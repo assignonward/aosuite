@@ -22,7 +22,6 @@
 #
 
 include(../MainCore/MainCore.pri)
-include(../OrganizerData/OrganizerData.pri)
 include(../GenesisForm/GenesisForm.pri)
 
 QT        += core gui widgets

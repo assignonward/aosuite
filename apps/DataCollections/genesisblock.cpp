@@ -20,24 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "genesisblock.h"
 #include "keyvaluepair.h"
 
 /**
- * @brief KeyValuePair::KeyValuePair - constructor
+ * @brief GenesisBlock::GenesisBlock - constructor
  * @param di - optional data item
  * @param p - optional parent object
  */
-KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEYPAIR, p )
+GenesisBlock::GenesisBlock( QByteArray di, QObject *p )
+                : DataVarLenLong( AO_GENESIS_BLOCK, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_KEYVALUEPAIR )
+    { if ( typeCodeOf( di ) != AO_GENESIS_BLOCK )
         { // TODO: log an error
           return;
         }
        else
         { DataVarLenLong temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { KeyValuePair kvp;
+              QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -45,17 +48,21 @@ KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEY
                       return;
                     }
                    else
-                    { DataVarLenLong dvll;
-                      typeCode_t tc = typeCodeOf( items ); // read valid items from the byte array, in any order
-                      if ( tc == AO_SHORTBYTEARRAY )
-                        key = items;
-                       else if (( tc & AO_VARSIZE_MASK ) == AO_SIZE_VARLENLONG )
-                        { dvll = items;
-                          value = dvll;
+                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                        { case AO_HASH256:
+                          case AO_HASH512:
+                            hash = items;
+                            break;
+
+                          case AO_KEYVALUEPAIR:
+                            kvp = items;
+                            properties.insert( kvp.getKey(), kvp.getValue() );
+                            break;
+
+                          default:
+                            // TODO: log anomaly - unrecognized data type
+                            break;
                         }
-                      // else cover other types...
-                      // else
-                      // TODO: log anomaly - unrecognized data type
                       items = items.mid( sz ); // move on to the next
                     }
                 }
@@ -65,28 +72,31 @@ KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEY
 }
 
 /**
- * @brief KeyValuePair::operator =
+ * @brief GenesisBlock::operator =
  * @param di - data item to assign
  */
-void KeyValuePair::operator = ( const QByteArray &di )
-{ KeyValuePair temp( di );
-  key      = temp.key;
-  value    = temp.value;
-  typeCode = temp.typeCode;
+void GenesisBlock::operator = ( const QByteArray &di )
+{ GenesisBlock temp( di );
+  hash       = temp.hash;
+  properties = temp.properties;
+  typeCode   = temp.typeCode;
   return;
 }
 
 /**
- * @brief KeyValuePair::toDataItem
+ * @brief GenesisBlock::toDataItem
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-QByteArray  KeyValuePair::toDataItem( bool cf )
+QByteArray  GenesisBlock::toDataItem( bool cf )
 { QList<QByteArray> dil;
-  if ( key.size() > 0 )
-    dil.append( key.toDataItem(cf) );
-  if ( value.getTypeCode() != AO_UNDEFINED_DATAITEM )
-    dil.append( value.toDataItem(cf) );
+  if ( hash.isValid() )
+    dil.append( hash.toDataItem(cf) );
+  QList<ByteArrayShort>keys = properties.keys();
+  foreach ( ByteArrayShort key, keys )
+    { KeyValuePair kvp( key, properties.value(key) );
+      dil.append( kvp.toDataItem(cf) );
+    }
   // TODO: randomize order of dil
   ba.clear();
   foreach( QByteArray a, dil )

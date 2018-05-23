@@ -24,7 +24,7 @@
 #define UNDERWRITING_H
 
 #include <QObject>
-#include "assignment.h"
+#include "authorization.h"
 
 /* An Underwriting & recording data structure
  * <UWT> Underwritten Transaction, ready to record as a page in a block in the chain

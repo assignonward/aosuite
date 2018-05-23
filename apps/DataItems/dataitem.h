@@ -34,6 +34,11 @@ class DataItem : public QObject
 public:
            explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
                        : QObject(p), typeCode( tc ), csVal( false ) {}
+                     DataItem( const DataItem &i, QObject *p = NULL )
+                       : QObject(p ? p : i.parent()), typeCode( i.typeCode ), csVal( i.csVal ) {}
+               void  operator = ( const DataItem &i )
+                       { typeCode = i.typeCode; csVal = i.csVal; }
+       virtual void  operator = ( const QByteArray &b ) { (void)b; }
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
              qint32  typeSize( const QByteArray &di ) const;
   static     qint32  typeSizeTable( typeCode_t tc );
@@ -44,7 +49,7 @@ public:
                void  setTypeCode( const typeCode_t &tc ) { typeCode = tc; }
 protected:
   typeCode_t  typeCode; // what kind of data item is this?
-        bool  csVal; // has the checksum been validated (during a data item initialization, or assignment)?
+        bool  csVal;   // has the checksum been validated (during a data item initialization, or assignment)?
 };
 
 #endif // DATAITEM_H

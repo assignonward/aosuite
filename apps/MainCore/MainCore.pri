@@ -30,14 +30,17 @@ INCLUDEPATH += $${QAMQP_INCLUDEPATH}
 LIBS        += -L$${DEPTH}/src $${QAMQP_LIBS}
 macx:CONFIG -= app_bundle
 
+include(../DataCollections/DataCollections.pri)
+include(../DataItems/DataItems.pri)
+include(../OrganizerData/OrganizerData.pri)
+include(../Random/Random.pri)
 include(../SingleApplication/singleapplication.pri)
 DEFINES     += QAPPLICATION_CLASS=QApplication
 
-include(../Random/Random.pri)
-
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/main.cpp \
+SOURCES     += $${PWD}/main.cpp          \
                $${PWD}/MainWinCommon.cpp
 
-HEADERS     += $${PWD}/MainWinCommon.h
+HEADERS     += $${PWD}/bytecodes.h     \
+               $${PWD}/MainWinCommon.h

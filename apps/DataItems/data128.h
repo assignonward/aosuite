@@ -39,7 +39,7 @@ public:
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data128( const QByteArray &di, QObject *p = NULL );
   QByteArray  toDataItem( bool cf = false ) const;
-        void  operator = ( const QByteArray &di );
+virtual void  operator = ( const QByteArray &di );
         void  operator = ( const  Data128 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
         void  operator = ( const __int128 &d ) { v = d; }
      Data128  operator + ( const  Data128 &d ) { Data128 c(*this); c.v = v + d.v; return c; }

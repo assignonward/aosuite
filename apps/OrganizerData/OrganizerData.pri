@@ -21,8 +21,6 @@
 # SOFTWARE.
 #
 
-include(../DataCollections/DataCollections.pri)
-
 INCLUDEPATH += $${PWD}
 
 SOURCES     += $${PWD}/assets.cpp    \

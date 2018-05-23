@@ -25,12 +25,17 @@
 
 #include "datavarlenlong.h"
 
+/**
+ * @brief The Note class - implies UTF8 encoding, but no enforcement as of yet.
+ */
 class Note : public DataVarLenLong
 {
     Q_OBJECT
 public:
-    explicit  Note( QByteArray ba = QByteArray(), QObject *p = NULL ) : DataVarLenLong( AO_NOTE, ba, p ) {}
-              Note( const Note &n, QObject *p = NULL ) : DataVarLenLong( AO_NOTE, n.ba, p ? p : n.parent() ) {}
+    explicit  Note( QByteArray ba = QByteArray(), QObject *p = NULL )
+                : DataVarLenLong( AO_NOTE, ba, p ) {}
+              Note( const Note &n, QObject *p = NULL )
+                : DataVarLenLong( AO_NOTE, n.ba, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
         void  operator = ( const QByteArray &di ) { DataVarLenLong::operator = ( di ); }
 };

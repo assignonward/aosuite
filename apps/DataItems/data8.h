@@ -36,8 +36,8 @@ public:
               Data8( const QByteArray &di, QObject *p = NULL );
     explicit  Data8(QObject *parent = NULL);
   QByteArray  toDataItem( bool cf = false ) const;
-        void  operator = ( const QByteArray &di );
-        void  operator = ( const Data8 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
+virtual void  operator = ( const QByteArray &di );
+        void  operator = ( const Data8 &d ) { v = d.v; DataItem::operator =( d ); }
         void  operator = ( const qint8 &d ) { v = d; }
        Data8  operator + ( const Data8 &d ) { Data8 c(*this); c.v = v + d.v; return c; }
        Data8  operator + ( const qint8 &d ) { Data8 c(*this); c.v = v + d;   return c; }

@@ -20,35 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEPAIR_H
-#define KEYVALUEPAIR_H
+#ifndef BYTEARRAYSHORT_H
+#define BYTEARRAYSHORT_H
 
-#include "bytearrayshort.h"
-#include "datavarlenlong.h"
+#include "datavarlenshort.h"
 
-/**
- * @brief The KeyValuePair class - A (short) arbitrary length key and a
- *   (long) arbitrary length value
- */
-class KeyValuePair : public DataVarLenLong
+class ByteArrayShort : public DataVarLenShort
 {
     Q_OBJECT
-public  :
-    explicit  KeyValuePair( QByteArray di = QByteArray(), QObject *p = NULL );
-                KeyValuePair( const KeyValuePair &k )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, k.parent() ),
-                    key( k.key ), value( k.value ) {}
-                KeyValuePair( const ByteArrayShort &k, const DataItem &v, QObject *p = NULL )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, p ),
-                    key( k ), value( v ) {}
-          void  operator = ( const QByteArray &di );
-    QByteArray  toDataItem( bool cf = false );
-ByteArrayShort  getKey() const { return key; }
-      DataItem  getValue() const { return value; }
-
-private:
-    ByteArrayShort  key;
-          DataItem  value;
+public:
+    explicit  ByteArrayShort( QByteArray ba = QByteArray(), QObject *p = NULL )
+                : DataVarLenShort( AO_SHORTBYTEARRAY, ba, p ) {}
+              ByteArrayShort( const ByteArrayShort &n, QObject *p = NULL )
+                : DataVarLenShort( AO_SHORTBYTEARRAY, n.ba, p ? p : n.parent() ) {}
+      qint32  size() { return ba.size(); }
+        void  operator = ( const QByteArray &di ) { DataVarLenShort::operator = ( di ); }
+        bool  operator < ( const ByteArrayShort &c ) const { return ba < c.ba; }
 };
 
-#endif // KEYVALUEPAIR_H
+#endif // BYTEARRAYSHORT_H

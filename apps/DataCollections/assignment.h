@@ -67,31 +67,6 @@ private:
   QList<Participant> participants;
 };
 
-/**
- * @brief The Authorization class - when
- *   complete and valid, contains a description of
- *   the basic assignment contract between all the participants
- *   without the underwriting and recording - only the RBID is specified
- *   which describes the maximum commission payable to
- *   the sum of all underwriters, chain-maker, and recording tax.
- */
-class Authorization : public DataVarLenLong
-{
-    Q_OBJECT
-public:
-    explicit Authorization( const QByteArray &di = QByteArray(), QObject *p = NULL );
-             Authorization( const Authorization &a, QObject *p = NULL )
-               : DataVarLenLong( AO_AUTHORIZATION, p ? p : a.parent() ),
-                 assignment( a.assignment ), sigs( a.sigs ) {}
-       void  operator = ( const QByteArray &di );
- QByteArray  toDataItem( bool cf = false );
-
-private:
-         Assignment  assignment;
-    QList<Signature> sigs;   // Same length and order as the participants list in tran
-           ListSize  nSigs;  // Used primarily as a check during serialization and deserialization
-};
-
 /* A structure to hold:
  *   <TRAN> Coin transfer transaction proposal:
  *     [SALT] 256 bit random number included in all signatures

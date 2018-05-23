@@ -20,35 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEPAIR_H
-#define KEYVALUEPAIR_H
+#include "note.h"
 
-#include "bytearrayshort.h"
-#include "datavarlenlong.h"
-
-/**
- * @brief The KeyValuePair class - A (short) arbitrary length key and a
- *   (long) arbitrary length value
- */
-class KeyValuePair : public DataVarLenLong
-{
-    Q_OBJECT
-public  :
-    explicit  KeyValuePair( QByteArray di = QByteArray(), QObject *p = NULL );
-                KeyValuePair( const KeyValuePair &k )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, k.parent() ),
-                    key( k.key ), value( k.value ) {}
-                KeyValuePair( const ByteArrayShort &k, const DataItem &v, QObject *p = NULL )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, p ),
-                    key( k ), value( v ) {}
-          void  operator = ( const QByteArray &di );
-    QByteArray  toDataItem( bool cf = false );
-ByteArrayShort  getKey() const { return key; }
-      DataItem  getValue() const { return value; }
-
-private:
-    ByteArrayShort  key;
-          DataItem  value;
-};
-
-#endif // KEYVALUEPAIR_H
+// Not much here

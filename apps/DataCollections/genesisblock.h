@@ -20,35 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEPAIR_H
-#define KEYVALUEPAIR_H
+#ifndef GENESISBLOCK_H
+#define GENESISBLOCK_H
 
 #include "bytearrayshort.h"
+#include "dataitem.h"
 #include "datavarlenlong.h"
+#include "hash.h"
+#include <QMap>
+
+#define PropertyMap QMap<ByteArrayShort,DataItem>
 
 /**
- * @brief The KeyValuePair class - A (short) arbitrary length key and a
- *   (long) arbitrary length value
+ * @brief The GenesisBlock class - the anchorpoint of a blockchain
  */
-class KeyValuePair : public DataVarLenLong
+class GenesisBlock : public DataVarLenLong
 {
     Q_OBJECT
-public  :
-    explicit  KeyValuePair( QByteArray di = QByteArray(), QObject *p = NULL );
-                KeyValuePair( const KeyValuePair &k )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, k.parent() ),
-                    key( k.key ), value( k.value ) {}
-                KeyValuePair( const ByteArrayShort &k, const DataItem &v, QObject *p = NULL )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, p ),
-                    key( k ), value( v ) {}
+public:
+      explicit  GenesisBlock( QByteArray di = QByteArray(), QObject *p = NULL );
+                GenesisBlock( const GenesisBlock &r )
+                  : DataVarLenLong( AO_GENESIS_BLOCK, QByteArray(), r.parent() ),
+                    hash( r.hash ), properties( r.properties ) {}
           void  operator = ( const QByteArray &di );
+          Hash  getHash()    const { return  hash; }
+          void  setHash( const Hash &h ) { hash = h; }
     QByteArray  toDataItem( bool cf = false );
-ByteArrayShort  getKey() const { return key; }
-      DataItem  getValue() const { return value; }
+          bool  isValid() { return hash.isValid(); }
+      DataItem  getProp( const ByteArrayShort &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
 
 private:
-    ByteArrayShort  key;
-          DataItem  value;
+           Hash  hash;        // hash signature (unique ID) of the genesis block
+    PropertyMap  properties;  // Collection of properties that describe the chain
 };
 
-#endif // KEYVALUEPAIR_H
+#endif // GENESISBLOCK_H

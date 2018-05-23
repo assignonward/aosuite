@@ -22,7 +22,7 @@
  */
 #ifndef APPNAME_H
 #define APPNAME_H
-
+// Ⓐ
 #define APPNAME_SHORT "AOAO"
 #define APPNAME "Assign Onward Asset Organizer"
 
