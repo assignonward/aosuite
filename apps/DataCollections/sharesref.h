@@ -42,18 +42,19 @@ public:
     explicit  SharesRef( const QByteArray &di = QByteArray(), QObject *p = NULL );
               SharesRef( const SharesRef &r )
                 : DataVarLenLong( r.typeCode, r.ba, r.parent() ),
-                  page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ),
-                  amount( r.amount ), shareState( r.shareState ), lockExp( r.lockExp ), assignRef( r.assignRef ) {}
+                  amount( r.amount ), key( r.key ), page( r.page ), seqNum( r.seqNum ), keyHash( r.keyHash ),
+                  shareState( r.shareState ), lockExp( r.lockExp ), assignRef( r.assignRef ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );
         bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
 
 private:
+      Shares  amount;     // amount of shares recorded
+      PubKey  key;        // Id (public key) of shares
+
      PageRef  page;       // page these shares are recorded on
        Index  seqNum;     // shares sequence number in the page
-      PubKey  key;        // Id (public key) of shares
         Hash  keyHash;    // Id (hashed public key) of shares
-      Shares  amount;     // amount of shares recorded
   ShareState  shareState; // available, or other?
       AOTime  lockExp;    // if the state is locked, when does the lock expire?
    AssignRef  assignRef;  // if these shares have been assigned away, this is the optional record of when/where

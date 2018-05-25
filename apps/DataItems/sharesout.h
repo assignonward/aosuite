@@ -34,6 +34,8 @@ class SharesOut : public Data128
 public:
     explicit  SharesOut( __int128 val = 0, QObject *p = NULL )
                 : Data128( AO_SHARES_OUT, val, p ) {}
+              SharesOut( const QByteArray &di, QObject *p = NULL )
+                : Data128( di, p ) {}
               SharesOut( const SharesOut &f, QObject *p = NULL )
                 : Data128( AO_SHARES_OUT, f.v, p ? p : f.parent() ) {}
         void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }

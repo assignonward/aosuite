@@ -31,6 +31,8 @@ class Index : public Data16
 public:
     explicit  Index( qint16 val = 0, QObject *p = NULL )
                 : Data16( AO_INDEX, val, p ) {}
+              Index( const QByteArray &di, QObject *p = NULL )
+                : Data16( di, p ) {}
               Index( const Index &f, QObject *p = NULL )
                 : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
         void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }

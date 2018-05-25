@@ -37,6 +37,8 @@ class ShareState : public Data8
 public:
     explicit  ShareState( qint8 val = 0, QObject *p = NULL )
                 : Data8( AO_SHARE_STATE, val, p ) { v = AOSS_UNKNOWN; }
+              ShareState( const QByteArray &di, QObject *p = NULL )
+                : Data8( di, p ) {}
               ShareState( const ShareState &f, QObject *p = NULL )
                 : Data8( AO_SHARE_STATE, f.v, p ? p : f.parent() ) { v = AOSS_UNKNOWN; }
         void  operator = ( const QByteArray &di ) { Data8::operator = ( di  ); }

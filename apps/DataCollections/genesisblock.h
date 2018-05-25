@@ -23,10 +23,9 @@
 #ifndef GENESISBLOCK_H
 #define GENESISBLOCK_H
 
-#include "bytearrayshort.h"
-#include "dataitem.h"
 #include "datavarlenlong.h"
 #include "hash.h"
+#include "keyvaluepair.h"
 #include <QMap>
 
 #define PropertyMap QMap<ByteArrayShort,DataItem>
@@ -47,7 +46,7 @@ public:
           void  setHash( const Hash &h ) { hash = h; }
     QByteArray  toDataItem( bool cf = false );
           bool  isValid() { return hash.isValid(); }
-      DataItem  getProp( const ByteArrayShort &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
+      DataItem  getProp( const KeyValueKey_t &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
 
 private:
            Hash  hash;        // hash signature (unique ID) of the genesis block

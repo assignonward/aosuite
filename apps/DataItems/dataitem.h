@@ -41,6 +41,7 @@ public:
        virtual void  operator = ( const QByteArray &b ) { (void)b; }
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
              qint32  typeSize( const QByteArray &di ) const;
+  static   DataItem  fromDataItem( const QByteArray &di );
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const QByteArray &di );
                bool  checksumValidated() const { return csVal; }

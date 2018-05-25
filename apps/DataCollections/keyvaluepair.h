@@ -26,6 +26,8 @@
 #include "bytearrayshort.h"
 #include "datavarlenlong.h"
 
+#define KeyValueKey_t ByteArrayShort
+
 /**
  * @brief The KeyValuePair class - A (short) arbitrary length key and a
  *   (long) arbitrary length value
@@ -34,20 +36,20 @@ class KeyValuePair : public DataVarLenLong
 {
     Q_OBJECT
 public  :
-    explicit  KeyValuePair( QByteArray di = QByteArray(), QObject *p = NULL );
-                KeyValuePair( const KeyValuePair &k )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, k.parent() ),
+      explicit  KeyValuePair( QByteArray di = QByteArray(), QObject *p = NULL );
+                KeyValuePair( const KeyValuePair &k, QObject *p = NULL )
+                  : DataVarLenLong( AO_KEYVALUEPAIR, p ? p : k.parent() ),
                     key( k.key ), value( k.value ) {}
-                KeyValuePair( const ByteArrayShort &k, const DataItem &v, QObject *p = NULL )
+                KeyValuePair( const KeyValueKey_t &k, const DataItem &v, QObject *p = NULL )
                   : DataVarLenLong( AO_KEYVALUEPAIR, p ),
                     key( k ), value( v ) {}
           void  operator = ( const QByteArray &di );
     QByteArray  toDataItem( bool cf = false );
-ByteArrayShort  getKey() const { return key; }
+ KeyValueKey_t  getKey() const { return key; }
       DataItem  getValue() const { return value; }
 
 private:
-    ByteArrayShort  key;
+     KeyValueKey_t  key;
           DataItem  value;
 };
 

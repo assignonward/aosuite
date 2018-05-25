@@ -67,6 +67,8 @@ Authorization::Authorization(const QByteArray &di, QObject *p) : DataVarLenLong(
                       items = items.mid( sz ); // move on to the next
                     }
                 }
+              // if ( nSigs != sigs.size() )
+              //   TODO: log error and cleanup.
             }
         }
     }

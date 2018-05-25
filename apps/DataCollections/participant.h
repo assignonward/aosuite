@@ -44,11 +44,11 @@ public:
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );
-  QByteArray  getId()      const { return key.getId(); }
-      PubKey  getKey()     const { return key;         }
-      Shares  getAmount()  const { return amount;      }
-  QByteArray  getNote()    const { return note.get();  }
-        void  setId( QByteArray i )   { key.set( i );  }
+  QByteArray  getId()     const { return key.getId(); }
+      PubKey  getKey()    const { return key;         }
+      Shares  getAmount() const { return amount;      }
+  QByteArray  getNote()   const { return note.get();  }
+        void  setId( QByteArray i )   { key.set( i ); }
         void  setAmount( Shares v )   { amount = v;  /* TODO: log error for 0 */ }
         void  setNote( QByteArray n ) { note.set( n ); }
        Index  getIndex() const { return index; }

@@ -59,7 +59,7 @@ public:
 
 private:
             Salt256  salt;
-            PageRef  proposedChain;     // Reference to the signature page of a recent block in the chain this assignment is proposed to be recorded on
+            PageRef  proposedChain;     // Reference to the signature page of a recent block in the chain this assignment is proposed to be recorded on, and valid child of this block should also be acceptable
              AOTime  recordingDeadline; // When the assignment contract is expected to be recorded in the chain
              Shares  recordingBid;      // Positive amount to bid for all underwriting and recording taxes
                Note  note;              // top level note, applies to all participants whereas participant level notes may only apply to that participant
