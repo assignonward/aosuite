@@ -45,17 +45,11 @@ KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEY
                       return;
                     }
                    else
-                    { DataVarLenLong dvll;
-                      typeCode_t tc = typeCodeOf( items ); // read valid items from the byte array, in any order
-                      if ( tc == AO_SHORTBYTEARRAY )
+                    { typeCode_t tc = typeCodeOf( items ); // read valid items from the byte array, in any order
+                      if ( tc == AO_KEYVALUEKEY )
                         key = items;
-                       else if (( tc & AO_VARSIZE_MASK ) == AO_SIZE_VARLENLONG )
-                        { dvll = items;
-                          value = dvll;
-                        }
-                      // else cover other types...
-                      // else
-                      // TODO: log anomaly - unrecognized data type
+                       else
+                        value = DataItem::fromDataItem( items );
                       items = items.mid( sz ); // move on to the next
                     }
                 }
@@ -82,14 +76,12 @@ void KeyValuePair::operator = ( const QByteArray &di )
  * @return data item with the BlockRef contents
  */
 QByteArray  KeyValuePair::toDataItem( bool cf )
-{ QList<QByteArray> dil;
-  if ( key.size() > 0 )
+{ QByteArrayList dil;
+  if ( key > 0 )
     dil.append( key.toDataItem(cf) );
   if ( value.getTypeCode() != AO_UNDEFINED_DATAITEM )
     dil.append( value.toDataItem(cf) );
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }

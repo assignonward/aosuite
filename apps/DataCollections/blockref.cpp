@@ -95,7 +95,7 @@ void BlockRef::operator = ( const QByteArray &di )
  * @return data item with the BlockRef contents
  */
 QByteArray  BlockRef::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   dil.append( propTime.toDataItem(cf) );
   if ( blkHash.isValid() )
     dil.append( blkHash.toDataItem(cf) );
@@ -104,8 +104,6 @@ QByteArray  BlockRef::toDataItem( bool cf )
   if ( genesis.isValid() )
     dil.append( genesis.toDataItem(cf) );
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }

@@ -68,6 +68,7 @@
 #define AO_SIZE_388BYTES       0x70
 #define AO_RSA3072_PUB_KEY     0x70
 #define AO_RSA3072_SIG         0x71  // Just the signature
+#define AO_KEYVALUEKEY         0x72
 
 // Variable length items
 

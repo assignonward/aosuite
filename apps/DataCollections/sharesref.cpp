@@ -108,7 +108,7 @@ void SharesRef::operator = ( const QByteArray &di )
 }
 
 QByteArray  SharesRef::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   if ( !cf )
     { if ( page.isValid() )
         dil.append( page.toDataItem(false) );
@@ -141,9 +141,7 @@ QByteArray  SharesRef::toDataItem( bool cf )
         dil.append( amount.toDataItem(true) );
     }
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }
 

@@ -89,17 +89,15 @@ void GenesisBlock::operator = ( const QByteArray &di )
  * @return data item with the BlockRef contents
  */
 QByteArray  GenesisBlock::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   if ( hash.isValid() )
     dil.append( hash.toDataItem(cf) );
-  QList<ByteArrayShort>keys = properties.keys();
-  foreach ( ByteArrayShort key, keys )
+  QList<KeyValueKey_t>keys = properties.keys();
+  foreach ( KeyValueKey_t key, keys )
     { KeyValuePair kvp( key, properties.value(key) );
       dil.append( kvp.toDataItem(cf) );
     }
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }

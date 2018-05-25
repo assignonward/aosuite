@@ -106,7 +106,7 @@ void Assignment::operator = ( const QByteArray &di )
 }
 
 QByteArray  Assignment::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   if ( salt.isValid() )
     dil.append( salt.toDataItem(cf) );
   if ( proposedChain.isValid() )
@@ -123,9 +123,7 @@ QByteArray  Assignment::toDataItem( bool cf )
   nParticipants = participants.size();
   dil.append( nParticipants.toDataItem(cf) );
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }
 

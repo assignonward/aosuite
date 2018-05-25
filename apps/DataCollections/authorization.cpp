@@ -84,7 +84,7 @@ void Authorization::operator = ( const QByteArray &di )
 }
 
 QByteArray  Authorization::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   dil.append( assignment.toDataItem(cf) );
   if ( sigs.size() > 0 )
     foreach( Signature s, sigs )
@@ -92,8 +92,6 @@ QByteArray  Authorization::toDataItem( bool cf )
   nSigs = sigs.size();
   dil.append( nSigs.toDataItem(cf) );
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }

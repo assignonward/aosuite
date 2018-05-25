@@ -54,7 +54,8 @@ SOURCES     += $${PWD}/aotime.cpp            \
                $${PWD}/sharesout.cpp         \
                $${PWD}/sharestate.cpp        \
                $${PWD}/sigecdsa.cpp          \
-               $${PWD}/sigrsa3072.cpp
+               $${PWD}/sigrsa3072.cpp \
+    $$PWD/keyvaluekey.cpp
 
 HEADERS     += $${PWD}/aotime.h            \
                $${PWD}/bytearraylong.h     \
@@ -84,4 +85,5 @@ HEADERS     += $${PWD}/aotime.h            \
                $${PWD}/sharesout.h         \
                $${PWD}/sharestate.h        \
                $${PWD}/sigecdsa.h          \
-               $${PWD}/sigrsa3072.h
+               $${PWD}/sigrsa3072.h \
+    $$PWD/keyvaluekey.h

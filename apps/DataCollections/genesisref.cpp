@@ -80,12 +80,10 @@ void GenesisRef::operator = ( const QByteArray &di )
  * @return data item with the BlockRef contents
  */
 QByteArray  GenesisRef::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   if ( hash.isValid() )
     dil.append( hash.toDataItem(cf) );
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }

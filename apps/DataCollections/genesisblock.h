@@ -28,7 +28,7 @@
 #include "keyvaluepair.h"
 #include <QMap>
 
-#define PropertyMap QMap<ByteArrayShort,DataItem>
+#define PropertyMap QMap<KeyValueKey_t,DataItem>
 
 /**
  * @brief The GenesisBlock class - the anchorpoint of a blockchain

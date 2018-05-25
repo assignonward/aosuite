@@ -114,7 +114,7 @@ void Participant::operator = ( const QByteArray &di )
  * @return data item in the requested form
  */
 QByteArray Participant::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   if ( cf )
     typeCode = AO_PARTICIPANT_CF;
    else if ( typeCode == AO_PARTICIPANT_CF )
@@ -151,9 +151,7 @@ QByteArray Participant::toDataItem( bool cf )
         return QByteArray();
     }
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }
 

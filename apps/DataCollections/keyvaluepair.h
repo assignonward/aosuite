@@ -23,10 +23,10 @@
 #ifndef KEYVALUEPAIR_H
 #define KEYVALUEPAIR_H
 
-#include "bytearrayshort.h"
+#include "keyvaluekey.h"
 #include "datavarlenlong.h"
 
-#define KeyValueKey_t ByteArrayShort
+#define KeyValueKey_t KeyValueKey
 
 /**
  * @brief The KeyValuePair class - A (short) arbitrary length key and a

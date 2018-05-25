@@ -87,14 +87,12 @@ void KeyPair::operator = ( const QByteArray &di )
  * @return data item with the BlockRef contents
  */
 QByteArray  KeyPair::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   if ( pubKey.isValid() )
     dil.append( pubKey.toDataItem(cf) );
   if ( priKey.isValid() )
     dil.append( priKey.toDataItem(cf) );
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }

@@ -131,7 +131,7 @@ void Signature::operator = ( const QByteArray &di )
  * @return the signature and time encapsulated as a data item
  */
 QByteArray  Signature::toDataItem( bool cf )
-{ QList<QByteArray> dil;
+{ QByteArrayList dil;
   dil.append( sigTime.toDataItem(cf) );
   switch ( sigType )
       { case AO_ECDSA_SIG:
@@ -145,9 +145,7 @@ QByteArray  Signature::toDataItem( bool cf )
   if ( index >= 0 )
     dil.append( index.toDataItem(cf) );
   // TODO: randomize order of dil
-  ba.clear();
-  foreach( QByteArray a, dil )
-    ba.append( a );
+  ba = dil.join();
   return DataVarLenLong::toDataItem(cf);
 }
 

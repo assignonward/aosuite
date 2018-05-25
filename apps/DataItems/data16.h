@@ -55,10 +55,10 @@ virtual void  operator = ( const QByteArray &di );
         bool  operator <=( const qint16 &d ) { return (v <= d  ); }
         bool  operator >=( const Data16 &d ) { return (v >= d.v); }
         bool  operator >=( const qint16 &d ) { return (v >= d  ); }
-        bool  operator < ( const Data16 &d ) { return (v <  d.v); }
-        bool  operator < ( const qint16 &d ) { return (v <  d  ); }
-        bool  operator > ( const Data16 &d ) { return (v >  d.v); }
-        bool  operator > ( const qint16 &d ) { return (v >  d  ); }
+        bool  operator < ( const Data16 &d ) const { return (v <  d.v); }
+        bool  operator < ( const qint16 &d ) const { return (v <  d  ); }
+        bool  operator > ( const Data16 &d ) const { return (v >  d.v); }
+        bool  operator > ( const qint16 &d ) const { return (v >  d  ); }
 
 protected:
       qint16  v; // generic value

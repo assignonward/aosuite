@@ -20,32 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GENESISREF_H
-#define GENESISREF_H
+#include "keyvaluekey.h"
 
-#include "genesisblock.h"
-
-/**
- * @brief The GenesisRef class - identifies a chain
- */
-class GenesisRef : public DataVarLenLong
-{
-    Q_OBJECT
-public:
-      explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
-                GenesisRef( const GenesisRef &r )
-                  : DataVarLenLong( AO_GENESIS_REF, QByteArray(), r.parent() ),
-                    hash( r.hash ) {}
-          void  operator = ( const QByteArray &di );
-          Hash  getHash()    const { return  hash; }
-          void  setHash( const Hash &h ) { hash = h; }
-    QByteArray  toDataItem( bool cf = false );
-          bool  isValid() { return hash.isValid(); }
-      DataItem  getProp( const KeyValueKey_t &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
-
-private:
-           Hash  hash;         // hash signature (unique ID) of the genesis block
-    PropertyMap  properties;  // Collection of properties that describe the chain
-};
-
-#endif // GENESISREF_H
+// Nothing here

@@ -20,32 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GENESISREF_H
-#define GENESISREF_H
+#ifndef KEYVALUEKEY_H
+#define KEYVALUEKEY_H
 
-#include "genesisblock.h"
+#include "data16.h"
 
-/**
- * @brief The GenesisRef class - identifies a chain
- */
-class GenesisRef : public DataVarLenLong
+class KeyValueKey : public Data16
 {
     Q_OBJECT
 public:
-      explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
-                GenesisRef( const GenesisRef &r )
-                  : DataVarLenLong( AO_GENESIS_REF, QByteArray(), r.parent() ),
-                    hash( r.hash ) {}
-          void  operator = ( const QByteArray &di );
-          Hash  getHash()    const { return  hash; }
-          void  setHash( const Hash &h ) { hash = h; }
-    QByteArray  toDataItem( bool cf = false );
-          bool  isValid() { return hash.isValid(); }
-      DataItem  getProp( const KeyValueKey_t &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
-
-private:
-           Hash  hash;         // hash signature (unique ID) of the genesis block
-    PropertyMap  properties;  // Collection of properties that describe the chain
+    explicit  KeyValueKey( qint16 val = 0, QObject *p = NULL )
+                : Data16( AO_KEYVALUEKEY, val, p ) {}
+              KeyValueKey( const QByteArray &di, QObject *p = NULL )
+                : Data16( di, p ) {}
+              KeyValueKey( const KeyValueKey &f, QObject *p = NULL )
+                : Data16( AO_KEYVALUEKEY, f.v, p ? p : f.parent() ) {}
+        void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
+        void  operator = ( const qint16    &val ) { Data16::operator = ( val ); }
 };
 
-#endif // GENESISREF_H
+#endif // KEYVALUEKEY_H
