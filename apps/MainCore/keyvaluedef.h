@@ -33,23 +33,33 @@ class KeyValueDef : public QObject
 {
     Q_OBJECT
 public:
-    explicit  KeyValueDef( const QJsonObject &jo = QJsonObject(), QObject *parent = nullptr );
+    explicit  KeyValueDef( const QJsonObject &jo = QJsonObject(), QObject *p = NULL )
+                : QObject( p ) { fromJsonObject( jo ); }
+              KeyValueDef( const KeyValueDef &k, QObject *p = NULL )
+                : QObject( p ? p : k.parent() ), key( k.key ), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
+        void  operator = ( const KeyValueDef &k ) { key = k.key; tn = k.tn; desc = k.desc; pdef = k.pdef; }
  QJsonObject  toJsonObject() const;
         void  fromJsonObject( const QJsonObject &jo );
 
       qint16  key;  // numerical value of the key
+     QString  tn;   // DataItem subclass name that the value is stored as
      QString  desc; // text description of the key-value
-  typeCode_t  tc;   // typecode that the value is stored as
+     QString  pdef; // #define short name used in program code
 };
 
+/**
+ * @brief The KeyValueDefinitions class - the list of KeyValueDef objects stored in the resource file
+ */
 class KeyValueDefinitions : public QObject
 {
     Q_OBJECT
 public:
-    explicit  KeyValueDefinitions( const QString &filename = "", QObject *parent = nullptr );
+    explicit  KeyValueDefinitions( const QString &filename = ":/files/keyValueDefinitions.json", QObject *parent = NULL )
+                : QObject( parent ) { if ( filename.size() > 0 ) fromFile( filename ); }
         void  fromFile( const QString &filename );
+        void  toFile( const QString &filename );
 
-    QList<KeyValueDef> kvds;
+    QList<KeyValueDef> kvdList;
 };
 
 #endif // KEYVALUEDEF_H

@@ -1,0 +1,14 @@
+[
+    {
+        "desc": "Starting number of shares",
+        "key": 1,
+        "pdef": "AOK_STARTING_SHARES",
+        "type": "Shares"
+    },
+    {
+        "desc": "Another entry for the list",
+        "key": 2,
+        "pdef": "AOK_ANOTHER_ITEM",
+        "type": "DataItem"
+    }
+]

@@ -30,6 +30,20 @@ MainWindow::MainWindow(QWidget *parent) :
   new GenesisForm( ui->genesisTab );
 
   restoreConfig();
+/*
+  KeyValueDef kv;
+  kv.key  = 1;
+  kv.tn   = "Shares";
+  kv.desc = "Starting number of shares";
+  kv.pdef = "AOK_STARTING_SHARES";
+  kvds.kvdList.append( kv );
+  kv.key  = 2;
+  kv.tn   = "DataItem";
+  kv.desc = "Another entry for the list";
+  kv.pdef = "AOK_ANOTHER_ITEM";
+  kvds.kvdList.append( kv );
+  kvds.toFile( "/home/mike/tempKvds.json" );
+*/
 }
 
 MainWindow::~MainWindow()

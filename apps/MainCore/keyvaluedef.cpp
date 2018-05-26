@@ -22,34 +22,56 @@
  */
 #include "keyvaluedef.h"
 #include <QFile>
-
-KeyValueDef::KeyValueDef( const QJsonObject &jo, QObject *parent) : QObject(parent)
-{ fromJsonObject( jo ); }
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QTextStream>
 
 QJsonObject  KeyValueDef::toJsonObject() const
 { QJsonObject jo;
   jo.insert( "key" , key  );
   jo.insert( "desc", desc );
-  jo.insert( "type", tc   );
+  jo.insert( "type", tn   );
+  jo.insert( "pdef", pdef );
   return jo;
 }
-
 
 void  KeyValueDef::fromJsonObject( const QJsonObject &jo )
 { if ( jo.contains( "key"  ) ) key  = jo.value( "key"  ).toInt();
   if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
-  if ( jo.contains( "type" ) ) tc   = jo.value( "type" ).toInt();
+  if ( jo.contains( "type" ) ) tn   = jo.value( "type" ).toString();
+  if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
 }
 
-
-KeyValueDefinitions::KeyValueDefinitions( const QString &filename, QObject *parent )
-  : QObject( parent )
-{ fromFile( filename ); }
+///////////////////////////////////////////////////////////////////////////////
 
 void KeyValueDefinitions::fromFile( const QString &filename )
-{ kvds.clear();
+{ kvdList.clear();
   QFile file( filename );
-  if ( !file.exists() )
-    return;
-  // TODO: read defined kvds from file
+  if ( !file.open( QIODevice::ReadOnly ) )
+    { // TODO: log error
+      return;
+    }
+  QJsonDocument doc = QJsonDocument::fromJson( file.readAll() );
+  if ( !doc.isArray() )
+    { // TODO: log error
+      return;
+    }
+  QJsonArray ja = doc.array();
+  foreach( const QJsonValue &jv, ja )
+    kvdList.append( KeyValueDef( jv.toObject() ) );
+}
+
+void KeyValueDefinitions::toFile( const QString &filename )
+{ QFile file( filename );
+  if ( !file.open( QIODevice::WriteOnly ) )
+    { // TODO: log error
+      return;
+    }
+  QJsonArray a;
+  foreach ( KeyValueDef kv, kvdList )
+    a.append( kv.toJsonObject() );
+  QJsonDocument doc;
+  doc.setArray( a );
+  QTextStream ts( &file );
+  ts << QString::fromUtf8( doc.toJson() );
 }

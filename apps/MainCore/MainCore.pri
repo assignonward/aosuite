@@ -46,3 +46,9 @@ SOURCES     += $${PWD}/main.cpp          \
 HEADERS     += $${PWD}/bytecodes.h     \
                $${PWD}/MainWinCommon.h \
     $$PWD/keyvaluedef.h
+
+RESOURCES += \
+    $$PWD/maincoreresources.qrc
+
+DISTFILES += \
+    $$PWD/keyValueDefinitions.json
