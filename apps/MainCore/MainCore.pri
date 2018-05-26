@@ -40,7 +40,9 @@ DEFINES     += QAPPLICATION_CLASS=QApplication
 INCLUDEPATH += $${PWD}
 
 SOURCES     += $${PWD}/main.cpp          \
-               $${PWD}/MainWinCommon.cpp
+               $${PWD}/MainWinCommon.cpp \
+    $$PWD/keyvaluedef.cpp
 
 HEADERS     += $${PWD}/bytecodes.h     \
-               $${PWD}/MainWinCommon.h
+               $${PWD}/MainWinCommon.h \
+    $$PWD/keyvaluedef.h
