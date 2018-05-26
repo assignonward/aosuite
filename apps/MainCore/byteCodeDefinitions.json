@@ -1,14 +1,100 @@
-[
-    {
-        "desc": "Starting number of shares",
-        "key": 1,
-        "pdef": "AOK_STARTING_SHARES",
-        "type": "Shares"
-    },
-    {
-        "desc": "Another entry for the list",
-        "key": 2,
-        "pdef": "AOK_ANOTHER_ITEM",
-        "type": "DataItem"
-    }
-]
+[{  "desc": "SHA2-256 hash of some data",
+    "byte": 0,
+    "pdef": "AO_HASH256",
+    "type": "Hash256"
+},{
+    "desc": "256 random bits",
+    "byte": 1,
+    "pdef": "AO_SALT256",
+    "type": "Salt256"
+},{
+    "desc": "ECDSA Public Key, type 2 compressed",
+    "byte": 2,
+    "pdef": "AO_ECDSA_PUB_KEY2",
+    "type": "PublicKeyEcdsa"
+},{
+    "desc": "ECDSA Public Key, type 3 compressed",
+    "byte": 3,
+    "pdef": "AO_ECDSA_PUB_KEY2",
+    "type": "PublicKeyEcdsa"
+},{
+    "desc": "Hash256 of a PublicKeyRsa3072",
+    "byte": 7,
+    "pdef": "AO_PUB_RSA3072_ID",
+    "type": "Hash256"
+},{
+    "desc": "SHA3-512 hash of some data",
+    "byte": 16,
+    "pdef": "AO_HASH512",
+    "type": "Hash512"
+},{
+    "desc": "UTC time (secs since epoch << 64) when a signature was made",
+    "byte": 32,
+    "pdef": "AO_TIME_OF_SIG",
+    "type": "AOTime"
+},{
+    "desc": "UTC time (secs since epoch << 64) when a record was made",
+    "byte": 33,
+    "pdef": "AO_TIME_RECORDED",
+    "type": "AOTime"
+},{
+    "desc": "UTC time (secs since epoch << 64) when a record is contracted to be recorded",
+    "byte": 34,
+    "pdef": "AO_RECORDING_DEADLINE",
+    "type": "AOTime"
+},{
+    "desc": "UTC time (secs since epoch << 64) when underwriting shares are bound until",
+    "byte": 36,
+    "pdef": "AO_TIME_RECORDED",
+    "type": "AOTime"
+},{
+    "desc": "128 bit signed integer number of shares assigned",
+    "byte": 40,
+    "pdef": "AO_ASSIGNMENT_AMT",
+    "type": "Shares"
+},{
+    "desc": "128 bit signed integer number of shares committed as underwriting",
+    "byte": 41,
+    "pdef": "AO_UNDERWRITING_AMT",
+    "type": "Shares"
+},{
+    "desc": "128 bit signed integer number of shares bid for recording",
+    "byte": 42,
+    "pdef": "AO_RECORDING_BID",
+    "type": "Shares"
+},{
+    "desc": "128 bit signed integer number of shares outstanding (recorded on blocks)",
+    "byte": 43,
+    "pdef": "AO_SHARES_OUT",
+    "type": "SharesOut"
+},{
+    "desc": "8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)",
+    "byte": 48,
+    "pdef": "AO_SHARE_STATE",
+    "type": "ShareState"
+},{
+    "desc": "16 bit signed integer declares the size of a list, as a check that all intended data is present.",
+    "byte": 64,
+    "pdef": "AO_LISTSIZE",
+    "type": "ListSize"
+},{
+    "desc": "16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.",
+    "byte": 65,
+    "pdef": "AO_INDEX",
+    "type": "Index"
+},{
+    "desc": "16 bit signed integer indicates the type of data contained in a value of a key-value pair",
+    "byte": 66,
+    "pdef": "AO_KEYVALUEKEY",
+    "type": "KeyValueKey"
+},{
+    "desc": "388 bytes (3072 bits) an RSA public key",
+    "byte": 112,
+    "pdef": "AO_RSA3072_PUB_KEY",
+    "type": "PublicKeyRsa3072"
+},{
+    "desc": "388 bytes (3072 bits) an RSA signature",
+    "byte": 113,
+    "pdef": "AO_RSA3072_SIG",
+    "type": "SigRsa3072"
+}]

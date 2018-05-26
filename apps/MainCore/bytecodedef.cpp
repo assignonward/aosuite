@@ -33,9 +33,10 @@ void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
   if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
 }
 
-QString ByteCodeDef::toDefine()
-{ return QString( "#define %1 %2 // %3 %4" )
-           .arg( pdef ).arg( byte, 2, 16, QChar('0') ).arg(tn).arg(desc);
+QString ByteCodeDef::toDefine( qint32 maxLenPdef )
+{ return QString( "#define %1%5 0x%2 // %3: %4" )
+           .arg( pdef ).arg( byte, 2, 16, QChar('0') ).arg(tn)
+           .arg(desc).arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
