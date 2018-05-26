@@ -20,44 +20,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "mainwindow.h"
-#include <QSettings>
+#include "bytecodedef.h"
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QTextStream>
 
-MainWindow::MainWindow(QWidget *parent) :
-    MainWinCommon(parent),
-    ui(new Ui::MainWindow)
-{ ui->setupUi(this);
-  new GenesisForm( ui->genesisTab );
-
-  restoreConfig();
+void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
+{ if ( jo.contains( "byte" ) ) byte = jo.value( "byte" ).toInt();
+  if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
+  if ( jo.contains( "type" ) ) tn   = jo.value( "type" ).toString();
+  if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
 }
 
-MainWindow::~MainWindow()
-{ delete ui;
+QString ByteCodeDef::toDefine()
+{ return QString( "#define %1 %2 // %3 %4" )
+           .arg( pdef ).arg( byte, 2, 16, QChar('0') ).arg(tn).arg(desc);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{ saveConfig();
-  QApplication::processEvents( QEventLoop::AllEvents,100 );
-  QMainWindow::closeEvent(event);
-}
+///////////////////////////////////////////////////////////////////////////////
 
-/**
- * @brief MainWindow::restoreConfig - in addition to the window size and
- *   placement saved in MainWinCommon, this app is also restoring assets.
- */
-void MainWindow::restoreConfig()
-{ MainWinCommon::restoreConfig();
-  QSettings settings;
-  assets = settings.value( "assets" ).toByteArray();
-}
-
-/**
- * @brief MainWindow::saveConfig - in addition to the window size and
- *   placement saved in MainWinCommon, this app is also saving assets.
- */
-void MainWindow::saveConfig()
-{ MainWinCommon::saveConfig();
-  QSettings settings;
-  settings.setValue( "assets", assets.toDataItem() );
+void ByteCodeDefinitions::fromFile( const QString &filename )
+{ bcdList.clear();
+  QFile file( filename );
+  if ( !file.open( QIODevice::ReadOnly ) )
+    { // TODO: log error
+      return;
+    }
+  QJsonDocument doc = QJsonDocument::fromJson( file.readAll() );
+  if ( !doc.isArray() )
+    { // TODO: log error
+      return;
+    }
+  QJsonArray ja = doc.array();
+  foreach( const QJsonValue &jv, ja )
+    bcdList.append( ByteCodeDef( jv.toObject() ) );
 }

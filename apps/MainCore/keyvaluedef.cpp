@@ -26,20 +26,16 @@
 #include <QJsonDocument>
 #include <QTextStream>
 
-QJsonObject  KeyValueDef::toJsonObject() const
-{ QJsonObject jo;
-  jo.insert( "key" , key  );
-  jo.insert( "desc", desc );
-  jo.insert( "type", tn   );
-  jo.insert( "pdef", pdef );
-  return jo;
-}
-
 void  KeyValueDef::fromJsonObject( const QJsonObject &jo )
 { if ( jo.contains( "key"  ) ) key  = jo.value( "key"  ).toInt();
   if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
   if ( jo.contains( "type" ) ) tn   = jo.value( "type" ).toString();
   if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
+}
+
+QString KeyValueDef::toDefine()
+{ return QString( "#define %1 %2 // %3 %4" )
+           .arg( pdef ).arg( key ).arg(tn).arg(desc);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,19 +55,4 @@ void KeyValueDefinitions::fromFile( const QString &filename )
   QJsonArray ja = doc.array();
   foreach( const QJsonValue &jv, ja )
     kvdList.append( KeyValueDef( jv.toObject() ) );
-}
-
-void KeyValueDefinitions::toFile( const QString &filename )
-{ QFile file( filename );
-  if ( !file.open( QIODevice::WriteOnly ) )
-    { // TODO: log error
-      return;
-    }
-  QJsonArray a;
-  foreach ( KeyValueDef kv, kvdList )
-    a.append( kv.toJsonObject() );
-  QJsonDocument doc;
-  doc.setArray( a );
-  QTextStream ts( &file );
-  ts << QString::fromUtf8( doc.toJson() );
 }

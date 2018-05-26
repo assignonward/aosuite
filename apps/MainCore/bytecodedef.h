@@ -20,45 +20,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEDEF_H
-#define KEYVALUEDEF_H
+#ifndef BYTECODEDEF_H
+#define BYTECODEDEF_H
 
 #include "dataitem.h"
 #include <QJsonObject>
 
 /**
- * @brief The KeyValueDef class - definition of what goes in a particular key-value key
+ * @brief The ByteCodeDef class - definition of what goes in a particular key-value key
  */
-class KeyValueDef : public QObject
+class ByteCodeDef : public QObject
 {
     Q_OBJECT
 public:
-    explicit  KeyValueDef( const QJsonObject &jo = QJsonObject(), QObject *p = NULL )
+    explicit  ByteCodeDef( const QJsonObject &jo = QJsonObject(), QObject *p = NULL )
                 : QObject( p ) { fromJsonObject( jo ); }
-              KeyValueDef( const KeyValueDef &k, QObject *p = NULL )
-                : QObject( p ? p : k.parent() ), key( k.key ), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
-        void  operator = ( const KeyValueDef &k ) { key = k.key; tn = k.tn; desc = k.desc; pdef = k.pdef; }
+              ByteCodeDef( const ByteCodeDef &k, QObject *p = NULL )
+                : QObject( p ? p : k.parent() ), byte( k.byte ), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
+        void  operator = ( const ByteCodeDef &k ) { byte = k.byte; tn = k.tn; desc = k.desc; pdef = k.pdef; }
         void  fromJsonObject( const QJsonObject &jo );
      QString  toDefine();
 
-      qint16  key;  // numerical value of the key
+  typeCode_t  byte; // numerical value of the bytecode
      QString  tn;   // DataItem subclass name that the value is stored as
-     QString  desc; // text description of the key-value
+     QString  desc; // text description of the bytecode usage
      QString  pdef; // #define short name used in program code
 };
 
 /**
- * @brief The KeyValueDefinitions class - the list of KeyValueDef objects stored in the resource file
+ * @brief The ByteCodeDefinitions class - the list of ByteCodeDef objects stored in the resource file
  */
-class KeyValueDefinitions : public QObject
+class ByteCodeDefinitions : public QObject
 {
     Q_OBJECT
 public:
-    explicit  KeyValueDefinitions( const QString &filename = ":/files/keyValueDefinitions.json", QObject *parent = NULL )
+    explicit  ByteCodeDefinitions( const QString &filename = ":/files/byteCodeDefinitions.json", QObject *parent = NULL )
                 : QObject( parent ) { if ( filename.size() > 0 ) fromFile( filename ); }
         void  fromFile( const QString &filename );
 
-  QList<KeyValueDef> kvdList;
+  QList<ByteCodeDef> bcdList;
 };
 
-#endif // KEYVALUEDEF_H
+#endif // BYTECODEDEF_H
