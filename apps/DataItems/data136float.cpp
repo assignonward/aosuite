@@ -20,14 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "data128fixedpoint.h"
+#include "data136float.h"
 
 /**
- * @brief Data128FixedPoint::Data128FixedPoint
+ * @brief Data136Float::Data136Float
  * @param di - data item for initialization
  * @param p - object parent, if any.
  */
-Data128FixedPoint::Data128FixedPoint( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+Data136Float::Data136Float( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { csVal = false;
   v = 0;
   if ( di.size() < 19 )
@@ -39,7 +39,7 @@ Data128FixedPoint::Data128FixedPoint( const QByteArray &di, QObject *p ) : DataI
       unsigned char d[16];
     } u;
   union _8_as_8
-    { qint8 i;
+    {         qint8 i;
       unsigned char d[1];
     } u8;
   typeCode = di.at(0);
@@ -72,11 +72,11 @@ Data128FixedPoint::Data128FixedPoint( const QByteArray &di, QObject *p ) : DataI
 }
 
 /**
- * @brief Data128FixedPoint::operator =
+ * @brief Data136Float::operator =
  * @param di - data item to assign
  */
-void Data128FixedPoint::operator = ( const QByteArray &di )
-{ Data128FixedPoint temp( di );
+void Data136Float::operator = ( const QByteArray &di )
+{ Data136Float temp( di );
   v        = temp.v;
   e        = temp.e;
   typeCode = temp.typeCode;
@@ -85,18 +85,18 @@ void Data128FixedPoint::operator = ( const QByteArray &di )
 }
 
 /**
- * @brief Data128FixedPoint::toDataItem
+ * @brief Data136Float::toDataItem
  * @param cf - compact (or chain) form, no difference at this level - unused
  * @return byte array starting with type code, followed by 128 bit data and 8 bit checksum.
  */
-QByteArray Data128FixedPoint::toDataItem( bool cf ) const
+QByteArray Data136Float::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   union _128_in_8s
     {      __int128 i;
       unsigned char d[16];
     } u;
   union _8_as_8
-    { qint8 i;
+    {         qint8 i;
       unsigned char d[1];
     } u8;
   // if (( code & AO_SIZE_MASK ) != AO_SIZE_19BYTES )

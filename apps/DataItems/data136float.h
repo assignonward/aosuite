@@ -22,26 +22,26 @@
  */
 // Assign Onward
 //
-// Data128FixedPoint is the base class for objects which are basically a 128 bit integer, with an 8 bit exponent
-//  for fixed point integer computations
+// Data136Float is the base class for objects which are basically a 128 bit integer, with an 8 bit exponent
+//  for floating point-like computations
 //
-#ifndef DATA128FIXEDPOINT_H
-#define DATA128FIXEDPOINT_H
+#ifndef DATA136FLOAT_H
+#define DATA136FLOAT_H
 
 #include "dataitem.h"
 
-class Data128FixedPoint : public DataItem
+class Data136Float : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  Data128FixedPoint( typeCode_t tc = AO_UNDEFINED_DATAITEM, __int128 d = 0, qint8 ex = 0, QObject *p = NULL )
+    explicit  Data136Float( typeCode_t tc = AO_UNDEFINED_DATAITEM, __int128 d = 0, qint8 ex = 0, QObject *p = NULL )
                 : DataItem( tc, p ), v( d ), e( ex ) {}
-              Data128FixedPoint( const Data128FixedPoint &d, QObject *p = NULL )
+              Data136Float( const Data136Float &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ), e( d.e ) {}
-              Data128FixedPoint( const QByteArray &di, QObject *p = NULL );
+              Data136Float( const QByteArray &di, QObject *p = NULL );
   QByteArray  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const QByteArray &di );
-        void  operator = ( const  Data128FixedPoint &d ) { v = d.v; e = d.e; typeCode = d.typeCode; csVal = d.csVal; }
+        void  operator = ( const  Data136Float &d ) { v = d.v; e = d.e; typeCode = d.typeCode; csVal = d.csVal; }
         void  operator = ( const __int128 &d ) { v = d; e = 0; }
 
 protected:

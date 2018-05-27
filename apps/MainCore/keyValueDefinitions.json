@@ -1,14 +1,43 @@
-[
-    {
-        "desc": "Starting number of shares",
-        "key": 1,
-        "pdef": "AOK_STARTING_SHARES",
-        "tdef": "AO_SHARES_OUT"
-    },
-    {
-        "desc": "Min block interval",
-        "key": 2,
-        "pdef": "AOK_MIN_BLOCK_INT",
-        "tdef": "AO_TIME_DIFF"
-    }
-]
+[{
+    "desc": "Starting number of shares",
+    "gbcr": "Pow2",
+    "key": 1,
+    "pdef": "AOK_STARTING_SHARES",
+    "tdef": "AO_SHARES_OUT"
+},{
+    "desc": "Minimuim block interval time",
+    "gbcr": "f64.64",
+    "key": 2,
+    "pdef": "AOK_MIN_BLOCK_INT",
+    "tdef": "AO_TIME_DIFF"
+},{
+    "desc": "Number of coins that the sum of all shares outstanding represents",
+    "gbcr": "Pow2",
+    "key": 3,
+    "pdef": "AOK_N_COINS_TOTAL",
+    "tdef": "AO_N_COINS"
+},{
+    "desc": "Short unique symbol that uniquely identifies the chain e.g. TⒶ1a",
+    "gbcr": "Text",
+    "key": 4,
+    "pdef": "AOK_SYMBOL",
+    "tdef": "AO_SHORT_NOTE"
+},{
+    "desc": "Text description of the chain",
+    "gbcr": "Text",
+    "key": 5,
+    "pdef": "AOK_DESCRIPTION",
+    "tdef": "AO_NOTE"
+},{
+    "desc": "Image suitable for icon use to represent the chain",
+    "gbcr": "File",
+    "key": 6,
+    "pdef": "AOK_ICON",
+    "tdef": "AO_LONGBYTEARRAY"
+},{
+    "desc": "Large format image to represent the chain",
+    "gbcr": "File",
+    "key": 7,
+    "pdef": "AOK_IMAGE",
+    "tdef": "AO_LONGBYTEARRAY"
+}]

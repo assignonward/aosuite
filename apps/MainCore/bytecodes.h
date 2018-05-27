@@ -43,7 +43,7 @@
 
 // First 4 bits, when 0010 means: this is a 18 byte chunk, one for the code, 16 for the data, one for the checkbyte
 #define AO_SIZE_18BYTES        0x20
-#define AO_TIME_CODE           0x20
+#define AO_TIME_CODE           0x20 // Times are in seconds << 64
 #define AO_TIME_OF_SIG             ( 0x00 | AO_TIME_CODE )
 #define AO_TIME_RECORDED           ( 0x01 | AO_TIME_CODE )
 #define AO_RECORDING_DEADLINE      ( 0x02 | AO_TIME_CODE )
@@ -55,6 +55,9 @@
 #define AO_UNDERWRITING_AMT  ( 0x01 | AO_SHARES_CODE )
 #define AO_RECORDING_BID     ( 0x02 | AO_SHARES_CODE )
 #define AO_SHARES_OUT        ( 0x03 | AO_SHARES_CODE )
+
+#define AO_COINS_CODE          0x2C // Like times, COINS_CODE quantities are << 64, but can also be handled with the Data132Float to adjust their precision and avoid overflows
+#define AO_N_COINS           ( 0x00 | AO_COINS_CODE )
 
 // First 4 bits, when 0011 means: this is a 3 byte chunk, one for the code, 1 for the data, one for the checkbyte (generally an 8 bit int)
 #define AO_SIZE_3BYTES         0x30
@@ -107,6 +110,7 @@
 // Last two bytes are checkbytes - total length 4+length of data
 #define AO_SIZE_VARLENSHORT    0xE0
 #define AO_ECDSA_SIG           0xE0  // just the ECDSA signature itself
+#define AO_SHORT_NOTE          0xE1  // UTF-8 text
 #define AO_SHORTBYTEARRAY      0xE4  // arbitrary data
 
 // Flag that somebody forgot to initialize the type

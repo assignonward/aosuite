@@ -218,6 +218,11 @@
     "pdef": "AO_ECDSA_SIG",
     "type": "SigEcdsa"
 },{
+    "desc": "An short UTF-8 text string",
+    "byte": 225,
+    "pdef": "AO_SHORT_NOTE",
+    "type": "ByteArrayShort"
+},{
     "desc": "Arbitray data, up to 255 bytes of it",
     "byte": 228,
     "pdef": "AO_SHORTBYTEARRAY",

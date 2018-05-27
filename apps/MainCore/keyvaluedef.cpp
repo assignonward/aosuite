@@ -28,6 +28,7 @@
 
 void  KeyValueDef::fromJsonObject( const QJsonObject &jo )
 { if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
+  if ( jo.contains( "gbcr" ) ) desc = jo.value( "gbcr" ).toString();
   if ( jo.contains( "key"  ) ) key  = jo.value( "key"  ).toInt();
   if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
   if ( jo.contains( "tdef" ) ) tdef = jo.value( "tdef" ).toString();

@@ -36,12 +36,13 @@ public:
     explicit  KeyValueDef( const QJsonObject &jo = QJsonObject(), QObject *p = NULL )
                 : QObject( p ) { fromJsonObject( jo ); }
               KeyValueDef( const KeyValueDef &k, QObject *p = NULL )
-                : QObject( p ? p : k.parent() ), desc( k.desc ), key( k.key ), pdef( k.pdef ), tdef( k.tdef ) {}
-        void  operator = ( const KeyValueDef &k ) { desc = k.desc; key = k.key; pdef = k.pdef; tdef = k.tdef; }
+                : QObject( p ? p : k.parent() ), desc( k.desc ), gbcr( k.gbcr ), key( k.key ), pdef( k.pdef ), tdef( k.tdef ) {}
+        void  operator = ( const KeyValueDef &k ) { desc = k.desc; gbcr = k.gbcr; key = k.key; pdef = k.pdef; tdef = k.tdef; }
         void  fromJsonObject( const QJsonObject &jo );
      QString  toDefine( qint32 maxLenPdef = 24 );
 
      QString  desc; // text description of the key-value
+     QString  gbcr; // Genesis Block Creator Representation - what kind of GUI editor to present
       qint16  key;  // numerical value of the key
      QString  pdef; // #define short name used in program code
      QString  tdef; // DataItem type identifier byte
