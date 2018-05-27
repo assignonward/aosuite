@@ -33,6 +33,7 @@ SOURCES     += $${PWD}/aotime.cpp            \
                $${PWD}/data8.cpp             \
                $${PWD}/data16.cpp            \
                $${PWD}/data128.cpp           \
+               $${PWD}/data128fixedpoint.cpp \
                $${PWD}/datafixedlength.cpp   \
                $${PWD}/datavarlenlong.cpp    \
                $${PWD}/datavarlenshort.cpp   \
@@ -64,6 +65,7 @@ HEADERS     += $${PWD}/aotime.h            \
                $${PWD}/data8.h             \
                $${PWD}/data16.h            \
                $${PWD}/data128.h           \
+               $${PWD}/data128fixedpoint.h \
                $${PWD}/datafixedlength.h   \
                $${PWD}/datavarlenlong.h    \
                $${PWD}/datavarlenshort.h   \

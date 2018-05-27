@@ -66,6 +66,9 @@
 #define AO_INDEX               0x41
 #define AO_KEYVALUEKEY         0x42
 
+// First 4 bits, when 0110 means: this is a 19 byte chunk, one for the code, 17 for the data, one for the checkbyte (generally a 128 bit int with 8 bit exponent)
+#define AO_SIZE_19BYTES        0x60
+
 // First 4 bits, when 0111 means: this is a 388 byte chunk, one for the code, 384 for the data, three for the checkbytes (generally an RSA3072 key)
 #define AO_SIZE_388BYTES       0x70
 #define AO_RSA3072_PUB_KEY     0x70
