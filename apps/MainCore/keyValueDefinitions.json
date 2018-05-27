@@ -3,12 +3,12 @@
         "desc": "Starting number of shares",
         "key": 1,
         "pdef": "AOK_STARTING_SHARES",
-        "type": "Shares"
+        "tdef": "AO_SHARES_OUT"
     },
     {
-        "desc": "Another entry for the list",
+        "desc": "Min block interval",
         "key": 2,
-        "pdef": "AOK_ANOTHER_ITEM",
-        "type": "DataItem"
+        "pdef": "AOK_MIN_BLOCK_INT",
+        "tdef": "AO_TIME_DIFF"
     }
 ]

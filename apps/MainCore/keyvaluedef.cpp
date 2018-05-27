@@ -27,15 +27,16 @@
 #include <QTextStream>
 
 void  KeyValueDef::fromJsonObject( const QJsonObject &jo )
-{ if ( jo.contains( "key"  ) ) key  = jo.value( "key"  ).toInt();
-  if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
-  if ( jo.contains( "type" ) ) tn   = jo.value( "type" ).toString();
+{ if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
+  if ( jo.contains( "key"  ) ) key  = jo.value( "key"  ).toInt();
   if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
+  if ( jo.contains( "tdef" ) ) tdef = jo.value( "tdef" ).toString();
 }
 
-QString KeyValueDef::toDefine()
-{ return QString( "#define %1 %2 // %3 %4" )
-           .arg( pdef ).arg( key ).arg(tn).arg(desc);
+QString KeyValueDef::toDefine( qint32 maxLenPdef )
+{ return QString( "#define %1%5 %2 // %3 %4" )
+           .arg( pdef ).arg( key ).arg(tdef).arg(desc)
+           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

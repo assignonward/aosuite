@@ -120,6 +120,7 @@ DataItem DataItem::fromDataItem( const QByteArray &di )
     { case AO_TIME_OF_SIG:
       case AO_TIME_RECORDED:
       case AO_RECORDING_DEADLINE:
+      case AO_TIME_DIFF:
       case AO_UNDERWRITING_EXPIRATION: return AOTime( di );
       case AO_LONGBYTEARRAY:           return ByteArrayLong( di );
       case AO_SHORTBYTEARRAY:          return ByteArrayShort( di );

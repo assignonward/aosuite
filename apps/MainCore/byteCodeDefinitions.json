@@ -43,6 +43,11 @@
     "pdef": "AO_RECORDING_DEADLINE",
     "type": "AOTime"
 },{
+    "desc": "UTC time (secs since epoch << 64) defining a time interval, or difference",
+    "byte": 35,
+    "pdef": "AO_TIME_DIFF",
+    "type": "AOTime"
+},{
     "desc": "UTC time (secs since epoch << 64) when underwriting shares are bound until",
     "byte": 36,
     "pdef": "AO_TIME_RECORDED",
@@ -97,4 +102,129 @@
     "byte": 113,
     "pdef": "AO_RSA3072_SIG",
     "type": "SigRsa3072"
+},{
+    "desc": "Shares Assignment agreement before signatures",
+    "byte": 160,
+    "pdef": "AO_ASSIGNMENT",
+    "type": "Assignment"
+},{
+    "desc": "Participant in a Shares Assignment agreement",
+    "byte": 161,
+    "pdef": "AO_PARTICIPANT",
+    "type": "Participant"
+},{
+    "desc": "Participant in a Shares Assignment agreement, compact (aka chain) form",
+    "byte": 162,
+    "pdef": "AO_PARTICIPANT_CF",
+    "type": "Participant"
+},{
+    "desc": "An assignment plus a list of signatures on the authorization",
+    "byte": 166,
+    "pdef": "AO_AUTHORIZATION",
+    "type": "Authorization"
+},{
+    "desc": "Describes a record of shares when they were signed away in a binding contract",
+    "byte": 167,
+    "pdef": "AO_ASSIGN_REF",
+    "type": "AssignRef"
+},{
+    "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
+    "byte": 170,
+    "pdef": "AO_NOTE",
+    "type": "Note"
+},{
+    "desc": "Describes a whole block in the chain",
+    "byte": 171,
+    "pdef": "AO_BLOCK_REF",
+    "type": "BlockRef"
+},{
+    "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
+    "byte": 172,
+    "pdef": "AO_PAGE_REF",
+    "type": "PageRef"
+},{
+    "desc": "Uniquely describes a genesis block, includes list of properties used to calculate new blocks",
+    "byte": 173,
+    "pdef": "AO_GENESIS_REF",
+    "type": "GenesisRef"
+},{
+    "desc": "All signatures include the time of signature",
+    "byte": 174,
+    "pdef": "AO_SIG_WITH_TIME",
+    "type": "Signature"
+},{
+    "desc": "Reference to shares received potentially including info on their current state in the chain",
+    "byte": 175,
+    "pdef": "AO_SHARES_REF",
+    "type": "SharesRef"
+},{
+    "desc": "A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs",
+    "byte": 176,
+    "pdef": "AO_ASSETS",
+    "type": "Assets"
+},{
+    "desc": "An ECDSA private key",
+    "byte": 177,
+    "pdef": "AO_ECDSA_PRI_KEY",
+    "type": "PrivateKeyEcdsa"
+},{
+    "desc": "An RSA3072 private key",
+    "byte": 178,
+    "pdef": "AO_RSA3072_PRI_KEY",
+    "type": "PrivateKeyRsa3072"
+},{
+    "desc": "A (hopefully matching) public-private key pair",
+    "byte": 179,
+    "pdef": "AO_KEYPAIR",
+    "type": "KeyPair"
+},{
+    "desc": "A 2 byte type identifier followed by a DataItem",
+    "byte": 180,
+    "pdef": "AO_KEYVALUEPAIR",
+    "type": "KeyValuePair"
+},{
+    "desc": "Arbitrary data, potentially lots of it",
+    "byte": 181,
+    "pdef": "AO_LONGBYTEARRAY",
+    "type": "ByteArrayLong"
+},{
+    "desc": "Contact information for an asset organizer (user software)",
+    "byte": 184,
+    "pdef": "AO_ORGANIZER",
+    "type": "Organizer"
+},{
+    "desc": "Contact information for a recorder (chainmaker software)",
+    "byte": 185,
+    "pdef": "AO_RECORDER",
+    "type": "Recorder"
+},{
+    "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
+    "byte": 186,
+    "pdef": "AO_NETADDRESS",
+    "type": "NetAddress"
+},{
+    "desc": "A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it",
+    "byte": 187,
+    "pdef": "AO_GENESIS_BLOCK",
+    "type": "GenesisBlock"
+},{
+    "desc": "A full chain block, including all data - though potentially censored as required by local laws",
+    "byte": 188,
+    "pdef": "AO_CHAIN_BLOCK",
+    "type": "TBD"
+},{
+    "desc": "An ECDSA signature",
+    "byte": 224,
+    "pdef": "AO_ECDSA_SIG",
+    "type": "SigEcdsa"
+},{
+    "desc": "Arbitray data, up to 255 bytes of it",
+    "byte": 228,
+    "pdef": "AO_SHORTBYTEARRAY",
+    "type": "ByteArrayShort"
+},{
+    "desc": "An undefined data item, usually an error",
+    "byte": 255,
+    "pdef": "AO_UNDEFINED_DATAITEM",
+    "type": "DataItem"
 }]

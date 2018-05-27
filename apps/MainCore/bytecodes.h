@@ -47,6 +47,7 @@
 #define AO_TIME_OF_SIG             ( 0x00 | AO_TIME_CODE )
 #define AO_TIME_RECORDED           ( 0x01 | AO_TIME_CODE )
 #define AO_RECORDING_DEADLINE      ( 0x02 | AO_TIME_CODE )
+#define AO_TIME_DIFF               ( 0x03 | AO_TIME_CODE )
 #define AO_UNDERWRITING_EXPIRATION ( 0x04 | AO_TIME_CODE )
 
 #define AO_SHARES_CODE         0x28
@@ -77,7 +78,6 @@
 #define AO_ASSIGNMENT          0xA0  // wrapper around the assignment data fields, which can come in any order
 #define AO_PARTICIPANT         0xA1  // wrapper around the participant data fields, which can come in any order
 #define AO_PARTICIPANT_CF      0xA2  // wrapper around the compact form participant data fields, which can come in any order
-#define AO_SIGNATURE_LIST      0xA5  // starts with an AO_LISTSIZE, followed by that many signature objects
 #define AO_AUTHORIZATION       0xA6  // an assignment, fully countersigned by all parties to the assignment
 #define AO_ASSIGN_REF          0xA7  // reference to shares assigned away on a page
 #define AO_NOTE                0xAA  // optional field in the participant item

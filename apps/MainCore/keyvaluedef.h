@@ -36,15 +36,15 @@ public:
     explicit  KeyValueDef( const QJsonObject &jo = QJsonObject(), QObject *p = NULL )
                 : QObject( p ) { fromJsonObject( jo ); }
               KeyValueDef( const KeyValueDef &k, QObject *p = NULL )
-                : QObject( p ? p : k.parent() ), key( k.key ), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
-        void  operator = ( const KeyValueDef &k ) { key = k.key; tn = k.tn; desc = k.desc; pdef = k.pdef; }
+                : QObject( p ? p : k.parent() ), desc( k.desc ), key( k.key ), pdef( k.pdef ), tdef( k.tdef ) {}
+        void  operator = ( const KeyValueDef &k ) { desc = k.desc; key = k.key; pdef = k.pdef; tdef = k.tdef; }
         void  fromJsonObject( const QJsonObject &jo );
-     QString  toDefine();
+     QString  toDefine( qint32 maxLenPdef = 24 );
 
-      qint16  key;  // numerical value of the key
-     QString  tn;   // DataItem subclass name that the value is stored as
      QString  desc; // text description of the key-value
+      qint16  key;  // numerical value of the key
      QString  pdef; // #define short name used in program code
+     QString  tdef; // DataItem type identifier byte
 };
 
 /**
