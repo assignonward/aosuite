@@ -46,4 +46,10 @@
     "key": 8,
     "pdef": "AOK_N_COINS_TOTAL",
     "tdef": "AO_N_COINS"
+},{
+    "desc": "Recording Tax in coins per byte (usually a very small number)",
+    "gbcr": "Pow2",
+    "key": 9,
+    "pdef": "AOK_RECORDING_TAX",
+    "tdef": "AO_N_COINS"
 }]

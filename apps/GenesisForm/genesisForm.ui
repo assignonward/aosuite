@@ -40,11 +40,17 @@
     </property>
     <item>
      <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>6</number>
       </property>
       <item row="7" column="0">
        <widget class="QLabel" name="label_4">
@@ -321,7 +327,7 @@ p, li { white-space: pre-wrap; }
           <string>TⒶ1</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="1" column="0">
+          <item row="2" column="0">
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -337,7 +343,10 @@ p, li { white-space: pre-wrap; }
           <item row="0" column="0">
            <widget class="QLabel" name="label_8">
             <property name="text">
-             <string>Current Shares</string>
+             <string>Current Shares (N)</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -345,6 +354,29 @@ p, li { white-space: pre-wrap; }
            <widget class="QLabel" name="label_9">
             <property name="text">
              <string>Calculated and Recorded</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_13">
+            <property name="text">
+             <string>Current Recording Tax (coins/byte)</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>Calculated in coins, recorded in shares</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
