@@ -35,6 +35,7 @@
 #define AO_SALT256             0x01
 #define AO_ECDSA_PUB_KEY2      0x02  // Two types of public keys, only one used at a time
 #define AO_ECDSA_PUB_KEY3      0x03
+#define AO_HASH224SALT32       0x06
 #define AO_PUB_RSA3072_ID      0x07  // Hash256 of the key itself, reducing size to 1/12th
 
 // First 4 bits, when 0001 means: this is a 66 byte chunk, one for the code, 32 for the data (hash), one for the checkbyte

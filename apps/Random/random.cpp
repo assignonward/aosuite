@@ -55,6 +55,21 @@ int64_t Random::rnd_int64()
   return v;
 }
 
+QByteArray Random::rnd_bytes( qint32 n )
+{ QByteArray ba;
+  union _64_as_8
+    { qint64 i;
+      unsigned char d[8];
+    } u;
+  while ( ba.size() < n )
+    { u.i = rnd_int64();
+      int j = 0;
+      while (( ba.size() < n ) && ( j < 8 ))
+        ba.append( u.d[j++] );
+    }
+  return ba;
+}
+
 float Random::rnd_float( float min, float max )
 { uint64_t x = s[0];
   uint64_t const y = s[1];

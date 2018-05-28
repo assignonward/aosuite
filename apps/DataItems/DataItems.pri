@@ -38,9 +38,11 @@ SOURCES     += $${PWD}/aotime.cpp            \
                $${PWD}/datavarlenlong.cpp    \
                $${PWD}/datavarlenshort.cpp   \
                $${PWD}/hash.cpp              \
+               $${PWD}/hash224salt32.cpp     \
                $${PWD}/hash256.cpp           \
                $${PWD}/hash512.cpp           \
                $${PWD}/index.cpp             \
+               $${PWD}/keyvaluekey.cpp       \
                $${PWD}/listsize.cpp          \
                $${PWD}/netaddress.cpp        \
                $${PWD}/note.cpp              \
@@ -55,8 +57,7 @@ SOURCES     += $${PWD}/aotime.cpp            \
                $${PWD}/sharesout.cpp         \
                $${PWD}/sharestate.cpp        \
                $${PWD}/sigecdsa.cpp          \
-               $${PWD}/sigrsa3072.cpp \
-    $$PWD/keyvaluekey.cpp
+               $${PWD}/sigrsa3072.cpp
 
 HEADERS     += $${PWD}/aotime.h            \
                $${PWD}/bytearraylong.h     \
@@ -70,9 +71,11 @@ HEADERS     += $${PWD}/aotime.h            \
                $${PWD}/datavarlenlong.h    \
                $${PWD}/datavarlenshort.h   \
                $${PWD}/hash.h              \
+               $${PWD}/hash224salt32.h     \
                $${PWD}/hash256.h           \
                $${PWD}/hash512.h           \
                $${PWD}/index.h             \
+               $${PWD}/keyvaluekey.h       \
                $${PWD}/listsize.h          \
                $${PWD}/netaddress.h        \
                $${PWD}/note.h              \
@@ -87,5 +90,4 @@ HEADERS     += $${PWD}/aotime.h            \
                $${PWD}/sharesout.h         \
                $${PWD}/sharestate.h        \
                $${PWD}/sigecdsa.h          \
-               $${PWD}/sigrsa3072.h \
-    $$PWD/keyvaluekey.h
+               $${PWD}/sigrsa3072.h

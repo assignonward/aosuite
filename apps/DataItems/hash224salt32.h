@@ -20,26 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef RANDOM_H
-#define RANDOM_H
-#include <stdint.h>
-#include <QByteArray>
+#ifndef HASH224SALT32_H
+#define HASH224SALT32_H
 
-class Random
+#include "datafixedlength.h"
+
+class Hash224Salt32 : public DataFixedLength
 {
+    Q_OBJECT
 public:
-               Random( __int128 seed = 42 );
-         void  seed( __int128 seed );
-     uint64_t  rnd_uint64();
-      int64_t  rnd_int64();
-   QByteArray  rnd_bytes( qint32 n = 4 );
-        float  rnd_float( float min, float max );
+      explicit  Hash224Salt32( QByteArray text = QByteArray(), QObject *p = NULL );
+                Hash224Salt32( const Hash224Salt32 &h, QObject *p = NULL )
+                  : DataFixedLength( AO_HASH224SALT32, h.ba, p ? p : h.parent() ), verified( h.verified ) { /* if ( h.typeCode != AO_HASH224SALT32 ) TODO: log error */ }
+ Hash224Salt32 &calculate( QByteArray text );
+          bool  verify( QByteArray text );
+          bool  isValid();
+          bool  isVerified() { return verified; }
 
 private:
-    /* The state must be seeded so that it is not all zero */
-     uint64_t  s[2];
+          bool  verified;
 };
 
-extern Random  rng; // Global object
-
-#endif // RANDOM_H
+#endif // HASH224SALT32_H
