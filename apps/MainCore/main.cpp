@@ -27,6 +27,7 @@
 #include "mainwindow.h"
 #include "random.h"
 #include "singleapplication.h"
+#include "stdio.h"
 
 using namespace std;
 
@@ -36,22 +37,23 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 { switch (type)
     { default:
       case QtDebugMsg:
-        // TODO: log a debug message QString(context.file), context.line, msg
+        printf( "Debug %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
         break;
       case QtInfoMsg:
-        // TODO: log an info message QString(context.file), context.line, msg
+        printf( "Info %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
         break;
       case QtWarningMsg:
-        // TODO: log a warning message QString(context.file), context.line, msg
+        printf( "Warning %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
         break;
       case QtCriticalMsg:
-        // TODO: log a critical message QString(context.file), context.line, msg
+        printf( "Critical %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
         break;
       case QtFatalMsg:
-        // TODO: log a fatal message QString(context.file), context.line, msg
+        printf( "Fatal %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
         abort();
     }
-  (void)context; (void)msg;
+  fflush(stdout);
+  // (void)context; (void)msg;
 }
 
 int main(int argc, char *argv[])
@@ -69,10 +71,10 @@ int main(int argc, char *argv[])
     rng.rnd_uint64();
 
     mw = new MainWindow();
-    // qInstallMessageHandler(myMessageOutput);
+    qInstallMessageHandler(myMessageOutput);
     QObject::connect( &app, &SingleApplication::instanceStarted, mw, &MainWindow::additionalInstanceStarted );
     mw->show();
     int r = app.exec();
-    // qInstallMessageHandler( 0 );
+    qInstallMessageHandler( 0 );
     return r;
 }
