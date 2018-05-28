@@ -84,32 +84,34 @@
 </style>
 
 <meta charset="UTF-8"/>
-<title>Assign Onward</title>
+<title>Assignment Agreement</title>
 </head>
 
 <body>
 <div class="page">
 <div class="zoom">
 
-<h1>Assign Onward: Whitepapers</h1>
-
-<ul><li><a href="BlockchainBasics.html">Blockchain Basics</a></li>
-    <li><a href="CorePrinciples.html">Core Principles</a></li>
-    <li><a href="Goals.html">Goals</a></li>
-    <li><a href="Roadmap.html">Roadmap</a></li>
-    <ul><li><a href="AssetOrganizer.html">Asset Organizer</a></li>
-        <li><a href="AssignmentRecorder.html">Assignment Recorder</a></li>
-        <li>Genesis Block Creator</li>
-    </ul>
-    <li><a href="Applications.html">Applications</a></li>
-</ul>
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Assignment Agreement</h1>
 
 
+<span itemprop="articleBody">An asssignment agreement is a list of shares available to be assigned, and identities (<a href="BlockchainBasics.html#KeyPairs">public keys</a>) which will receive shares, plus a specified recording fee.  Following the principles of <a href="AtomicAssignment.html">atomic assignment</a>, all shares assigned are assigned in their entirety, and public keys are never reused.<div class="tooltip"><sup>1</sup><span class="tooltiptext">Most of the time, a giver of shares will be giving more shares than needed for the transaction, so they also provide one or more IDs to receive the excess shares under.</span></div>  The agreement includes a recording deadline, if the agreement is not recorded by the deadline, it becomes null and void, and shares given in the agreement may be given in other agreements.<div class="tooltip"><sup>2</sup><span class="tooltiptext">Givers of shares might record an explicit revocation of expired agreements which do not get recorded, which would act to block inclusion of any side chains that might appear containing the expired transactions.  To this end, shares might remain in escrow for some period of time following an agreement expiration to allow for recording of the revocation.</span></div>  When all parties, givers and receivers, have signed (Authorized) a share assignment agreement, it becomes binding upon them pending recording.
+
+<h2>Signing an Agreement</h2>
+
+An agreement includes <a href="SeparableItems.html">separable items</a>, like freetext notes or data, and inseparable items like share amounts and signatures.  The separable items are individually hashed, and those hashes are included with the inseparable items to be hashed before <a href="Signatures.html">signatures</a> are applied.<div class="tooltip"><sup>3</sup><span class="tooltiptext">Signatures are applied to the final hash of the agreement.</span></div>  Since public keys for all participants are included with the agreement, anyone can check the correctness of the signatures on the agreement.  If the final signature is applied before the recording deadline, then the agreement is eligible for recording.
+
+<h2>Recording an Agreement</h2>
+
+Recorders work closer to the <a href="BlockchainBasics.html">chain</a> than ordinary <a href="AssetOrganizer.html">users</a> do.  They check the transaction for validity against the current blockchain: Are the signatures correct?  Are the timestamps in order?  Are all the sources of shares in the agreement still available for assignment?  Are there sufficient shares provided for recording tax?  If so, then the recorder may include this agreement in a new block anytime before the recording deadline specified in the agreement.
+
+</br>
+</span>
 
 </div>
-<br/><span itemprop="author" itemscope itemtype="http://schema.org/Person">
-<span itemprop="name">Assign Onward</span></span><br/>
-<span itemprop="datePublished" content="2018-05-04"><div class="tooltip">4 May 2018<span class="tooltiptext">
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-05-28"><div class="tooltip">28 May 2018<span class="tooltiptext">
 MIT License
 <br/>
 Copyright (c) 2018 Assign Onward
@@ -132,5 +134,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 </span></div></span>
+
 </div>
+
 </body></html>
+
