@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     MainWinCommon(parent),
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
-  new GenesisForm( ui->genesisTab );
+  new GenesisForm( ui->genesisTab,this );
 
   restoreConfig();
 }

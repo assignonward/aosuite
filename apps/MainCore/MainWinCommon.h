@@ -36,6 +36,8 @@ public:
             void  saveConfig();
 
 signals:
+            void  restoringConfig();
+            void  savingConfig();
 
 public slots:
             void  additionalInstanceStarted();

@@ -25,6 +25,7 @@
 
 #include <QtGui>
 #include "ui_genesisForm.h"
+#include "MainWinCommon.h"
 
 namespace Ui {
 class GenesisForm;
@@ -35,10 +36,14 @@ class GenesisForm : public QScrollArea
     Q_OBJECT
 
 public:
-  explicit  GenesisForm( QWidget *cw );
+  explicit  GenesisForm( QWidget *cw, MainWinCommon *mw = NULL );
            ~GenesisForm();
 public:
     Ui::GenesisForm *ui;
+
+public slots:
+      void  restoreConfig();
+      void  saveConfig();
 };
 
 #endif // RABBITFORM_H

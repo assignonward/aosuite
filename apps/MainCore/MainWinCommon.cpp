@@ -41,19 +41,20 @@ void  MainWinCommon::closeEvent(QCloseEvent *event)
   QMainWindow::closeEvent(event);
 }
 
-
 void MainWinCommon::additionalInstanceStarted()
 { qWarning( "Attempt to start a second instance of " APPNAME );
 }
 
 void MainWinCommon::restoreConfig()
-{ QSettings settings;
+{ emit restoringConfig();
+  QSettings settings;
   restoreGeometry( settings.value( "geometry" ).toByteArray() );
   restoreState   ( settings.value( "state"    ).toByteArray() );
 }
 
 void MainWinCommon::saveConfig()
-{ QSettings settings;
+{ emit savingConfig();
+  QSettings settings;
   settings.setValue( "geometry", saveGeometry() );
   settings.setValue( "state"   , saveState()    );
 }

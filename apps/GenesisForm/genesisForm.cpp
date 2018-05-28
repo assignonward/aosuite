@@ -22,13 +22,43 @@
  */
 #include "genesisForm.h"
 
-GenesisForm::GenesisForm( QWidget *cw ) :
+GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw ) :
     QScrollArea(cw),
     ui(new Ui::GenesisForm)
 { ui->setupUi(this);
   new QVBoxLayout( cw );
   cw->layout()->addWidget( this );
+  if ( mw )
+    { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));
+      connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
+    }
 }
 
 GenesisForm::~GenesisForm()
 { delete ui; }
+
+void  GenesisForm::restoreConfig()
+{ QSettings s;
+  if ( s.contains( "description"    ) ) ui->description   ->setText        ( s.value( "description"    ).toString() );
+  if ( s.contains( "protocol"       ) ) ui->protocol      ->setCurrentIndex( s.value( "protocol"       ).toInt()    );
+  if ( s.contains( "symbol"         ) ) ui->symbol        ->setText        ( s.value( "symbol"         ).toString() );
+  if ( s.contains( "icon"           ) ) ui->icon          ->setText        ( s.value( "icon"           ).toString() );
+  if ( s.contains( "image"          ) ) ui->image         ->setText        ( s.value( "image"          ).toString() );
+  if ( s.contains( "startingShares" ) ) ui->startingShares->setValue       ( s.value( "startingShares" ).toInt()    );
+  if ( s.contains( "totalCoins"     ) ) ui->totalCoins    ->setValue       ( s.value( "totalCoins"     ).toInt()    );
+  if ( s.contains( "recordingTax"   ) ) ui->recordingTax  ->setValue       ( s.value( "recordingTax"   ).toInt()    );
+  if ( s.contains( "minBlockTime"   ) ) ui->minBlockTime  ->setValue       ( s.value( "minBlockTime"   ).toDouble() );
+}
+
+void  GenesisForm::saveConfig()
+{ QSettings s;
+  s.setValue( "description"   , ui->description   ->toPlainText()  );
+  s.setValue( "protocol"      , ui->protocol      ->currentIndex() );
+  s.setValue( "symbol"        , ui->symbol        ->text()         );
+  s.setValue( "icon"          , ui->icon          ->text()         );
+  s.setValue( "image"         , ui->image         ->text()         );
+  s.setValue( "startingShares", ui->startingShares->value()        );
+  s.setValue( "totalCoins"    , ui->totalCoins    ->value()        );
+  s.setValue( "recordingTax"  , ui->recordingTax  ->value()        );
+  s.setValue( "minBlockTime"  , ui->minBlockTime  ->value()        );
+}
