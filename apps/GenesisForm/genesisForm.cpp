@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 #include "genesisForm.h"
+#include <QFileDialog>
 
 GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw ) :
     QScrollArea(cw),
@@ -61,4 +62,16 @@ void  GenesisForm::saveConfig()
   s.setValue( "totalCoins"    , ui->totalCoins    ->value()        );
   s.setValue( "recordingTax"  , ui->recordingTax  ->value()        );
   s.setValue( "minBlockTime"  , ui->minBlockTime  ->value()        );
+}
+
+void  GenesisForm::on_chooseIcon_clicked()
+{ QString name = QFileDialog::getOpenFileName( this, "Icon file" );
+  if ( name.size() > 0 )
+    ui->icon->setText( name );
+}
+
+void  GenesisForm::on_chooseImage_clicked()
+{ QString name = QFileDialog::getOpenFileName( this, "Image file" );
+  if ( name.size() > 0 )
+    ui->image->setText( name );
 }

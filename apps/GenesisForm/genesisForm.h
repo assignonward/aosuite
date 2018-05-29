@@ -44,6 +44,8 @@ public:
 public slots:
       void  restoreConfig();
       void  saveConfig();
+      void  on_chooseIcon_clicked();
+      void  on_chooseImage_clicked();
 };
 
 #endif // RABBITFORM_H
