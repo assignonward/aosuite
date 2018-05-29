@@ -46,6 +46,8 @@ public slots:
       void  saveConfig();
       void  on_chooseIcon_clicked();
       void  on_chooseImage_clicked();
+      void  on_importGenesisBlock_clicked();
+      void  on_publishGenesisBlock_clicked();
 };
 
 #endif // RABBITFORM_H

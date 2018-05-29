@@ -47,7 +47,6 @@ public:
 private:
       Ui::MainWindow *ui;
               Assets  assets;
- KeyValueDefinitions  kvds;
 };
 
 #endif // MAINWINDOW_H

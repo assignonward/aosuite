@@ -27,12 +27,10 @@
 
 MainWinCommon::MainWinCommon(QWidget *parent)
   : QMainWindow(parent)
-{ qInfo( "MainWinCommon() starting" );
-}
+{}
 
 MainWinCommon::~MainWinCommon()
-{
-}
+{}
 
 void  MainWinCommon::closeEvent(QCloseEvent *event)
 { qInfo( "MainWinCommon::closeEvent() starting" );

@@ -26,6 +26,8 @@
 #include <QJsonDocument>
 #include <QTextStream>
 
+ByteCodeDefinitions bcds; // Global object
+
 void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
 { if ( jo.contains( "byte" ) ) byte = jo.value( "byte" ).toInt();
   if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();

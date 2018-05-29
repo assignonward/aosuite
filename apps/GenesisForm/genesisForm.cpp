@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "genesisblock.h"
 #include "genesisForm.h"
 #include <QFileDialog>
 
@@ -74,4 +75,23 @@ void  GenesisForm::on_chooseImage_clicked()
 { QString name = QFileDialog::getOpenFileName( this, "Image file" );
   if ( name.size() > 0 )
     ui->image->setText( name );
+}
+
+void  GenesisForm::on_importGenesisBlock_clicked()
+{
+
+}
+
+/**
+ * @brief GenesisForm::on_publishGenesisBlock_clicked - saving to file at the moment
+ *   when we have a recorder to talk to, can communicate it directly to the recorder.
+ */
+void  GenesisForm::on_publishGenesisBlock_clicked()
+{ QString name = QFileDialog::getSaveFileName( this, "save Genesis Block to file:" );
+  if ( name.size() < 1 )
+    return;
+  GenesisBlock gb;
+// TODO: populate gb.properties.insert() with
+// values from the form.  May want to generate some
+// #define code from the json objects.
 }

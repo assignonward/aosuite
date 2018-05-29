@@ -26,6 +26,8 @@
 #include <QJsonDocument>
 #include <QTextStream>
 
+KeyValueDefinitions  kvds; // Global object
+
 void  KeyValueDef::fromJsonObject( const QJsonObject &jo )
 { if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
   if ( jo.contains( "gbcr" ) ) desc = jo.value( "gbcr" ).toString();

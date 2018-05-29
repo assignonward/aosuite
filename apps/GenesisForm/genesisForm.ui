@@ -265,7 +265,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="11" column="0">
-       <widget class="QPushButton" name="publish">
+       <widget class="QPushButton" name="publishGenesisBlock">
         <property name="text">
          <string>Publish</string>
         </property>
@@ -309,6 +309,13 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="11" column="2">
+       <widget class="QPushButton" name="importGenesisBlock">
+        <property name="text">
+         <string>Import</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
