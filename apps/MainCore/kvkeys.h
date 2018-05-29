@@ -20,27 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEKEY_H
-#define KEYVALUEKEY_H
+#ifndef KVKEYS_H
+#define KVKEYS_H
 
-#include "data16.h"
-#include "kvkeys.h"
+#define AOK_PROTOCOL         1 // Basic level of protocol, identifies functionality
+#define AOK_PROTOCOL_REV     2 // Revision of the protocol, may indicate additional types supported
+#define AOK_TEXT_SYMBOL      3 // Short unique symbol that uniquely identifies the chain e.g. TⒶ1a
+#define AOK_DESCRIPTION      4 // UTF-8 Text description of the chain
+#define AOK_ICON             5 // Image suitable for icon use to represent the chain
+#define AOK_IMAGE            6 // Large format image to represent the chain
+#define AOK_STARTING_SHARES  7 // Starting number of shares
+#define AOK_MIN_BLOCK_INT    8 // Minimuim block interval time
+#define AOK_N_COINS_TOTAL    9 // Number of coins that the sum of all shares outstanding represents
+#define AOK_RECORDING_TAX   10 // Recording Tax in coins per byte (usually a very small number)
 
-#define KeyValueKey_t qint16
-
-
-class KeyValueKey : public Data16
-{
-    Q_OBJECT
-public:
-      explicit  KeyValueKey( KeyValueKey_t val = 0, QObject *p = NULL )
-                  : Data16( AO_KEYVALUEKEY, val, p ) {}
-                KeyValueKey( const QByteArray &di, QObject *p = NULL )
-                  : Data16( di, p ) {}
-                KeyValueKey( const KeyValueKey &f, QObject *p = NULL )
-                  : Data16( AO_KEYVALUEKEY, f.v, p ? p : f.parent() ) {}
-          void  operator = ( const QByteArray    &di  ) { Data16::operator = ( di  ); }
-          void  operator = ( const KeyValueKey_t &val ) { Data16::operator = ( val ); }
-};
-
-#endif // KEYVALUEKEY_H
+#endif // KVKEYS_H

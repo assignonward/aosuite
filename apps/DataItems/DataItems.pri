@@ -26,7 +26,8 @@ INCLUDEPATH += /usr/include
 # sudo apt-get install libgpgme11-dev libgcrypt11-dev
 LIBS        += -lgpgme -lgcrypt -ldl -lgpg-error
 
-SOURCES     += $${PWD}/aotime.cpp            \
+SOURCES     += $${PWD}/aocoins.cpp           \
+               $${PWD}/aotime.cpp            \
                $${PWD}/bytearraylong.cpp     \
                $${PWD}/bytearrayshort.cpp    \
                $${PWD}/dataitem.cpp          \
@@ -56,10 +57,12 @@ SOURCES     += $${PWD}/aotime.cpp            \
                $${PWD}/shares.cpp            \
                $${PWD}/sharesout.cpp         \
                $${PWD}/sharestate.cpp        \
+               $${PWD}/shortnote.cpp         \
                $${PWD}/sigecdsa.cpp          \
                $${PWD}/sigrsa3072.cpp
 
-HEADERS     += $${PWD}/aotime.h            \
+HEADERS     += $${PWD}/aocoins.h           \
+               $${PWD}/aotime.h            \
                $${PWD}/bytearraylong.h     \
                $${PWD}/bytearrayshort.h    \
                $${PWD}/dataitem.h          \
@@ -89,5 +92,6 @@ HEADERS     += $${PWD}/aotime.h            \
                $${PWD}/shares.h            \
                $${PWD}/sharesout.h         \
                $${PWD}/sharestate.h        \
+               $${PWD}/shortnote.h         \
                $${PWD}/sigecdsa.h          \
                $${PWD}/sigrsa3072.h

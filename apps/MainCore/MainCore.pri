@@ -47,7 +47,8 @@ SOURCES     += $${PWD}/main.cpp          \
 HEADERS     += $${PWD}/bytecodes.h     \
                $${PWD}/MainWinCommon.h \
     $$PWD/keyvaluedef.h \
-    $$PWD/bytecodedef.h
+    $$PWD/bytecodedef.h \
+    $$PWD/kvkeys.h
 
 RESOURCES += \
     $$PWD/maincoreresources.qrc

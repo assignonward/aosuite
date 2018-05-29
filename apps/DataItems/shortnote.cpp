@@ -20,27 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEKEY_H
-#define KEYVALUEKEY_H
+#include "shortnote.h"
 
-#include "data16.h"
-#include "kvkeys.h"
-
-#define KeyValueKey_t qint16
-
-
-class KeyValueKey : public Data16
-{
-    Q_OBJECT
-public:
-      explicit  KeyValueKey( KeyValueKey_t val = 0, QObject *p = NULL )
-                  : Data16( AO_KEYVALUEKEY, val, p ) {}
-                KeyValueKey( const QByteArray &di, QObject *p = NULL )
-                  : Data16( di, p ) {}
-                KeyValueKey( const KeyValueKey &f, QObject *p = NULL )
-                  : Data16( AO_KEYVALUEKEY, f.v, p ? p : f.parent() ) {}
-          void  operator = ( const QByteArray    &di  ) { Data16::operator = ( di  ); }
-          void  operator = ( const KeyValueKey_t &val ) { Data16::operator = ( val ); }
-};
-
-#endif // KEYVALUEKEY_H
+// Not much here

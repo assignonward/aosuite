@@ -20,27 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEKEY_H
-#define KEYVALUEKEY_H
+#ifndef SHORTNOTE_H
+#define SHORTNOTE_H
 
-#include "data16.h"
-#include "kvkeys.h"
+#include "datavarlenshort.h"
 
-#define KeyValueKey_t qint16
-
-
-class KeyValueKey : public Data16
+/**
+ * @brief The ShortNote class - implies UTF8 encoding, but no enforcement as of yet.
+ */
+class ShortNote : public DataVarLenShort
 {
     Q_OBJECT
 public:
-      explicit  KeyValueKey( KeyValueKey_t val = 0, QObject *p = NULL )
-                  : Data16( AO_KEYVALUEKEY, val, p ) {}
-                KeyValueKey( const QByteArray &di, QObject *p = NULL )
-                  : Data16( di, p ) {}
-                KeyValueKey( const KeyValueKey &f, QObject *p = NULL )
-                  : Data16( AO_KEYVALUEKEY, f.v, p ? p : f.parent() ) {}
-          void  operator = ( const QByteArray    &di  ) { Data16::operator = ( di  ); }
-          void  operator = ( const KeyValueKey_t &val ) { Data16::operator = ( val ); }
+    explicit  ShortNote( QByteArray ba = QByteArray(), QObject *p = NULL )
+                : DataVarLenShort( AO_NOTE, ba, p ) {}
+              ShortNote( const ShortNote &n, QObject *p = NULL )
+                : DataVarLenShort( AO_NOTE, n.ba, p ? p : n.parent() ) {}
+      qint32  size() { return ba.size(); }
+        void  operator = ( const QByteArray &di ) { DataVarLenShort::operator = ( di ); }
 };
 
-#endif // KEYVALUEKEY_H
+#endif // SHORTNOTE_H

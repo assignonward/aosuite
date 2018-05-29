@@ -26,8 +26,6 @@
 #include "keyvaluekey.h"
 #include "datavarlenlong.h"
 
-#define KeyValueKey_t KeyValueKey
-
 /**
  * @brief The KeyValuePair class - A (short) arbitrary length key and a
  *   (long) arbitrary length value

@@ -228,35 +228,6 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="protocol">
-        <item>
-         <property name="text">
-          <string>TⒶ1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>TⒶ2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>TⒶ3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>TⒶ4</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ⒶLive</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_12">
         <property name="text">
@@ -316,6 +287,46 @@ p, li { white-space: pre-wrap; }
          <string>Import</string>
         </property>
        </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QComboBox" name="protocol">
+          <item>
+           <property name="text">
+            <string>TⒶ1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TⒶ2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TⒶ3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TⒶ4</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>ⒶLive</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="protocolRev">
+          <property name="prefix">
+           <string>Rev. </string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>

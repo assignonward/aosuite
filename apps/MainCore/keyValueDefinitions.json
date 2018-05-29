@@ -1,55 +1,61 @@
 [{
-    "desc": "Protocol",
+    "desc": "Basic level of protocol, identifies functionality",
     "gbcr": "Combo",
     "key": 1,
     "pdef": "AOK_PROTOCOL",
     "tdef": "AO_INDEX"
 },{
+    "desc": "Revision of the protocol, may indicate additional types supported",
+    "gbcr": "Combo",
+    "key": 2,
+    "pdef": "AOK_PROTOCOL_REV",
+    "tdef": "AO_INDEX"
+},{
     "desc": "Short unique symbol that uniquely identifies the chain e.g. TⒶ1a",
     "gbcr": "Text",
-    "key": 2,
+    "key": 3,
     "pdef": "AOK_TEXT_SYMBOL",
     "tdef": "AO_SHORT_NOTE"
 },{
     "desc": "Text description of the chain",
     "gbcr": "Text",
-    "key": 3,
+    "key": 4,
     "pdef": "AOK_DESCRIPTION",
     "tdef": "AO_NOTE"
 },{
     "desc": "Image suitable for icon use to represent the chain",
     "gbcr": "File",
-    "key": 4,
+    "key": 5,
     "pdef": "AOK_ICON",
     "tdef": "AO_LONGBYTEARRAY"
 },{
     "desc": "Large format image to represent the chain",
     "gbcr": "File",
-    "key": 5,
+    "key": 6,
     "pdef": "AOK_IMAGE",
     "tdef": "AO_LONGBYTEARRAY"
 },{
     "desc": "Starting number of shares",
     "gbcr": "Pow2",
-    "key": 6,
+    "key": 7,
     "pdef": "AOK_STARTING_SHARES",
     "tdef": "AO_SHARES_OUT"
 },{
     "desc": "Minimuim block interval time",
     "gbcr": "f64.64",
-    "key": 7,
+    "key": 8,
     "pdef": "AOK_MIN_BLOCK_INT",
     "tdef": "AO_TIME_DIFF"
 },{
     "desc": "Number of coins that the sum of all shares outstanding represents",
     "gbcr": "Pow2",
-    "key": 8,
+    "key": 9,
     "pdef": "AOK_N_COINS_TOTAL",
     "tdef": "AO_N_COINS"
 },{
     "desc": "Recording Tax in coins per byte (usually a very small number)",
     "gbcr": "Pow2",
-    "key": 9,
+    "key": 10,
     "pdef": "AOK_RECORDING_TAX",
     "tdef": "AO_N_COINS"
 }]

@@ -22,6 +22,7 @@
  */
 #include "genesisblock.h"
 #include "genesisForm.h"
+#include "keyvaluepair.h"
 #include <QFileDialog>
 
 GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw ) :
@@ -82,6 +83,14 @@ void  GenesisForm::on_importGenesisBlock_clicked()
 
 }
 
+#include "aocoins.h"
+#include "aotime.h"
+#include "bytearraylong.h"
+#include "index.h"
+#include "note.h"
+#include "sharesout.h"
+#include "shortnote.h"
+
 /**
  * @brief GenesisForm::on_publishGenesisBlock_clicked - saving to file at the moment
  *   when we have a recorder to talk to, can communicate it directly to the recorder.
@@ -91,7 +100,19 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
   if ( name.size() < 1 )
     return;
   GenesisBlock gb;
-// TODO: populate gb.properties.insert() with
-// values from the form.  May want to generate some
-// #define code from the json objects.
+  __int128_t tv;
+  gb.add( AOK_PROTOCOL       ,     Index( ui->protocol   ->currentIndex()         ) );
+  gb.add( AOK_PROTOCOL_REV   ,     Index( ui->protocolRev->value()                ) );
+  gb.add( AOK_TEXT_SYMBOL    , ShortNote( ui->symbol     ->text().toUtf8()        ) );
+  gb.add( AOK_DESCRIPTION    ,      Note( ui->description->toPlainText().toUtf8() ) );
+//  gb.add( AOK_ICON           , ByteArrayLong( ) ) // TODO: file reader
+//  gb.add( AOK_IMAGE          , ByteArrayLong( ) ) // TODO: file reader
+  tv = 1; tv = tv << ui->startingShares->value();
+  gb.add( AOK_STARTING_SHARES, SharesOut( tv ) );
+  tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
+  gb.add( AOK_MIN_BLOCK_INT  , AOTime( tv, AO_TIME_DIFF ) );
+  tv = 1; tv = tv << (ui->totalCoins->value() + 64);
+  gb.add( AOK_N_COINS_TOTAL  , AOCoins( tv ) );
+  tv = 1; tv = tv << (ui->recordingTax->value() + 64);
+  gb.add( AOK_RECORDING_TAX  , AOCoins( tv ) );
 }

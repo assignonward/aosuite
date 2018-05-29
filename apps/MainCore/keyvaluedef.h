@@ -24,6 +24,7 @@
 #define KEYVALUEDEF_H
 
 #include "dataitem.h"
+#include "kvkeys.h"
 #include <QJsonObject>
 
 /**

@@ -47,7 +47,7 @@ public:
     QByteArray  toDataItem( bool cf = false );
           bool  isValid() { return hash.isValid(); }
       DataItem  getProp( const KeyValueKey_t &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
-
+          void  add( const KeyValueKey_t& key, const DataItem &value ) { properties.insert( key, value ); }
 private:
            Hash  hash;        // hash signature (unique ID) of the genesis block
     PropertyMap  properties;  // Collection of properties that describe the chain

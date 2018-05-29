@@ -27,7 +27,8 @@
  * @param di - optional data item
  * @param p - optional parent object
  */
-KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEYPAIR, p )
+KeyValuePair::KeyValuePair( QByteArray di, QObject *p )
+  : DataVarLenLong( AO_KEYPAIR, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_KEYVALUEPAIR )
@@ -37,7 +38,8 @@ KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEY
        else
         { DataVarLenLong temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { KeyValueKey k;
+              QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -47,7 +49,9 @@ KeyValuePair::KeyValuePair( QByteArray di, QObject *p ) : DataVarLenLong( AO_KEY
                    else
                     { typeCode_t tc = typeCodeOf( items ); // read valid items from the byte array, in any order
                       if ( tc == AO_KEYVALUEKEY )
-                        key = items;
+                        { k = items;
+                          key = k.value();
+                        }
                        else
                         value = DataItem::fromDataItem( items );
                       items = items.mid( sz ); // move on to the next
@@ -78,7 +82,9 @@ void KeyValuePair::operator = ( const QByteArray &di )
 QByteArray  KeyValuePair::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( key > 0 )
-    dil.append( key.toDataItem(cf) );
+    { KeyValueKey k( key );
+      dil.append( k.toDataItem(cf) );
+    }
   if ( value.getTypeCode() != AO_UNDEFINED_DATAITEM )
     dil.append( value.toDataItem(cf) );
   // TODO: randomize order of dil

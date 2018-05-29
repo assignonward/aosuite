@@ -20,27 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYVALUEKEY_H
-#define KEYVALUEKEY_H
+// Assign Onward
+//
+// A quantity of coins, fixed point 64.64
 
-#include "data16.h"
-#include "kvkeys.h"
+#ifndef AOCOINS_H
+#define AOCOINS_H
 
-#define KeyValueKey_t qint16
+#include "data128.h"
 
-
-class KeyValueKey : public Data16
+class AOCoins : public Data128
 {
     Q_OBJECT
 public:
-      explicit  KeyValueKey( KeyValueKey_t val = 0, QObject *p = NULL )
-                  : Data16( AO_KEYVALUEKEY, val, p ) {}
-                KeyValueKey( const QByteArray &di, QObject *p = NULL )
-                  : Data16( di, p ) {}
-                KeyValueKey( const KeyValueKey &f, QObject *p = NULL )
-                  : Data16( AO_KEYVALUEKEY, f.v, p ? p : f.parent() ) {}
-          void  operator = ( const QByteArray    &di  ) { Data16::operator = ( di  ); }
-          void  operator = ( const KeyValueKey_t &val ) { Data16::operator = ( val ); }
+       explicit  AOCoins( __int128 c = 0, typeCode_t typ = AO_N_COINS, QObject *p = NULL )
+                   : Data128( typ, c, p ) {}
+                 AOCoins( const QByteArray &di, QObject *p = NULL )
+                   : Data128( di, p ) {}
+                 AOCoins( const AOCoins &c, QObject *p = NULL )
+                   : Data128( c.typeCode, c.get(), p ? p : c.parent() ) {}
+           void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
+
+static __int128  shiftUp64( __int128 m ) { return m << 64; }
+       __int128  get() const { return v; }
+           void  set( __int128 m ) { v = m; }
 };
 
-#endif // KEYVALUEKEY_H
+#endif // AOTIME_H
