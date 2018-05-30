@@ -38,17 +38,17 @@ public  :
                 KeyValuePair( const KeyValuePair &k, QObject *p = NULL )
                   : DataVarLenLong( AO_KEYVALUEPAIR, p ? p : k.parent() ),
                     key( k.key ), value( k.value ) {}
-                KeyValuePair( const KeyValueKey_t &k, const DataItem &v, QObject *p = NULL )
+                KeyValuePair( const KeyValueKey_t &k, const DataItem *v, QObject *p = NULL )
                   : DataVarLenLong( AO_KEYVALUEPAIR, p ),
-                    key( k ), value( v ) {}
+                    key( k ), value( DataItem::fromDataItem( v ) ) {}
           void  operator = ( const QByteArray &di );
     QByteArray  toDataItem( bool cf = false );
  KeyValueKey_t  getKey() const { return key; }
-      DataItem  getValue() const { return value; }
+      DataItem *getValue() const { return value; }
 
 private:
      KeyValueKey_t  key;
-          DataItem  value;
+          DataItem *value;
 };
 
 #endif // KEYVALUEPAIR_H

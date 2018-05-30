@@ -41,7 +41,7 @@ public:
           void  setHash( const Hash &h ) { hash = h; }
     QByteArray  toDataItem( bool cf = false );
           bool  isValid() { return hash.isValid(); }
-      DataItem  getProp( const KeyValueKey_t &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
+      DataItem *getProp( const KeyValueKey_t &key ) { return ( properties.contains( key ) ) ? properties.value(key) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
 
 private:
            Hash  hash;         // hash signature (unique ID) of the genesis block

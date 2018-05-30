@@ -28,7 +28,7 @@
 #include "keyvaluepair.h"
 #include <QMap>
 
-#define PropertyMap QMap<KeyValueKey_t,DataItem>
+#define PropertyMap QMap<KeyValueKey_t,DataItem *>
 
 /**
  * @brief The GenesisBlock class - the anchorpoint of a blockchain
@@ -46,8 +46,8 @@ public:
           void  setHash( const Hash &h ) { hash = h; }
     QByteArray  toDataItem( bool cf = false );
           bool  isValid() { return hash.isValid(); }
-      DataItem  getProp( const KeyValueKey_t &key ) const { return ( properties.contains( key ) ) ? properties.value(key) : DataItem(); }
-          void  add( const KeyValueKey_t& key, const DataItem &value ) { properties.insert( key, value ); }
+      DataItem *getProp( KeyValueKey_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
+          void  add( const KeyValueKey_t& key, DataItem *value ) { properties.insert( key, value ); }
 private:
            Hash  hash;        // hash signature (unique ID) of the genesis block
     PropertyMap  properties;  // Collection of properties that describe the chain

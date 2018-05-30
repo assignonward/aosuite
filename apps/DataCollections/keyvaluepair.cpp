@@ -85,8 +85,8 @@ QByteArray  KeyValuePair::toDataItem( bool cf )
     { KeyValueKey k( key );
       dil.append( k.toDataItem(cf) );
     }
-  if ( value.getTypeCode() != AO_UNDEFINED_DATAITEM )
-    dil.append( value.toDataItem(cf) );
+  if ( value->getTypeCode() != AO_UNDEFINED_DATAITEM )
+    dil.append( value->toDataItem(cf) );
   // TODO: randomize order of dil
   ba = dil.join();
   return DataVarLenLong::toDataItem(cf);

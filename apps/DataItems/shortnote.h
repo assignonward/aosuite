@@ -33,9 +33,9 @@ class ShortNote : public DataVarLenShort
     Q_OBJECT
 public:
     explicit  ShortNote( QByteArray ba = QByteArray(), QObject *p = NULL )
-                : DataVarLenShort( AO_NOTE, ba, p ) {}
+                : DataVarLenShort( AO_SHORT_NOTE, ba, p ) {}
               ShortNote( const ShortNote &n, QObject *p = NULL )
-                : DataVarLenShort( AO_NOTE, n.ba, p ? p : n.parent() ) {}
+                : DataVarLenShort( AO_SHORT_NOTE, n.ba, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
         void  operator = ( const QByteArray &di ) { DataVarLenShort::operator = ( di ); }
 };

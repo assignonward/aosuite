@@ -80,6 +80,7 @@ typeCode_t DataItem::typeCodeOf( const QByteArray &di )
   return reinterpret_cast<typeCode_t &>( tc );
 }
 
+#include "aocoins.h"
 #include "aotime.h"
 #include "bytearraylong.h"
 #include "bytearrayshort.h"
@@ -95,6 +96,7 @@ typeCode_t DataItem::typeCodeOf( const QByteArray &di )
 #include "shares.h"
 #include "sharesout.h"
 #include "sharestate.h"
+#include "shortnote.h"
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
 #include "assignment.h"
@@ -115,46 +117,92 @@ typeCode_t DataItem::typeCodeOf( const QByteArray &di )
  * @param di - serialized form of a data item
  * @return a de-serialized "live" DataItem of the type found in the byte array
  */
-DataItem DataItem::fromDataItem( const QByteArray &di )
+DataItem *DataItem::fromDataItem( const QByteArray &di )
 { switch ( typeCodeOf( di ) )
-    { case AO_TIME_OF_SIG:
+    { case AO_N_COINS:                 return new AOCoins( di );
+      case AO_TIME_OF_SIG:
       case AO_TIME_RECORDED:
       case AO_RECORDING_DEADLINE:
       case AO_TIME_DIFF:
-      case AO_UNDERWRITING_EXPIRATION: return AOTime( di );
-      case AO_LONGBYTEARRAY:           return ByteArrayLong( di );
-      case AO_SHORTBYTEARRAY:          return ByteArrayShort( di );
-      case AO_HASH256:                 return Hash256( di );
-      case AO_HASH512:                 return Hash512( di );
-      case AO_INDEX:                   return Index( di );
-      case AO_LISTSIZE:                return ListSize( di );
-      case AO_NETADDRESS:              return NetAddress( di );
-      case AO_NOTE:                    return Note( di );
+      case AO_UNDERWRITING_EXPIRATION: return new AOTime( di );
+      case AO_LONGBYTEARRAY:           return new ByteArrayLong( di );
+      case AO_SHORTBYTEARRAY:          return new ByteArrayShort( di );
+      case AO_HASH256:                 return new Hash256( di );
+      case AO_HASH512:                 return new Hash512( di );
+      case AO_INDEX:                   return new Index( di );
+      case AO_LISTSIZE:                return new ListSize( di );
+      case AO_NETADDRESS:              return new NetAddress( di );
+      case AO_NOTE:                    return new Note( di );
       case AO_ECDSA_PUB_KEY2:
-      case AO_ECDSA_PUB_KEY3:          return PublicKeyEcdsa( di );
-      case AO_RSA3072_PUB_KEY:         return PublicKeyRsa3072( di );
-      case AO_SALT256:                 return Salt256( di );
+      case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( di );
+      case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( di );
+      case AO_SALT256:                 return new Salt256( di );
       case AO_ASSIGNMENT_AMT:
       case AO_UNDERWRITING_AMT:
-      case AO_RECORDING_BID:           return Shares( di );
-      case AO_SHARES_OUT:              return SharesOut( di );
-      case AO_SHARE_STATE:             return ShareState( di );
-      case AO_ECDSA_SIG:               return SigEcdsa( di );
-      case AO_RSA3072_SIG:             return SigRsa3072( di );
-      case AO_ASSIGNMENT:              return Assignment( di );
-      case AO_ASSIGN_REF:              return AssignRef( di );
-      case AO_AUTHORIZATION:           return Authorization( di );
-      case AO_BLOCK_REF:               return BlockRef( di );
-      case AO_GENESIS_BLOCK:           return GenesisBlock( di );
-      case AO_GENESIS_REF:             return GenesisRef( di );
-      case AO_KEYPAIR:                 return KeyPair( di );
-      case AO_KEYVALUEPAIR:            return KeyValuePair( di );
-      case AO_PAGE_REF:                return PageRef( di );
+      case AO_RECORDING_BID:           return new Shares( di );
+      case AO_SHARES_OUT:              return new SharesOut( di );
+      case AO_SHARE_STATE:             return new ShareState( di );
+      case AO_SHORT_NOTE:              return new ShortNote( di );
+      case AO_ECDSA_SIG:               return new SigEcdsa( di );
+      case AO_RSA3072_SIG:             return new SigRsa3072( di );
+      case AO_ASSIGNMENT:              return new Assignment( di );
+      case AO_ASSIGN_REF:              return new AssignRef( di );
+      case AO_AUTHORIZATION:           return new Authorization( di );
+      case AO_BLOCK_REF:               return new BlockRef( di );
+      case AO_GENESIS_BLOCK:           return new GenesisBlock( di );
+      case AO_GENESIS_REF:             return new GenesisRef( di );
+      case AO_KEYPAIR:                 return new KeyPair( di );
+      case AO_KEYVALUEPAIR:            return new KeyValuePair( di );
+      case AO_PAGE_REF:                return new PageRef( di );
       case AO_PARTICIPANT_CF:
-      case AO_PARTICIPANT:             return Participant( di );
-      case AO_SHARES_REF:              return SharesRef( di );
-      case AO_SIG_WITH_TIME:           return Signature( di );
+      case AO_PARTICIPANT:             return new Participant( di );
+      case AO_SHARES_REF:              return new SharesRef( di );
+      case AO_SIG_WITH_TIME:           return new Signature( di );
     }
-  return DataItem();
+  return new DataItem();
 }
 
+DataItem *DataItem::fromDataItem( const DataItem *di )
+{ switch ( di->typeCode )
+    { case AO_N_COINS:                 return new AOCoins( *((AOCoins *)di) );
+      case AO_TIME_OF_SIG:
+      case AO_TIME_RECORDED:
+      case AO_RECORDING_DEADLINE:
+      case AO_TIME_DIFF:
+      case AO_UNDERWRITING_EXPIRATION: return new AOTime( *((AOTime *)di) );
+      case AO_LONGBYTEARRAY:           return new ByteArrayLong( *((ByteArrayLong *)di) );
+      case AO_SHORTBYTEARRAY:          return new ByteArrayShort( *((ByteArrayShort *)di) );
+      case AO_HASH256:                 return new Hash256( *((Hash256 *)di) );
+      case AO_HASH512:                 return new Hash512( *((Hash512 *)di) );
+      case AO_INDEX:                   return new Index( *((Index *)di) );
+      case AO_LISTSIZE:                return new ListSize( *((ListSize *)di) );
+      case AO_NETADDRESS:              return new NetAddress( *((NetAddress*)di) );
+      case AO_NOTE:                    return new Note( *((Note *)di) );
+      case AO_ECDSA_PUB_KEY2:
+      case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)di) );
+      case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( *((PublicKeyRsa3072 *)di) );
+      case AO_SALT256:                 return new Salt256( *((Salt256 *)di) );
+      case AO_ASSIGNMENT_AMT:
+      case AO_UNDERWRITING_AMT:
+      case AO_RECORDING_BID:           return new Shares( *((Shares *)di) );
+      case AO_SHARES_OUT:              return new SharesOut( *((SharesOut *)di) );
+      case AO_SHARE_STATE:             return new ShareState( *((ShareState *)di) );
+      case AO_SHORT_NOTE:              return new ShortNote( *((ShortNote *)di) );
+      case AO_ECDSA_SIG:               return new SigEcdsa( *((SigEcdsa *)di) );
+      case AO_RSA3072_SIG:             return new SigRsa3072( *((SigRsa3072 *)di) );
+      case AO_ASSIGNMENT:              return new Assignment( *((Assignment *)di) );
+      case AO_ASSIGN_REF:              return new AssignRef( *((AssignRef *)di) );
+      case AO_AUTHORIZATION:           return new Authorization( *((Authorization *)di) );
+      case AO_BLOCK_REF:               return new BlockRef( *((BlockRef *)di) );
+      case AO_GENESIS_BLOCK:           return new GenesisBlock( *((GenesisBlock *)di) );
+      case AO_GENESIS_REF:             return new GenesisRef( *((GenesisRef *)di) );
+      case AO_KEYPAIR:                 return new KeyPair( *((KeyPair *)di) );
+      case AO_KEYVALUEPAIR:            return new KeyValuePair( *((KeyValuePair *)di) );
+      case AO_PAGE_REF:                return new PageRef( *((PageRef *)di) );
+      case AO_PARTICIPANT_CF:
+      case AO_PARTICIPANT:             return new Participant( *((Participant *)di) );
+      case AO_SHARES_REF:              return new SharesRef( *((SharesRef *)di) );
+      case AO_SIG_WITH_TIME:           return new Signature( *((Signature *)di) );
+    }
+  return new DataItem();
+}

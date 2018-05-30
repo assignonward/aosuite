@@ -101,18 +101,24 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
     return;
   GenesisBlock gb;
   __int128_t tv;
-  gb.add( AOK_PROTOCOL       ,     Index( ui->protocol   ->currentIndex()         ) );
-  gb.add( AOK_PROTOCOL_REV   ,     Index( ui->protocolRev->value()                ) );
-  gb.add( AOK_TEXT_SYMBOL    , ShortNote( ui->symbol     ->text().toUtf8()        ) );
-  gb.add( AOK_DESCRIPTION    ,      Note( ui->description->toPlainText().toUtf8() ) );
+  gb.add( AOK_PROTOCOL       , new     Index( ui->protocol   ->currentIndex()         ) );
+  gb.add( AOK_PROTOCOL_REV   , new     Index( ui->protocolRev->value()                ) );
+  gb.add( AOK_TEXT_SYMBOL    , new ShortNote( ui->symbol     ->text().toUtf8()        ) );
+  gb.add( AOK_DESCRIPTION    , new      Note( ui->description->toPlainText().toUtf8() ) );
 //  gb.add( AOK_ICON           , ByteArrayLong( ) ) // TODO: file reader
 //  gb.add( AOK_IMAGE          , ByteArrayLong( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.add( AOK_STARTING_SHARES, SharesOut( tv ) );
+  gb.add( AOK_STARTING_SHARES, new SharesOut( tv ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
-  gb.add( AOK_MIN_BLOCK_INT  , AOTime( tv, AO_TIME_DIFF ) );
+  gb.add( AOK_MIN_BLOCK_INT  , new AOTime( tv, AO_TIME_DIFF ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb.add( AOK_N_COINS_TOTAL  , AOCoins( tv ) );
+  gb.add( AOK_N_COINS_TOTAL  , new AOCoins( tv ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb.add( AOK_RECORDING_TAX  , AOCoins( tv ) );
+  gb.add( AOK_RECORDING_TAX  , new AOCoins( tv ) );
+  QFile file( name );
+  if ( !file.open( QIODevice::WriteOnly ) )
+    { qDebug() << gb.toDataItem();
+      return;
+    }
+  file.write( gb.toDataItem() );
 }
