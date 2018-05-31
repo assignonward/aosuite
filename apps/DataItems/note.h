@@ -33,9 +33,9 @@ class Note : public DataVarLength
     Q_OBJECT
 public:
     explicit  Note( QByteArray ba = QByteArray(), QObject *p = NULL )
-                : DataVarLength( AO_NOTE, ba, p ) {}
+                : DataVarLength( ba, AO_NOTE, p ) {}
               Note( const Note &n, QObject *p = NULL )
-                : DataVarLength( AO_NOTE, n.ba, p ? p : n.parent() ) {}
+                : DataVarLength( n.ba, AO_NOTE, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
         void  operator = ( const QByteArray &di ) { DataVarLength::operator = ( di ); }
 };

@@ -63,7 +63,7 @@ void DataVarLength::operator = ( const QByteArray &di )
  */
 QByteArray DataVarLength::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
-  di.append( typeCode );
+  di.append( codeToBytes( typeCode ) );
   di.append( codeToBytes( ba.size() ) );
   di.append( ba );
   return di;

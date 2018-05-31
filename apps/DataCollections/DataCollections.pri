@@ -30,7 +30,6 @@ SOURCES     += $${PWD}/assignment.cpp    \
                $${PWD}/genesisblock.cpp  \
                $${PWD}/genesisref.cpp    \
                $${PWD}/keypair.cpp       \
-               $${PWD}/keyvaluepair.cpp  \
                $${PWD}/pageref.cpp       \
                $${PWD}/participant.cpp   \
                $${PWD}/sharesref.cpp     \
@@ -43,7 +42,6 @@ HEADERS     += $${PWD}/assignment.h    \
                $${PWD}/genesisblock.h  \
                $${PWD}/genesisref.h    \
                $${PWD}/keypair.h       \
-               $${PWD}/keyvaluepair.h  \
                $${PWD}/pageref.h       \
                $${PWD}/participant.h   \
                $${PWD}/sharesref.h     \

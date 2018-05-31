@@ -47,7 +47,7 @@ public:
                  AOTime( const QByteArray &di, QObject *p = NULL )
                    : Data128( di, p ) {}
                  AOTime( const AOTime &tm, QObject *p = NULL )
-                   : Data128( tm.typeCode, tm.get(), p ? p : tm.parent() ) {}
+                   : Data128( tm.get(), tm.typeCode, p ? p : tm.parent() ) {}
            void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
 
 static __int128  now();

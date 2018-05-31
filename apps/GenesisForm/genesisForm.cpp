@@ -22,7 +22,6 @@
  */
 #include "genesisblock.h"
 #include "genesisForm.h"
-#include "keyvaluepair.h"
 #include <QFileDialog>
 
 GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw ) :
@@ -86,8 +85,7 @@ void  GenesisForm::on_importGenesisBlock_clicked()
 #include "aocoins.h"
 #include "aotime.h"
 #include "databytearray.h"
-#include "index.h"
-#include "note.h"
+#include "data16.h"
 #include "shares.h"
 
 /**
@@ -100,20 +98,20 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
     return;
   GenesisBlock gb;
   __int128_t tv;
-  gb.add( AOK_PROTOCOL       , new Index( ui->protocol   ->currentIndex()        , &gb ) );
-  gb.add( AOK_PROTOCOL_REV   , new Index( ui->protocolRev->value()               , &gb ) );
-  gb.add( AOK_TEXT_SYMBOL    , new  Note( ui->symbol     ->text().toUtf8()       , &gb ) );
-  gb.add( AOK_DESCRIPTION    , new  Note( ui->description->toPlainText().toUtf8(), &gb ) );
+  gb.add( AO_PROTOCOL    , new Data16       ( ui->protocol   ->currentIndex()        , AO_PROTOCOL,     &gb ) );
+  gb.add( AO_PROTOCOL_REV, new Data16       ( ui->protocolRev->value()               , AO_PROTOCOL_REV, &gb ) );
+  gb.add( AO_TEXT_SYMBOL , new DataVarLength( ui->symbol     ->text().toUtf8()       , AO_TEXT_SYMBOL,  &gb ) );
+  gb.add( AO_DESCRIPTION , new DataVarLength( ui->description->toPlainText().toUtf8(), AO_DESCRIPTION,  &gb ) );
 //  gb.add( AOK_ICON           , DataByteArray( ) ) // TODO: file reader
 //  gb.add( AOK_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.add( AOK_STARTING_SHARES, new Shares( tv, AO_SHARES_OUT, &gb ) );
+  gb.add( AO_STARTING_SHARES, new Shares( tv, AO_SHARES_OUT, &gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
-  gb.add( AOK_MIN_BLOCK_INT  , new AOTime( tv, AO_TIME_DIFF, &gb ) );
+  gb.add( AO_MIN_BLOCK_INT  , new AOTime( tv, AO_TIME_DIFF , &gb ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb.add( AOK_N_COINS_TOTAL  , new AOCoins( tv, &gb ) );
+  gb.add( AO_N_COINS_TOTAL  , new AOCoins( tv, AO_N_COINS_TOTAL, &gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb.add( AOK_RECORDING_TAX  , new AOCoins( tv, &gb ) );
+  gb.add( AO_RECORDING_TAX  , new AOCoins( tv, AO_RECORDING_TAX, &gb ) );
   QFile file( name );
   if ( !file.open( QIODevice::WriteOnly ) )
     { qDebug() << gb.toDataItem();

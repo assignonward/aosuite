@@ -39,7 +39,7 @@ class AssignRef : public DataVarLength
 public:
     explicit  AssignRef( const QByteArray &di = QByteArray(), QObject *p = NULL );
               AssignRef( const AssignRef &r, QObject *p = NULL )
-                : DataVarLength( r.typeCode, r.ba, p ? p : r.parent() ),
+                : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ),
                   page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

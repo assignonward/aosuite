@@ -29,12 +29,12 @@ class Index : public Data16
 {
     Q_OBJECT
 public:
-    explicit  Index( qint16 val = 0, QObject *p = NULL )
-                : Data16( AO_INDEX, val, p ) {}
+    explicit  Index( qint16 val = 0, typeCode_t typ = AO_INDEX, QObject *p = NULL )
+                : Data16( typ, val, p ) {}
               Index( const QByteArray &di, QObject *p = NULL )
                 : Data16( di, p ) {}
               Index( const Index &f, QObject *p = NULL )
-                : Data16( AO_INDEX, f.v, p ? p : f.parent() ) {}
+                : Data16( f.typeCode, f.v, p ? p : f.parent() ) {}
         void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
         void  operator = ( const qint16    &val ) { Data16::operator = ( val ); }
 };

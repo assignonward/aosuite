@@ -32,7 +32,7 @@ public:
     explicit  PrivateKeyRsa3072( QObject *p = NULL )
                 : DataVarLength( AO_RSA3072_PRI_KEY, p ) {}
               PrivateKeyRsa3072( const PrivateKeyRsa3072 &k, QObject *p = NULL )
-                : DataVarLength( AO_RSA3072_PRI_KEY, k.ba, p ? p : k.parent() ) {}
+                : DataVarLength( k.ba, AO_RSA3072_PRI_KEY, p ? p : k.parent() ) {}
               PrivateKeyRsa3072( const QByteArray &di, QObject *p = NULL )
                 : DataVarLength( di, p ) {}
         void  clear() { ba.clear(); }

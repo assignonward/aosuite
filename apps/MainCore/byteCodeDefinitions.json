@@ -106,12 +106,6 @@
     "size": 2,
     "type": "Index"
 },{
-    "desc": "16 bit signed integer indicates the type of data contained in a value of a key-value pair",
-    "code": 66,
-    "pdef": "AO_KEYVALUEKEY",
-    "size": 2,
-    "type": "KeyValueKey"
-},{
     "desc": "an RSA3072 public key",
     "code": 112,
     "pdef": "AO_RSA3072_PUB_KEY",
@@ -213,12 +207,6 @@
     "pdef": "AO_KEYPAIR",
     "size": -1,
     "type": "KeyPair"
-},{
-    "desc": "A 2 byte type identifier followed by a DataItem",
-    "code": 180,
-    "pdef": "AO_KEYVALUEPAIR",
-    "size": -1,
-    "type": "KeyValuePair"
 },{
     "desc": "Arbitrary data, potentially lots of it",
     "code": 181,

@@ -106,7 +106,18 @@
 #define AO_CHAIN_BLOCK         0xBC  // an actual block in the chain
 #define AO_ECDSA_SIG           0xBE  // just the ECDSA signature itself
 
+#define AO_PROTOCOL         301 // Basic level of protocol, identifies functionality
+#define AO_PROTOCOL_REV     302 // Revision of the protocol, may indicate additional types supported
+#define AO_TEXT_SYMBOL      303 // Short unique symbol that uniquely identifies the chain e.g. TⒶ1a
+#define AO_DESCRIPTION      304 // UTF-8 Text description of the chain
+#define AO_ICON             305 // Image suitable for icon use to represent the chain
+#define AO_IMAGE            306 // Large format image to represent the chain
+#define AO_STARTING_SHARES  307 // Starting number of shares
+#define AO_MIN_BLOCK_INT    308 // Minimuim block interval time
+#define AO_N_COINS_TOTAL    309 // Number of coins that the sum of all shares outstanding represents
+#define AO_RECORDING_TAX    310 // Recording Tax in coins per byte (usually a very small number)
+
 // Flag that somebody forgot to initialize the type
-#define AO_UNDEFINED_DATAITEM  0xFF
+#define AO_UNDEFINED_DATAITEM  0x7F
 
 #endif // BYTECODES_H

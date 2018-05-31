@@ -25,10 +25,9 @@
 
 #include "datavarlength.h"
 #include "hash.h"
-#include "keyvaluepair.h"
 #include <QMap>
 
-#define PropertyMap QMap<KeyValueKey_t,DataItem *>
+#define PropertyMap QMap<typeCode_t,DataItem *>
 
 /**
  * @brief The GenesisBlock class - the anchorpoint of a blockchain
@@ -39,15 +38,15 @@ class GenesisBlock : public DataVarLength
 public:
       explicit  GenesisBlock( QByteArray di = QByteArray(), QObject *p = NULL );
                 GenesisBlock( const GenesisBlock &r, QObject *p = NULL )
-                  : DataVarLength( AO_GENESIS_BLOCK, QByteArray(), p ? p : r.parent() ),
+                  : DataVarLength( QByteArray(), AO_GENESIS_BLOCK, p ? p : r.parent() ),
                     hash( r.hash ), properties( r.properties ) {}
           void  operator = ( const QByteArray &di );
           Hash  getHash()    const { return  hash; }
           void  setHash( const Hash &h ) { hash = h; }
     QByteArray  toDataItem( bool cf = false );
           bool  isValid() { return hash.isValid(); }
-      DataItem *getProp( KeyValueKey_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
-          void  add( const KeyValueKey_t& key, DataItem *value ) { properties.insert( key, value ); }
+      DataItem *getProp( typeCode_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
+          void  add( const typeCode_t& key, DataItem *value ) { properties.insert( key, value ); }
 private:
            Hash  hash;        // hash signature (unique ID) of the genesis block
     PropertyMap  properties;  // Collection of properties that describe the chain

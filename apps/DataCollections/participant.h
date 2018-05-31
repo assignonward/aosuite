@@ -40,7 +40,7 @@ class Participant : public DataVarLength
 public:
     explicit  Participant( QByteArray di = QByteArray(), QObject *p = NULL );
               Participant( const Participant &r, QObject *p = NULL )
-                : DataVarLength( AO_PARTICIPANT, QByteArray(), p ? p : r.parent() ),
+                : DataVarLength( QByteArray(), AO_PARTICIPANT, p ? p : r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

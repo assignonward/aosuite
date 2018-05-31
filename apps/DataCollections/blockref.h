@@ -39,10 +39,10 @@ class BlockRef : public DataVarLength
 public:
     explicit  BlockRef( QByteArray di = QByteArray(), QObject *p = NULL );
               BlockRef( const BlockRef &r, QObject *p = NULL )
-                : DataVarLength( AO_BLOCK_REF, QByteArray(), p ? p : r.parent() ),
+                : DataVarLength( QByteArray(), AO_BLOCK_REF, p ? p : r.parent() ),
                   propTime( r.propTime ), shOut( r.shOut ), blkHash( r.blkHash ), genesis( r.genesis ) {}
               BlockRef( const Hash &h, const AOTime t, const Shares &s, const GenesisRef &r, QObject *p = NULL )
-                : DataVarLength( AO_BLOCK_REF, QByteArray(), p ),
+                : DataVarLength( QByteArray(), AO_BLOCK_REF, p ),
                   propTime( t ), shOut( s ), blkHash( h ), genesis( r ) {}
         void  operator = ( const QByteArray &di );
       AOTime  getTime()    const { return propTime; }

@@ -41,18 +41,14 @@ INCLUDEPATH += $${PWD}
 
 SOURCES     += $${PWD}/main.cpp          \
                $${PWD}/MainWinCommon.cpp \
-    $$PWD/keyvaluedef.cpp \
     $$PWD/bytecodedef.cpp
 
 HEADERS     += $${PWD}/bytecodes.h     \
                $${PWD}/MainWinCommon.h \
-    $$PWD/keyvaluedef.h \
-    $$PWD/bytecodedef.h \
-    $$PWD/kvkeys.h
+    $$PWD/bytecodedef.h
 
 RESOURCES += \
     $$PWD/maincoreresources.qrc
 
 DISTFILES += \
-    $$PWD/keyValueDefinitions.json \
     $$PWD/byteCodeDefinitions.json

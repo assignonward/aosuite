@@ -32,7 +32,7 @@ public:
     explicit  SigEcdsa( QObject *p = NULL )
                 : DataVarLength( AO_ECDSA_SIG, p ) {}
               SigEcdsa( const SigEcdsa &s, QObject *p = NULL )
-                : DataVarLength( AO_ECDSA_SIG, s.ba, p ? p : s.parent() ) {}
+                : DataVarLength( s.ba, AO_ECDSA_SIG, p ? p : s.parent() ) {}
               SigEcdsa( const QByteArray &di, QObject *p = NULL )
                 : DataVarLength( di, p ) {}
   QByteArray  get() const { return ba; }

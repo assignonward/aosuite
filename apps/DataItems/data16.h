@@ -29,7 +29,7 @@ class Data16 : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  Data16( typeCode_t tc = AO_UNDEFINED_DATAITEM, qint16 d = 0, QObject *p = NULL )
+    explicit  Data16( qint16 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
                 : DataItem( tc, p ), v( d ) {}
               Data16( const Data16 &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}

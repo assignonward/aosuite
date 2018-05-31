@@ -30,9 +30,9 @@ class DataByteArray : public DataVarLength
     Q_OBJECT
 public:
     explicit  DataByteArray( QByteArray ba = QByteArray(), QObject *p = NULL )
-                : DataVarLength( AO_DATABYTEARRAY, ba, p ) {}
+                : DataVarLength( ba, AO_DATABYTEARRAY, p ) {}
               DataByteArray( const DataByteArray &n, QObject *p = NULL )
-                : DataVarLength( AO_DATABYTEARRAY, n.ba, p ? p : n.parent() ) {}
+                : DataVarLength( n.ba, AO_DATABYTEARRAY, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
         void  operator = ( const QByteArray &di ) { DataVarLength::operator = ( di ); }
 };

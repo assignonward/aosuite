@@ -34,14 +34,14 @@ class GenesisRef : public DataVarLength
 public:
       explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
                 GenesisRef( const GenesisRef &r, QObject *p = NULL )
-                  : DataVarLength( AO_GENESIS_REF, QByteArray(), p ? p : r.parent() ),
+                  : DataVarLength( QByteArray(), AO_GENESIS_REF, p ? p : r.parent() ),
                     hash( r.hash ) {}
           void  operator = ( const QByteArray &di );
           Hash  getHash()    const { return  hash; }
           void  setHash( const Hash &h ) { hash = h; }
     QByteArray  toDataItem( bool cf = false );
           bool  isValid() { return hash.isValid(); }
-      DataItem *getProp( const KeyValueKey_t &key ) { return ( properties.contains( key ) ) ? properties.value(key) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
+      DataItem *getProp( const typeCode_t &key ) { return ( properties.contains( key ) ) ? properties.value(key) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
 
 private:
            Hash  hash;         // hash signature (unique ID) of the genesis block

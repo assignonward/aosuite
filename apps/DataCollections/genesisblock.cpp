@@ -21,7 +21,6 @@
  * SOFTWARE.
  */
 #include "genesisblock.h"
-#include "keyvaluepair.h"
 
 /**
  * @brief GenesisBlock::GenesisBlock - constructor
@@ -39,8 +38,7 @@ GenesisBlock::GenesisBlock( QByteArray di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { KeyValuePair kvp;
-              QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -54,13 +52,8 @@ GenesisBlock::GenesisBlock( QByteArray di, QObject *p )
                             hash = items;
                             break;
 
-                          case AO_KEYVALUEPAIR:
-                            kvp = items;
-                            properties.insert( kvp.getKey(), kvp.getValue() );
-                            break;
-
                           default:
-                            // TODO: log anomaly - unrecognized data type
+                            properties.insert( typeCodeOf( items ), DataItem::fromDataItem( items, this ) );
                             break;
                         }
                       items = items.mid( sz ); // move on to the next
@@ -92,11 +85,9 @@ QByteArray  GenesisBlock::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( hash.isValid() )
     dil.append( hash.toDataItem(cf) );
-  QList<KeyValueKey_t>keys = properties.keys();
-  foreach ( KeyValueKey_t key, keys )
-    { KeyValuePair kvp( key, properties.value(key) );
-      dil.append( kvp.toDataItem(cf) );
-    }
+  QList<typeCode_t>keys = properties.keys();
+  foreach ( typeCode_t key, keys )
+    dil.append( properties.value(key)->toDataItem(cf) );
   // TODO: randomize order of dil
   ba = dil.join();
   return DataVarLength::toDataItem(cf);

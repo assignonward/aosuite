@@ -38,9 +38,9 @@ class PageRef : public DataVarLength
     Q_OBJECT
 public:
     explicit  PageRef( QObject *p = NULL )
-                : DataVarLength( AO_PAGE_REF, QByteArray(), p ) {}
+                : DataVarLength( QByteArray(), AO_PAGE_REF, p ) {}
               PageRef( const PageRef &r, QObject *p = NULL )
-                : DataVarLength( r.typeCode, r.ba, p ? p : r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
+                : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
               PageRef( const QByteArray &di, QObject *p = NULL );
         void  operator = ( const QByteArray &di );
       AOTime  publicationTime() { return block.getTime(); }

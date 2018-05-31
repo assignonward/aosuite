@@ -101,7 +101,6 @@ typeCode_t DataItem::typeCodeOf( const QByteArray &di )
 #include "genesisblock.h"
 #include "genesisref.h"
 #include "keypair.h"
-#include "keyvaluepair.h"
 #include "pageref.h"
 #include "participant.h"
 #include "sharesref.h"
@@ -144,7 +143,6 @@ DataItem *DataItem::fromDataItem( const QByteArray &di, QObject *p )
       case AO_GENESIS_BLOCK:           return new GenesisBlock( di, p );
       case AO_GENESIS_REF:             return new GenesisRef( di, p );
       case AO_KEYPAIR:                 return new KeyPair( di, p );
-      case AO_KEYVALUEPAIR:            return new KeyValuePair( di, p );
       case AO_PAGE_REF:                return new PageRef( di, p );
       case AO_PARTICIPANT_CF:
       case AO_PARTICIPANT:             return new Participant( di, p );
@@ -186,7 +184,6 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
       case AO_GENESIS_BLOCK:           return new GenesisBlock( *((GenesisBlock *)ditm), p );
       case AO_GENESIS_REF:             return new GenesisRef( *((GenesisRef *)ditm), p );
       case AO_KEYPAIR:                 return new KeyPair( *((KeyPair *)ditm) );
-      case AO_KEYVALUEPAIR:            return new KeyValuePair( *((KeyValuePair *)ditm), p );
       case AO_PAGE_REF:                return new PageRef( *((PageRef *)ditm), p );
       case AO_PARTICIPANT_CF:
       case AO_PARTICIPANT:             return new Participant( *((Participant *)ditm), p );

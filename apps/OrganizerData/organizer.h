@@ -33,7 +33,7 @@ class Organizer : public DataVarLength
 public:
     explicit  Organizer( QByteArray di = QByteArray(), QObject *p = NULL );
               Organizer( const Organizer &o )
-                : DataVarLength( AO_ORGANIZER, QByteArray(), o.parent() ),
+                : DataVarLength( QByteArray(), AO_ORGANIZER, o.parent() ),
                   note( o.note ), pubKey( o.pubKey ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

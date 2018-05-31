@@ -32,7 +32,7 @@ public:
     explicit  PrivateKeyEcdsa( QObject *p = NULL )
                 : DataVarLength( AO_ECDSA_PRI_KEY, p ) {}
               PrivateKeyEcdsa( const PrivateKeyEcdsa &k, QObject *p = NULL )
-                : DataVarLength( AO_ECDSA_PRI_KEY, k.ba, p ? p : k.parent() ) {}
+                : DataVarLength( k.ba, AO_ECDSA_PRI_KEY, p ? p : k.parent() ) {}
               PrivateKeyEcdsa( const QByteArray &di, QObject *p = NULL )
                 : DataVarLength( di, p ) {}
         void  clear() { ba.clear(); }

@@ -23,8 +23,8 @@
 #include "aotime.h"
 #include <QDateTime>
 
-AOTime::AOTime( __int128 tm, typeCode_t typ, QObject *parent)
-  : Data128( typ, tm, parent )
+AOTime::AOTime( __int128 tm, typeCode_t typ, QObject *p )
+  : Data128( tm, typ, p )
 { if ( tm == 0 )
     set( now() );
 }

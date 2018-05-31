@@ -34,7 +34,7 @@ class Recorder : public DataVarLength
 public:
     explicit  Recorder( QByteArray di = QByteArray(), QObject *p = NULL );
               Recorder( const Recorder &r )
-                : DataVarLength( AO_RECORDER, QByteArray(), r.parent() ),
+                : DataVarLength( QByteArray(), AO_RECORDER, r.parent() ),
                   netAddress( r.netAddress ), note( r.note ), pubKey( r.pubKey ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

@@ -31,7 +31,7 @@ class DataVarLength : public DataItem
 public:
           explicit  DataVarLength( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
                       : DataItem( tc, p ) {}
-                    DataVarLength( typeCode_t tc, QByteArray iba, QObject *p = NULL )
+                    DataVarLength( QByteArray iba, typeCode_t tc, QObject *p = NULL )
                       : DataItem( tc, p ), ba( iba ) {}
                     DataVarLength( const DataVarLength &d, QObject *p = NULL )
                       : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ) {}
