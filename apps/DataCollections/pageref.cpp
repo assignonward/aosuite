@@ -23,7 +23,7 @@
 #include "pageref.h"
 
 PageRef::PageRef( const QByteArray &di, QObject *p )
-  : DataVarLength( AO_PAGE_REF, p )
+  : DataVarLength( AO_PAGE_REF, p ), sequenceNumber( -1 )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_PAGE_REF )
@@ -83,7 +83,9 @@ QByteArray  PageRef::toDataItem( bool cf )
 { QByteArrayList dil;
   dil.append(            block.toDataItem(cf) );
   if ( sequenceNumber >= 0 )
-    dil.append( sequenceNumber.toDataItem(cf) );
+    { sequenceNumber.setTypeCode( AO_INDEX );
+      dil.append( sequenceNumber.toDataItem(cf) );
+    }
   if ( hash.isValid() )
     dil.append(           hash.toDataItem(cf) );
   // TODO: randomize order of dil

@@ -25,9 +25,9 @@
 
 #include "aotime.h"
 #include "blockref.h"
+#include "data16.h"
 #include "datavarlength.h"
 #include "hash.h"
-#include "index.h"
 
 /**
  * @brief The PageRef class - when the page is the chain-maker's signature page on
@@ -38,7 +38,7 @@ class PageRef : public DataVarLength
     Q_OBJECT
 public:
     explicit  PageRef( QObject *p = NULL )
-                : DataVarLength( QByteArray(), AO_PAGE_REF, p ) {}
+                : DataVarLength( QByteArray(), AO_PAGE_REF, p ), sequenceNumber( -1 ) {}
               PageRef( const PageRef &r, QObject *p = NULL )
                 : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
               PageRef( const QByteArray &di, QObject *p = NULL );
@@ -49,7 +49,7 @@ public:
 
 private:
     BlockRef block;           // block this page is recorded in
-       Index sequenceNumber;  // page's sequence number in the block
+      Data16 sequenceNumber;  // page's sequence number in the block
         Hash hash;            // Hash of page - redundant check
 };
 

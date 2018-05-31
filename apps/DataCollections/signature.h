@@ -24,8 +24,8 @@
 #define SIGNATURE_H
 
 #include "aotime.h"
+#include "data16.h"
 #include "datavarlength.h"
-#include "index.h"
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
 
@@ -60,8 +60,8 @@ public:
       AOTime  getTime() const { return sigTime; }
         void  setTime( const AOTime &t ) { sigTime = t; }
   typeCode_t  getType() const { return sigType; }
-       Index  getIndex() const { return index; }
-        void  setIndex( const Index &i ) { index = i; }
+      Data16  getIndex() const { return index; }
+        void  setIndex( const Data16 &i ) { index = i; }
 
 private:
   // Every signature has a time of signing
@@ -71,7 +71,7 @@ private:
     SigEcdsa  sigEcdsa;
   SigRsa3072  sigRsa3072;
   // Index, used in Authorizations to match to index numbers in the participant list
-       Index  index;
+      Data16  index;
 };
 
 #endif // SIGNATURE_H

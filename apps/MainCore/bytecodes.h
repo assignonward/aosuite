@@ -23,101 +23,61 @@
 #ifndef BYTECODES_H
 #define BYTECODES_H
 
-#define AO_CODE_MASK           0xF8
-#define AO_SIZE_MASK           0xF0
-#define AO_VARSIZE_MASK        0xE0
-
-// The atomic chunks:
-// First bit, when 0, means fixed length, single byte checksum
-// First 4 bits, when 0000 means: this is a 34 byte chunk, one for the code, 32 for the data (hash), one for the checkbyte
-#define AO_SIZE_34BYTES        0x00
-#define AO_HASH256             0x00
-#define AO_SALT256             0x01
-#define AO_ECDSA_PUB_KEY2      0x02  // Two types of public keys, only one used at a time
-#define AO_ECDSA_PUB_KEY3      0x03
-#define AO_HASH224SALT32       0x06
-#define AO_PUB_RSA3072_ID      0x07  // Hash256 of the key itself, reducing size to 1/12th
-
-// First 4 bits, when 0001 means: this is a 66 byte chunk, one for the code, 32 for the data (hash), one for the checkbyte
-#define AO_SIZE_66BYTES        0x10
-#define AO_HASH512             0x10
-
-// First 4 bits, when 0010 means: this is a 17 byte chunk, one for the code, 16 for the data
-#define AO_SIZE_17BYTES        0x20
-#define AO_TIME_CODE           0x20 // Times are in seconds << 64
-#define AO_TIME_OF_SIG             ( 0x00 | AO_TIME_CODE )
-#define AO_TIME_RECORDED           ( 0x01 | AO_TIME_CODE )
-#define AO_RECORDING_DEADLINE      ( 0x02 | AO_TIME_CODE )
-#define AO_TIME_DIFF               ( 0x03 | AO_TIME_CODE )
-#define AO_UNDERWRITING_EXPIRATION ( 0x04 | AO_TIME_CODE )
-
-#define AO_SHARES_CODE         0x28
-#define AO_ASSIGNMENT_AMT    ( 0x00 | AO_SHARES_CODE )
-#define AO_UNDERWRITING_AMT  ( 0x01 | AO_SHARES_CODE )
-#define AO_RECORDING_BID     ( 0x02 | AO_SHARES_CODE )
-#define AO_SHARES_OUT        ( 0x03 | AO_SHARES_CODE )
-
-#define AO_COINS_CODE          0x2C // Like times, COINS_CODE quantities are << 64, but can also be handled with the Data132Float to adjust their precision and avoid overflows
-#define AO_N_COINS           ( 0x00 | AO_COINS_CODE )
-
-// First 4 bits, when 0011 means: this is a 2 byte chunk, one for the code, 1 for the data (generally an 8 bit int)
-#define AO_SIZE_2BYTES         0x30
-#define AO_SHARE_STATE         0x30
-
-// First 4 bits, when 0100 means: this is a 3 byte chunk, one for the code, 2 for the data (generally a 16 bit int)
-#define AO_SIZE_3BYTES         0x40
-#define AO_LISTSIZE            0x40
-#define AO_INDEX               0x41
-#define AO_KEYVALUEKEY         0x42
-
-// First 4 bits, when 0110 means: this is a 19 byte chunk, one for the code, 17 for the data, one for the checkbyte (generally a 128 bit int with 8 bit exponent)
-#define AO_SIZE_19BYTES        0x60
-
-// First 4 bits, when 0111 means: this is a 388 byte chunk, one for the code, 384 for the data, three for the checkbytes (generally an RSA3072 key)
-#define AO_SIZE_388BYTES       0x70
-#define AO_RSA3072_PUB_KEY     0x70
-#define AO_RSA3072_SIG         0x71  // Just the signature
-
-// Variable length items
-
-// First 3 bits, when 101 means: this is a variable length byte array, variable data size specified in a chain of 7 bit "digits", ending when the 8th bit is 0
-#define AO_SIZE_VARLEN         0xA0
-#define AO_ASSIGNMENT          0xA0  // wrapper around the assignment data fields, which can come in any order
-#define AO_PARTICIPANT         0xA1  // wrapper around the participant data fields, which can come in any order
-#define AO_PARTICIPANT_CF      0xA2  // wrapper around the compact form participant data fields, which can come in any order
-#define AO_AUTHORIZATION       0xA6  // an assignment, fully countersigned by all parties to the assignment
-#define AO_ASSIGN_REF          0xA7  // reference to shares assigned away on a page
-#define AO_NOTE                0xAA  // optional field in the participant item
-#define AO_BLOCK_REF           0xAB  // reference to a block
-#define AO_PAGE_REF            0xAC  // reference to a page in a block
-#define AO_GENESIS_REF         0xAD  // reference to a genesis block (chain)
-#define AO_SIG_WITH_TIME       0xAE  // contains time of signature, and the signature itself
-#define AO_SHARES_REF          0xAF  // reference to shares on a page
-#define AO_ASSETS              0xB0  // collection of assets - the asset organizer database
-#define AO_ECDSA_PRI_KEY       0xB1  // private key
-#define AO_RSA3072_PRI_KEY     0xB2  // private key
-#define AO_KEYPAIR             0xB3  // matching public/private key pair
-#define AO_KEYVALUEPAIR        0xB4  // arbitrary key and value
-#define AO_DATABYTEARRAY       0xB5  // arbitrary data
-#define AO_ORGANIZER           0xB8  // collection of data to describe an Organizer entity
-#define AO_RECORDER            0xB9  // collection of data to describe a Recorder entity
-#define AO_NETADDRESS          0xBA  // string with an IP4, IP6 or FQDN address, optionally with :port number
-#define AO_GENESIS_BLOCK       0xBB  // an actual genesis block
-#define AO_CHAIN_BLOCK         0xBC  // an actual block in the chain
-#define AO_ECDSA_SIG           0xBE  // just the ECDSA signature itself
-
-#define AO_PROTOCOL         301 // Basic level of protocol, identifies functionality
-#define AO_PROTOCOL_REV     302 // Revision of the protocol, may indicate additional types supported
-#define AO_TEXT_SYMBOL      303 // Short unique symbol that uniquely identifies the chain e.g. TⒶ1a
-#define AO_DESCRIPTION      304 // UTF-8 Text description of the chain
-#define AO_ICON             305 // Image suitable for icon use to represent the chain
-#define AO_IMAGE            306 // Large format image to represent the chain
-#define AO_STARTING_SHARES  307 // Starting number of shares
-#define AO_MIN_BLOCK_INT    308 // Minimuim block interval time
-#define AO_N_COINS_TOTAL    309 // Number of coins that the sum of all shares outstanding represents
-#define AO_RECORDING_TAX    310 // Recording Tax in coins per byte (usually a very small number)
-
-// Flag that somebody forgot to initialize the type
-#define AO_UNDEFINED_DATAITEM  0x7F
+#define AO_ECDSA_PUB_KEY2        0x02 // PublicKeyEcdsa (02)32: ECDSA Public Key, type 2 compressed
+#define AO_ECDSA_PUB_KEY3        0x03 // PublicKeyEcdsa (03)32: ECDSA Public Key, type 3 compressed
+#define AO_HASH256               0x06 // Hash256 (06)32: SHA2-256 hash of some data
+#define AO_SALT256               0x09 // Salt256 (09)32: 256 random bits
+#define AO_PUB_RSA3072_ID        0x0c // Hash256 (0c)32: Hash256 of a PublicKeyRsa3072
+#define AO_HASH224SALT32         0x0e // Hash224Salt32 (0e)32: Hash224 of some data including a 32 bit salt
+#define AO_HASH512               0x0f // Hash512 (0f)64: SHA3-512 hash of some data
+#define AO_TIME_OF_SIG           0x12 // AOTime (12)16: UTC time (secs since epoch << 64) when a signature was made
+#define AO_TIME_RECORDED         0x15 // AOTime (15)16: UTC time (secs since epoch << 64) when a record was made
+#define AO_RECORDING_DEADLINE    0x18 // AOTime (18)16: UTC time (secs since epoch << 64) when a record is contracted to be recorded
+#define AO_TIME_DIFF             0x1b // AOTime (1b)16: UTC time (secs since epoch << 64) defining a time interval, or difference
+#define AO_UNDERWRITING_EXPIRATION 0x1e // AOTime (1e)16: UTC time (secs since epoch << 64) when underwriting shares are bound until
+#define AO_ASSIGNMENT_AMT        0x21 // Shares (21)16: 128 bit signed integer number of shares assigned
+#define AO_UNDERWRITING_AMT      0x24 // Shares (24)16: 128 bit signed integer number of shares committed as underwriting
+#define AO_RECORDING_BID         0x27 // Shares (27)16: 128 bit signed integer number of shares bid for recording
+#define AO_SHARES_OUT            0x2a // Shares (2a)16: 128 bit signed integer number of shares outstanding (recorded on blocks)
+#define AO_SHARE_STATE           0x2d // ShareState (2d)1: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
+#define AO_N_COINS               0x2e // AOCoins (2e)1: Number of coins, as a fixed point 64.64 bit number
+#define AO_LISTSIZE              0x30 // Data16 (30)2: 16 bit signed integer declares the size of a list, as a check that all intended data is present.
+#define AO_INDEX                 0x33 // Data16 (33)2: 16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.
+#define AO_RSA3072_PUB_KEY       0x36 // PublicKeyRsa3072 (36)384: an RSA3072 public key
+#define AO_RSA3072_SIG           0x39 // SigRsa3072 (39)384: an RSA3072 signature
+#define AO_ASSIGNMENT            0x3c // Assignment (3c)-1: Shares Assignment agreement before signatures
+#define AO_PARTICIPANT           0x3f // Participant (3f)-1: Participant in a Shares Assignment agreement
+#define AO_PARTICIPANT_CF        0x42 // Participant (42)-1: Participant in a Shares Assignment agreement, compact (aka chain) form
+#define AO_AUTHORIZATION         0x45 // Authorization (45)-1: An assignment plus a list of signatures on the authorization
+#define AO_ASSIGN_REF            0x48 // AssignRef (48)-1: Describes a record of shares when they were signed away in a binding contract
+#define AO_DATABYTEARRAY         0x4a // DataByteArray (4a)-1: Arbitrary data of any form, may contain NULL bytes, any length (within reason)
+#define AO_NOTE                  0x4b // Note (4b)-1: UTF-8 free text, no specific function, but recorded in the blockchain
+#define AO_BLOCK_REF             0x4e // BlockRef (4e)-1: Describes a whole block in the chain
+#define AO_PAGE_REF              0x51 // PageRef (51)-1: UTF-8 free text, no specific function, but recorded in the blockchain
+#define AO_GENESIS_REF           0x54 // GenesisRef (54)-1: Uniquely describes a genesis block, includes list of properties used to calculate new blocks
+#define AO_SIG_WITH_TIME         0x57 // Signature (57)-1: All signatures include the time of signature
+#define AO_SHARES_REF            0x5a // SharesRef (5a)-1: Reference to shares received potentially including info on their current state in the chain
+#define AO_ASSETS                0x5d // Assets (5d)-1: A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
+#define AO_ECDSA_PRI_KEY         0x60 // PrivateKeyEcdsa (60)-1: An ECDSA private key
+#define AO_RSA3072_PRI_KEY       0x63 // PrivateKeyRsa3072 (63)-1: An RSA3072 private key
+#define AO_KEYPAIR               0x66 // KeyPair (66)-1: A (hopefully matching) public-private key pair
+#define AO_LONGBYTEARRAY         0x69 // ByteArrayLong (69)-1: Arbitrary data, potentially lots of it
+#define AO_ORGANIZER             0x6c // Organizer (6c)-1: Contact information for an asset organizer (user software)
+#define AO_RECORDER              0x6f // Recorder (6f)-1: Contact information for a recorder (chainmaker software)
+#define AO_NETADDRESS            0x72 // NetAddress (72)-1: IP4 or IP6 or named network contact address, potentially including :port number
+#define AO_GENESIS_BLOCK         0x75 // GenesisBlock (75)-1: A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it
+#define AO_CHAIN_BLOCK           0x78 // TBD (78)-1: A full chain block, including all data - though potentially censored as required by local laws
+#define AO_ECDSA_SIG             0x7b // SigEcdsa (7b)-1: An ECDSA signature
+#define AO_PROTOCOL              0x12c // Data16 (ac02)2: Basic level of protocol, identifies functionality
+#define AO_PROTOCOL_REV          0x12f // Data16 (af02)2: Revision of the protocol, may indicate additional types supported
+#define AO_TEXT_SYMBOL           0x132 // Note (b202)-1: Short unique symbol that uniquely identifies the chain e.g. TⒶ1a
+#define AO_DESCRIPTION           0x135 // Note (b502)-1: Text description of the chain
+#define AO_ICON                  0x138 // DataByteArray (b802)-1: Image suitable for icon use to represent the chain
+#define AO_IMAGE                 0x13b // DataByteArray (bb02)-1: Large format image to represent the chain
+#define AO_STARTING_SHARES       0x13e // Shares (be02)16: Starting number of shares
+#define AO_MIN_BLOCK_INT         0x8765 // AOTime (e58e02)16: Minimuim block interval time
+#define AO_N_COINS_TOTAL         0x144 // AOCoins (c402)16: Number of coins that the sum of all shares outstanding represents
+#define AO_RECORDING_TAX         0x147 // AOCoins (c702)16: Recording Tax in coins per byte (usually a very small number)
+#define AO_UNDEFINED_DATAITEM    0x7f // DataItem (7f)0: An undefined data item, usually an error
 
 #endif // BYTECODES_H

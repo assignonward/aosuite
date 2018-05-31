@@ -36,8 +36,8 @@ public:
     explicit  ByteCodeDef( const QJsonObject &jo = QJsonObject(), QObject *p = NULL )
                 : QObject( p ) { fromJsonObject( jo ); }
               ByteCodeDef( const ByteCodeDef &k, QObject *p = NULL )
-                : QObject( p ? p : k.parent() ), code( k.code ), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
-        void  operator = ( const ByteCodeDef &k ) { code = k.code; tn = k.tn; desc = k.desc; pdef = k.pdef; }
+                : QObject( p ? p : k.parent() ), code( k.code ), sz( k.sz ), gbcr( k.gbcr), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
+        void  operator = ( const ByteCodeDef &k ) { code = k.code; sz = k.sz; gbcr = k.gbcr; tn = k.tn; desc = k.desc; pdef = k.pdef; }
         void  fromJsonObject( const QJsonObject &jo );
      QString  toDefine( qint32 maxLenPdef = 24 );
      QString  toCase( qint32 maxLenPdef = 24 );

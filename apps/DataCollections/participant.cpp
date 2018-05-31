@@ -131,7 +131,9 @@ QByteArray Participant::toDataItem( bool cf )
         if ( note.size() > 0 )
           dil.append( note.toDataItem(false) );
         if ( index > -1 )
-          dil.append( index.toDataItem(false) );
+          { index.setTypeCode( AO_INDEX );
+            dil.append( index.toDataItem(false) );
+          }
         break;
 
       case AO_PARTICIPANT_CF:
@@ -144,7 +146,9 @@ QByteArray Participant::toDataItem( bool cf )
         if ( note.size() > 0 )
           dil.append( note.toDataItem(true) );
         if ( index > -1 )
-          dil.append( index.toDataItem(true) );
+          { index.setTypeCode( AO_INDEX );
+            dil.append( index.toDataItem(true) );
+          }
         break;
 
       default:

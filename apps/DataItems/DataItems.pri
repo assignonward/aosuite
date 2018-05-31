@@ -40,8 +40,6 @@ SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/hash224salt32.cpp     \
                $${PWD}/hash256.cpp           \
                $${PWD}/hash512.cpp           \
-               $${PWD}/index.cpp             \
-               $${PWD}/listsize.cpp          \
                $${PWD}/netaddress.cpp        \
                $${PWD}/note.cpp              \
                $${PWD}/prikey.cpp            \
@@ -71,8 +69,6 @@ HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/hash224salt32.h     \
                $${PWD}/hash256.h           \
                $${PWD}/hash512.h           \
-               $${PWD}/index.h             \
-               $${PWD}/listsize.h          \
                $${PWD}/netaddress.h        \
                $${PWD}/note.h              \
                $${PWD}/prikey.h            \

@@ -25,6 +25,7 @@
 #ifndef PARTICIPANT_H
 #define PARTICIPANT_H
 
+#include "data16.h"
 #include "datavarlength.h"
 #include "note.h"
 #include "pageref.h"
@@ -51,8 +52,8 @@ public:
         void  setId( QByteArray i )   { key.set( i ); }
         void  setAmount( Shares v )   { amount = v;  /* TODO: log error for 0 */ }
         void  setNote( QByteArray n ) { note.set( n ); }
-       Index  getIndex() const { return index; }
-        void  setIndex( const Index &i ) { index = i; }
+      Data16  getIndex() const { return index; }
+        void  setIndex( const Data16 &i ) { index = i; }
 
 private:
       Shares  amount;  // Negative for givers, positive for receivers, 0 is invalid
@@ -60,7 +61,7 @@ private:
         Hash  keyHash; // Hash of the public key, not always suitable to check signatures, but good enough for unique Id
      PageRef  page;    // Reference for givers
         Note  note;    // Arbitrary data to record with the transaction
-       Index  index;   // When part of a participant list, this is the index number (starting with 0)
+      Data16  index;   // When part of a participant list, this is the index number (starting with 0)
 };
 
 #endif // PARTICIPANT_H

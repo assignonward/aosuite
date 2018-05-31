@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/files">
-        <file>keyValueDefinitions.json</file>
         <file>byteCodeDefinitions.json</file>
     </qresource>
 </RCC>

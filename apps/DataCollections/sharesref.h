@@ -24,8 +24,8 @@
 #define SHARESREF_H
 
 #include "assignref.h"
+#include "data16.h"
 #include "datavarlength.h"
-#include "index.h"
 #include "pageref.h"
 #include "pubkey.h"
 #include "shares.h"
@@ -53,7 +53,7 @@ private:
       PubKey  key;        // Id (public key) of shares
 
      PageRef  page;       // page these shares are recorded on
-       Index  seqNum;     // shares sequence number in the page
+      Data16  seqNum;     // shares sequence number in the page
         Hash  keyHash;    // Id (hashed public key) of shares
   ShareState  shareState; // available, or other?
       AOTime  lockExp;    // if the state is locked, when does the lock expire?

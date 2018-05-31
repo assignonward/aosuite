@@ -25,8 +25,8 @@
 
 #include <QObject>
 #include "assignment.h"
+#include "data16.h"
 #include "datavarlength.h"
-#include "listsize.h"
 #include "signature.h"
 
 /**
@@ -51,7 +51,7 @@ public:
 private:
          Assignment  assignment;
     QList<Signature> sigs;   // Same length as the participants list in the assignment, index numbers match signature to participant
-           ListSize  nSigs;  // Used primarily as a check during serialization and deserialization
+             Data16  nSigs;  // Used primarily as a check during serialization and deserialization
 };
 
 #endif // AUTHORIZATION_H

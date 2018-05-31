@@ -21,6 +21,7 @@
 # SOFTWARE.
 #
 
+include(../CodeForm/CodeForm.pri)
 include(../MainCore/MainCore.pri)
 include(../GenesisForm/GenesisForm.pri)
 

@@ -23,7 +23,7 @@
 #include "assignref.h"
 
 AssignRef::AssignRef( const QByteArray &di, QObject *p )
-  : DataVarLength( AO_ASSIGN_REF, p )
+  : DataVarLength( AO_ASSIGN_REF, p ), seqNum( -1 )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_ASSIGN_REF )
@@ -97,7 +97,9 @@ QByteArray  AssignRef::toDataItem( bool cf )
     { if ( page.isValid() )
         dil.append( page.toDataItem(false) );
       if ( seqNum >= 0 )
-        dil.append( seqNum.toDataItem(false) );
+        { seqNum.setTypeCode( AO_INDEX );
+          dil.append( seqNum.toDataItem(false) );
+        }
       if ( key.isValid() )
         dil.append( key.toDataItem(false) );
       if ( keyHash.isValid() )

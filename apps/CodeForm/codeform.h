@@ -20,6 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "listsize.h"
+#ifndef CODEFORM_H
+#define CODEFORM_H
 
-// Nothing here
+#include <QScrollArea>
+#include "MainWinCommon.h"
+#include "ui_codeform.h"
+
+namespace Ui {
+class CodeForm;
+}
+
+class CodeForm : public QScrollArea
+{
+    Q_OBJECT
+
+public:
+    explicit CodeForm( QWidget *cw, MainWinCommon *mw = NULL);
+    ~CodeForm();
+
+private:
+    Ui::CodeForm *ui;
+};
+
+#endif // CODEFORM_H

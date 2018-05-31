@@ -20,23 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef INDEX_H
-#define INDEX_H
+#include "bytecodedef.h"
+#include "codeform.h"
 
-#include "data16.h"
+extern ByteCodeDefinitions bcds;
 
-class Index : public Data16
+CodeForm::CodeForm( QWidget *cw, MainWinCommon *mw ) :
+    QScrollArea(cw),
+    ui(new Ui::CodeForm)
 {
-    Q_OBJECT
-public:
-    explicit  Index( qint16 val = 0, typeCode_t typ = AO_INDEX, QObject *p = NULL )
-                : Data16( typ, val, p ) {}
-              Index( const QByteArray &di, QObject *p = NULL )
-                : Data16( di, p ) {}
-              Index( const Index &f, QObject *p = NULL )
-                : Data16( f.typeCode, f.v, p ? p : f.parent() ) {}
-        void  operator = ( const QByteArray &di ) { Data16::operator = ( di  ); }
-        void  operator = ( const qint16    &val ) { Data16::operator = ( val ); }
-};
+    ui->setupUi(this);
+    new QVBoxLayout( cw );
+    cw->layout()->addWidget( this );
+    /*
+    if ( mw )
+      { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));
+        connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
+      }
+    */
 
-#endif // INDEX_H
+    ByteCodeDefinitions bcds;
+    foreach( ByteCodeDef bcd, bcds.bcdList )
+      { ui->codeEdit->appendPlainText( bcd.toDefine() );
+
+      }
+}
+
+CodeForm::~CodeForm()
+{
+    delete ui;
+}

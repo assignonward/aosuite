@@ -1,5 +1,3 @@
-# MIT License
-#
 # Copyright (c) 2018 Assign Onward
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,31 +20,15 @@
 #
 
 QT          += core gui widgets
-TEMPLATE     = app
 
-DEPTH = ../..
-include($${DEPTH}/qamqp.pri)
-INCLUDEPATH += $${QAMQP_INCLUDEPATH}
-LIBS        += -L$${DEPTH}/src $${QAMQP_LIBS}
-macx:CONFIG -= app_bundle
+CONFIG      += c++11
 
-include(../DataCollections/DataCollections.pri)
-include(../DataItems/DataItems.pri)
-include(../OrganizerData/OrganizerData.pri)
-include(../Random/Random.pri)
-include(../SingleApplication/singleapplication.pri)
-DEFINES     += QAPPLICATION_CLASS=QApplication
+DEFINES     += QAMQP_DEBUG=Y
 
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/main.cpp          \
-               $${PWD}/MainWinCommon.cpp \
-               $${PWD}/bytecodedef.cpp
+SOURCES     += $${PWD}/codeform.cpp
 
-HEADERS     += $${PWD}/bytecodes.h     \
-               $${PWD}/MainWinCommon.h \
-               $${PWD}/bytecodedef.h
+HEADERS     += $${PWD}/codeform.h
 
-RESOURCES   += $${PWD}/maincoreresources.qrc
-
-DISTFILES   += $${PWD}/byteCodeDefinitions.json
+FORMS       += $${PWD}/codeform.ui

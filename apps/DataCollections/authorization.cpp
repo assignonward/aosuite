@@ -90,6 +90,7 @@ QByteArray  Authorization::toDataItem( bool cf )
   if ( sigs.size() > 0 )
     foreach( Signature s, sigs )
       dil.append( s.toDataItem(cf) );
+  nSigs.setTypeCode( AO_LISTSIZE );
   nSigs = sigs.size();
   dil.append( nSigs.toDataItem(cf) );
   // TODO: randomize order of dil

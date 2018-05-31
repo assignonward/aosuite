@@ -26,8 +26,8 @@
 #include <QObject>
 #include "aotime.h"
 #include "blockref.h"
+#include "data16.h"
 #include "datavarlength.h"
-#include "listsize.h"
 #include "note.h"
 #include "pageref.h"
 #include "participant.h"
@@ -63,7 +63,7 @@ private:
              AOTime  recordingDeadline; // When the assignment contract is expected to be recorded in the chain
              Shares  recordingBid;      // Positive amount to bid for all underwriting and recording taxes
                Note  note;              // top level note, applies to all participants whereas participant level notes may only apply to that participant
-           ListSize  nParticipants;
+             Data16  nParticipants;
   QList<Participant> participants;
 };
 

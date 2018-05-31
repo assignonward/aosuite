@@ -62,7 +62,7 @@ Signature::Signature( const Signature &s, QObject *p )
  * @param p - object parent, if any
  */
 Signature::Signature( const QByteArray &di, QObject *p )
-  : DataVarLength( AO_UNDEFINED_DATAITEM, p )
+  : DataVarLength( AO_UNDEFINED_DATAITEM, p ), index( -1 )
 { sigType = AO_UNDEFINED_DATAITEM;
   // See if there's anything interesting in the data item
   if ( di.size() > 0 )

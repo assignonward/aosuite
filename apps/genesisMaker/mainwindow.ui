@@ -155,6 +155,11 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="codeTab">
+       <attribute name="title">
+        <string>Code</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
    </layout>

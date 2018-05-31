@@ -23,8 +23,8 @@
 #ifndef ASSIGNREF_H
 #define ASSIGNREF_H
 
+#include "data16.h"
 #include "datavarlength.h"
-#include "index.h"
 #include "pageref.h"
 #include "pubkey.h"
 #include "shares.h"
@@ -47,7 +47,7 @@ public:
 
 private:
      PageRef  page;    // page these shares are recorded on
-       Index  seqNum;  // share assignment sequence number in the page
+      Data16  seqNum;  // share assignment sequence number in the page
       PubKey  key;     // Id (public key) of shares
         Hash  keyHash; // Id (hashed public key) of shares
       Shares  amount;  // amount of shares assigned

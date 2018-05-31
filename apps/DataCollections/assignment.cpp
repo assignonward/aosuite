@@ -121,6 +121,7 @@ QByteArray  Assignment::toDataItem( bool cf )
   if ( participants.size() > 0 )
     foreach( Participant p, participants )
       dil.append( p.toDataItem(cf) );
+  nParticipants.setTypeCode( AO_LISTSIZE );
   nParticipants = participants.size();
   dil.append( nParticipants.toDataItem(cf) );
   // TODO: randomize order of dil

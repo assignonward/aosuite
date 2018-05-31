@@ -34,7 +34,6 @@ public:
               Data16( const Data16 &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data16( const QByteArray &di, QObject *p = NULL );
-    explicit  Data16(QObject *parent = NULL);
       qint16  value() { return v; }
   QByteArray  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const QByteArray &di );

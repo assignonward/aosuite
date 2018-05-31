@@ -27,8 +27,6 @@
 #include <QJsonDocument>
 #include <QTextStream>
 
-ByteCodeDefinitions bcds; // Global object
-
 void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
 { if ( jo.contains( "code" ) ) code = jo.value( "code" ).toInt();
   if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
@@ -42,7 +40,7 @@ QString ByteCodeDef::toDefine( qint32 maxLenPdef )
 { return QString( "#define %1%7 0x%2 // %3 (%4)%5: %6" )
            .arg( pdef ).arg( code, 2, 16, QChar('0') ).arg(tn)
            .arg( QString::fromUtf8( VarSizeCode::codeToBytes(code).toHex() ) )
-           .arg( (sz<0) ? "var" : QString::number(sz) ).arg(desc)
+           .arg( (sz<0)?"var":QString::number(sz) ).arg(desc)
            .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
 }
 
@@ -64,7 +62,7 @@ void ByteCodeDefinitions::fromFile( const QString &filename )
 { bcdList.clear();
   QFile file( filename );
   if ( !file.open( QIODevice::ReadOnly ) )
-    { // TODO: log error
+    { qDebug( "Could not open %s %s", qPrintable( file.fileName() ), qPrintable( file.errorString() ) );
       return;
     }
   QJsonDocument doc = QJsonDocument::fromJson( file.readAll() );
