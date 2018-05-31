@@ -23,7 +23,7 @@
 #ifndef GENESISBLOCK_H
 #define GENESISBLOCK_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "hash.h"
 #include "keyvaluepair.h"
 #include <QMap>
@@ -33,13 +33,13 @@
 /**
  * @brief The GenesisBlock class - the anchorpoint of a blockchain
  */
-class GenesisBlock : public DataVarLenLong
+class GenesisBlock : public DataVarLength
 {
     Q_OBJECT
 public:
       explicit  GenesisBlock( QByteArray di = QByteArray(), QObject *p = NULL );
-                GenesisBlock( const GenesisBlock &r )
-                  : DataVarLenLong( AO_GENESIS_BLOCK, QByteArray(), r.parent() ),
+                GenesisBlock( const GenesisBlock &r, QObject *p = NULL )
+                  : DataVarLength( AO_GENESIS_BLOCK, QByteArray(), p ? p : r.parent() ),
                     hash( r.hash ), properties( r.properties ) {}
           void  operator = ( const QByteArray &di );
           Hash  getHash()    const { return  hash; }

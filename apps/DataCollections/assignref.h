@@ -23,7 +23,7 @@
 #ifndef ASSIGNREF_H
 #define ASSIGNREF_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "index.h"
 #include "pageref.h"
 #include "pubkey.h"
@@ -33,13 +33,13 @@
  * @brief The AssignRef class - refers to a record of shares assigned,
  *   on a page, in a block, in a chain.
  */
-class AssignRef : public DataVarLenLong
+class AssignRef : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  AssignRef( const QByteArray &di = QByteArray(), QObject *p = NULL );
-              AssignRef( const AssignRef &r )
-                : DataVarLenLong( r.typeCode, r.ba, r.parent() ),
+              AssignRef( const AssignRef &r, QObject *p = NULL )
+                : DataVarLength( r.typeCode, r.ba, p ? p : r.parent() ),
                   page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

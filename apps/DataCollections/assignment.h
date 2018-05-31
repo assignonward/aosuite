@@ -26,7 +26,7 @@
 #include <QObject>
 #include "aotime.h"
 #include "blockref.h"
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "listsize.h"
 #include "note.h"
 #include "pageref.h"
@@ -40,13 +40,13 @@
 /**
  * @brief The Assignment class - for negotiation and recording of a shares assignment contract
  */
-class Assignment : public DataVarLenLong
+class Assignment : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  Assignment( const QByteArray &di = QByteArray(), QObject *p = NULL );
               Assignment( const Assignment &a, QObject *p = NULL )
-                : DataVarLenLong( AO_ASSIGNMENT, p ? p : a.parent() ), salt( a.salt ), proposedChain( a.proposedChain ),
+                : DataVarLength( AO_ASSIGNMENT, p ? p : a.parent() ), salt( a.salt ), proposedChain( a.proposedChain ),
                   recordingDeadline( a.recordingDeadline ), recordingBid( a.recordingBid ), note( a.note ),
                   participants( a.participants ) {}
         void  operator = ( const QByteArray &di );

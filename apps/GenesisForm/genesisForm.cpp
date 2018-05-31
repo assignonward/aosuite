@@ -85,11 +85,10 @@ void  GenesisForm::on_importGenesisBlock_clicked()
 
 #include "aocoins.h"
 #include "aotime.h"
-#include "bytearraylong.h"
+#include "databytearray.h"
 #include "index.h"
 #include "note.h"
 #include "sharesout.h"
-#include "shortnote.h"
 
 /**
  * @brief GenesisForm::on_publishGenesisBlock_clicked - saving to file at the moment
@@ -101,20 +100,20 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
     return;
   GenesisBlock gb;
   __int128_t tv;
-  gb.add( AOK_PROTOCOL       , new     Index( ui->protocol   ->currentIndex()         ) );
-  gb.add( AOK_PROTOCOL_REV   , new     Index( ui->protocolRev->value()                ) );
-  gb.add( AOK_TEXT_SYMBOL    , new ShortNote( ui->symbol     ->text().toUtf8()        ) );
-  gb.add( AOK_DESCRIPTION    , new      Note( ui->description->toPlainText().toUtf8() ) );
-//  gb.add( AOK_ICON           , ByteArrayLong( ) ) // TODO: file reader
-//  gb.add( AOK_IMAGE          , ByteArrayLong( ) ) // TODO: file reader
+  gb.add( AOK_PROTOCOL       , new Index( ui->protocol   ->currentIndex()        , &gb ) );
+  gb.add( AOK_PROTOCOL_REV   , new Index( ui->protocolRev->value()               , &gb ) );
+  gb.add( AOK_TEXT_SYMBOL    , new  Note( ui->symbol     ->text().toUtf8()       , &gb ) );
+  gb.add( AOK_DESCRIPTION    , new  Note( ui->description->toPlainText().toUtf8(), &gb ) );
+//  gb.add( AOK_ICON           , DataByteArray( ) ) // TODO: file reader
+//  gb.add( AOK_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.add( AOK_STARTING_SHARES, new SharesOut( tv ) );
+  gb.add( AOK_STARTING_SHARES, new SharesOut( tv, &gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
-  gb.add( AOK_MIN_BLOCK_INT  , new AOTime( tv, AO_TIME_DIFF ) );
+  gb.add( AOK_MIN_BLOCK_INT  , new AOTime( tv, AO_TIME_DIFF, &gb ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb.add( AOK_N_COINS_TOTAL  , new AOCoins( tv ) );
+  gb.add( AOK_N_COINS_TOTAL  , new AOCoins( tv, &gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb.add( AOK_RECORDING_TAX  , new AOCoins( tv ) );
+  gb.add( AOK_RECORDING_TAX  , new AOCoins( tv, &gb ) );
   QFile file( name );
   if ( !file.open( QIODevice::WriteOnly ) )
     { qDebug() << gb.toDataItem();

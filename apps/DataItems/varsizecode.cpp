@@ -20,8 +20,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-// Assign Onward
-//
-#include "sharesout.h"
+#include "varsizecode.h"
 
-// Nothing here
+/**
+ * @brief VarSizeCode::bytesToCode - decodes a sequence of bytes according to the variable length scheme
+ * @param ca - code array
+ * @param i - returns the length of the code array in bytes
+ * @return code value
+ */
+quint32  VarSizeCode::bytesToCode( const QByteArray &ca, qint32 &i )
+{ quint32 code = 0;
+  qint32  m    = 1;
+  i = 0;
+  while (( i < ca.size() ) && ( i < 5 ))
+    { code += m * ( ca.at( i ) & 0x7F );
+      if ( (ca.at( i ) & 0x80) == 0 )
+        { i++;
+          return code;
+        }
+      m = m << 7;
+      i++;
+    }
+  // TODO: if ( i >= 5 ) log error
+  return code;
+}
+
+QByteArray  VarSizeCode::codeToBytes( const quint32 &c )
+{ QByteArray ca;
+  quint32 code = c;
+  if ( code == 0 )
+    ca.append( (char)0 );
+   else
+    while ( code > 0 )
+      { ca.append( (unsigned char)( (code & 0x7F) | ( (code>127) ? 0x80 : 0 ) ) );
+        code = code >> 7;
+      }
+  return ca;
+}

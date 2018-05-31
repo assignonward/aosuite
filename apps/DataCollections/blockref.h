@@ -25,7 +25,7 @@
 
 #include "aotime.h"
 #include "bytecodes.h"
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "genesisref.h"
 #include "hash.h"
 #include "sharesout.h"
@@ -33,16 +33,16 @@
 /**
  * @brief The BlockRef class - identifies a block in the chain
  */
-class BlockRef : public DataVarLenLong
+class BlockRef : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  BlockRef( QByteArray di = QByteArray(), QObject *p = NULL );
-              BlockRef( const BlockRef &r )
-                : DataVarLenLong( AO_BLOCK_REF, QByteArray(), r.parent() ),
+              BlockRef( const BlockRef &r, QObject *p = NULL )
+                : DataVarLength( AO_BLOCK_REF, QByteArray(), p ? p : r.parent() ),
                   propTime( r.propTime ), shOut( r.shOut ), blkHash( r.blkHash ), genesis( r.genesis ) {}
               BlockRef( const Hash &h, const AOTime t, const SharesOut &s, const GenesisRef &r, QObject *p = NULL )
-                : DataVarLenLong( AO_BLOCK_REF, QByteArray(), p ),
+                : DataVarLength( AO_BLOCK_REF, QByteArray(), p ),
                   propTime( t ), shOut( s ), blkHash( h ), genesis( r ) {}
         void  operator = ( const QByteArray &di );
       AOTime  getTime()    const { return propTime; }

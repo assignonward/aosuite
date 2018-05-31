@@ -23,18 +23,18 @@
 #ifndef PRIVATEKEYECDSA_H
 #define PRIVATEKEYECDSA_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 
-class PrivateKeyEcdsa : public DataVarLenLong
+class PrivateKeyEcdsa : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  PrivateKeyEcdsa( QObject *p = NULL )
-                : DataVarLenLong( AO_ECDSA_PRI_KEY, p ) {}
+                : DataVarLength( AO_ECDSA_PRI_KEY, p ) {}
               PrivateKeyEcdsa( const PrivateKeyEcdsa &k, QObject *p = NULL )
-                : DataVarLenLong( AO_ECDSA_PRI_KEY, k.ba, p ? p : k.parent() ) {}
+                : DataVarLength( AO_ECDSA_PRI_KEY, k.ba, p ? p : k.parent() ) {}
               PrivateKeyEcdsa( const QByteArray &di, QObject *p = NULL )
-                : DataVarLenLong( di, p ) {}
+                : DataVarLength( di, p ) {}
         void  clear() { ba.clear(); }
         bool  isValid() const { return (ba.size() > 0); } // TODO: really check
 };

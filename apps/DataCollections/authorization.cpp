@@ -27,7 +27,8 @@
  * @param di - data item to populate this object from, optional
  * @param p - parent, if any
  */
-Authorization::Authorization(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSIGNMENT, p )
+Authorization::Authorization(const QByteArray &di, QObject *p)
+  : DataVarLength( AO_ASSIGNMENT, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_AUTHORIZATION )
@@ -35,7 +36,7 @@ Authorization::Authorization(const QByteArray &di, QObject *p) : DataVarLenLong(
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -93,5 +94,5 @@ QByteArray  Authorization::toDataItem( bool cf )
   dil.append( nSigs.toDataItem(cf) );
   // TODO: randomize order of dil
   ba = dil.join();
-  return DataVarLenLong::toDataItem(cf);
+  return DataVarLength::toDataItem(cf);
 }

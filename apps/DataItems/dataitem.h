@@ -25,10 +25,11 @@
 
 #include <QObject>
 #include "bytecodes.h"
+#include "varsizecode.h"
 
-#define typeCode_t unsigned char
+#define typeCode_t quint32
 
-class DataItem : public QObject
+class DataItem : public QObject, public VarSizeCode
 {
     Q_OBJECT
 public:
@@ -41,8 +42,8 @@ public:
        virtual void  operator = ( const QByteArray &b ) { (void)b; }
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
              qint32  typeSize( const QByteArray &di ) const;
-  static   DataItem *fromDataItem( const QByteArray &di );
-  static   DataItem *fromDataItem( const DataItem *di );
+  static   DataItem *fromDataItem( const QByteArray &di, QObject *p = NULL );
+  static   DataItem *fromDataItem( const DataItem *di, QObject *p = NULL );
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const QByteArray &di );
                bool  checksumValidated() const { return csVal; }

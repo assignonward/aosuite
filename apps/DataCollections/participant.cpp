@@ -36,7 +36,8 @@
 
 #include "participant.h"
 
-Participant::Participant( QByteArray di, QObject *p ) : DataVarLenLong( AO_PARTICIPANT, p )
+Participant::Participant( QByteArray di, QObject *p )
+  : DataVarLength( AO_PARTICIPANT, p )
 { // See if there's anything interesting in the data item
   index = -1;
   if ( di.size() > 0 )
@@ -47,7 +48,7 @@ Participant::Participant( QByteArray di, QObject *p ) : DataVarLenLong( AO_PARTI
         }
        else
         { typeCode = typeCodeOf( di );
-          DataVarLenLong temp( di );          // It's our type
+          DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -152,7 +153,7 @@ QByteArray Participant::toDataItem( bool cf )
     }
   // TODO: randomize order of dil
   ba = dil.join();
-  return DataVarLenLong::toDataItem(cf);
+  return DataVarLength::toDataItem(cf);
 }
 
 

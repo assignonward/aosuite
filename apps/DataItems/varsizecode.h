@@ -20,22 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef BYTEARRAYSHORT_H
-#define BYTEARRAYSHORT_H
+#ifndef VARSIZECODE_H
+#define VARSIZECODE_H
 
-#include "datavarlenshort.h"
+#include <QByteArray>
 
-class ByteArrayShort : public DataVarLenShort
+/**
+ * @brief The VarSizeCode class contains functions to encode and decode unsigned integers as
+ *   a variable length byte array with 7 bits of "value" in each byte, if the byte
+ *   has a 1 in the MSb, then the next byte contains the next 7 more significant bits -
+ *   continue until a byte with a 0 in the MSb is found.  Default functions work with 32 bit
+ *   unsigned integers, but the same scheme could be applied to 64 or even 128 bit integers,
+ *   and signed integers might be accomodated with a double encoding scheme that essentially
+ *   puts the sign bit in the LSb, similar to negative value Golomb-Rice codes.
+ */
+class VarSizeCode
 {
-    Q_OBJECT
 public:
-    explicit  ByteArrayShort( QByteArray ba = QByteArray(), QObject *p = NULL )
-                : DataVarLenShort( AO_SHORTBYTEARRAY, ba, p ) {}
-              ByteArrayShort( const ByteArrayShort &n, QObject *p = NULL )
-                : DataVarLenShort( AO_SHORTBYTEARRAY, n.ba, p ? p : n.parent() ) {}
-      qint32  size() { return ba.size(); }
-        void  operator = ( const QByteArray &di ) { DataVarLenShort::operator = ( di ); }
-        bool  operator < ( const ByteArrayShort &c ) const { return ba < c.ba; }
+                   VarSizeCode() {}
+static    quint32  bytesToCode( const QByteArray &sa, qint32 &i );
+static QByteArray  codeToBytes( const quint32 &s );
 };
 
-#endif // BYTEARRAYSHORT_H
+#endif // VARSIZECODE_H

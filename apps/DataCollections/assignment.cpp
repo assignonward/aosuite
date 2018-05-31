@@ -29,7 +29,8 @@
  * @param di - optional data item
  * @param p - object parent
  */
-Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSIGNMENT, p )
+Assignment::Assignment(const QByteArray &di, QObject *p)
+  : DataVarLength( AO_ASSIGNMENT, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_ASSIGNMENT )
@@ -38,7 +39,7 @@ Assignment::Assignment(const QByteArray &di, QObject *p) : DataVarLenLong( AO_AS
         }
        else
         { randomizeSalt();                    // Incase it is not yet created
-          DataVarLenLong temp( di );          // It's our type
+          DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -124,7 +125,7 @@ QByteArray  Assignment::toDataItem( bool cf )
   dil.append( nParticipants.toDataItem(cf) );
   // TODO: randomize order of dil
   ba = dil.join();
-  return DataVarLenLong::toDataItem(cf);
+  return DataVarLength::toDataItem(cf);
 }
 
 AOTime Assignment::proposalTime()

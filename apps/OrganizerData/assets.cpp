@@ -27,7 +27,7 @@
  * @param di - optional data item
  * @param p - object parent
  */
-Assets::Assets(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSETS, p )
+Assets::Assets(const QByteArray &di, QObject *p) : DataVarLength( AO_ASSETS, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_ASSETS )
@@ -35,7 +35,7 @@ Assets::Assets(const QByteArray &di, QObject *p) : DataVarLenLong( AO_ASSETS, p 
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -110,5 +110,5 @@ QByteArray  Assets::toDataItem( bool cf )
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem(false);
+  return DataVarLength::toDataItem(false);
 }

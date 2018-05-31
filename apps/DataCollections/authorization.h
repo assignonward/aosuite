@@ -25,7 +25,7 @@
 
 #include <QObject>
 #include "assignment.h"
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "listsize.h"
 #include "signature.h"
 
@@ -37,13 +37,13 @@
  *   which describes the maximum commission payable to
  *   the sum of all underwriters, chain-maker, and recording tax.
  */
-class Authorization : public DataVarLenLong
+class Authorization : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit Authorization( const QByteArray &di = QByteArray(), QObject *p = NULL );
              Authorization( const Authorization &a, QObject *p = NULL )
-               : DataVarLenLong( AO_AUTHORIZATION, p ? p : a.parent() ),
+               : DataVarLength( AO_AUTHORIZATION, p ? p : a.parent() ),
                  assignment( a.assignment ), sigs( a.sigs ) {}
        void  operator = ( const QByteArray &di );
  QByteArray  toDataItem( bool cf = false );

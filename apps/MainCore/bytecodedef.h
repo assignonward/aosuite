@@ -36,12 +36,14 @@ public:
     explicit  ByteCodeDef( const QJsonObject &jo = QJsonObject(), QObject *p = NULL )
                 : QObject( p ) { fromJsonObject( jo ); }
               ByteCodeDef( const ByteCodeDef &k, QObject *p = NULL )
-                : QObject( p ? p : k.parent() ), byte( k.byte ), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
-        void  operator = ( const ByteCodeDef &k ) { byte = k.byte; tn = k.tn; desc = k.desc; pdef = k.pdef; }
+                : QObject( p ? p : k.parent() ), code( k.code ), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
+        void  operator = ( const ByteCodeDef &k ) { code = k.code; tn = k.tn; desc = k.desc; pdef = k.pdef; }
         void  fromJsonObject( const QJsonObject &jo );
      QString  toDefine( qint32 maxLenPdef = 24 );
 
-  typeCode_t  byte; // numerical value of the bytecode
+  typeCode_t  code; // numerical value of the bytecode
+      qint32  sz;   // size of the following data in bytes, or -1 if variable size
+     QString  gbcr; // Genesis block creator ui type
      QString  tn;   // DataItem subclass name that the value is stored as
      QString  desc; // text description of the bytecode usage
      QString  pdef; // #define short name used in program code

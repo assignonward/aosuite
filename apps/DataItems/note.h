@@ -23,21 +23,21 @@
 #ifndef NOTE_H
 #define NOTE_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 
 /**
  * @brief The Note class - implies UTF8 encoding, but no enforcement as of yet.
  */
-class Note : public DataVarLenLong
+class Note : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  Note( QByteArray ba = QByteArray(), QObject *p = NULL )
-                : DataVarLenLong( AO_NOTE, ba, p ) {}
+                : DataVarLength( AO_NOTE, ba, p ) {}
               Note( const Note &n, QObject *p = NULL )
-                : DataVarLenLong( AO_NOTE, n.ba, p ? p : n.parent() ) {}
+                : DataVarLength( AO_NOTE, n.ba, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
-        void  operator = ( const QByteArray &di ) { DataVarLenLong::operator = ( di ); }
+        void  operator = ( const QByteArray &di ) { DataVarLength::operator = ( di ); }
 };
 
 #endif // NOTE_H

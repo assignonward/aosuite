@@ -28,26 +28,19 @@
  * @param p - object parent, if any.
  */
 Data16::Data16( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
-{ csVal = false;
-  v = 0;
-  if ( di.size() < 4 )
-    { // TODO: log an exception
-      return;
-    }
+{ v = 0;
   union _16_as_8
     { qint16 i;
       unsigned char d[2];
     } u;
-  typeCode = di.at(0);
-  unsigned char chk = typeCode;
-  // if (( chk & AO_SIZE_MASK ) != AO_SIZE_4BYTES )
-  //   TODO: log a warning
-  chk ^= u.d[ 0] = di.at( 1);
-  chk ^= u.d[ 1] = di.at( 2);
-  if ( chk == di.at(3) )
-    csVal = true;
-  // else
-  // TODO: log a warning
+  qint32 tcSz = 0;
+  typeCode = bytesToCode( di, tcSz );
+  if ( di.size() < tcSz+2 )
+    { // TODO: log an exception
+      return;
+    }
+  u.d[ 0] = di.at( tcSz   );
+  u.d[ 1] = di.at( tcSz+1 );
   v = u.i;
 }
 
@@ -74,13 +67,11 @@ QByteArray Data16::toDataItem( bool cf ) const
     {        qint16 i;
       unsigned char d[2];
     } u;
-  // if (( code & AO_SIZE_MASK ) != AO_SIZE_4BYTES )
+  // if (( code & AO_SIZE_MASK ) != AO_SIZE_3BYTES )
   //   TODO: log a warning
-  unsigned char chk = typeCode;
   u.i = v;
-  di.append( typeCode );
-  di.append( u.d[ 0] ); chk ^= u.d[ 0];
-  di.append( u.d[ 1] ); chk ^= u.d[ 1];
-  di.append( chk );
+  di.append( codeToBytes( typeCode ) );
+  di.append( u.d[ 0] );
+  di.append( u.d[ 1] );
   return di;
 }

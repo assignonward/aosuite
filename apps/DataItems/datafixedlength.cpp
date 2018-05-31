@@ -28,26 +28,13 @@
  * @param p - parent object
  */
 DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
-{ csVal = false;
-  if ( di.size() < 4 ) // Shortest fixed length serialized data type
+{ qint32 tcSz = 0;
+  typeCode = bytesToCode( di, tcSz );
+  if ( di.size() < typeSize()+tcSz )
     { // TODO: log an exception
       return;
     }
-  typeCode = di.at(0);
-  if ( di.size() < typeSize() )
-    { // TODO: log an exception
-      return;
-    }
-  unsigned char chk = typeCode;
-  qint32 end = typeSize() - 1;
-  for ( int i = 1 ; i < end ; i++ )
-    { ba.append( di.at(i) );
-      chk ^= di.at(i);
-    }
-  if ( chk == di.at( di.size()-1 ) )
-    csVal = true;
-  // else
-  // TODO: log an exception
+  ba.append( di.mid( tcSz ) );
 }
 
 /**
@@ -69,13 +56,8 @@ void DataFixedLength::operator = ( const QByteArray &di )
  */
 QByteArray DataFixedLength::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
-  // if (( code & AO_FIXED_MASK ) != 0x00 )
-  //   TODO: log a warning, maybe check closer for defined types, too.
-  unsigned char chk = typeCode;
-  di.append( typeCode );
-  for ( int i = 0; i < ba.size(); i++ )
-    { di.append( ba.at(i) ); chk ^= ba.at(i); }
-  di.append( chk );
+  di.append( codeToBytes( typeCode ) );
+  di.append( ba );
   return di;
 }
 

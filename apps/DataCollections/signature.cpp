@@ -28,7 +28,7 @@
  * @param p - object parent, if any
  */
 Signature::Signature( typeCode_t tc, QObject *p )
-  : DataVarLenLong( tc, p )
+  : DataVarLength( tc, p )
 { typeCode = AO_SIG_WITH_TIME;
   index = -1;
   switch ( tc )
@@ -48,7 +48,7 @@ Signature::Signature( typeCode_t tc, QObject *p )
  * @param p - alternate parentage
  */
 Signature::Signature( const Signature &s, QObject *p )
-  : DataVarLenLong( s.typeCode, p ? p : s.parent() )
+  : DataVarLength( s.typeCode, p ? p : s.parent() )
 { sigTime    = s.sigTime;
   sigType    = s.sigType;
   sigEcdsa   = s.sigEcdsa;
@@ -62,7 +62,7 @@ Signature::Signature( const Signature &s, QObject *p )
  * @param p - object parent, if any
  */
 Signature::Signature( const QByteArray &di, QObject *p )
-  : DataVarLenLong( AO_UNDEFINED_DATAITEM, p )
+  : DataVarLength( AO_UNDEFINED_DATAITEM, p )
 { sigType = AO_UNDEFINED_DATAITEM;
   // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -71,7 +71,7 @@ Signature::Signature( const QByteArray &di, QObject *p )
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -146,7 +146,7 @@ QByteArray  Signature::toDataItem( bool cf )
     dil.append( index.toDataItem(cf) );
   // TODO: randomize order of dil
   ba = dil.join();
-  return DataVarLenLong::toDataItem(cf);
+  return DataVarLength::toDataItem(cf);
 }
 
 /**

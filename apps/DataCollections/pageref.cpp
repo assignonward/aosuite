@@ -22,7 +22,8 @@
  */
 #include "pageref.h"
 
-PageRef::PageRef( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_PAGE_REF, p )
+PageRef::PageRef( const QByteArray &di, QObject *p )
+  : DataVarLength( AO_PAGE_REF, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_PAGE_REF )
@@ -30,7 +31,7 @@ PageRef::PageRef( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_PAGE_R
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -87,6 +88,6 @@ QByteArray  PageRef::toDataItem( bool cf )
     dil.append(           hash.toDataItem(cf) );
   // TODO: randomize order of dil
   ba = dil.join();
-  return DataVarLenLong::toDataItem(cf);
+  return DataVarLength::toDataItem(cf);
 }
 

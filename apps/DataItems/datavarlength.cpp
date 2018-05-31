@@ -20,52 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 
 /**
- * @brief DataVarLenLong::DataVarLenLong - constructor from serialized form
- * @param di - typecode, 3 bytes size, data, 4 bytes checksum
+ * @brief DataVarLength::DataVarLength - constructor from serialized form
+ * @param di - typecode, extensible size, data
  * @param p - parent object
  */
-DataVarLenLong::DataVarLenLong( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+DataVarLength::DataVarLength( const QByteArray &di, QObject *p )
+  : DataItem( DataItem::typeCodeOf(di), p )
 { csVal = false;
-  if ( di.size() < 8 ) // Shortest valid varlenlong serialized data (1 type + 3 length + 0 data + 4 checksum)
+  if ( di.size() < 2 ) // Shortest valid varlenlong serialized data (1 type + 1 length + 0 data)
     { // TODO: log an exception
       return;
     }
   typeCode = di.at(0);
-  qint32 size = (((qint32)di.at(1)) * 256 + ((qint32)di.at(2))) * 256 + ((qint32)di.at(3));
-  if ( di.size() < (size+8) )
+  qint32  i = 0;
+  quint32 size = bytesToCode( di.mid(1), i );
+  if ( di.size() < (size+i+1) )
     { // TODO: log an exception
       return;
     }
-  QByteArray chk;
-  chk[0] = di.at(0);
-  chk[1] = di.at(1);
-  chk[2] = di.at(2);
-  chk[3] = di.at(3);
-  int i;
-  int j = 0;
-  for ( i = 4; i < size+4 ; i++ )
-    { ba.append( di.at(i) );
-      chk[j] = chk.at(j) ^ di.at(i);
-      if ( ++j > 3 )
-        j = 0;
-    }
-  for ( j = 0; j < 4 ; j++ )
-    if ( chk.at(j) != di.at(i++) )
-      { // TODO: log an exception
-        return;
-      }
-  csVal = true;
+  ba = di.mid(1+i);
 }
 
 /**
- * @brief DataVarLenLong::operator =  Assign values from a serialized bytearray
+ * @brief DataVarLength::operator =  Assign values from a serialized bytearray
  * @param di - serialized bytearray with typeCode, size, data and checksum
  */
-void DataVarLenLong::operator = ( const QByteArray &di )
-{ DataVarLenLong temp( di );
+void DataVarLength::operator = ( const QByteArray &di )
+{ DataVarLength temp( di );
   ba       = temp.ba;
   typeCode = temp.typeCode;
   csVal    = temp.csVal;
@@ -73,31 +57,14 @@ void DataVarLenLong::operator = ( const QByteArray &di )
 }
 
 /**
- * @brief DataVarLenLong::toDataItem
+ * @brief DataVarLength::toDataItem
  * @param cf - compact (or chain) form, no difference at this level - unused
  * @return serialized bytearray with typeCode, size, data and checksum
  */
-QByteArray DataVarLenLong::toDataItem( bool cf ) const
+QByteArray DataVarLength::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   di.append( typeCode );
-  qint32 size = ba.size();
-  di.append(( size & 0xFF0000 ) >> 16 );
-  di.append(( size & 0xFF00   ) >>  8 );
-  di.append(( size & 0xFF     )       );
-
-  QByteArray chk;
-  chk[0] = di.at(0);
-  chk[1] = di.at(1);
-  chk[2] = di.at(2);
-  chk[3] = di.at(3);
-  int j = 0;
-  for ( int i = 0; i < ba.size(); i++ )
-    { di.append( ba.at(i) );
-      chk[j] = chk.at(j) ^ ba.at(i);
-      if ( ++j > 3 )
-        j = 0;
-    }
-  di.append( chk );
+  di.append( codeToBytes( ba.size() ) );
+  di.append( ba );
   return di;
 }
-

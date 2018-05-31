@@ -28,7 +28,7 @@
  * @param p - optional parent object
  */
 KeyValuePair::KeyValuePair( QByteArray di, QObject *p )
-  : DataVarLenLong( AO_KEYPAIR, p )
+  : DataVarLength( AO_KEYPAIR, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_KEYVALUEPAIR )
@@ -36,7 +36,7 @@ KeyValuePair::KeyValuePair( QByteArray di, QObject *p )
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { KeyValueKey k;
               QByteArray items = temp.get();  // typeCode and checksum have been stripped off
@@ -89,5 +89,5 @@ QByteArray  KeyValuePair::toDataItem( bool cf )
     dil.append( value->toDataItem(cf) );
   // TODO: randomize order of dil
   ba = dil.join();
-  return DataVarLenLong::toDataItem(cf);
+  return DataVarLength::toDataItem(cf);
 }

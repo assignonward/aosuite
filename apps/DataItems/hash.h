@@ -29,7 +29,6 @@
 #ifndef HASH_H
 #define HASH_H
 
-#include "datavarlenlong.h"
 #include "hash256.h"
 #include "hash512.h"
 

@@ -32,13 +32,13 @@
  * @brief The Assets class - collections of valuable information
  *   for the Asset Organizer.  Includes shares records and contact info.
  */
-class Assets : public DataVarLenLong
+class Assets : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  Assets( const QByteArray &di = QByteArray(), QObject *p = NULL );
               Assets( const Assets &a, QObject *p = NULL )
-                : DataVarLenLong( AO_ASSETS, p ? p : a.parent() ), organizers( a.organizers ),
+                : DataVarLength( AO_ASSETS, p ? p : a.parent() ), organizers( a.organizers ),
                   recorders( a.recorders ), sharesRefs( a.sharesRefs ), keyPairs( a.keyPairs ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

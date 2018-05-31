@@ -24,22 +24,22 @@
 #define KEYVALUEPAIR_H
 
 #include "keyvaluekey.h"
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 
 /**
  * @brief The KeyValuePair class - A (short) arbitrary length key and a
  *   (long) arbitrary length value
  */
-class KeyValuePair : public DataVarLenLong
+class KeyValuePair : public DataVarLength
 {
     Q_OBJECT
 public  :
       explicit  KeyValuePair( QByteArray di = QByteArray(), QObject *p = NULL );
                 KeyValuePair( const KeyValuePair &k, QObject *p = NULL )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, p ? p : k.parent() ),
+                  : DataVarLength( AO_KEYVALUEPAIR, p ? p : k.parent() ),
                     key( k.key ), value( k.value ) {}
                 KeyValuePair( const KeyValueKey_t &k, const DataItem *v, QObject *p = NULL )
-                  : DataVarLenLong( AO_KEYVALUEPAIR, p ),
+                  : DataVarLength( AO_KEYVALUEPAIR, p ),
                     key( k ), value( DataItem::fromDataItem( v ) ) {}
           void  operator = ( const QByteArray &di );
     QByteArray  toDataItem( bool cf = false );

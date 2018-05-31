@@ -20,24 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef SHORTNOTE_H
-#define SHORTNOTE_H
+#ifndef DATABYTEARRAY_H
+#define DATABYTEARRAY_H
 
-#include "datavarlenshort.h"
+#include "datavarlength.h"
 
-/**
- * @brief The ShortNote class - implies UTF8 encoding, but no enforcement as of yet.
- */
-class ShortNote : public DataVarLenShort
+class DataByteArray : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  ShortNote( QByteArray ba = QByteArray(), QObject *p = NULL )
-                : DataVarLenShort( AO_SHORT_NOTE, ba, p ) {}
-              ShortNote( const ShortNote &n, QObject *p = NULL )
-                : DataVarLenShort( AO_SHORT_NOTE, n.ba, p ? p : n.parent() ) {}
+    explicit  DataByteArray( QByteArray ba = QByteArray(), QObject *p = NULL )
+                : DataVarLength( AO_DATABYTEARRAY, ba, p ) {}
+              DataByteArray( const DataByteArray &n, QObject *p = NULL )
+                : DataVarLength( AO_DATABYTEARRAY, n.ba, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
-        void  operator = ( const QByteArray &di ) { DataVarLenShort::operator = ( di ); }
+        void  operator = ( const QByteArray &di ) { DataVarLength::operator = ( di ); }
 };
 
-#endif // SHORTNOTE_H
+#endif // DATABYTEARRAY_H

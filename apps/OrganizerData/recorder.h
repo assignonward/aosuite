@@ -23,18 +23,18 @@
 #ifndef RECORDER_H
 #define RECORDER_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "netaddress.h"
 #include "note.h"
 #include "pubkey.h"
 
-class Recorder : public DataVarLenLong
+class Recorder : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  Recorder( QByteArray di = QByteArray(), QObject *p = NULL );
               Recorder( const Recorder &r )
-                : DataVarLenLong( AO_RECORDER, QByteArray(), r.parent() ),
+                : DataVarLength( AO_RECORDER, QByteArray(), r.parent() ),
                   netAddress( r.netAddress ), note( r.note ), pubKey( r.pubKey ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

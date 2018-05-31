@@ -23,16 +23,18 @@
 #ifndef NETADDRESS_H
 #define NETADDRESS_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 
-class NetAddress : public DataVarLenLong
+class NetAddress : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  NetAddress( QByteArray ba = QByteArray(), QObject *p = NULL ) : DataVarLenLong( AO_NETADDRESS, ba, p ) {}
-              NetAddress( const NetAddress &n, QObject *p = NULL ) : DataVarLenLong( AO_NETADDRESS, n.ba, p ? p : n.parent() ) {}
+    explicit  NetAddress( QByteArray ba = QByteArray(), QObject *p = NULL )
+                : DataVarLength( AO_NETADDRESS, ba, p ) {}
+              NetAddress( const NetAddress &n, QObject *p = NULL )
+                : DataVarLength( AO_NETADDRESS, n.ba, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
-        void  operator = ( const QByteArray &di ) { DataVarLenLong::operator = ( di ); }
+        void  operator = ( const QByteArray &di ) { DataVarLength::operator = ( di ); }
 };
 
 #endif // NETADDRESS_H

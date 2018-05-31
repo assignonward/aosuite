@@ -25,7 +25,7 @@
 
 #include "aotime.h"
 #include "blockref.h"
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "hash.h"
 #include "index.h"
 
@@ -33,14 +33,14 @@
  * @brief The PageRef class - when the page is the chain-maker's signature page on
  *   a block in the chain, then this is also a reference to a block and chain.
  */
-class PageRef : public DataVarLenLong
+class PageRef : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  PageRef( QObject *p = NULL )
-                : DataVarLenLong( AO_PAGE_REF, QByteArray(), p ) {}
-              PageRef( const PageRef &r )
-                : DataVarLenLong( r.typeCode, r.ba, r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
+                : DataVarLength( AO_PAGE_REF, QByteArray(), p ) {}
+              PageRef( const PageRef &r, QObject *p = NULL )
+                : DataVarLength( r.typeCode, r.ba, p ? p : r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
               PageRef( const QByteArray &di, QObject *p = NULL );
         void  operator = ( const QByteArray &di );
       AOTime  publicationTime() { return block.getTime(); }

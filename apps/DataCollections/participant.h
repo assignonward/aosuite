@@ -25,7 +25,7 @@
 #ifndef PARTICIPANT_H
 #define PARTICIPANT_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "note.h"
 #include "pageref.h"
 #include "pubkey.h"
@@ -34,13 +34,13 @@
 /**
  * @brief The Participant class - identifies a source or recipient of shares
  */
-class Participant : public DataVarLenLong
+class Participant : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  Participant( QByteArray di = QByteArray(), QObject *p = NULL );
-              Participant( const Participant &r )
-                : DataVarLenLong( AO_PARTICIPANT, QByteArray(), r.parent() ),
+              Participant( const Participant &r, QObject *p = NULL )
+                : DataVarLength( AO_PARTICIPANT, QByteArray(), p ? p : r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

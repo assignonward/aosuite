@@ -23,18 +23,18 @@
 #ifndef PRIVATEKEYRSA3072_H
 #define PRIVATEKEYRSA3072_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 
-class PrivateKeyRsa3072 : public DataVarLenLong
+class PrivateKeyRsa3072 : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  PrivateKeyRsa3072( QObject *p = NULL )
-                : DataVarLenLong( AO_RSA3072_PRI_KEY, p ) {}
+                : DataVarLength( AO_RSA3072_PRI_KEY, p ) {}
               PrivateKeyRsa3072( const PrivateKeyRsa3072 &k, QObject *p = NULL )
-                : DataVarLenLong( AO_RSA3072_PRI_KEY, k.ba, p ? p : k.parent() ) {}
+                : DataVarLength( AO_RSA3072_PRI_KEY, k.ba, p ? p : k.parent() ) {}
               PrivateKeyRsa3072( const QByteArray &di, QObject *p = NULL )
-                : DataVarLenLong( di, p ) {}
+                : DataVarLength( di, p ) {}
         void  clear() { ba.clear(); }
         bool  isValid() const { return (ba.size() > 0); }  // TODO: really check
 };

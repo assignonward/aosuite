@@ -42,8 +42,8 @@
 #define AO_SIZE_66BYTES        0x10
 #define AO_HASH512             0x10
 
-// First 4 bits, when 0010 means: this is a 18 byte chunk, one for the code, 16 for the data, one for the checkbyte
-#define AO_SIZE_18BYTES        0x20
+// First 4 bits, when 0010 means: this is a 17 byte chunk, one for the code, 16 for the data
+#define AO_SIZE_17BYTES        0x20
 #define AO_TIME_CODE           0x20 // Times are in seconds << 64
 #define AO_TIME_OF_SIG             ( 0x00 | AO_TIME_CODE )
 #define AO_TIME_RECORDED           ( 0x01 | AO_TIME_CODE )
@@ -60,12 +60,12 @@
 #define AO_COINS_CODE          0x2C // Like times, COINS_CODE quantities are << 64, but can also be handled with the Data132Float to adjust their precision and avoid overflows
 #define AO_N_COINS           ( 0x00 | AO_COINS_CODE )
 
-// First 4 bits, when 0011 means: this is a 3 byte chunk, one for the code, 1 for the data, one for the checkbyte (generally an 8 bit int)
-#define AO_SIZE_3BYTES         0x30
+// First 4 bits, when 0011 means: this is a 2 byte chunk, one for the code, 1 for the data (generally an 8 bit int)
+#define AO_SIZE_2BYTES         0x30
 #define AO_SHARE_STATE         0x30
 
-// First 4 bits, when 0100 means: this is a 4 byte chunk, one for the code, 2 for the data, one for the checkbyte (generally a 16 bit int)
-#define AO_SIZE_4BYTES         0x40
+// First 4 bits, when 0100 means: this is a 3 byte chunk, one for the code, 2 for the data (generally a 16 bit int)
+#define AO_SIZE_3BYTES         0x40
 #define AO_LISTSIZE            0x40
 #define AO_INDEX               0x41
 #define AO_KEYVALUEKEY         0x42
@@ -80,8 +80,8 @@
 
 // Variable length items
 
-// First 3 bits, when 101 means: this is a long variable length byte array, 3 byte data size, followed by 4 byte checksum
-#define AO_SIZE_VARLENLONG     0xA0
+// First 3 bits, when 101 means: this is a variable length byte array, variable data size specified in a chain of 7 bit "digits", ending when the 8th bit is 0
+#define AO_SIZE_VARLEN         0xA0
 #define AO_ASSIGNMENT          0xA0  // wrapper around the assignment data fields, which can come in any order
 #define AO_PARTICIPANT         0xA1  // wrapper around the participant data fields, which can come in any order
 #define AO_PARTICIPANT_CF      0xA2  // wrapper around the compact form participant data fields, which can come in any order
@@ -98,21 +98,13 @@
 #define AO_RSA3072_PRI_KEY     0xB2  // private key
 #define AO_KEYPAIR             0xB3  // matching public/private key pair
 #define AO_KEYVALUEPAIR        0xB4  // arbitrary key and value
-#define AO_LONGBYTEARRAY       0xB5  // arbitrary data
+#define AO_DATABYTEARRAY       0xB5  // arbitrary data
 #define AO_ORGANIZER           0xB8  // collection of data to describe an Organizer entity
 #define AO_RECORDER            0xB9  // collection of data to describe a Recorder entity
 #define AO_NETADDRESS          0xBA  // string with an IP4, IP6 or FQDN address, optionally with :port number
 #define AO_GENESIS_BLOCK       0xBB  // an actual genesis block
 #define AO_CHAIN_BLOCK         0xBC  // an actual block in the chain
-
-// First 4 bits, when 1110 means: this is a short variable length byte array, up to 255 bytes
-// Next byte tells the length of the following byte array
-// Next bytes are the byte array
-// Last two bytes are checkbytes - total length 4+length of data
-#define AO_SIZE_VARLENSHORT    0xE0
-#define AO_ECDSA_SIG           0xE0  // just the ECDSA signature itself
-#define AO_SHORT_NOTE          0xE1  // UTF-8 text
-#define AO_SHORTBYTEARRAY      0xE4  // arbitrary data
+#define AO_ECDSA_SIG           0xBE  // just the ECDSA signature itself
 
 // Flag that somebody forgot to initialize the type
 #define AO_UNDEFINED_DATAITEM  0xFF

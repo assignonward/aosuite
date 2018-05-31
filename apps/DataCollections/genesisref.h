@@ -28,13 +28,13 @@
 /**
  * @brief The GenesisRef class - identifies a chain
  */
-class GenesisRef : public DataVarLenLong
+class GenesisRef : public DataVarLength
 {
     Q_OBJECT
 public:
       explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
-                GenesisRef( const GenesisRef &r )
-                  : DataVarLenLong( AO_GENESIS_REF, QByteArray(), r.parent() ),
+                GenesisRef( const GenesisRef &r, QObject *p = NULL )
+                  : DataVarLength( AO_GENESIS_REF, QByteArray(), p ? p : r.parent() ),
                     hash( r.hash ) {}
           void  operator = ( const QByteArray &di );
           Hash  getHash()    const { return  hash; }

@@ -29,15 +29,17 @@
 ByteCodeDefinitions bcds; // Global object
 
 void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
-{ if ( jo.contains( "byte" ) ) byte = jo.value( "byte" ).toInt();
+{ if ( jo.contains( "code" ) ) code = jo.value( "code" ).toInt();
   if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
+  if ( jo.contains( "gbcr" ) ) gbcr = jo.value( "gbcr" ).toString();
+  if ( jo.contains( "size" ) ) sz   = jo.value( "size" ).toInt();
   if ( jo.contains( "type" ) ) tn   = jo.value( "type" ).toString();
   if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
 }
 
 QString ByteCodeDef::toDefine( qint32 maxLenPdef )
-{ return QString( "#define %1%5 0x%2 // %3: %4" )
-           .arg( pdef ).arg( byte, 2, 16, QChar('0') ).arg(tn)
+{ return QString( "#define %1%6 0x%2 // %3 %4: %5" )
+           .arg( pdef ).arg( code, 2, 16, QChar('0') ).arg(tn).arg(sz<0?"var":QString::number(sz))
            .arg(desc).arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
 }
 

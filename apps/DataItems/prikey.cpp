@@ -57,11 +57,7 @@ PriKey::PriKey( const PriKey &pk, QObject *p )
  * @param p - object parent, if any
  */
 PriKey::PriKey( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
-{ if ( di.size() < 34 )
-    { // TODO: log error
-      return;
-    }
-  switch ( typeCodeOf( di ) )
+{ switch ( typeCodeOf( di ) )
     { case AO_ECDSA_PRI_KEY:
         typeCode = AO_ECDSA_PRI_KEY;
         privateKeyEcdsa = PrivateKeyEcdsa( di, this );

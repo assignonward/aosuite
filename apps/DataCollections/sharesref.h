@@ -24,7 +24,7 @@
 #define SHARESREF_H
 
 #include "assignref.h"
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "index.h"
 #include "pageref.h"
 #include "pubkey.h"
@@ -35,13 +35,13 @@
  * @brief The SharesRef class - refers to a record of shares received,
  *   on a page, in a block, in a chain.
  */
-class SharesRef : public DataVarLenLong
+class SharesRef : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  SharesRef( const QByteArray &di = QByteArray(), QObject *p = NULL );
-              SharesRef( const SharesRef &r )
-                : DataVarLenLong( r.typeCode, r.ba, r.parent() ),
+              SharesRef( const SharesRef &r, QObject *p = NULL )
+                : DataVarLength( r.typeCode, r.ba, p ? p : r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), seqNum( r.seqNum ), keyHash( r.keyHash ),
                   shareState( r.shareState ), lockExp( r.lockExp ), assignRef( r.assignRef ) {}
         void  operator = ( const QByteArray &di );

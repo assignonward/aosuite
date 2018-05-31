@@ -24,7 +24,7 @@
 #define SIGNATURE_H
 
 #include "aotime.h"
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "index.h"
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
@@ -45,7 +45,7 @@
  * @brief The Signature class - multi-container for various types of signatures
  *   of course, a signature type must correspond to the PubKey type to validate.
  */
-class Signature : public DataVarLenLong
+class Signature : public DataVarLength
 {
     Q_OBJECT
 public:

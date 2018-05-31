@@ -28,12 +28,8 @@
  * @param p - object parent, if any.
  */
 Data136Float::Data136Float( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
-{ csVal = false;
-  v = 0;
-  if ( di.size() < 19 )
-    { // TODO: log an exception
-      return;
-    }
+{ v = 0;
+  e = 0;
   union _128_as_8
     { __int128 i;
       unsigned char d[16];
@@ -42,31 +38,29 @@ Data136Float::Data136Float( const QByteArray &di, QObject *p ) : DataItem( AO_UN
     {         qint8 i;
       unsigned char d[1];
     } u8;
-  typeCode = di.at(0);
-  unsigned char chk = typeCode;
-  // if (( chk & AO_SIZE_MASK ) != AO_SIZE_19BYTES )
-  //   TODO: log a warning
-  chk ^= u.d[ 0] = di.at( 1);
-  chk ^= u.d[ 1] = di.at( 2);
-  chk ^= u.d[ 2] = di.at( 3);
-  chk ^= u.d[ 3] = di.at( 4);
-  chk ^= u.d[ 4] = di.at( 5);
-  chk ^= u.d[ 5] = di.at( 6);
-  chk ^= u.d[ 6] = di.at( 7);
-  chk ^= u.d[ 7] = di.at( 8);
-  chk ^= u.d[ 8] = di.at( 9);
-  chk ^= u.d[ 9] = di.at(10);
-  chk ^= u.d[10] = di.at(11);
-  chk ^= u.d[11] = di.at(12);
-  chk ^= u.d[12] = di.at(13);
-  chk ^= u.d[13] = di.at(14);
-  chk ^= u.d[14] = di.at(15);
-  chk ^= u.d[15] = di.at(16);
-  chk ^= u8.d[0] = di.at(17);
-  if ( chk == di.at(18) )
-    csVal = true;
-   // else
-   // TODO: log a warning
+  qint32 tcSz = 0;
+  typeCode = bytesToCode( di, tcSz );
+  if ( di.size() < tcSz+17 )
+    { // TODO: log an exception
+      return;
+    }
+  u.d[ 0] = di.at( tcSz    ); // Surely there is a clever memory mapping to do this more efficiently, later.
+  u.d[ 1] = di.at( tcSz+ 1 );
+  u.d[ 2] = di.at( tcSz+ 2 );
+  u.d[ 3] = di.at( tcSz+ 3 );
+  u.d[ 4] = di.at( tcSz+ 4 );
+  u.d[ 5] = di.at( tcSz+ 5 );
+  u.d[ 6] = di.at( tcSz+ 6 );
+  u.d[ 7] = di.at( tcSz+ 7 );
+  u.d[ 8] = di.at( tcSz+ 8 );
+  u.d[ 9] = di.at( tcSz+ 9 );
+  u.d[10] = di.at( tcSz+10 );
+  u.d[11] = di.at( tcSz+11 );
+  u.d[12] = di.at( tcSz+12 );
+  u.d[13] = di.at( tcSz+13 );
+  u.d[14] = di.at( tcSz+14 );
+  u.d[15] = di.at( tcSz+15 );
+  u8.d[0] = di.at( tcSz+16 );
   v = u.i;
   e = u8.i;
 }
@@ -99,29 +93,25 @@ QByteArray Data136Float::toDataItem( bool cf ) const
     {         qint8 i;
       unsigned char d[1];
     } u8;
-  // if (( code & AO_SIZE_MASK ) != AO_SIZE_19BYTES )
-  //   TODO: log a warning
-  unsigned char chk = typeCode;
   u.i = v;
   u8.i = e;
-  di.append( typeCode );
-  di.append( u.d[ 0] ); chk ^= u.d[ 0];
-  di.append( u.d[ 1] ); chk ^= u.d[ 1];
-  di.append( u.d[ 2] ); chk ^= u.d[ 2];
-  di.append( u.d[ 3] ); chk ^= u.d[ 3];
-  di.append( u.d[ 4] ); chk ^= u.d[ 4];
-  di.append( u.d[ 5] ); chk ^= u.d[ 5];
-  di.append( u.d[ 6] ); chk ^= u.d[ 6];
-  di.append( u.d[ 7] ); chk ^= u.d[ 7];
-  di.append( u.d[ 8] ); chk ^= u.d[ 8];
-  di.append( u.d[ 9] ); chk ^= u.d[ 9];
-  di.append( u.d[10] ); chk ^= u.d[10];
-  di.append( u.d[11] ); chk ^= u.d[11];
-  di.append( u.d[12] ); chk ^= u.d[12];
-  di.append( u.d[13] ); chk ^= u.d[13];
-  di.append( u.d[14] ); chk ^= u.d[14];
-  di.append( u.d[15] ); chk ^= u.d[15];
-  di.append( u8.d[0] ); chk ^= u8.d[0];
-  di.append( chk );
+  di.append( codeToBytes( typeCode ) );
+  di.append( u.d[ 0] );
+  di.append( u.d[ 1] );
+  di.append( u.d[ 2] );
+  di.append( u.d[ 3] );
+  di.append( u.d[ 4] );
+  di.append( u.d[ 5] );
+  di.append( u.d[ 6] );
+  di.append( u.d[ 7] );
+  di.append( u.d[ 8] );
+  di.append( u.d[ 9] );
+  di.append( u.d[10] );
+  di.append( u.d[11] );
+  di.append( u.d[12] );
+  di.append( u.d[13] );
+  di.append( u.d[14] );
+  di.append( u.d[15] );
+  di.append( u8.d[0] );
   return di;
 }

@@ -23,17 +23,17 @@
 #ifndef ORGANIZER_H
 #define ORGANIZER_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "note.h"
 #include "pubkey.h"
 
-class Organizer : public DataVarLenLong
+class Organizer : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  Organizer( QByteArray di = QByteArray(), QObject *p = NULL );
               Organizer( const Organizer &o )
-                : DataVarLenLong( AO_ORGANIZER, QByteArray(), o.parent() ),
+                : DataVarLength( AO_ORGANIZER, QByteArray(), o.parent() ),
                   note( o.note ), pubKey( o.pubKey ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

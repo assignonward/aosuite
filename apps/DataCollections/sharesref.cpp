@@ -22,7 +22,8 @@
  */
 #include "sharesref.h"
 
-SharesRef::SharesRef( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_SHARES_REF, p )
+SharesRef::SharesRef( const QByteArray &di, QObject *p )
+  : DataVarLength( AO_SHARES_REF, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_SHARES_REF )
@@ -30,7 +31,7 @@ SharesRef::SharesRef( const QByteArray &di, QObject *p ) : DataVarLenLong( AO_SH
           return;
         }
        else
-        { DataVarLenLong temp( di );          // It's our type
+        { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -142,6 +143,6 @@ QByteArray  SharesRef::toDataItem( bool cf )
     }
   // TODO: randomize order of dil
   ba = dil.join();
-  return DataVarLenLong::toDataItem(cf);
+  return DataVarLength::toDataItem(cf);
 }
 

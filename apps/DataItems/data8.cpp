@@ -28,25 +28,18 @@
  * @param p - object parent, if any.
  */
 Data8::Data8( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
-{ csVal = false;
-  v = 0;
-  if ( di.size() < 3 )
-    { // TODO: log an exception
-      return;
-    }
+{ v = 0;
   union _8_as_8
     { qint8 i;
       unsigned char d[1];
     } u;
-  typeCode = di.at(0);
-  unsigned char chk = typeCode;
-  // if (( chk & AO_SIZE_MASK ) != AO_SIZE_3BYTES )
-  //   TODO: log a warning
-  chk ^= u.d[ 0] = di.at( 1);
-  if ( chk == di.at(2) )
-    csVal = true;
-  // else
-  // TODO: log a warning
+  qint32 tcSz = 0;
+  typeCode = bytesToCode( di, tcSz );
+  if ( di.size() < tcSz+1 )
+    { // TODO: log an exception
+      return;
+    }
+  u.d[ 0] = di.at( 1);
   v = u.i;
 }
 
@@ -73,12 +66,10 @@ QByteArray Data8::toDataItem( bool cf ) const
     {         qint8 i;
       unsigned char d[1];
     } u;
-  // if (( code & AO_SIZE_MASK ) != AO_SIZE_3BYTES )
+  // if (( code & AO_SIZE_MASK ) != AO_SIZE_2BYTES )
   //   TODO: log a warning
-  unsigned char chk = typeCode;
   u.i = v;
-  di.append( typeCode );
-  di.append( u.d[0] ); chk ^= u.d[0];
-  di.append( chk );
+  di.append( codeToBytes( typeCode ) );
+  di.append( u.d[0] );
   return di;
 }

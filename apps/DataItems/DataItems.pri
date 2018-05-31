@@ -28,16 +28,14 @@ LIBS        += -lgpgme -lgcrypt -ldl -lgpg-error
 
 SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/aotime.cpp            \
-               $${PWD}/bytearraylong.cpp     \
-               $${PWD}/bytearrayshort.cpp    \
+               $${PWD}/databytearray.cpp     \
                $${PWD}/dataitem.cpp          \
                $${PWD}/data8.cpp             \
                $${PWD}/data16.cpp            \
                $${PWD}/data128.cpp           \
                $${PWD}/data136float.cpp      \
                $${PWD}/datafixedlength.cpp   \
-               $${PWD}/datavarlenlong.cpp    \
-               $${PWD}/datavarlenshort.cpp   \
+               $${PWD}/datavarlength.cpp     \
                $${PWD}/hash.cpp              \
                $${PWD}/hash224salt32.cpp     \
                $${PWD}/hash256.cpp           \
@@ -55,24 +53,21 @@ SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/publickeyrsa3072.cpp  \
                $${PWD}/salt256.cpp           \
                $${PWD}/shares.cpp            \
-               $${PWD}/sharesout.cpp         \
                $${PWD}/sharestate.cpp        \
-               $${PWD}/shortnote.cpp         \
                $${PWD}/sigecdsa.cpp          \
-               $${PWD}/sigrsa3072.cpp
+               $${PWD}/sigrsa3072.cpp \
+    $$PWD/varsizecode.cpp
 
 HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/aotime.h            \
-               $${PWD}/bytearraylong.h     \
-               $${PWD}/bytearrayshort.h    \
+               $${PWD}/databytearray.h     \
                $${PWD}/dataitem.h          \
                $${PWD}/data8.h             \
                $${PWD}/data16.h            \
                $${PWD}/data128.h           \
                $${PWD}/data136float.h      \
                $${PWD}/datafixedlength.h   \
-               $${PWD}/datavarlenlong.h    \
-               $${PWD}/datavarlenshort.h   \
+               $${PWD}/datavarlength.h     \
                $${PWD}/hash.h              \
                $${PWD}/hash224salt32.h     \
                $${PWD}/hash256.h           \
@@ -90,8 +85,7 @@ HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/publickeyrsa3072.h  \
                $${PWD}/salt256.h           \
                $${PWD}/shares.h            \
-               $${PWD}/sharesout.h         \
                $${PWD}/sharestate.h        \
-               $${PWD}/shortnote.h         \
                $${PWD}/sigecdsa.h          \
-               $${PWD}/sigrsa3072.h
+               $${PWD}/sigrsa3072.h \
+    $$PWD/varsizecode.h

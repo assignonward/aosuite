@@ -23,20 +23,20 @@
 #ifndef KEYPAIR_H
 #define KEYPAIR_H
 
-#include "datavarlenlong.h"
+#include "datavarlength.h"
 #include "prikey.h"
 #include "pubkey.h"
 
 /**
  * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
  */
-class KeyPair : public DataVarLenLong
+class KeyPair : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  KeyPair( QByteArray di = QByteArray(), QObject *p = NULL );
               KeyPair( const KeyPair &k )
-                : DataVarLenLong( AO_KEYPAIR, k.parent() ),
+                : DataVarLength( AO_KEYPAIR, k.parent() ),
                   pubKey( k.pubKey ), priKey( k.priKey ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

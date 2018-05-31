@@ -23,18 +23,18 @@
 #ifndef SIGECDSA_H
 #define SIGECDSA_H
 
-#include "datavarlenshort.h"
+#include "datavarlength.h"
 
-class SigEcdsa : public DataVarLenShort
+class SigEcdsa : public DataVarLength
 {
     Q_OBJECT
 public:
     explicit  SigEcdsa( QObject *p = NULL )
-                : DataVarLenShort( AO_ECDSA_SIG, p ) {}
+                : DataVarLength( AO_ECDSA_SIG, p ) {}
               SigEcdsa( const SigEcdsa &s, QObject *p = NULL )
-                : DataVarLenShort( AO_ECDSA_SIG, s.ba, p ? p : s.parent() ) {}
+                : DataVarLength( AO_ECDSA_SIG, s.ba, p ? p : s.parent() ) {}
               SigEcdsa( const QByteArray &di, QObject *p = NULL )
-                : DataVarLenShort( di, p ) {}
+                : DataVarLength( di, p ) {}
   QByteArray  get() const { return ba; }
         void  set( QByteArray s ) { ba = s; }
         void  clear() { ba.clear(); }

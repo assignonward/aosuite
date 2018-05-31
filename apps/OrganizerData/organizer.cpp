@@ -22,7 +22,7 @@
  */
 #include "organizer.h"
 
-Organizer::Organizer( QByteArray di, QObject *p ) : DataVarLenLong( AO_ORGANIZER, p )
+Organizer::Organizer( QByteArray di, QObject *p ) : DataVarLength( AO_ORGANIZER, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_ORGANIZER )
@@ -31,7 +31,7 @@ Organizer::Organizer( QByteArray di, QObject *p ) : DataVarLenLong( AO_ORGANIZER
         }
        else
         { typeCode = typeCodeOf( di );
-          DataVarLenLong temp( di );          // It's our type
+          DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
             { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
@@ -81,5 +81,5 @@ QByteArray  Organizer::toDataItem( bool cf )
   ba.clear();
   foreach( QByteArray a, dil )
     ba.append( a );
-  return DataVarLenLong::toDataItem(cf);
+  return DataVarLength::toDataItem(cf);
 }
