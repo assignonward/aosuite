@@ -37,7 +37,7 @@ DataVarLength::DataVarLength( const QByteArray &di, QObject *p )
   typeCode = di.at(0);
   qint32  i = 0;
   quint32 size = bytesToCode( di.mid(1), i );
-  if ( di.size() < (size+i+1) )
+  if ( (unsigned int)di.size() < (size+i+1) )
     { // TODO: log an exception
       return;
     }

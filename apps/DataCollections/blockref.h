@@ -28,7 +28,7 @@
 #include "datavarlength.h"
 #include "genesisref.h"
 #include "hash.h"
-#include "sharesout.h"
+#include "shares.h"
 
 /**
  * @brief The BlockRef class - identifies a block in the chain
@@ -41,24 +41,24 @@ public:
               BlockRef( const BlockRef &r, QObject *p = NULL )
                 : DataVarLength( AO_BLOCK_REF, QByteArray(), p ? p : r.parent() ),
                   propTime( r.propTime ), shOut( r.shOut ), blkHash( r.blkHash ), genesis( r.genesis ) {}
-              BlockRef( const Hash &h, const AOTime t, const SharesOut &s, const GenesisRef &r, QObject *p = NULL )
+              BlockRef( const Hash &h, const AOTime t, const Shares &s, const GenesisRef &r, QObject *p = NULL )
                 : DataVarLength( AO_BLOCK_REF, QByteArray(), p ),
                   propTime( t ), shOut( s ), blkHash( h ), genesis( r ) {}
         void  operator = ( const QByteArray &di );
       AOTime  getTime()    const { return propTime; }
         Hash  getHash()    const { return  blkHash; }
-   SharesOut  getShOut()   const { return    shOut; }
+      Shares  getShOut()   const { return    shOut; }
   GenesisRef  getGenesis() const { return  genesis; }
         void  setTime( const AOTime &t )        { propTime = t; }
         void  setHash( const Hash &h )          {  blkHash = h; }
-        void  setShOut( const SharesOut &s )    {    shOut = s; }
+        void  setShOut( const Shares &s )       {    shOut = s; typeCode = AO_SHARES_OUT; }
         void  setGenesis( const GenesisRef &r ) {  genesis = r; }
   QByteArray  toDataItem( bool cf = false );
         bool  isValid() { return propTime.past() && blkHash.isValid() && genesis.isValid(); }
 
 private:
       AOTime  propTime;  // time this block was proposed (should fit it into a specific time-layer)
-   SharesOut  shOut;     // shares outstanding after this block is recorded
+      Shares  shOut;     // shares outstanding after this block is recorded
         Hash  blkHash;   // Whole block hash signature (unique ID)
   GenesisRef  genesis;   // the genesis block (chain ID)
 };

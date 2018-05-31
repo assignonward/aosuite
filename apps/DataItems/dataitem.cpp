@@ -91,7 +91,6 @@ typeCode_t DataItem::typeCodeOf( const QByteArray &di )
 #include "publickeyrsa3072.h"
 #include "salt256.h"
 #include "shares.h"
-#include "sharesout.h"
 #include "sharestate.h"
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
@@ -135,7 +134,6 @@ DataItem *DataItem::fromDataItem( const QByteArray &di, QObject *p )
       case AO_ASSIGNMENT_AMT:
       case AO_UNDERWRITING_AMT:
       case AO_RECORDING_BID:           return new Shares( di, p );
-      case AO_SHARES_OUT:              return new SharesOut( di, p );
       case AO_SHARE_STATE:             return new ShareState( di, p );
       case AO_ECDSA_SIG:               return new SigEcdsa( di, p );
       case AO_RSA3072_SIG:             return new SigRsa3072( di, p );
@@ -178,7 +176,6 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
       case AO_ASSIGNMENT_AMT:
       case AO_UNDERWRITING_AMT:
       case AO_RECORDING_BID:           return new Shares( *((Shares *)ditm), p );
-      case AO_SHARES_OUT:              return new SharesOut( *((SharesOut *)ditm), p );
       case AO_SHARE_STATE:             return new ShareState( *((ShareState *)ditm), p );
       case AO_ECDSA_SIG:               return new SigEcdsa( *((SigEcdsa *)ditm), p );
       case AO_RSA3072_SIG:             return new SigRsa3072( *((SigRsa3072 *)ditm), p );

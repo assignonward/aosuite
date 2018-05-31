@@ -88,7 +88,7 @@ void  GenesisForm::on_importGenesisBlock_clicked()
 #include "databytearray.h"
 #include "index.h"
 #include "note.h"
-#include "sharesout.h"
+#include "shares.h"
 
 /**
  * @brief GenesisForm::on_publishGenesisBlock_clicked - saving to file at the moment
@@ -107,7 +107,7 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
 //  gb.add( AOK_ICON           , DataByteArray( ) ) // TODO: file reader
 //  gb.add( AOK_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.add( AOK_STARTING_SHARES, new SharesOut( tv, &gb ) );
+  gb.add( AOK_STARTING_SHARES, new Shares( tv, AO_SHARES_OUT, &gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
   gb.add( AOK_MIN_BLOCK_INT  , new AOTime( tv, AO_TIME_DIFF, &gb ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);

@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 #include "bytecodedef.h"
+#include "varsizecode.h"
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -38,9 +39,23 @@ void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
 }
 
 QString ByteCodeDef::toDefine( qint32 maxLenPdef )
-{ return QString( "#define %1%6 0x%2 // %3 %4: %5" )
-           .arg( pdef ).arg( code, 2, 16, QChar('0') ).arg(tn).arg(sz<0?"var":QString::number(sz))
-           .arg(desc).arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
+{ return QString( "#define %1%7 0x%2 // %3 (%4)%5: %6" )
+           .arg( pdef ).arg( code, 2, 16, QChar('0') ).arg(tn)
+           .arg( QString::fromUtf8( VarSizeCode::codeToBytes(code).toHex() ) )
+           .arg( (sz<0) ? "var" : QString::number(sz) ).arg(desc)
+           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
+}
+
+QString ByteCodeDef::toCase( qint32 maxLenPdef )
+{ return QString( "case %1:%3 return new %2( di, p );" )
+           .arg( pdef ).arg( tn )
+           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
+}
+
+QString ByteCodeDef::toCaseDataItem( qint32 maxLenPdef )
+{ return QString( "case %1:%3 return new %2( *((%2 *)ditm), p );" )
+           .arg( pdef ).arg( tn )
+           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

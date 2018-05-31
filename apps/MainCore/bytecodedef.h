@@ -40,6 +40,8 @@ public:
         void  operator = ( const ByteCodeDef &k ) { code = k.code; tn = k.tn; desc = k.desc; pdef = k.pdef; }
         void  fromJsonObject( const QJsonObject &jo );
      QString  toDefine( qint32 maxLenPdef = 24 );
+     QString  toCase( qint32 maxLenPdef = 24 );
+     QString  toCaseDataItem( qint32 maxLenPdef = 24 );
 
   typeCode_t  code; // numerical value of the bytecode
       qint32  sz;   // size of the following data in bytes, or -1 if variable size
