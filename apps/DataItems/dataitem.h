@@ -24,10 +24,66 @@
 #define DATAITEM_H
 
 #include <QObject>
-#include "bytecodes.h"
 #include "varsizecode.h"
 
 #define typeCode_t quint32
+#define AO_SEPARABLE_TYPE          0x40 // Types with this bit set are separable
+
+#define AO_ECDSA_PUB_KEY2          0x02 // (02+32) PublicKeyEcdsa: ECDSA Public Key, type 2 compressed
+#define AO_ECDSA_PUB_KEY3          0x03 // (03+32) PublicKeyEcdsa: ECDSA Public Key, type 3 compressed
+#define AO_HASH256                 0x06 // (06+32) Hash256: SHA2-256 hash of some data
+#define AO_SALT256                 0x07 // (07+32) Salt256: 256 random bits
+#define AO_PUB_RSA3072_ID          0x08 // (08+32) Hash256: Hash256 of a PublicKeyRsa3072
+#define AO_HASH224SALT32           0x09 // (09+32) Hash224Salt32: Hash224 of some data including a 32 bit salt
+#define AO_HASH512                 0x10 // (10+64) Hash512: SHA3-512 hash of some data
+#define AO_TIME_OF_SIG             0x18 // (18+16) AOTime: UTC time (secs since epoch << 64) when a signature was made
+#define AO_TIME_RECORDED           0x19 // (19+16) AOTime: UTC time (secs since epoch << 64) when a record was made
+#define AO_RECORDING_DEADLINE      0x1a // (1a+16) AOTime: UTC time (secs since epoch << 64) when a record is contracted to be recorded
+#define AO_TIME_DIFF               0x1b // (1b+16) AOTime: UTC time (secs since epoch << 64) defining a time interval, or difference
+#define AO_UNDERWRITING_EXPIRATION 0x1c // (1c+16) AOTime: UTC time (secs since epoch << 64) when underwriting shares are bound until
+#define AO_ASSIGNMENT_AMT          0x1d // (1d+16) Shares: 128 bit signed integer number of shares assigned
+#define AO_UNDERWRITING_AMT        0x1e // (1e+16) Shares: 128 bit signed integer number of shares committed as underwriting
+#define AO_RECORDING_BID           0x1f // (1f+16) Shares: 128 bit signed integer number of shares bid for recording
+#define AO_SHARES_OUT              0x20 // (20+16) Shares: 128 bit signed integer number of shares outstanding (recorded on blocks)
+#define AO_N_COINS                 0x21 // (21+16) AOCoins: Number of coins, as a fixed point 64.64 bit number
+#define AO_SHARE_STATE             0x28 // (28+1) ShareState: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
+#define AO_LISTSIZE                0x30 // (30+2) Data16: 16 bit signed integer declares the size of a list, as a check that all intended data is present.
+#define AO_INDEX                   0x31 // (31+2) Data16: 16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.
+#define AO_RSA3072_PUB_KEY         0x38 // (38+384) PublicKeyRsa3072: an RSA3072 public key
+#define AO_RSA3072_SIG             0x39 // (39+384) SigRsa3072: an RSA3072 signature
+#define AO_ASSIGNMENT              0x22 // (22+var) Assignment: Shares Assignment agreement before signatures
+#define AO_PARTICIPANT             0x23 // (23+var) Participant: Participant in a Shares Assignment agreement
+#define AO_PARTICIPANT_CF          0x24 // (24+var) Participant: Participant in a Shares Assignment agreement, compact (aka chain) form
+#define AO_AUTHORIZATION           0x27 // (27+var) Authorization: An assignment plus a list of signatures on the authorization
+#define AO_ASSIGN_REF              0x0a // (0a+var) AssignRef: Describes a record of shares when they were signed away in a binding contract
+#define AO_DATABYTEARRAY           0x4a // (4a+var) DataByteArray:separable Arbitrary data of any form, may contain NULL bytes, any length (within reason)
+#define AO_NOTE                    0x4b // (4b+var) Note:separable UTF-8 free text, no specific function, but recorded in the blockchain
+#define AO_BLOCK_REF               0x0e // (0e+var) BlockRef: Describes a whole block in the chain
+#define AO_PAGE_REF                0x11 // (11+var) PageRef: UTF-8 free text, no specific function, but recorded in the blockchain
+#define AO_GENESIS_REF             0x14 // (14+var) GenesisRef: Uniquely describes a genesis block, includes list of properties used to calculate new blocks
+#define AO_SIG_WITH_TIME           0x17 // (17+var) Signature: All signatures include the time of signature
+#define AO_SHARES_REF              0x25 // (25+var) SharesRef: Reference to shares received potentially including info on their current state in the chain
+#define AO_ASSETS                  0x26 // (26+var) Assets: A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
+#define AO_ECDSA_PRI_KEY           0x60 // (60+var) PrivateKeyEcdsa:separable An ECDSA private key
+#define AO_RSA3072_PRI_KEY         0x63 // (63+var) PrivateKeyRsa3072:separable An RSA3072 private key
+#define AO_KEYPAIR                 0x29 // (29+var) KeyPair: A (hopefully matching) public-private key pair
+#define AO_ORGANIZER               0x2c // (2c+var) Organizer: Contact information for an asset organizer (user software)
+#define AO_RECORDER                0x2f // (2f+var) Recorder: Contact information for a recorder (chainmaker software)
+#define AO_NETADDRESS              0x72 // (72+var) NetAddress:separable IP4 or IP6 or named network contact address, potentially including :port number
+#define CB_CHAIN_BLOCK             0x3a // (3a+var) GenericCollection: A full chain block, including all data - though potentially censored as required by local laws
+#define AO_ECDSA_SIG               0x3b // (3b+var) SigEcdsa: An ECDSA signature
+#define GB_GENESIS_BLOCK           0x87 // (8701+var) GenericCollection: A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it
+#define GB_PROTOCOL                0x107 // (8702+2) Data16: Basic level of protocol, identifies functionality
+#define GB_PROTOCOL_REV            0x187 // (8703+2) Data16: Revision of the protocol, may indicate additional types supported
+#define GB_TEXT_SYMBOL             0x1807 // (8730+var) Note: Short unique symbol that uniquely identifies the chain e.g. TⒶ1a
+#define GB_DESCRIPTION             0x18c7 // (c731+var) Note:separable Text description of the chain
+#define GB_ICON                    0x2047 // (c740+var) DataByteArray:separable Image suitable for icon use to represent the chain
+#define GB_IMAGE                   0x20c7 // (c741+var) DataByteArray:separable Large format image to represent the chain
+#define GB_STARTING_SHARES         0x807 // (8710+16) Shares: Starting number of shares
+#define GB_MIN_BLOCK_INT           0x887 // (8711+16) AOTime: Minimuim block interval time
+#define GB_N_COINS_TOTAL           0x907 // (8712+16) AOCoins: Number of coins that the sum of all shares outstanding represents
+#define GB_RECORDING_TAX           0x987 // (8713+16) AOCoins: Recording Tax in coins per byte (usually a very small number)
+#define AO_UNDEFINED_DATAITEM      0x3f // (3f+0) DataItem: An undefined data item, usually an error
 
 class DataItem : public QObject, public VarSizeCode
 {
@@ -48,6 +104,7 @@ public:
   static typeCode_t  typeCodeOf( const QByteArray &di );
                bool  checksumValidated() const { return csVal; }
  virtual QByteArray  toDataItem( bool cf = false ) const { (void)cf; return QByteArray(); } // Implemented in all child classes
+ virtual QByteArray  toHashData( bool cf = false ) const;
          typeCode_t  getTypeCode() const { return typeCode; }
                void  setTypeCode( const typeCode_t &tc ) { typeCode = tc; }
 protected:

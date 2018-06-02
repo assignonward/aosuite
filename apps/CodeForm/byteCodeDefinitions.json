@@ -1,0 +1,405 @@
+[
+    {
+        "code": 2,
+        "desc": "ECDSA Public Key, type 2 compressed",
+        "pdef": "AO_ECDSA_PUB_KEY2",
+        "size": 32,
+        "type": "PublicKeyEcdsa"
+    },
+    {
+        "code": 3,
+        "desc": "ECDSA Public Key, type 3 compressed",
+        "pdef": "AO_ECDSA_PUB_KEY3",
+        "size": 32,
+        "type": "PublicKeyEcdsa"
+    },
+    {
+        "code": 6,
+        "desc": "SHA2-256 hash of some data",
+        "pdef": "AO_HASH256",
+        "size": 32,
+        "type": "Hash256"
+    },
+    {
+        "code": 7,
+        "desc": "256 random bits",
+        "pdef": "AO_SALT256",
+        "size": 32,
+        "type": "Salt256"
+    },
+    {
+        "code": 8,
+        "desc": "Hash256 of a PublicKeyRsa3072",
+        "pdef": "AO_PUB_RSA3072_ID",
+        "size": 32,
+        "type": "Hash256"
+    },
+    {
+        "code": 9,
+        "desc": "Hash224 of some data including a 32 bit salt",
+        "pdef": "AO_HASH224SALT32",
+        "size": 32,
+        "type": "Hash224Salt32"
+    },
+    {
+        "code": 16,
+        "desc": "SHA3-512 hash of some data",
+        "pdef": "AO_HASH512",
+        "size": 64,
+        "type": "Hash512"
+    },
+    {
+        "code": 24,
+        "desc": "UTC time (secs since epoch << 64) when a signature was made",
+        "pdef": "AO_TIME_OF_SIG",
+        "size": 16,
+        "type": "AOTime"
+    },
+    {
+        "code": 25,
+        "desc": "UTC time (secs since epoch << 64) when a record was made",
+        "pdef": "AO_TIME_RECORDED",
+        "size": 16,
+        "type": "AOTime"
+    },
+    {
+        "code": 26,
+        "desc": "UTC time (secs since epoch << 64) when a record is contracted to be recorded",
+        "pdef": "AO_RECORDING_DEADLINE",
+        "size": 16,
+        "type": "AOTime"
+    },
+    {
+        "code": 27,
+        "desc": "UTC time (secs since epoch << 64) defining a time interval, or difference",
+        "pdef": "AO_TIME_DIFF",
+        "size": 16,
+        "type": "AOTime"
+    },
+    {
+        "code": 28,
+        "desc": "UTC time (secs since epoch << 64) when underwriting shares are bound until",
+        "pdef": "AO_UNDERWRITING_EXPIRATION",
+        "size": 16,
+        "type": "AOTime"
+    },
+    {
+        "code": 29,
+        "desc": "128 bit signed integer number of shares assigned",
+        "pdef": "AO_ASSIGNMENT_AMT",
+        "size": 16,
+        "type": "Shares"
+    },
+    {
+        "code": 30,
+        "desc": "128 bit signed integer number of shares committed as underwriting",
+        "pdef": "AO_UNDERWRITING_AMT",
+        "size": 16,
+        "type": "Shares"
+    },
+    {
+        "code": 31,
+        "desc": "128 bit signed integer number of shares bid for recording",
+        "pdef": "AO_RECORDING_BID",
+        "size": 16,
+        "type": "Shares"
+    },
+    {
+        "code": 32,
+        "desc": "128 bit signed integer number of shares outstanding (recorded on blocks)",
+        "pdef": "AO_SHARES_OUT",
+        "size": 16,
+        "type": "Shares"
+    },
+{
+    "code": 33,
+    "desc": "Number of coins, as a fixed point 64.64 bit number",
+    "pdef": "AO_N_COINS",
+    "size": 16,
+    "type": "AOCoins"
+},
+    {
+        "code": 40,
+        "desc": "8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)",
+        "pdef": "AO_SHARE_STATE",
+        "size": 1,
+        "type": "ShareState"
+    },
+    {
+        "code": 48,
+        "desc": "16 bit signed integer declares the size of a list, as a check that all intended data is present.",
+        "pdef": "AO_LISTSIZE",
+        "size": 2,
+        "type": "Data16"
+    },
+    {
+        "code": 49,
+        "desc": "16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.",
+        "pdef": "AO_INDEX",
+        "size": 2,
+        "type": "Data16"
+    },
+    {
+        "code": 52,
+        "desc": "an RSA3072 public key",
+        "pdef": "AO_RSA3072_PUB_KEY",
+        "size": 384,
+        "type": "PublicKeyRsa3072"
+    },
+    {
+        "code": 53,
+        "desc": "an RSA3072 signature",
+        "pdef": "AO_RSA3072_SIG",
+        "size": 384,
+        "type": "SigRsa3072"
+    },
+{
+    "code": 54,
+    "desc": "An ECDSA signature",
+    "pdef": "AO_ECDSA_SIG",
+    "size": -1,
+    "type": "SigEcdsa"
+},
+    {
+        "code": 34,
+        "desc": "Shares Assignment agreement before signatures",
+        "pdef": "AO_ASSIGNMENT",
+        "size": -1,
+        "type": "Assignment"
+    },
+    {
+        "code": 35,
+        "desc": "Participant in a Shares Assignment agreement",
+        "pdef": "AO_PARTICIPANT",
+        "size": -1,
+        "type": "Participant"
+    },
+    {
+        "code": 36,
+        "desc": "Participant in a Shares Assignment agreement, compact (aka chain) form",
+        "pdef": "AO_PARTICIPANT_CF",
+        "size": -1,
+        "type": "Participant"
+    },
+    {
+        "code": 39,
+        "desc": "An assignment plus a list of signatures on the authorization",
+        "pdef": "AO_AUTHORIZATION",
+        "size": -1,
+        "type": "Authorization"
+    },
+    {
+        "code": 10,
+        "desc": "Describes a record of shares when they were signed away in a binding contract",
+        "pdef": "AO_ASSIGN_REF",
+        "size": -1,
+        "type": "AssignRef"
+    },
+    {
+        "code": 74,
+        "desc": "Arbitrary data of any form, may contain NULL bytes, any length (within reason)",
+        "pdef": "AO_DATABYTEARRAY",
+        "sepr": true,
+        "size": -1,
+        "type": "DataByteArray"
+    },
+    {
+        "code": 75,
+        "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
+        "pdef": "AO_NOTE",
+        "sepr": true,
+        "size": -1,
+        "type": "Note"
+    },
+    {
+        "code": 14,
+        "desc": "Describes a whole block in the chain",
+        "pdef": "AO_BLOCK_REF",
+        "size": -1,
+        "type": "BlockRef"
+    },
+    {
+        "code": 17,
+        "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
+        "pdef": "AO_PAGE_REF",
+        "size": -1,
+        "type": "PageRef"
+    },
+    {
+        "code": 20,
+        "desc": "Uniquely describes a genesis block, includes list of properties used to calculate new blocks",
+        "pdef": "AO_GENESIS_REF",
+        "size": -1,
+        "type": "GenesisRef"
+    },
+    {
+        "code": 23,
+        "desc": "All signatures include the time of signature",
+        "pdef": "AO_SIG_WITH_TIME",
+        "size": -1,
+        "type": "Signature"
+    },
+    {
+        "code": 37,
+        "desc": "Reference to shares received potentially including info on their current state in the chain",
+        "pdef": "AO_SHARES_REF",
+        "size": -1,
+        "type": "SharesRef"
+    },
+    {
+        "code": 38,
+        "desc": "A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs",
+        "pdef": "AO_ASSETS",
+        "size": -1,
+        "type": "Assets"
+    },
+    {
+        "code": 96,
+        "desc": "An ECDSA private key",
+        "pdef": "AO_ECDSA_PRI_KEY",
+        "sepr": true,
+        "size": -1,
+        "type": "PrivateKeyEcdsa"
+    },
+    {
+        "code": 99,
+        "desc": "An RSA3072 private key",
+        "pdef": "AO_RSA3072_PRI_KEY",
+        "sepr": true,
+        "size": -1,
+        "type": "PrivateKeyRsa3072"
+    },
+    {
+        "code": 41,
+        "desc": "A (hopefully matching) public-private key pair",
+        "pdef": "AO_KEYPAIR",
+        "size": -1,
+        "type": "KeyPair"
+    },
+    {
+        "code": 44,
+        "desc": "Contact information for an asset organizer (user software)",
+        "pdef": "AO_ORGANIZER",
+        "size": -1,
+        "type": "Organizer"
+    },
+    {
+        "code": 47,
+        "desc": "Contact information for a recorder (chainmaker software)",
+        "pdef": "AO_RECORDER",
+        "size": -1,
+        "type": "Recorder"
+    },
+    {
+        "code": 114,
+        "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
+        "pdef": "AO_NETADDRESS",
+        "sepr": true,
+        "size": -1,
+        "type": "NetAddress"
+    },
+{
+    "code": 55,
+    "desc": "A full chain block, including all data - though potentially censored as required by local laws",
+    "pdef": "CB_CHAIN_BLOCK",
+    "size": -1,
+    "type": "GenericCollection"
+},
+{
+    "code": 135,
+    "desc": "A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it",
+    "pdef": "GB_GENESIS_BLOCK",
+    "size": -1,
+    "type": "GenericCollection"
+},
+    {
+        "code": 263,
+        "desc": "Basic level of protocol, identifies functionality",
+        "gbcr": "Combo",
+        "pdef": "GB_PROTOCOL",
+        "size": 2,
+        "type": "Data16"
+    },
+    {
+        "code": 391,
+        "desc": "Revision of the protocol, may indicate additional types supported",
+        "gbcr": "Combo",
+        "pdef": "GB_PROTOCOL_REV",
+        "size": 2,
+        "type": "Data16"
+    },
+    {
+        "code": 6151,
+        "desc": "Short unique symbol that uniquely identifies the chain e.g. TⒶ1a",
+        "gbcr": "Text",
+        "pdef": "GB_TEXT_SYMBOL",
+        "size": -1,
+        "type": "Note"
+    },
+    {
+        "code": 6343,
+        "desc": "Text description of the chain",
+        "gbcr": "Text",
+        "pdef": "GB_DESCRIPTION",
+        "sepr": true,
+        "size": -1,
+        "type": "Note"
+    },
+    {
+        "code": 8263,
+        "desc": "Image suitable for icon use to represent the chain",
+        "gbcr": "File",
+        "pdef": "GB_ICON",
+        "sepr": true,
+        "size": -1,
+        "type": "DataByteArray"
+    },
+    {
+        "code": 8391,
+        "desc": "Large format image to represent the chain",
+        "gbcr": "File",
+        "pdef": "GB_IMAGE",
+        "sepr": true,
+        "size": -1,
+        "type": "DataByteArray"
+    },
+    {
+        "code": 2055,
+        "desc": "Starting number of shares",
+        "gbcr": "Pow2",
+        "pdef": "GB_STARTING_SHARES",
+        "size": 16,
+        "type": "Shares"
+    },
+    {
+        "code": 2183,
+        "desc": "Minimuim block interval time",
+        "gbcr": "f64.64",
+        "pdef": "GB_MIN_BLOCK_INT",
+        "size": 16,
+        "type": "AOTime"
+    },
+    {
+        "code": 2311,
+        "desc": "Number of coins that the sum of all shares outstanding represents",
+        "gbcr": "Pow2",
+        "pdef": "GB_N_COINS_TOTAL",
+        "size": 16,
+        "type": "AOCoins"
+    },
+    {
+        "code": 2439,
+        "desc": "Recording Tax in coins per byte (usually a very small number)",
+        "gbcr": "Pow2",
+        "pdef": "GB_RECORDING_TAX",
+        "size": 16,
+        "type": "AOCoins"
+    },
+    {
+        "code": 63,
+        "desc": "An undefined data item, usually an error",
+        "pdef": "AO_UNDEFINED_DATAITEM",
+        "size": 0,
+        "type": "DataItem"
+    }
+]

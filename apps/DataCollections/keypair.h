@@ -35,8 +35,8 @@ class KeyPair : public DataVarLength
     Q_OBJECT
 public:
     explicit  KeyPair( QByteArray di = QByteArray(), QObject *p = NULL );
-              KeyPair( const KeyPair &k )
-                : DataVarLength( AO_KEYPAIR, k.parent() ),
+              KeyPair( const KeyPair &k, QObject *p = NULL )
+                : DataVarLength( AO_KEYPAIR, p ? p : k.parent() ),
                   pubKey( k.pubKey ), priKey( k.priKey ) {}
         void  operator = ( const QByteArray &di );
   QByteArray  toDataItem( bool cf = false );

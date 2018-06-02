@@ -23,26 +23,26 @@
 
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/assignment.cpp    \
-               $${PWD}/assignref.cpp     \
-               $${PWD}/authorization.cpp \
-               $${PWD}/blockref.cpp      \
-               $${PWD}/genesisblock.cpp  \
-               $${PWD}/genesisref.cpp    \
-               $${PWD}/keypair.cpp       \
-               $${PWD}/pageref.cpp       \
-               $${PWD}/participant.cpp   \
-               $${PWD}/sharesref.cpp     \
+SOURCES     += $${PWD}/assignment.cpp        \
+               $${PWD}/assignref.cpp         \
+               $${PWD}/authorization.cpp     \
+               $${PWD}/blockref.cpp          \
+               $${PWD}/genericcollection.cpp \
+               $${PWD}/genesisref.cpp        \
+               $${PWD}/keypair.cpp           \
+               $${PWD}/pageref.cpp           \
+               $${PWD}/participant.cpp       \
+               $${PWD}/sharesref.cpp         \
                $${PWD}/signature.cpp
 
-HEADERS     += $${PWD}/assignment.h    \
-               $${PWD}/assignref.h     \
-               $${PWD}/authorization.h \
-               $${PWD}/blockref.h      \
-               $${PWD}/genesisblock.h  \
-               $${PWD}/genesisref.h    \
-               $${PWD}/keypair.h       \
-               $${PWD}/pageref.h       \
-               $${PWD}/participant.h   \
-               $${PWD}/sharesref.h     \
+HEADERS     += $${PWD}/assignment.h        \
+               $${PWD}/assignref.h         \
+               $${PWD}/authorization.h     \
+               $${PWD}/blockref.h          \
+               $${PWD}/genericcollection.h \
+               $${PWD}/genesisref.h        \
+               $${PWD}/keypair.h           \
+               $${PWD}/pageref.h           \
+               $${PWD}/participant.h       \
+               $${PWD}/sharesref.h         \
                $${PWD}/signature.h

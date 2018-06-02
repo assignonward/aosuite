@@ -40,13 +40,65 @@ CodeForm::CodeForm( QWidget *cw, MainWinCommon *mw ) :
     */
 
     ByteCodeDefinitions bcds;
+    QMap<typeCode_t,QString>codeNames;
     foreach( ByteCodeDef bcd, bcds.bcdList )
-      { ui->codeEdit->appendPlainText( bcd.toDefine() );
+      { ui->bytecodeDefinitions->appendPlainText( bcd.toDefine() );
+        if ( bcd.sz >= 0 ) ui->typeSizeTable->appendPlainText( bcd.toSizeCase() );
+        ui->copyDataItem->appendPlainText( bcd.toCaseDataItem() );
+        ui->copyDataItemFromBytes->appendPlainText( bcd.toCase() );
 
+        // Ensure that the separable bit is properly implemented
+        if ( bcd.sepr )
+          { if (( bcd.code & AO_SEPARABLE_TYPE ) == 0)
+              qDebug( "%s typecode %x indicates not separable but the separable flag is set.", qPrintable( bcd.pdef ), bcd.code );
+          }
+         else
+          { if (( bcd.code & AO_SEPARABLE_TYPE ) != 0)
+              qDebug( "%s typecode %x indicates separable but the separable flag is not set.", qPrintable( bcd.pdef ), bcd.code );
+          }
+
+        // Check for duplicates
+        if ( codeNames.contains( bcd.code ) )
+          qDebug( "%s already defined %d, %s also trying to use it.", qPrintable( codeNames[bcd.code] ), bcd.code, qPrintable( bcd.pdef ) );
+         else
+          codeNames.insert( bcd.code, bcd.pdef );
       }
+    ui->json->appendPlainText( bcds.toString() );
 }
 
 CodeForm::~CodeForm()
 {
     delete ui;
 }
+
+void CodeForm::on_massage_clicked()
+{ qDebug( "Massage clicked" );
+
+  ui->json->clear();
+
+  QMap<typeCode_t,QString>codeNames;
+  ByteCodeDefinitions bcds;
+  ByteCodeDefinitions bcdn("");
+  foreach( ByteCodeDef bcd, bcds.bcdList )
+    { bool done = false;
+      while ( !done )
+        { done = true;
+          if ( bcd.sepr )
+            bcd.code |= AO_SEPARABLE_TYPE;
+           else
+            bcd.code &= ~(AO_SEPARABLE_TYPE);
+
+          if ( !codeNames.contains( bcd.code ) )
+            codeNames.insert( bcd.code, bcd.pdef );
+           else
+            { done = false;
+              while ( codeNames.contains( bcd.code ) )
+               bcd.code++;
+              qDebug( "found new code %d for %s", bcd.code, qPrintable( bcd.pdef ) );
+            }
+        }
+      bcdn.bcdList.append( bcd );
+    }
+  ui->json->appendPlainText( bcdn.toString() );
+}
+

@@ -20,7 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "genesisblock.h"
 #include "genesisForm.h"
 #include <QFileDialog>
 
@@ -86,6 +85,8 @@ void  GenesisForm::on_importGenesisBlock_clicked()
 #include "aotime.h"
 #include "databytearray.h"
 #include "data16.h"
+#include "data16.h"
+#include "genericcollection.h"
 #include "shares.h"
 
 /**
@@ -96,26 +97,27 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
 { QString name = QFileDialog::getSaveFileName( this, "save Genesis Block to file:" );
   if ( name.size() < 1 )
     return;
-  GenesisBlock gb;
+  GenericCollection gb( GB_GENESIS_BLOCK );
   __int128_t tv;
-  gb.add( AO_PROTOCOL    , new Data16       ( ui->protocol   ->currentIndex()        , AO_PROTOCOL,     &gb ) );
-  gb.add( AO_PROTOCOL_REV, new Data16       ( ui->protocolRev->value()               , AO_PROTOCOL_REV, &gb ) );
-  gb.add( AO_TEXT_SYMBOL , new DataVarLength( ui->symbol     ->text().toUtf8()       , AO_TEXT_SYMBOL,  &gb ) );
-  gb.add( AO_DESCRIPTION , new DataVarLength( ui->description->toPlainText().toUtf8(), AO_DESCRIPTION,  &gb ) );
-//  gb.add( AOK_ICON           , DataByteArray( ) ) // TODO: file reader
-//  gb.add( AOK_IMAGE          , DataByteArray( ) ) // TODO: file reader
+  gb.add( GB_PROTOCOL    , new Data16       ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
+  gb.add( GB_PROTOCOL_REV, new Data16       ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
+  gb.add( GB_TEXT_SYMBOL , new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  &gb ) );
+  if ( ui->description->toPlainText().size() > 0 )
+  gb.add( GB_DESCRIPTION , new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  &gb ) );
+//  gb.add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
+//  gb.add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.add( AO_STARTING_SHARES, new Shares( tv, AO_SHARES_OUT, &gb ) );
+  gb.add( GB_STARTING_SHARES, new Shares( tv, GB_STARTING_SHARES, &gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
-  gb.add( AO_MIN_BLOCK_INT  , new AOTime( tv, AO_TIME_DIFF , &gb ) );
+  gb.add( GB_MIN_BLOCK_INT  , new AOTime( tv, GB_MIN_BLOCK_INT  , &gb ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb.add( AO_N_COINS_TOTAL  , new AOCoins( tv, AO_N_COINS_TOTAL, &gb ) );
+  gb.add( GB_N_COINS_TOTAL  , new AOCoins( tv, GB_N_COINS_TOTAL, &gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb.add( AO_RECORDING_TAX  , new AOCoins( tv, AO_RECORDING_TAX, &gb ) );
+  gb.add( GB_RECORDING_TAX  , new AOCoins( tv, GB_RECORDING_TAX, &gb ) );
   QFile file( name );
   if ( !file.open( QIODevice::WriteOnly ) )
     { qDebug() << gb.toDataItem();
       return;
     }
-  file.write( gb.toDataItem() );
+  file.write( ui->hashData->isChecked() ? gb.toHashData() : gb.toDataItem() );
 }

@@ -36,6 +36,8 @@ public:
                 : DataVarLength( ba, AO_NOTE, p ) {}
               Note( const Note &n, QObject *p = NULL )
                 : DataVarLength( n.ba, AO_NOTE, p ? p : n.parent() ) {}
+        void  setNote( const QString &s ) { ba = s.toUtf8(); }
+     QString  getNote() { return QString::fromUtf8( ba ); }
       qint32  size() { return ba.size(); }
         void  operator = ( const QByteArray &di ) { DataVarLength::operator = ( di ); }
 };

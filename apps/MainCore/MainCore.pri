@@ -40,13 +40,7 @@ DEFINES     += QAPPLICATION_CLASS=QApplication
 INCLUDEPATH += $${PWD}
 
 SOURCES     += $${PWD}/main.cpp          \
-               $${PWD}/MainWinCommon.cpp \
-               $${PWD}/bytecodedef.cpp
+               $${PWD}/MainWinCommon.cpp
 
-HEADERS     += $${PWD}/bytecodes.h     \
-               $${PWD}/MainWinCommon.h \
-               $${PWD}/bytecodedef.h
+HEADERS     += $${PWD}/MainWinCommon.h
 
-RESOURCES   += $${PWD}/maincoreresources.qrc
-
-DISTFILES   += $${PWD}/byteCodeDefinitions.json

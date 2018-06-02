@@ -20,19 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "genesisblock.h"
+#include "genericcollection.h"
 
 /**
- * @brief GenesisBlock::GenesisBlock - constructor
+ * @brief GenericCollection::GenericCollection - constructor
  * @param di - optional data item
+ * @param tc - type code
  * @param p - optional parent object
  */
-GenesisBlock::GenesisBlock( QByteArray di, QObject *p )
-                : DataVarLength( AO_GENESIS_BLOCK, p )
+GenericCollection::GenericCollection( QByteArray di, QObject *p )
+                     : DataVarLength( typeCodeOf(di), p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_GENESIS_BLOCK )
-        { // TODO: log an error
+    { if (( typeCodeOf( di ) != GB_GENESIS_BLOCK ) &&
+          ( typeCodeOf( di ) != CB_CHAIN_BLOCK   )) // add more as they are defined
+        { typeCode = AO_UNDEFINED_DATAITEM;
+          // TODO: log an error
           return;
         }
        else
@@ -46,16 +49,7 @@ GenesisBlock::GenesisBlock( QByteArray di, QObject *p )
                       return;
                     }
                    else
-                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_HASH256:
-                          case AO_HASH512:
-                            hash = items;
-                            break;
-
-                          default:
-                            properties.insert( typeCodeOf( items ), DataItem::fromDataItem( items, this ) );
-                            break;
-                        }
+                    { properties.insert( typeCodeOf( items ), DataItem::fromDataItem( items, this ) );
                       items = items.mid( sz ); // move on to the next
                     }
                 }
@@ -65,30 +59,40 @@ GenesisBlock::GenesisBlock( QByteArray di, QObject *p )
 }
 
 /**
- * @brief GenesisBlock::operator =
+ * @brief GenericCollection::operator =
  * @param di - data item to assign
  */
-void GenesisBlock::operator = ( const QByteArray &di )
-{ GenesisBlock temp( di );
-  hash       = temp.hash;
+void GenericCollection::operator = ( const QByteArray &di )
+{ GenericCollection temp( di );
   properties = temp.properties;
   typeCode   = temp.typeCode;
   return;
 }
 
 /**
- * @brief GenesisBlock::toDataItem
+ * @brief GenericCollection::toDataItem
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-QByteArray  GenesisBlock::toDataItem( bool cf )
+QByteArray  GenericCollection::toDataItem( bool cf )
 { QByteArrayList dil;
-  if ( hash.isValid() )
-    dil.append( hash.toDataItem(cf) );
   QList<typeCode_t>keys = properties.keys();
   foreach ( typeCode_t key, keys )
-    dil.append( properties.value(key)->toDataItem(cf) );
+    { dil.append( properties.value(key)->toDataItem(cf) );
+      qDebug( "appending key %x", key );
+    }
   // TODO: randomize order of dil
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }
+
+QByteArray  GenericCollection::toHashData( bool cf )
+{ QByteArrayList dil;
+  QList<typeCode_t>keys = properties.keys();
+  foreach ( typeCode_t key, keys )
+    dil.append( properties.value(key)->toHashData(cf) );
+  // TODO: randomize order of dil
+  ba = dil.join();
+  return DataVarLength::toDataItem(cf);
+}
+

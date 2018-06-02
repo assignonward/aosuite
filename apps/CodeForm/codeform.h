@@ -36,8 +36,11 @@ class CodeForm : public QScrollArea
     Q_OBJECT
 
 public:
-    explicit CodeForm( QWidget *cw, MainWinCommon *mw = NULL);
+    explicit  CodeForm( QWidget *cw, MainWinCommon *mw = NULL);
     ~CodeForm();
+
+public slots:
+        void  on_massage_clicked();
 
 private:
     Ui::CodeForm *ui;

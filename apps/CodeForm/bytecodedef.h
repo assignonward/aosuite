@@ -27,7 +27,7 @@
 #include <QJsonObject>
 
 /**
- * @brief The ByteCodeDef class - definition of what goes in a particular key-value key
+ * @brief The ByteCodeDef class - what goes in a particular byte code definition
  */
 class ByteCodeDef : public QObject
 {
@@ -36,14 +36,31 @@ public:
     explicit  ByteCodeDef( const QJsonObject &jo = QJsonObject(), QObject *p = NULL )
                 : QObject( p ) { fromJsonObject( jo ); }
               ByteCodeDef( const ByteCodeDef &k, QObject *p = NULL )
-                : QObject( p ? p : k.parent() ), code( k.code ), sz( k.sz ), gbcr( k.gbcr), tn( k.tn ), desc( k.desc ), pdef( k.pdef ) {}
-        void  operator = ( const ByteCodeDef &k ) { code = k.code; sz = k.sz; gbcr = k.gbcr; tn = k.tn; desc = k.desc; pdef = k.pdef; }
+                : QObject( p ? p : k.parent() ),
+                  code( k.code ),
+                  sepr( k.sepr ),
+                    sz( k.sz   ),
+                  gbcr( k.gbcr ),
+                    tn( k.tn   ),
+                  desc( k.desc ),
+                  pdef( k.pdef ) {}
+        void  operator = ( const ByteCodeDef &k )
+                { code = k.code;
+                  sepr = k.sepr;
+                    sz = k.sz  ;
+                  gbcr = k.gbcr;
+                    tn = k.tn  ;
+                  desc = k.desc;
+                  pdef = k.pdef; }
         void  fromJsonObject( const QJsonObject &jo );
-     QString  toDefine( qint32 maxLenPdef = 24 );
-     QString  toCase( qint32 maxLenPdef = 24 );
-     QString  toCaseDataItem( qint32 maxLenPdef = 24 );
+ QJsonObject  toJsonObject() const;
+     QString  toDefine( qint32 maxLenPdef = 26 );
+     QString  toCase( qint32 maxLenPdef = 26 );
+     QString  toCaseDataItem( qint32 maxLenPdef = 26 );
+     QString  toSizeCase( qint32 maxLenPdef = 26 );
 
   typeCode_t  code; // numerical value of the bytecode
+        bool  sepr; // separable?  defaults to false, true means that the hash of the data is hashed in the collection, instead of the data itself
       qint32  sz;   // size of the following data in bytes, or -1 if variable size
      QString  gbcr; // Genesis block creator ui type
      QString  tn;   // DataItem subclass name that the value is stored as
@@ -61,6 +78,7 @@ public:
     explicit  ByteCodeDefinitions( const QString &filename = ":/files/byteCodeDefinitions.json", QObject *parent = NULL )
                 : QObject( parent ) { if ( filename.size() > 0 ) fromFile( filename ); }
         void  fromFile( const QString &filename );
+     QString  toString() const;
 
   QList<ByteCodeDef> bcdList;
 };

@@ -27,8 +27,15 @@ DEFINES     += QAMQP_DEBUG=Y
 
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/codeform.cpp
+SOURCES     += $${PWD}/codeform.cpp    \
+               $${PWD}/bytecodedef.cpp
 
-HEADERS     += $${PWD}/codeform.h
+HEADERS     += $${PWD}/codeform.h    \
+               $${PWD}/bytecodedef.h
 
 FORMS       += $${PWD}/codeform.ui
+
+RESOURCES   += $${PWD}/codeformresources.qrc
+
+DISTFILES   += $${PWD}/byteCodeDefinitions.json
+

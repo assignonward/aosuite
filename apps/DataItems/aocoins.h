@@ -34,7 +34,7 @@ class AOCoins : public Data128
     Q_OBJECT
 public:
        explicit  AOCoins( __int128 c = 0, typeCode_t typ = AO_N_COINS, QObject *p = NULL )
-                   : Data128( typ, c, p ) {}
+                   : Data128( c, typ, p ) {}
                  AOCoins( __int128 c, QObject *p = NULL )
                    : Data128( c, AO_N_COINS, p ) {}
                  AOCoins( const QByteArray &di, QObject *p = NULL )

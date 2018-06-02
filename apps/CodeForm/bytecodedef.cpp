@@ -28,31 +28,58 @@
 #include <QTextStream>
 
 void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
-{ if ( jo.contains( "code" ) ) code = jo.value( "code" ).toInt();
+{ gbcr = "";
+  sepr = false;
+  if ( jo.contains( "code" ) ) code = jo.value( "code" ).toInt();
   if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
   if ( jo.contains( "gbcr" ) ) gbcr = jo.value( "gbcr" ).toString();
+  if ( jo.contains( "sepr" ) ) sepr = jo.value( "sepr" ).toBool();
   if ( jo.contains( "size" ) ) sz   = jo.value( "size" ).toInt();
   if ( jo.contains( "type" ) ) tn   = jo.value( "type" ).toString();
   if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
 }
 
+QJsonObject  ByteCodeDef::toJsonObject() const
+{ QJsonObject jo;
+  jo.insert( "code", QJsonValue( (qint64)code ) );
+  jo.insert( "desc", QJsonValue(         desc ) );
+  if ( gbcr.size() )
+  jo.insert( "gbcr", QJsonValue(         gbcr ) );
+  if ( sepr )
+  jo.insert( "sepr", QJsonValue(         sepr ) );
+  jo.insert( "size", QJsonValue(    (int)sz   ) );
+  jo.insert( "type", QJsonValue(         tn   ) );
+  jo.insert( "pdef", QJsonValue(         pdef ) );
+  return jo;
+}
+
 QString ByteCodeDef::toDefine( qint32 maxLenPdef )
-{ return QString( "#define %1%7 0x%2 // %3 (%4)%5: %6" )
-           .arg( pdef ).arg( code, 2, 16, QChar('0') ).arg(tn)
+{ return QString( "#define %1%2 0x%3 // (%4+%5) %6:%7%8" )
+           .arg( pdef )
+           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) )
+           .arg( code, 2, 16, QChar('0') )
            .arg( QString::fromUtf8( VarSizeCode::codeToBytes(code).toHex() ) )
-           .arg( (sz<0)?"var":QString::number(sz) ).arg(desc)
-           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
+           .arg( (sz<0) ? "var" : QString::number(sz) )
+           .arg( tn )
+           .arg( sepr ? "separable " : " " )
+           .arg( desc );
 }
 
 QString ByteCodeDef::toCase( qint32 maxLenPdef )
-{ return QString( "case %1:%3 return new %2( di, p );" )
+{ return QString( "      case %1:%3 return new %2( di, p );" )
            .arg( pdef ).arg( tn )
            .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
 }
 
 QString ByteCodeDef::toCaseDataItem( qint32 maxLenPdef )
-{ return QString( "case %1:%3 return new %2( *((%2 *)ditm), p );" )
+{ return QString( "      case %1:%3 return new %2( *((%2 *)ditm), p );" )
            .arg( pdef ).arg( tn )
+           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
+}
+
+QString ByteCodeDef::toSizeCase( qint32 maxLenPdef )
+{ return QString( "      case %1:%3 return %2;" )
+           .arg( pdef ).arg( sz )
            .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
 }
 
@@ -73,4 +100,13 @@ void ByteCodeDefinitions::fromFile( const QString &filename )
   QJsonArray ja = doc.array();
   foreach( const QJsonValue &jv, ja )
     bcdList.append( ByteCodeDef( jv.toObject() ) );
+}
+
+QString ByteCodeDefinitions::toString() const
+{ QJsonDocument doc;
+  QJsonArray ja;
+  foreach( ByteCodeDef bcd, bcdList )
+    ja.append( bcd.toJsonObject() );
+  doc.setArray( ja );
+  return QString::fromUtf8( doc.toJson() );
 }

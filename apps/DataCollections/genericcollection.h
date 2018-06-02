@@ -20,36 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GENESISBLOCK_H
-#define GENESISBLOCK_H
+#ifndef GENERICCOLLECTION_H
+#define GENERICCOLLECTION_H
 
 #include "datavarlength.h"
 #include "hash.h"
 #include <QMap>
 
-#define PropertyMap QMap<typeCode_t,DataItem *>
+#define DataItemMap QMap<typeCode_t,DataItem *>
 
 /**
- * @brief The GenesisBlock class - the anchorpoint of a blockchain
+ * @brief The GenericCollection class - the anchorpoint of a blockchain
  */
-class GenesisBlock : public DataVarLength
+class GenericCollection : public DataVarLength
 {
     Q_OBJECT
 public:
-      explicit  GenesisBlock( QByteArray di = QByteArray(), QObject *p = NULL );
-                GenesisBlock( const GenesisBlock &r, QObject *p = NULL )
-                  : DataVarLength( QByteArray(), AO_GENESIS_BLOCK, p ? p : r.parent() ),
-                    hash( r.hash ), properties( r.properties ) {}
+      explicit  GenericCollection( QByteArray di = QByteArray(), QObject *p = NULL );
+                GenericCollection( typeCode_t tc, QObject *p = NULL )
+                  : DataVarLength( QByteArray(), tc, p ) {}
+                GenericCollection( const GenericCollection &r, QObject *p = NULL )
+                  : DataVarLength( QByteArray(), r.typeCode, p ? p : r.parent() ),
+                    properties( r.properties ) {}
           void  operator = ( const QByteArray &di );
-          Hash  getHash()    const { return  hash; }
-          void  setHash( const Hash &h ) { hash = h; }
     QByteArray  toDataItem( bool cf = false );
-          bool  isValid() { return hash.isValid(); }
-      DataItem *getProp( typeCode_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
+    QByteArray  toHashData( bool cf = false );
+      DataItem *getProp( typeCode_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : NULL; }
           void  add( const typeCode_t& key, DataItem *value ) { properties.insert( key, value ); }
 private:
-           Hash  hash;        // hash signature (unique ID) of the genesis block
-    PropertyMap  properties;  // Collection of properties that describe the chain
+    DataItemMap  properties;  // Collection of properties that describe the chain
 };
 
-#endif // GENESISBLOCK_H
+#endif // GENERICCOLLECTION_H

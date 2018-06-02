@@ -20,32 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GENESISREF_H
-#define GENESISREF_H
+#ifndef CHAINBLOCK_H
+#define CHAINBLOCK_H
 
-#include "genericcollection.h"
+#include "datavarlength.h"
+#include "hash.h"
+#include <QMap>
+
+#define PropertyMap QMap<typeCode_t,DataItem *>
 
 /**
- * @brief The GenesisRef class - identifies a chain
+ * @brief The ChainBlock class - contains a block in the chain
  */
-class GenesisRef : public DataVarLength
+class ChainBlock : public DataVarLength
 {
     Q_OBJECT
 public:
-      explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
-                GenesisRef( const GenesisRef &r, QObject *p = NULL )
-                  : DataVarLength( QByteArray(), AO_GENESIS_REF, p ? p : r.parent() ),
-                    hash( r.hash ) {}
+      explicit  ChainBlock( QByteArray di = QByteArray(), QObject *p = NULL );
+                ChainBlock( const ChainBlock &r, QObject *p = NULL )
+                  : DataVarLength( QByteArray(), AO_GENESIS_BLOCK, p ? p : r.parent() ),
+                    hash( r.hash ), properties( r.properties ) {}
           void  operator = ( const QByteArray &di );
           Hash  getHash()    const { return  hash; }
           void  setHash( const Hash &h ) { hash = h; }
     QByteArray  toDataItem( bool cf = false );
           bool  isValid() { return hash.isValid(); }
-      DataItem *getProp( const typeCode_t &key ) { return ( properties.contains( key ) ) ? properties.value(key) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
-
+      DataItem *getProp( typeCode_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
+          void  add( const typeCode_t& key, DataItem *value ) { properties.insert( key, value ); }
 private:
-           Hash  hash;         // hash signature (unique ID) of the genesis block
-    DataItemMap  properties;  // Collection of properties that describe the chain
+           Hash  hash;        // hash signature (unique ID) of the genesis block
+    PropertyMap  properties;  // Collection of properties that describe the chain
 };
 
-#endif // GENESISREF_H
+#endif // CHAINBLOCK_H

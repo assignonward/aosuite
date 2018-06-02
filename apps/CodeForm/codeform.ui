@@ -27,7 +27,111 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QPlainTextEdit" name="codeEdit"/>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>bytecode definitions</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="bytecodeDefinitions">
+      <property name="font">
+       <font>
+        <family>Ubuntu Mono</family>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>typeSizeTable</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="typeSizeTable">
+      <property name="font">
+       <font>
+        <family>Ubuntu Mono</family>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>copyDataItem</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="copyDataItem">
+      <property name="font">
+       <font>
+        <family>Ubuntu Mono</family>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>copyDataItemFromBytes</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="copyDataItemFromBytes">
+      <property name="font">
+       <font>
+        <family>Ubuntu Mono</family>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>json massaged</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="massage">
+        <property name="text">
+         <string>Massage</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="json">
+      <property name="font">
+       <font>
+        <family>Ubuntu Mono</family>
+       </font>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

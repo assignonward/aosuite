@@ -24,7 +24,6 @@
 #define BLOCKREF_H
 
 #include "aotime.h"
-#include "bytecodes.h"
 #include "datavarlength.h"
 #include "genesisref.h"
 #include "hash.h"
