@@ -35,7 +35,7 @@
         "type": "Hash256"
     },
     {
-        "code": 9,
+        "code": 12,
         "desc": "Hash224 of some data including a 32 bit salt",
         "pdef": "AO_HASH224SALT32",
         "size": 32,
@@ -49,77 +49,77 @@
         "type": "Hash512"
     },
     {
-        "code": 24,
+        "code": 32,
         "desc": "UTC time (secs since epoch << 64) when a signature was made",
         "pdef": "AO_TIME_OF_SIG",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 25,
+        "code": 33,
         "desc": "UTC time (secs since epoch << 64) when a record was made",
         "pdef": "AO_TIME_RECORDED",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 26,
+        "code": 34,
         "desc": "UTC time (secs since epoch << 64) when a record is contracted to be recorded",
         "pdef": "AO_RECORDING_DEADLINE",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 27,
+        "code": 35,
         "desc": "UTC time (secs since epoch << 64) defining a time interval, or difference",
         "pdef": "AO_TIME_DIFF",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 28,
+        "code": 36,
         "desc": "UTC time (secs since epoch << 64) when underwriting shares are bound until",
         "pdef": "AO_UNDERWRITING_EXPIRATION",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 29,
+        "code": 37,
         "desc": "128 bit signed integer number of shares assigned",
         "pdef": "AO_ASSIGNMENT_AMT",
         "size": 16,
         "type": "Shares"
     },
     {
-        "code": 30,
+        "code": 38,
         "desc": "128 bit signed integer number of shares committed as underwriting",
         "pdef": "AO_UNDERWRITING_AMT",
         "size": 16,
         "type": "Shares"
     },
     {
-        "code": 31,
+        "code": 39,
         "desc": "128 bit signed integer number of shares bid for recording",
         "pdef": "AO_RECORDING_BID",
         "size": 16,
         "type": "Shares"
     },
     {
-        "code": 32,
+        "code": 40,
         "desc": "128 bit signed integer number of shares outstanding (recorded on blocks)",
         "pdef": "AO_SHARES_OUT",
         "size": 16,
         "type": "Shares"
     },
 {
-    "code": 33,
+    "code": 44,
     "desc": "Number of coins, as a fixed point 64.64 bit number",
     "pdef": "AO_N_COINS",
     "size": 16,
     "type": "AOCoins"
 },
     {
-        "code": 40,
+        "code": 47,
         "desc": "8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)",
         "pdef": "AO_SHARE_STATE",
         "size": 1,
@@ -161,35 +161,35 @@
     "type": "SigEcdsa"
 },
     {
-        "code": 34,
+        "code": 10,
         "desc": "Shares Assignment agreement before signatures",
         "pdef": "AO_ASSIGNMENT",
         "size": -1,
         "type": "Assignment"
     },
     {
-        "code": 35,
+        "code": 42,
         "desc": "Participant in a Shares Assignment agreement",
         "pdef": "AO_PARTICIPANT",
         "size": -1,
         "type": "Participant"
     },
     {
-        "code": 36,
+        "code": 43,
         "desc": "Participant in a Shares Assignment agreement, compact (aka chain) form",
         "pdef": "AO_PARTICIPANT_CF",
         "size": -1,
         "type": "Participant"
     },
     {
-        "code": 39,
+        "code": 31,
         "desc": "An assignment plus a list of signatures on the authorization",
         "pdef": "AO_AUTHORIZATION",
         "size": -1,
         "type": "Authorization"
     },
     {
-        "code": 10,
+        "code": 30,
         "desc": "Describes a record of shares when they were signed away in a binding contract",
         "pdef": "AO_ASSIGN_REF",
         "size": -1,
@@ -212,42 +212,42 @@
         "type": "Note"
     },
     {
-        "code": 14,
+        "code": 29,
         "desc": "Describes a whole block in the chain",
         "pdef": "AO_BLOCK_REF",
         "size": -1,
         "type": "BlockRef"
     },
     {
-        "code": 17,
+        "code": 28,
         "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
         "pdef": "AO_PAGE_REF",
         "size": -1,
         "type": "PageRef"
     },
     {
-        "code": 20,
+        "code": 27,
         "desc": "Uniquely describes a genesis block, includes list of properties used to calculate new blocks",
         "pdef": "AO_GENESIS_REF",
         "size": -1,
         "type": "GenesisRef"
     },
     {
-        "code": 23,
+        "code": 26,
         "desc": "All signatures include the time of signature",
         "pdef": "AO_SIG_WITH_TIME",
         "size": -1,
         "type": "Signature"
     },
     {
-        "code": 37,
+        "code": 25,
         "desc": "Reference to shares received potentially including info on their current state in the chain",
         "pdef": "AO_SHARES_REF",
         "size": -1,
         "type": "SharesRef"
     },
     {
-        "code": 38,
+        "code": 24,
         "desc": "A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs",
         "pdef": "AO_ASSETS",
         "size": -1,
@@ -262,7 +262,7 @@
         "type": "PrivateKeyEcdsa"
     },
     {
-        "code": 99,
+        "code": 97,
         "desc": "An RSA3072 private key",
         "pdef": "AO_RSA3072_PRI_KEY",
         "sepr": true,
@@ -270,33 +270,34 @@
         "type": "PrivateKeyRsa3072"
     },
     {
-        "code": 41,
+        "code": 98,
         "desc": "A (hopefully matching) public-private key pair",
         "pdef": "AO_KEYPAIR",
+        "sepr": true,
         "size": -1,
         "type": "KeyPair"
     },
+{
+    "code": 106,
+    "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
+    "pdef": "AO_NETADDRESS",
+    "sepr": true,
+    "size": -1,
+    "type": "NetAddress"
+},
     {
-        "code": 44,
+        "code": 128,
         "desc": "Contact information for an asset organizer (user software)",
         "pdef": "AO_ORGANIZER",
         "size": -1,
         "type": "Organizer"
     },
     {
-        "code": 47,
+        "code": 129,
         "desc": "Contact information for a recorder (chainmaker software)",
         "pdef": "AO_RECORDER",
         "size": -1,
         "type": "Recorder"
-    },
-    {
-        "code": 114,
-        "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
-        "pdef": "AO_NETADDRESS",
-        "sepr": true,
-        "size": -1,
-        "type": "NetAddress"
     },
 {
     "code": 55,
