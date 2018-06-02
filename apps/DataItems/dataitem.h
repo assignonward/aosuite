@@ -105,6 +105,8 @@ public:
                bool  checksumValidated() const { return csVal; }
  virtual QByteArray  toDataItem( bool cf = false ) const { (void)cf; return QByteArray(); } // Implemented in all child classes
  virtual QByteArray  toHashData( bool cf = false ) const;
+         QByteArray  getHash( typeCode_t ht = AO_HASH256 ) const;
+               bool  verifyHash( const QByteArray &hdi ) const;
          typeCode_t  getTypeCode() const { return typeCode; }
                void  setTypeCode( const typeCode_t &tc ) { typeCode = tc; }
 protected:

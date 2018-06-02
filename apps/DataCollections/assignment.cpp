@@ -124,7 +124,7 @@ QByteArray  Assignment::toDataItem( bool cf )
   nParticipants.setTypeCode( AO_LISTSIZE );
   nParticipants = participants.size();
   dil.append( nParticipants.toDataItem(cf) );
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

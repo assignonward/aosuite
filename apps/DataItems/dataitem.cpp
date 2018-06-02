@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 #include "dataitem.h"
+#include "hash.h"
 #include "varsizecode.h"
 
 /**
@@ -254,7 +255,12 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
   return new DataItem( AO_UNDEFINED_DATAITEM, p );
 }
 
-#include "hash224salt32.h"
+/**
+ * @brief DataItem::toHashData
+ * @param cf - chain/compact form?
+ * @return the data item as a type identified byte array, with separable items replaced
+ *   with a salted hash.
+ */
 QByteArray  DataItem::toHashData( bool cf ) const
 { if ( typeCode & AO_SEPARABLE_TYPE )
     { Hash224Salt32 h;
@@ -262,4 +268,26 @@ QByteArray  DataItem::toHashData( bool cf ) const
     }
   return toDataItem(cf);
 }
+
+/**
+ * @brief DataItem::getHash - return the hash of this item
+ * @param ht - type of hash to calculate
+ * @return The hash value in a hash type identifying wrapper
+ */
+QByteArray  DataItem::getHash( typeCode_t ht ) const
+{ Hash hi( ht );
+  hi.calculate( toHashData() );
+  return hi.toDataItem();
+}
+
+/**
+ * @brief DataItem::verifyHash
+ * @param hdi - hash in a type identifying wrapper to verify against this item's current text
+ * @return
+ */
+bool  DataItem::verifyHash( const QByteArray &hdi ) const
+{ Hash hi( hdi );
+  return hi.verify( toHashData() );
+}
+
 

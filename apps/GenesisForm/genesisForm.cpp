@@ -120,4 +120,11 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
       return;
     }
   file.write( ui->hashData->isChecked() ? gb.toHashData() : gb.toDataItem() );
+  typeCode_t ht = AO_HASH256;
+  switch( ui->hashType->currentIndex() )
+    { case 0: ht = AO_HASH256; break;
+      case 1: ht = AO_HASH512; break;
+      case 2: ht = AO_HASH224SALT32; break;
+    }
+  ui->hash->setPlainText( QString::fromUtf8( gb.getHash(ht).toHex() ) );
 }

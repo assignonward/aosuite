@@ -31,6 +31,7 @@
 
 #include "hash256.h"
 #include "hash512.h"
+#include "hash224salt32.h"
 
 class Hash : public DataItem
 {
@@ -39,8 +40,15 @@ public:
     explicit  Hash( typeCode_t tc = AO_HASH256, QObject *p = NULL );
               Hash( const QByteArray &di, QObject *p = NULL );
               Hash( const Hash &d, QObject *p = NULL )
-                : DataItem( d.typeCode, p ? p : d.parent() ), hash256( d.hash256 ), hash512( d.hash512 ) {}
-        void  operator = ( const Hash &h ) { typeCode = h.typeCode; hash256 = h.hash256; hash512 = h.hash512; }
+                : DataItem( d.typeCode, p ? p : d.parent() ),
+                  hash256( d.hash256 ),
+                  hash512( d.hash512 ),
+                  hash224salt32( d.hash224salt32 ) {}
+        void  operator = ( const Hash &h )
+                { typeCode = h.typeCode;
+                  hash256 = h.hash256;
+                  hash512 = h.hash512;
+                  hash224salt32 = h.hash224salt32; }
   QByteArray  toDataItem( bool cf = false ) const;
         Hash &calculate( QByteArray text );
         bool  verify( QByteArray text );
@@ -50,6 +58,7 @@ public:
 private:
      Hash256  hash256;
      Hash512  hash512;
+     Hash224Salt32  hash224salt32;
 };
 
 #endif // HASH_H

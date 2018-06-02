@@ -93,7 +93,7 @@ QByteArray  KeyPair::toDataItem( bool cf )
     dil.append( pubKey.toDataItem(cf) );
   if ( priKey.isValid() )
     dil.append( priKey.toDataItem(cf) );
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

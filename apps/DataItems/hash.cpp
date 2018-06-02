@@ -31,6 +31,7 @@ Hash::Hash( typeCode_t tc, QObject *p ) : DataItem( tc, p )
 { switch ( tc )
     { case AO_HASH256: // valid type codes for Hash
       case AO_HASH512:
+      case AO_HASH224SALT32:
         // Nothing to do here...
         break;
       default:
@@ -46,7 +47,8 @@ Hash::Hash( typeCode_t tc, QObject *p ) : DataItem( tc, p )
  */
 Hash::Hash( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { if ( di.size() < 4 )
-    { // TODO: log error
+    { qDebug( "passed data item too small to be a hash" ); // TODO: log error
+      typeCode = AO_UNDEFINED_DATAITEM;
       return;
     }
   switch ( typeCodeOf( di ) )
@@ -60,8 +62,13 @@ Hash::Hash( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM
         hash512 = Hash512( di, this );
         break;
 
+      case AO_HASH224SALT32:
+        typeCode = AO_HASH224SALT32;
+        hash224salt32 = Hash224Salt32( di, this );
+        break;
+
       default:
-        // TODO: log error
+        qDebug( "passed data item's type is not a recognized hash type" ); // TODO: log error
         typeCode = AO_UNDEFINED_DATAITEM;
     }
 }
@@ -77,6 +84,8 @@ QByteArray Hash::toDataItem( bool cf ) const
         return hash256.toDataItem(cf);
       case AO_HASH512:
         return hash512.toDataItem(cf);
+      case AO_HASH224SALT32:
+        return hash224salt32.toDataItem(cf);
     }
   // TODO: log warning
   return QByteArray();
@@ -95,6 +104,9 @@ Hash &Hash::calculate( QByteArray text )
       case AO_HASH512:
         hash512.calculate( text );
         return *this;
+      case AO_HASH224SALT32:
+        hash224salt32.calculate( text );
+        return *this;
     }
   // TODO: log error
   return *this;
@@ -112,6 +124,9 @@ bool Hash::verify( QByteArray text )
 
       case AO_HASH512:
         return hash512.verify( text );
+
+      case AO_HASH224SALT32:
+        return hash224salt32.verify( text );
     }
   // TODO: log error
   return false;
@@ -127,6 +142,8 @@ bool Hash::isValid()
         return hash256.isValid();
       case AO_HASH512:
         return hash512.isValid();
+      case AO_HASH224SALT32:
+        return hash224salt32.isValid();
     }
   // TODO: log warning
   return false;
@@ -142,6 +159,8 @@ bool Hash::isVerified()
         return hash256.isVerified();
       case AO_HASH512:
         return hash512.isVerified();
+      case AO_HASH224SALT32:
+        return hash224salt32.isVerified();
     }
   // TODO: log warning
   return false;

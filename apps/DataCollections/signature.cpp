@@ -30,6 +30,7 @@
 Signature::Signature( typeCode_t tc, QObject *p )
   : DataVarLength( tc, p )
 { typeCode = AO_SIG_WITH_TIME;
+  index.setTypeCode( AO_INDEX );
   index = -1;
   switch ( tc )
     { case AO_ECDSA_SIG: // valid type codes for Signature
@@ -64,6 +65,8 @@ Signature::Signature( const Signature &s, QObject *p )
 Signature::Signature( const QByteArray &di, QObject *p )
   : DataVarLength( AO_UNDEFINED_DATAITEM, p ), index( -1 )
 { sigType = AO_UNDEFINED_DATAITEM;
+  index.setTypeCode( AO_INDEX );
+  index = -1;
   // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_SIG_WITH_TIME )
@@ -99,7 +102,7 @@ Signature::Signature( const QByteArray &di, QObject *p )
                           case AO_INDEX:
                             index = items;
                             break;
-                                                  break;
+
                           default:
                             // TODO: log anomaly - unrecognized data type
                             break;
@@ -144,7 +147,7 @@ QByteArray  Signature::toDataItem( bool cf )
       }
   if ( index >= 0 )
     dil.append( index.toDataItem(cf) );
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

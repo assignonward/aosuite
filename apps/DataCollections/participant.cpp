@@ -155,7 +155,7 @@ QByteArray Participant::toDataItem( bool cf )
         // TODO: log error
         return QByteArray();
     }
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

@@ -84,7 +84,7 @@ QByteArray  GenesisRef::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( hash.isValid() )
     dil.append( hash.toDataItem(cf) );
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

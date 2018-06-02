@@ -87,8 +87,8 @@ QByteArray  PageRef::toDataItem( bool cf )
       dil.append( sequenceNumber.toDataItem(cf) );
     }
   if ( hash.isValid() )
-    dil.append(           hash.toDataItem(cf) );
-  // TODO: randomize order of dil
+    dil.append( hash.toDataItem(cf) );
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

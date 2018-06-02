@@ -79,7 +79,7 @@ QByteArray  GenericCollection::toDataItem( bool cf )
   QList<typeCode_t>keys = properties.keys();
   foreach ( typeCode_t key, keys )
     { dil.append( properties.value(key)->toDataItem(cf) );
-      qDebug( "appending key %x", key );
+      // qDebug( "appending key %x", key );
     }
   // TODO: randomize order of dil
   ba = dil.join();
