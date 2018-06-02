@@ -27,7 +27,7 @@
  * @param di - optional data item
  * @param p - optional parent object
  */
-KeyPair::KeyPair( QByteArray di, QObject *p )
+KeyPair::KeyPair( DataItemBA di, QObject *p )
   : DataVarLength( AO_KEYPAIR, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -38,7 +38,7 @@ KeyPair::KeyPair( QByteArray di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -74,7 +74,7 @@ KeyPair::KeyPair( QByteArray di, QObject *p )
  * @brief KeyPair::operator =
  * @param di - data item to assign
  */
-void KeyPair::operator = ( const QByteArray &di )
+void KeyPair::operator = ( const DataItemBA &di )
 { KeyPair temp( di );
   pubKey   = temp.pubKey;
   priKey   = temp.priKey;
@@ -87,7 +87,7 @@ void KeyPair::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-QByteArray  KeyPair::toDataItem( bool cf )
+DataItemBA  KeyPair::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( pubKey.isValid() )
     dil.append( pubKey.toDataItem(cf) );

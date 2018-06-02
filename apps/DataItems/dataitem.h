@@ -23,7 +23,10 @@
 #ifndef DATAITEM_H
 #define DATAITEM_H
 
+#define INCLUDE_TESTS
+
 #include <QObject>
+#include "dataitemba.h"
 #include "varsizecode.h"
 
 #define typeCode_t quint32
@@ -95,20 +98,27 @@ public:
                        : QObject(p ? p : i.parent()), typeCode( i.typeCode ), csVal( i.csVal ) {}
                void  operator = ( const DataItem &i )
                        { typeCode = i.typeCode; csVal = i.csVal; }
-       virtual void  operator = ( const QByteArray &b ) { (void)b; }
+       virtual void  operator = ( const DataItemBA &di ) { typeCode = typeCodeOf(di); csVal=false; }
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
-             qint32  typeSize( const QByteArray &di ) const;
-  static   DataItem *fromDataItem( const QByteArray &di, QObject *p = NULL );
+             qint32  typeSize( const DataItemBA &di ) const;
+  static   DataItem *fromDataItem( const DataItemBA &di, QObject *p = NULL );
   static   DataItem *fromDataItem( const DataItem *di, QObject *p = NULL );
   static     qint32  typeSizeTable( typeCode_t tc );
-  static typeCode_t  typeCodeOf( const QByteArray &di );
+  static typeCode_t  typeCodeOf( const DataItemBA &di );
                bool  checksumValidated() const { return csVal; }
- virtual QByteArray  toDataItem( bool cf = false ) const { (void)cf; return QByteArray(); } // Implemented in all child classes
+ virtual DataItemBA  toDataItem( bool cf = false ) const { (void)cf; return DataItemBA(); } // Implemented in all child classes
  virtual QByteArray  toHashData( bool cf = false ) const;
-         QByteArray  getHash( typeCode_t ht = AO_HASH256 ) const;
-               bool  verifyHash( const QByteArray &hdi ) const;
+         DataItemBA  getHash( typeCode_t ht = AO_HASH256 ) const;
+               bool  verifyHash( const DataItemBA &hdi ) const;
          typeCode_t  getTypeCode() const { return typeCode; }
                void  setTypeCode( const typeCode_t &tc ) { typeCode = tc; }
+
+// Testing code
+#ifdef INCLUDE_TESTS
+               bool  testHashVerify();
+               bool  testHashVerifyType( typeCode_t ht );
+#endif
+
 protected:
   typeCode_t  typeCode; // what kind of data item is this?
         bool  csVal;   // has the checksum been validated (during a data item initialization, or assignment)?

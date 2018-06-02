@@ -20,32 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-// Assign Onward
-//
-// A quantity of coins, fixed point 64.64
+#include "dataitemba.h"
 
-#ifndef AOCOINS_H
-#define AOCOINS_H
-
-#include "data128.h"
-
-class AOCoins : public Data128
-{
-    Q_OBJECT
-public:
-       explicit  AOCoins( __int128 c = 0, typeCode_t typ = AO_N_COINS, QObject *p = NULL )
-                   : Data128( c, typ, p ) {}
-                 AOCoins( __int128 c, QObject *p = NULL )
-                   : Data128( c, AO_N_COINS, p ) {}
-                 AOCoins( const DataItemBA &di, QObject *p = NULL )
-                   : Data128( di, p ) {}
-                 AOCoins( const AOCoins &c, QObject *p = NULL )
-                   : Data128( c.typeCode, c.get(), p ? p : c.parent() ) {}
-           void  operator = ( const DataItemBA &di ) { Data128::operator = ( di ); }
-
-static __int128  shiftUp64( __int128 m ) { return m << 64; }
-       __int128  get() const { return v; }
-           void  set( __int128 m ) { v = m; }
-};
-
-#endif // AOTIME_H
+// Nothing here

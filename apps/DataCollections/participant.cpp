@@ -36,7 +36,7 @@
 
 #include "participant.h"
 
-Participant::Participant( QByteArray di, QObject *p )
+Participant::Participant( DataItemBA di, QObject *p )
   : DataVarLength( AO_PARTICIPANT, p )
 { // See if there's anything interesting in the data item
   index = -1;
@@ -50,7 +50,7 @@ Participant::Participant( QByteArray di, QObject *p )
         { typeCode = typeCodeOf( di );
           DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -97,7 +97,7 @@ Participant::Participant( QByteArray di, QObject *p )
  * @brief Participant::operator =
  * @param di - data item to assign from
  */
-void Participant::operator = ( const QByteArray &di )
+void Participant::operator = ( const DataItemBA &di )
 { Participant temp( di );
   amount   = temp.amount;
   key      = temp.key;
@@ -114,7 +114,7 @@ void Participant::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form
  * @return data item in the requested form
  */
-QByteArray Participant::toDataItem( bool cf )
+DataItemBA Participant::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( cf )
     typeCode = AO_PARTICIPANT_CF;

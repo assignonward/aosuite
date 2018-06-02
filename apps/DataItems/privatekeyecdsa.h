@@ -33,7 +33,7 @@ public:
                 : DataVarLength( AO_ECDSA_PRI_KEY, p ) {}
               PrivateKeyEcdsa( const PrivateKeyEcdsa &k, QObject *p = NULL )
                 : DataVarLength( k.ba, AO_ECDSA_PRI_KEY, p ? p : k.parent() ) {}
-              PrivateKeyEcdsa( const QByteArray &di, QObject *p = NULL )
+              PrivateKeyEcdsa( const DataItemBA &di, QObject *p = NULL )
                 : DataVarLength( di, p ) {}
         void  clear() { ba.clear(); }
         bool  isValid() const { return (ba.size() > 0); } // TODO: really check

@@ -35,9 +35,9 @@ public:
                       : DataItem( tc, p ), ba( iba ) {}
                     DataVarLength( const DataVarLength &d, QObject *p = NULL )
                       : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ) {}
-                    DataVarLength( const QByteArray &di, QObject *p = NULL );
-virtual QByteArray  toDataItem( bool cf = false ) const;
-      virtual void  operator =  ( const QByteArray &di );
+                    DataVarLength( const DataItemBA &di, QObject *p = NULL );
+virtual DataItemBA  toDataItem( bool cf = false ) const;
+      virtual void  operator =  ( const DataItemBA &di );
               void  operator =  ( const DataVarLength &d ) { ba = d.ba; typeCode = d.typeCode; csVal = d.csVal; }
               bool  operator == ( const DataVarLength &d ) { return ba == d.ba; }
               bool  operator != ( const DataVarLength &d ) { return ba != d.ba; }

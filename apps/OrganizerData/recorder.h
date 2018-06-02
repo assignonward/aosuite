@@ -32,12 +32,12 @@ class Recorder : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  Recorder( QByteArray di = QByteArray(), QObject *p = NULL );
+    explicit  Recorder( DataItemBA di = DataItemBA(), QObject *p = NULL );
               Recorder( const Recorder &r, QObject *p = NULL )
                 : DataVarLength( QByteArray(), AO_RECORDER, p ? p : r.parent() ),
                   netAddress( r.netAddress ), note( r.note ), pubKey( r.pubKey ) {}
-        void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( bool cf = false );
+        void  operator = ( const DataItemBA &di );
+  DataItemBA  toDataItem( bool cf = false );
 
 private:
   NetAddress  netAddress;

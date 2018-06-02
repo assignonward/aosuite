@@ -27,7 +27,7 @@
  * @param di - data item to populate this object from, optional
  * @param p - parent, if any
  */
-Authorization::Authorization(const QByteArray &di, QObject *p)
+Authorization::Authorization(const DataItemBA &di, QObject *p)
   : DataVarLength( AO_ASSIGNMENT, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -38,7 +38,7 @@ Authorization::Authorization(const QByteArray &di, QObject *p)
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -75,7 +75,7 @@ Authorization::Authorization(const QByteArray &di, QObject *p)
     }
 }
 
-void Authorization::operator = ( const QByteArray &di )
+void Authorization::operator = ( const DataItemBA &di )
 { Authorization temp( di );
   assignment     = temp.assignment;
   sigs           = temp.sigs;
@@ -84,7 +84,7 @@ void Authorization::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  Authorization::toDataItem( bool cf )
+DataItemBA Authorization::toDataItem( bool cf )
 { QByteArrayList dil;
   dil.append( assignment.toDataItem(cf) );
   if ( sigs.size() > 0 )
@@ -93,7 +93,7 @@ QByteArray  Authorization::toDataItem( bool cf )
   nSigs.setTypeCode( AO_LISTSIZE );
   nSigs = sigs.size();
   dil.append( nSigs.toDataItem(cf) );
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

@@ -27,7 +27,7 @@
  * @param di - optional data item
  * @param p - object parent
  */
-Assets::Assets(const QByteArray &di, QObject *p) : DataVarLength( AO_ASSETS, p )
+Assets::Assets(const DataItemBA &di, QObject *p) : DataVarLength( AO_ASSETS, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_ASSETS )
@@ -37,7 +37,7 @@ Assets::Assets(const QByteArray &di, QObject *p) : DataVarLength( AO_ASSETS, p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -82,7 +82,7 @@ Assets::Assets(const QByteArray &di, QObject *p) : DataVarLength( AO_ASSETS, p )
     }
 }
 
-void Assets::operator = ( const QByteArray &di )
+void Assets::operator = ( const DataItemBA &di )
 { Assets temp( di );
   organizers = temp.organizers;
   recorders  = temp.recorders;
@@ -92,7 +92,7 @@ void Assets::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  Assets::toDataItem( bool cf )
+DataItemBA  Assets::toDataItem( bool cf )
 { QList<QByteArray> dil; (void)cf;  // unused in this context, always false
   if ( organizers.size() > 0 )
     foreach( Organizer o, organizers )

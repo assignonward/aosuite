@@ -127,4 +127,5 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
       case 2: ht = AO_HASH224SALT32; break;
     }
   ui->hash->setPlainText( QString::fromUtf8( gb.getHash(ht).toHex() ) );
+  gb.testHashVerify();
 }

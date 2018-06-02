@@ -39,13 +39,13 @@ class SharesRef : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  SharesRef( const QByteArray &di = QByteArray(), QObject *p = NULL );
+    explicit  SharesRef( const DataItemBA &di = QByteArray(), QObject *p = NULL );
               SharesRef( const SharesRef &r, QObject *p = NULL )
                 : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), seqNum( r.seqNum ), keyHash( r.keyHash ),
                   shareState( r.shareState ), lockExp( r.lockExp ), assignRef( r.assignRef ) {}
-        void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( bool cf = false );
+        void  operator = ( const DataItemBA &di );
+  DataItemBA  toDataItem( bool cf = false );
         bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
 
 private:

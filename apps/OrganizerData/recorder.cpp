@@ -22,7 +22,7 @@
  */
 #include "recorder.h"
 
-Recorder::Recorder( QByteArray di, QObject *p ) : DataVarLength( AO_RECORDER, p )
+Recorder::Recorder( DataItemBA di, QObject *p ) : DataVarLength( AO_RECORDER, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_RECORDER )
@@ -33,7 +33,7 @@ Recorder::Recorder( QByteArray di, QObject *p ) : DataVarLength( AO_RECORDER, p 
         { typeCode = typeCodeOf( di );
           DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -67,7 +67,7 @@ Recorder::Recorder( QByteArray di, QObject *p ) : DataVarLength( AO_RECORDER, p 
     }
 }
 
-void Recorder::operator = ( const QByteArray &di )
+void Recorder::operator = ( const DataItemBA &di )
 { Recorder temp( di );
   note       = temp.note;
   pubKey     = temp.pubKey;
@@ -76,7 +76,7 @@ void Recorder::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  Recorder::toDataItem( bool cf )
+DataItemBA  Recorder::toDataItem( bool cf )
 { QList<QByteArray> dil;
   if ( note.size() > 0 )
     dil.append( note.toDataItem(cf) );

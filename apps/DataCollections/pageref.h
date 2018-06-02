@@ -41,10 +41,10 @@ public:
                 : DataVarLength( QByteArray(), AO_PAGE_REF, p ), sequenceNumber( -1 ) {}
               PageRef( const PageRef &r, QObject *p = NULL )
                 : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
-              PageRef( const QByteArray &di, QObject *p = NULL );
-        void  operator = ( const QByteArray &di );
+              PageRef( const DataItemBA &di, QObject *p = NULL );
+        void  operator = ( const DataItemBA &di );
       AOTime  publicationTime() { return block.getTime(); }
-  QByteArray  toDataItem( bool cf = false );
+  DataItemBA  toDataItem( bool cf = false );
         bool  isValid() { return block.isValid(); }
 
 private:

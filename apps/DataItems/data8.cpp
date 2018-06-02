@@ -27,7 +27,7 @@
  * @param di - data item for initialization
  * @param p - object parent, if any.
  */
-Data8::Data8( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+Data8::Data8( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { v = 0;
   union _8_as_8
     { qint8 i;
@@ -47,7 +47,7 @@ Data8::Data8( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAIT
  * @brief Data8::operator =
  * @param di - data item to assign
  */
-void Data8::operator = ( const QByteArray &di )
+void Data8::operator = ( const DataItemBA &di )
 { Data8 temp( di );
   v        = temp.v;
   typeCode = temp.typeCode;
@@ -60,7 +60,7 @@ void Data8::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form, no difference at this level - unused
  * @return byte array starting with type code, followed by 8 bit data and 8 bit checksum.
  */
-QByteArray Data8::toDataItem( bool cf ) const
+DataItemBA Data8::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   union _8_in_8s
     {         qint8 i;

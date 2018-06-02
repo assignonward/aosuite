@@ -56,7 +56,7 @@ PriKey::PriKey( const PriKey &pk, QObject *p )
  * @param di - data item
  * @param p - object parent, if any
  */
-PriKey::PriKey( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+PriKey::PriKey( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { switch ( typeCodeOf( di ) )
     { case AO_ECDSA_PRI_KEY:
         typeCode = AO_ECDSA_PRI_KEY;
@@ -107,7 +107,7 @@ bool  PriKey::isValid() const
  * @param cf - compact (or chain) form, passed on to children
  * @return the key encapsulated as a data item
  */
-QByteArray  PriKey::toDataItem( bool cf ) const
+DataItemBA  PriKey::toDataItem( bool cf ) const
 { switch ( typeCode )
     { case AO_ECDSA_PRI_KEY:
         return privateKeyEcdsa.toDataItem(cf);
@@ -123,7 +123,7 @@ QByteArray  PriKey::toDataItem( bool cf ) const
  * @brief PriKey::operator =
  * @param di - data item to assign
  */
-void PriKey::operator = ( const QByteArray &di )
+void PriKey::operator = ( const DataItemBA &di )
 { PriKey temp( di );
   privateKeyEcdsa   = temp.privateKeyEcdsa;
   privateKeyRsa3072 = temp.privateKeyRsa3072;

@@ -35,11 +35,11 @@ class PubKey : public DataItem
     Q_OBJECT
 public:
     explicit  PubKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
-              PubKey( const QByteArray &di, QObject *p = NULL );
+              PubKey( const DataItemBA &di, QObject *p = NULL );
               PubKey( const PubKey &pk, QObject *p = NULL );
         void  operator = ( const PubKey &k ) { typeCode = k.typeCode; publicKeyEcdsa = k.publicKeyEcdsa; publicKeyRsa3072 = k.publicKeyRsa3072; }
-        void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( bool cf = false ) const;
+        void  operator = ( const DataItemBA &di );
+  DataItemBA  toDataItem( bool cf = false ) const;
   QByteArray  get() const;
   QByteArray  getId( bool cf = true ) const;
         void  set( const QByteArray k );

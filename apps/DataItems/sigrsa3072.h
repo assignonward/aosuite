@@ -33,7 +33,7 @@ public:
                 : DataFixedLength( AO_RSA3072_SIG, p ) {}
               SigRsa3072( const SigRsa3072 &s, QObject *p = NULL )
                 : DataFixedLength( AO_RSA3072_SIG, s.ba, p ? p : s.parent() ) {}
-              SigRsa3072( const QByteArray &di, QObject *p = NULL )
+              SigRsa3072( const DataItemBA &di, QObject *p = NULL )
                 : DataFixedLength( di, p ) {}
   QByteArray  get() const { return ba; }
         void  set( QByteArray s ) { ba = s; }

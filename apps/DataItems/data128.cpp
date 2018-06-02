@@ -27,7 +27,7 @@
  * @param di - data item for initialization
  * @param p - object parent, if any.
  */
-Data128::Data128( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+Data128::Data128( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { v = 0;
   union _128_as_8
     { __int128 i;
@@ -62,7 +62,7 @@ Data128::Data128( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DA
  * @brief Data128::operator =
  * @param di - data item to assign
  */
-void Data128::operator = ( const QByteArray &di )
+void Data128::operator = ( const DataItemBA &di )
 { Data128 temp( di );
   v        = temp.v;
   typeCode = temp.typeCode;
@@ -75,7 +75,7 @@ void Data128::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form, no difference at this level - unused
  * @return byte array starting with type code, followed by 128 bit data and 8 bit checksum.
  */
-QByteArray Data128::toDataItem( bool cf ) const
+DataItemBA Data128::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   union _128_in_8s
     {      __int128 i;

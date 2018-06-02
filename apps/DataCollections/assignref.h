@@ -37,12 +37,12 @@ class AssignRef : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  AssignRef( const QByteArray &di = QByteArray(), QObject *p = NULL );
+    explicit  AssignRef( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
               AssignRef( const AssignRef &r, QObject *p = NULL )
                 : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ),
                   page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
-        void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( bool cf = false );
+        void  operator = ( const DataItemBA &di );
+  DataItemBA  toDataItem( bool cf = false );
         bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
 
 private:

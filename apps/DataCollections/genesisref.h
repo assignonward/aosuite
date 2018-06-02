@@ -32,14 +32,14 @@ class GenesisRef : public DataVarLength
 {
     Q_OBJECT
 public:
-      explicit  GenesisRef( QByteArray di = QByteArray(), QObject *p = NULL );
+      explicit  GenesisRef( DataItemBA di = DataItemBA(), QObject *p = NULL );
                 GenesisRef( const GenesisRef &r, QObject *p = NULL )
                   : DataVarLength( QByteArray(), AO_GENESIS_REF, p ? p : r.parent() ),
                     hash( r.hash ) {}
-          void  operator = ( const QByteArray &di );
+          void  operator = ( const DataItemBA &di );
           Hash  getHash()    const { return  hash; }
           void  setHash( const Hash &h ) { hash = h; }
-    QByteArray  toDataItem( bool cf = false );
+    DataItemBA  toDataItem( bool cf = false );
           bool  isValid() { return hash.isValid(); }
       DataItem *getProp( const typeCode_t &key ) { return ( properties.contains( key ) ) ? properties.value(key) : new DataItem(AO_UNDEFINED_DATAITEM,this); }
 

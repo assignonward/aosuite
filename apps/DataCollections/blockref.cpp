@@ -27,7 +27,7 @@
  * @param di - optional data item
  * @param p - optional parent object
  */
-BlockRef::BlockRef( QByteArray di, QObject *p )
+BlockRef::BlockRef( DataItemBA di, QObject *p )
   : DataVarLength( AO_BLOCK_REF, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -38,7 +38,7 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -80,7 +80,7 @@ BlockRef::BlockRef( QByteArray di, QObject *p )
  * @brief BlockRef::operator =
  * @param di - data item to assign
  */
-void BlockRef::operator = ( const QByteArray &di )
+void BlockRef::operator = ( const DataItemBA &di )
 { BlockRef temp( di );
   propTime = temp.propTime;
   blkHash  = temp.blkHash;
@@ -95,7 +95,7 @@ void BlockRef::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-QByteArray  BlockRef::toDataItem( bool cf )
+DataItemBA  BlockRef::toDataItem( bool cf )
 { QByteArrayList dil;
   dil.append( propTime.toDataItem(cf) );
   if ( blkHash.isValid() )
@@ -104,7 +104,7 @@ QByteArray  BlockRef::toDataItem( bool cf )
     dil.append( shOut.toDataItem(cf) );
   if ( genesis.isValid() )
     dil.append( genesis.toDataItem(cf) );
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

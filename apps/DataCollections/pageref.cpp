@@ -22,7 +22,7 @@
  */
 #include "pageref.h"
 
-PageRef::PageRef( const QByteArray &di, QObject *p )
+PageRef::PageRef( const DataItemBA &di, QObject *p )
   : DataVarLength( AO_PAGE_REF, p ), sequenceNumber( -1 )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -33,7 +33,7 @@ PageRef::PageRef( const QByteArray &di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -70,7 +70,7 @@ PageRef::PageRef( const QByteArray &di, QObject *p )
  * @brief PageRef::operator =
  * @param di - data item to assign
  */
-void PageRef::operator = ( const QByteArray &di )
+void PageRef::operator = ( const DataItemBA &di )
 { PageRef temp( di );
   block          = temp.block;
   sequenceNumber = temp.sequenceNumber;
@@ -79,7 +79,7 @@ void PageRef::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  PageRef::toDataItem( bool cf )
+DataItemBA  PageRef::toDataItem( bool cf )
 { QByteArrayList dil;
   dil.append(            block.toDataItem(cf) );
   if ( sequenceNumber >= 0 )

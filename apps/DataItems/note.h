@@ -39,7 +39,7 @@ public:
         void  setNote( const QString &s ) { ba = s.toUtf8(); }
      QString  getNote() { return QString::fromUtf8( ba ); }
       qint32  size() { return ba.size(); }
-        void  operator = ( const QByteArray &di ) { DataVarLength::operator = ( di ); }
+        void  operator = ( const DataItemBA &di ) { DataVarLength::operator = ( di ); }
 };
 
 #endif // NOTE_H

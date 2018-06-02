@@ -27,7 +27,7 @@
  * @param di - optional data item
  * @param p - optional parent object
  */
-GenesisRef::GenesisRef( QByteArray di, QObject *p )
+GenesisRef::GenesisRef( DataItemBA di, QObject *p )
   : DataVarLength( AO_GENESIS_REF, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -38,7 +38,7 @@ GenesisRef::GenesisRef( QByteArray di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -68,7 +68,7 @@ GenesisRef::GenesisRef( QByteArray di, QObject *p )
  * @brief GenesisRef::operator =
  * @param di - data item to assign
  */
-void GenesisRef::operator = ( const QByteArray &di )
+void GenesisRef::operator = ( const DataItemBA &di )
 { GenesisRef temp( di );
   hash     = temp.hash;
   typeCode = temp.typeCode;
@@ -80,7 +80,7 @@ void GenesisRef::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-QByteArray  GenesisRef::toDataItem( bool cf )
+DataItemBA  GenesisRef::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( hash.isValid() )
     dil.append( hash.toDataItem(cf) );

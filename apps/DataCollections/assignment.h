@@ -44,13 +44,13 @@ class Assignment : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  Assignment( const QByteArray &di = QByteArray(), QObject *p = NULL );
+    explicit  Assignment( const DataItemBA &di = QByteArray(), QObject *p = NULL );
               Assignment( const Assignment &a, QObject *p = NULL )
                 : DataVarLength( AO_ASSIGNMENT, p ? p : a.parent() ), salt( a.salt ), proposedChain( a.proposedChain ),
                   recordingDeadline( a.recordingDeadline ), recordingBid( a.recordingBid ), note( a.note ),
                   participants( a.participants ) {}
-        void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( bool cf = false );
+        void  operator = ( const DataItemBA &di );
+  DataItemBA  toDataItem( bool cf = false );
       AOTime  proposalTime();
         void  randomizeSalt();
         bool  valid();

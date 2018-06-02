@@ -38,9 +38,9 @@ public:
                 : DataItem( tc, p ), v( d ), e( ex ) {}
               Data136Float( const Data136Float &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ), e( d.e ) {}
-              Data136Float( const QByteArray &di, QObject *p = NULL );
-  QByteArray  toDataItem( bool cf = false ) const;
-virtual void  operator = ( const QByteArray &di );
+              Data136Float( const DataItemBA &di, QObject *p = NULL );
+  DataItemBA  toDataItem( bool cf = false ) const;
+virtual void  operator = ( const DataItemBA &di );
         void  operator = ( const  Data136Float &d ) { v = d.v; e = d.e; typeCode = d.typeCode; csVal = d.csVal; }
         void  operator = ( const __int128 &d ) { v = d; e = 0; }
 

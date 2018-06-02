@@ -57,7 +57,7 @@ PubKey::PubKey( const PubKey &pk, QObject *p )
  * @param di - data item
  * @param p - object parent, if any
  */
-PubKey::PubKey( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+PubKey::PubKey( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { if ( di.size() < 34 )
     { // TODO: log error
       return;
@@ -115,7 +115,7 @@ bool  PubKey::isValid() const
  * @param cf - compact (or chain) form, passed on to children
  * @return the key encapsulated as a data item
  */
-QByteArray  PubKey::toDataItem( bool cf ) const
+DataItemBA  PubKey::toDataItem( bool cf ) const
 { switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
@@ -125,14 +125,14 @@ QByteArray  PubKey::toDataItem( bool cf ) const
         return publicKeyRsa3072.toDataItem(cf);
     }
   // TODO: log error
-  return QByteArray();
+  return DataItemBA();
 }
 
 /**
  * @brief PubKey::operator =
  * @param di - data item to assign
  */
-void PubKey::operator = ( const QByteArray &di )
+void PubKey::operator = ( const DataItemBA &di )
 { PubKey temp( di );
   publicKeyEcdsa   = temp.publicKeyEcdsa;
   publicKeyRsa3072 = temp.publicKeyRsa3072;

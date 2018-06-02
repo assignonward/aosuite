@@ -36,14 +36,14 @@ class GenericCollection : public DataVarLength
 {
     Q_OBJECT
 public:
-      explicit  GenericCollection( QByteArray di = QByteArray(), QObject *p = NULL );
+      explicit  GenericCollection( DataItemBA di = DataItemBA(), QObject *p = NULL );
                 GenericCollection( typeCode_t tc, QObject *p = NULL )
                   : DataVarLength( QByteArray(), tc, p ) {}
                 GenericCollection( const GenericCollection &r, QObject *p = NULL )
                   : DataVarLength( QByteArray(), r.typeCode, p ? p : r.parent() ),
                     properties( r.properties ) {}
-          void  operator = ( const QByteArray &di );
-    QByteArray  toDataItem( bool cf = false );
+          void  operator = ( const DataItemBA &di );
+    DataItemBA  toDataItem( bool cf = false );
     QByteArray  toHashData( bool cf = false );
       DataItem *getProp( typeCode_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : NULL; }
           void  add( const typeCode_t& key, DataItem *value ) { properties.insert( key, value ); }

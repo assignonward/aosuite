@@ -22,7 +22,7 @@
  */
 #include "assignref.h"
 
-AssignRef::AssignRef( const QByteArray &di, QObject *p )
+AssignRef::AssignRef( const DataItemBA &di, QObject *p )
   : DataVarLength( AO_ASSIGN_REF, p ), seqNum( -1 )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -33,7 +33,7 @@ AssignRef::AssignRef( const QByteArray &di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode has been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -80,7 +80,7 @@ AssignRef::AssignRef( const QByteArray &di, QObject *p )
  * @brief AssignRef::operator =
  * @param di - data item to assign
  */
-void AssignRef::operator = ( const QByteArray &di )
+void AssignRef::operator = ( const DataItemBA &di )
 { AssignRef temp( di );
   page     = temp.page;
   seqNum   = temp.seqNum;
@@ -91,7 +91,7 @@ void AssignRef::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  AssignRef::toDataItem( bool cf )
+DataItemBA  AssignRef::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( !cf )
     { if ( page.isValid() )
@@ -113,7 +113,7 @@ QByteArray  AssignRef::toDataItem( bool cf )
        else if ( key.isValid() )
         dil.append( key.getId(true) );
     }
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

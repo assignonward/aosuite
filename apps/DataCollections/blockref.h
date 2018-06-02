@@ -36,14 +36,14 @@ class BlockRef : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  BlockRef( QByteArray di = QByteArray(), QObject *p = NULL );
+    explicit  BlockRef( DataItemBA di = DataItemBA(), QObject *p = NULL );
               BlockRef( const BlockRef &r, QObject *p = NULL )
                 : DataVarLength( QByteArray(), AO_BLOCK_REF, p ? p : r.parent() ),
                   propTime( r.propTime ), shOut( r.shOut ), blkHash( r.blkHash ), genesis( r.genesis ) {}
               BlockRef( const Hash &h, const AOTime t, const Shares &s, const GenesisRef &r, QObject *p = NULL )
                 : DataVarLength( QByteArray(), AO_BLOCK_REF, p ),
                   propTime( t ), shOut( s ), blkHash( h ), genesis( r ) {}
-        void  operator = ( const QByteArray &di );
+        void  operator = ( const DataItemBA &di );
       AOTime  getTime()    const { return propTime; }
         Hash  getHash()    const { return  blkHash; }
       Shares  getShOut()   const { return    shOut; }
@@ -52,7 +52,7 @@ public:
         void  setHash( const Hash &h )          {  blkHash = h; }
         void  setShOut( const Shares &s )       {    shOut = s; typeCode = AO_SHARES_OUT; }
         void  setGenesis( const GenesisRef &r ) {  genesis = r; }
-  QByteArray  toDataItem( bool cf = false );
+  DataItemBA  toDataItem( bool cf = false );
         bool  isValid() { return propTime.past() && blkHash.isValid() && genesis.isValid(); }
 
 private:

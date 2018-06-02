@@ -33,7 +33,7 @@ public:
                 : DataVarLength( AO_RSA3072_PRI_KEY, p ) {}
               PrivateKeyRsa3072( const PrivateKeyRsa3072 &k, QObject *p = NULL )
                 : DataVarLength( k.ba, AO_RSA3072_PRI_KEY, p ? p : k.parent() ) {}
-              PrivateKeyRsa3072( const QByteArray &di, QObject *p = NULL )
+              PrivateKeyRsa3072( const DataItemBA &di, QObject *p = NULL )
                 : DataVarLength( di, p ) {}
         void  clear() { ba.clear(); }
         bool  isValid() const { return (ba.size() > 0); }  // TODO: really check

@@ -27,7 +27,8 @@
  * @param di - data item for initialization
  * @param p - object parent, if any.
  */
-Data136Float::Data136Float( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+Data136Float::Data136Float( const DataItemBA &di, QObject *p )
+                : DataItem( AO_UNDEFINED_DATAITEM, p )
 { v = 0;
   e = 0;
   union _128_as_8
@@ -69,7 +70,7 @@ Data136Float::Data136Float( const QByteArray &di, QObject *p ) : DataItem( AO_UN
  * @brief Data136Float::operator =
  * @param di - data item to assign
  */
-void Data136Float::operator = ( const QByteArray &di )
+void Data136Float::operator = ( const DataItemBA &di )
 { Data136Float temp( di );
   v        = temp.v;
   e        = temp.e;
@@ -83,7 +84,7 @@ void Data136Float::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form, no difference at this level - unused
  * @return byte array starting with type code, followed by 128 bit data and 8 bit checksum.
  */
-QByteArray Data136Float::toDataItem( bool cf ) const
+DataItemBA Data136Float::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   union _128_in_8s
     {      __int128 i;

@@ -44,11 +44,11 @@ class AOTime : public Data128
     Q_OBJECT
 public:
        explicit  AOTime( __int128 tm = 0, typeCode_t typ = AO_TIME_RECORDED, QObject *p = NULL );
-                 AOTime( const QByteArray &di, QObject *p = NULL )
+                 AOTime( const DataItemBA &di, QObject *p = NULL )
                    : Data128( di, p ) {}
                  AOTime( const AOTime &tm, QObject *p = NULL )
                    : Data128( tm.get(), tm.typeCode, p ? p : tm.parent() ) {}
-           void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
+           void  operator = ( const DataItemBA &di ) { Data128::operator = ( di ); }
 
 static __int128  now();
 static __int128  shiftUp64( __int128 m );

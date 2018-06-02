@@ -62,7 +62,7 @@ Signature::Signature( const Signature &s, QObject *p )
  * @param di - data item
  * @param p - object parent, if any
  */
-Signature::Signature( const QByteArray &di, QObject *p )
+Signature::Signature( const DataItemBA &di, QObject *p )
   : DataVarLength( AO_UNDEFINED_DATAITEM, p ), index( -1 )
 { sigType = AO_UNDEFINED_DATAITEM;
   index.setTypeCode( AO_INDEX );
@@ -76,7 +76,7 @@ Signature::Signature( const QByteArray &di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -119,7 +119,7 @@ Signature::Signature( const QByteArray &di, QObject *p )
  * @brief Signature::operator =
  * @param di - data item to assign
  */
-void Signature::operator = ( const QByteArray &di )
+void Signature::operator = ( const DataItemBA &di )
 { Signature temp( di );
   sigTime    = temp.sigTime;
   typeCode   = temp.typeCode;
@@ -133,7 +133,7 @@ void Signature::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return the signature and time encapsulated as a data item
  */
-QByteArray  Signature::toDataItem( bool cf )
+DataItemBA  Signature::toDataItem( bool cf )
 { QByteArrayList dil;
   dil.append( sigTime.toDataItem(cf) );
   switch ( sigType )

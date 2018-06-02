@@ -27,28 +27,28 @@
  * @param di - typecode, extensible size, data
  * @param p - parent object
  */
-DataVarLength::DataVarLength( const QByteArray &di, QObject *p )
+DataVarLength::DataVarLength( const DataItemBA &di, QObject *p )
   : DataItem( DataItem::typeCodeOf(di), p )
 { csVal = false;
   if ( di.size() < 2 ) // Shortest valid varlenlong serialized data (1 type + 1 length + 0 data)
     { // TODO: log an exception
       return;
     }
-  typeCode = di.at(0);
-  qint32  i = 0;
-  quint32 size = bytesToCode( di.mid(1), i );
-  if ( (unsigned int)di.size() < (size+i+1) )
+  qint32 i,j;
+  typeCode = bytesToCode( di, i );
+  quint32 size = bytesToCode( di.mid(i), j );
+  if ( (unsigned int)di.size() < (size+i+j) )
     { // TODO: log an exception
       return;
     }
-  ba = di.mid(1+i);
+  ba = di.mid(i+j);
 }
 
 /**
  * @brief DataVarLength::operator =  Assign values from a serialized bytearray
  * @param di - serialized bytearray with typeCode, size, data and checksum
  */
-void DataVarLength::operator = ( const QByteArray &di )
+void DataVarLength::operator = ( const DataItemBA &di )
 { DataVarLength temp( di );
   ba       = temp.ba;
   typeCode = temp.typeCode;
@@ -61,8 +61,8 @@ void DataVarLength::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form, no difference at this level - unused
  * @return serialized bytearray with typeCode, size, data and checksum
  */
-QByteArray DataVarLength::toDataItem( bool cf ) const
-{ QByteArray di; (void)cf;
+DataItemBA DataVarLength::toDataItem( bool cf ) const
+{ DataItemBA di; (void)cf;
   di.append( codeToBytes( typeCode ) );
   di.append( codeToBytes( ba.size() ) );
   di.append( ba );

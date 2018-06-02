@@ -88,7 +88,7 @@ QByteArray  ChainBlock::toDataItem( bool cf )
   QList<typeCode_t>keys = properties.keys();
   foreach ( typeCode_t key, keys )
     dil.append( properties.value(key)->toDataItem(cf) );
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

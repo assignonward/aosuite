@@ -36,12 +36,12 @@ class Assets : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  Assets( const QByteArray &di = QByteArray(), QObject *p = NULL );
+    explicit  Assets( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
               Assets( const Assets &a, QObject *p = NULL )
                 : DataVarLength( AO_ASSETS, p ? p : a.parent() ), organizers( a.organizers ),
                   recorders( a.recorders ), sharesRefs( a.sharesRefs ), keyPairs( a.keyPairs ) {}
-        void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( bool cf = false );
+        void  operator = ( const DataItemBA &di );
+  DataItemBA  toDataItem( bool cf = false );
 
 private:
     QList<Organizer> organizers;

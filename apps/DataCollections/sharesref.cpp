@@ -22,7 +22,7 @@
  */
 #include "sharesref.h"
 
-SharesRef::SharesRef( const QByteArray &di, QObject *p )
+SharesRef::SharesRef( const DataItemBA &di, QObject *p )
   : DataVarLength( AO_SHARES_REF, p ), seqNum( -1 )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -33,7 +33,7 @@ SharesRef::SharesRef( const QByteArray &di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -94,7 +94,7 @@ SharesRef::SharesRef( const QByteArray &di, QObject *p )
  * @brief SharesRef::operator =
  * @param di - data item to assign
  */
-void SharesRef::operator = ( const QByteArray &di )
+void SharesRef::operator = ( const DataItemBA &di )
 { SharesRef temp( di );
   page       = temp.page;
   seqNum     = temp.seqNum;
@@ -108,7 +108,7 @@ void SharesRef::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  SharesRef::toDataItem( bool cf )
+DataItemBA  SharesRef::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( !cf )
     { if ( page.isValid() )
@@ -143,7 +143,7 @@ QByteArray  SharesRef::toDataItem( bool cf )
       if ( amount > 0 )
         dil.append( amount.toDataItem(true) );
     }
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

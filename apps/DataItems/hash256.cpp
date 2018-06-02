@@ -58,6 +58,8 @@ bool Hash256::verify( QByteArray text )
 { QCryptographicHash ho( QCryptographicHash::Sha256 );
   ho.addData( text );
   verified = (ho.result() == ba);
+  qDebug( "  result:%s",qPrintable( QString::fromUtf8( ho.result().toHex() ) ) );
+  qDebug( "      ba:%s",qPrintable( QString::fromUtf8( ba.toHex() ) ) );
   return verified;
 }
 

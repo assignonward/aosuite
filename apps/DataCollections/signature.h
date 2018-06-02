@@ -50,7 +50,7 @@ class Signature : public DataVarLength
     Q_OBJECT
 public:
     explicit  Signature( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
-              Signature( const QByteArray &di, QObject *p = NULL );
+              Signature( const DataItemBA &di, QObject *p = NULL );
               Signature( const Signature &s, QObject *p = NULL );
         void  operator = ( const Signature &s )
                 { sigType    = s.sigType;
@@ -58,8 +58,8 @@ public:
                   sigRsa3072 = s.sigRsa3072;
                   sigTime    = s.sigTime;
                   index      = s.index; }
-        void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( bool cf = false );
+        void  operator = ( const DataItemBA &di );
+  DataItemBA  toDataItem( bool cf = false );
   QByteArray  getSig() const;
         void  setSig( const QByteArray &s, typeCode_t tc = AO_UNDEFINED_DATAITEM );
       AOTime  getTime() const { return sigTime; }

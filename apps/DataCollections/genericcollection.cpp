@@ -28,7 +28,7 @@
  * @param tc - type code
  * @param p - optional parent object
  */
-GenericCollection::GenericCollection( QByteArray di, QObject *p )
+GenericCollection::GenericCollection( DataItemBA di, QObject *p )
                      : DataVarLength( typeCodeOf(di), p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -41,7 +41,7 @@ GenericCollection::GenericCollection( QByteArray di, QObject *p )
        else
         { DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -62,7 +62,7 @@ GenericCollection::GenericCollection( QByteArray di, QObject *p )
  * @brief GenericCollection::operator =
  * @param di - data item to assign
  */
-void GenericCollection::operator = ( const QByteArray &di )
+void GenericCollection::operator = ( const DataItemBA &di )
 { GenericCollection temp( di );
   properties = temp.properties;
   typeCode   = temp.typeCode;
@@ -74,14 +74,14 @@ void GenericCollection::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-QByteArray  GenericCollection::toDataItem( bool cf )
+DataItemBA  GenericCollection::toDataItem( bool cf )
 { QByteArrayList dil;
   QList<typeCode_t>keys = properties.keys();
   foreach ( typeCode_t key, keys )
     { dil.append( properties.value(key)->toDataItem(cf) );
       // qDebug( "appending key %x", key );
     }
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }
@@ -91,7 +91,7 @@ QByteArray  GenericCollection::toHashData( bool cf )
   QList<typeCode_t>keys = properties.keys();
   foreach ( typeCode_t key, keys )
     dil.append( properties.value(key)->toHashData(cf) );
-  // TODO: randomize order of dil
+  std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }

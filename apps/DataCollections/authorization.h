@@ -41,12 +41,12 @@ class Authorization : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit Authorization( const QByteArray &di = QByteArray(), QObject *p = NULL );
+    explicit Authorization( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
              Authorization( const Authorization &a, QObject *p = NULL )
                : DataVarLength( AO_AUTHORIZATION, p ? p : a.parent() ),
                  assignment( a.assignment ), sigs( a.sigs ) {}
-       void  operator = ( const QByteArray &di );
- QByteArray  toDataItem( bool cf = false );
+       void  operator = ( const DataItemBA &di );
+ DataItemBA  toDataItem( bool cf = false );
 
 private:
          Assignment  assignment;

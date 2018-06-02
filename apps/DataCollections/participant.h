@@ -39,12 +39,12 @@ class Participant : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  Participant( QByteArray di = QByteArray(), QObject *p = NULL );
+    explicit  Participant( DataItemBA di = DataItemBA(), QObject *p = NULL );
               Participant( const Participant &r, QObject *p = NULL )
                 : DataVarLength( QByteArray(), AO_PARTICIPANT, p ? p : r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
-        void  operator = ( const QByteArray &di );
-  QByteArray  toDataItem( bool cf = false );
+        void  operator = ( const DataItemBA &di );
+  DataItemBA  toDataItem( bool cf = false );
   QByteArray  getId()     const { return key.getId(); }
       PubKey  getKey()    const { return key;         }
       Shares  getAmount() const { return amount;      }

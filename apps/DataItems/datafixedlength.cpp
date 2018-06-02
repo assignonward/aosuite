@@ -27,7 +27,8 @@
  * @param di - typeCode, data, and checksum
  * @param p - parent object
  */
-DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+DataFixedLength::DataFixedLength( const DataItemBA &di, QObject *p )
+                   : DataItem( AO_UNDEFINED_DATAITEM, p )
 { qint32 tcSz = 0;
   typeCode = bytesToCode( di, tcSz );
   if ( di.size() < typeSize()+tcSz )
@@ -41,7 +42,7 @@ DataFixedLength::DataFixedLength( const QByteArray &di, QObject *p ) : DataItem(
  * @brief DataFixedLength::operator =  Assign value from a serialized bytearray
  * @param di - serialized bytearray with typeCode and checksum
  */
-void DataFixedLength::operator = ( const QByteArray &di )
+void DataFixedLength::operator = ( const DataItemBA &di )
 { DataFixedLength temp( di );
   ba       = temp.ba;
   typeCode = temp.typeCode;
@@ -54,7 +55,7 @@ void DataFixedLength::operator = ( const QByteArray &di )
  * @param cf - compact (or chain) form, no difference at this level - unused
  * @return serialized byte array with type, data and checksum
  */
-QByteArray DataFixedLength::toDataItem( bool cf ) const
+DataItemBA DataFixedLength::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   di.append( codeToBytes( typeCode ) );
   di.append( ba );

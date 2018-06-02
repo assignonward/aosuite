@@ -34,11 +34,11 @@ class Shares : public Data128
 public:
     explicit  Shares( __int128 val = 0, typeCode_t tc = AO_ASSIGNMENT_AMT, QObject *p = NULL )
                 : Data128( val, tc, p ) {}
-              Shares( const QByteArray &di, QObject *p = NULL )
+              Shares( const DataItemBA &di, QObject *p = NULL )
                 : Data128( di, p ) {}
               Shares( const Shares &f, QObject *p = NULL )
                 : Data128( f.v, f.typeCode, p ? p : f.parent() ) {}
-        void  operator = ( const QByteArray &di ) { Data128::operator = ( di ); }
+        void  operator = ( const DataItemBA &di ) { Data128::operator = ( di ); }
 };
 
 #endif // SHARES_H

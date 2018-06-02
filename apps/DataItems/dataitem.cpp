@@ -29,7 +29,7 @@
  * @param di - data item to interpret
  * @return typecode of the passed data item
  */
-typeCode_t DataItem::typeCodeOf( const QByteArray &di )
+typeCode_t DataItem::typeCodeOf( const DataItemBA &di )
 { if ( di.size() < 1 )
     return AO_UNDEFINED_DATAITEM;
   int i;
@@ -90,7 +90,7 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
  *   type code is not for a fixed length data item, then the variable
  *   length value is decoded and returned.
  */
-qint32 DataItem::typeSize( const QByteArray &di ) const
+qint32 DataItem::typeSize( const DataItemBA &di ) const
 { if ( di.size() < 1 )
     return -1;
   int tcSz = 0;
@@ -135,7 +135,7 @@ qint32 DataItem::typeSize( const QByteArray &di ) const
  * @param di - serialized form of a data item
  * @return a de-serialized "live" DataItem of the type found in the byte array
  */
-DataItem *DataItem::fromDataItem( const QByteArray &di, QObject *p )
+DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
 { switch ( typeCodeOf( di ) )
   { case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( di, p );
     case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( di, p );
@@ -274,7 +274,7 @@ QByteArray  DataItem::toHashData( bool cf ) const
  * @param ht - type of hash to calculate
  * @return The hash value in a hash type identifying wrapper
  */
-QByteArray  DataItem::getHash( typeCode_t ht ) const
+DataItemBA  DataItem::getHash( typeCode_t ht ) const
 { Hash hi( ht );
   hi.calculate( toHashData() );
   return hi.toDataItem();
@@ -285,9 +285,66 @@ QByteArray  DataItem::getHash( typeCode_t ht ) const
  * @param hdi - hash in a type identifying wrapper to verify against this item's current text
  * @return
  */
-bool  DataItem::verifyHash( const QByteArray &hdi ) const
+bool  DataItem::verifyHash( const DataItemBA &hdi ) const
 { Hash hi( hdi );
   return hi.verify( toHashData() );
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
+#ifdef INCLUDE_TESTS
+/**
+ * @brief DataItem::testHashVerify - create and verify all kinds of hashes, then modify the hash
+ *   and verify that it does not successfully verify.
+ * @return true if all tests pass
+ */
+bool DataItem::testHashVerify()
+{ if ( !testHashVerifyType( AO_HASH256       ) ) return false;
+  if ( !testHashVerifyType( AO_HASH512       ) ) return false;
+  if ( !testHashVerifyType( AO_HASH224SALT32 ) ) return false;
+  qDebug( "  PASS all types" );
+  return true;
+}
+
+/**
+ * @brief DataItem::testHashVerifyType - create and verify one kind of hash, then modify the hash
+ *   and verify that it does not successfully verify.
+ * @param ht - type of hash to test
+ * @return true if all tests pass
+ */
+bool DataItem::testHashVerifyType( typeCode_t ht )
+{ qDebug( "testHashVerifyType( %x )", ht );
+  qDebug( "  data:%s",qPrintable( QString::fromUtf8( toDataItem().toHex() ) ) );
+  qDebug( "  sepr:%s",qPrintable( QString::fromUtf8( toHashData().toHex() ) ) );
+  QByteArray hdi = getHash( ht );
+  qDebug( "  hash:%s",qPrintable( QString::fromUtf8( hdi.toHex() ) ) );
+  if ( verifyHash( hdi ) )
+    qDebug( "  verified when hash is unaltered." );
+   else
+    { qDebug( "  FAIL, did not verify." );
+      return false;
+    }
+  // Single bit-flip tests
+  for ( int i = 0 ; i < hdi.size() ; i++ )
+    { for ( int j = 0; j < 8 ; j++ )
+        { QByteArray hda = hdi;
+          hda[i] = hda.at(i) ^ (0x01 << j);
+          if ( verifyHash( hda ) )
+            { qDebug( "  FAIL, verified with altered hash %d %d.",i,j );
+              qDebug( "  altered hash:%s",qPrintable( QString::fromUtf8( hda.toHex() ) ) );
+              return false;
+            }
+        }
+    }
+  if ( verifyHash( hdi ) )
+    qDebug( "  re-verified unaltered hash." );
+   else
+    { qDebug( "  FAIL, unaltered hash did not re-verify." );
+      qDebug( "  hash:%s",qPrintable( QString::fromUtf8( hdi.toHex() ) ) );
+      return false;
+    }
+  qDebug( "  PASS type %x", ht );
+  return true;
+}
+
+#endif // #ifdef INCLUDE_TESTS

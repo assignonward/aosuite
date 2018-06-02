@@ -33,10 +33,10 @@ public:
                 : DataItem( tc, p ), v( d ) {}
               Data16( const Data16 &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
-              Data16( const QByteArray &di, QObject *p = NULL );
+              Data16( const DataItemBA &di, QObject *p = NULL );
       qint16  value() { return v; }
-  QByteArray  toDataItem( bool cf = false ) const;
-virtual void  operator = ( const QByteArray &di );
+  DataItemBA  toDataItem( bool cf = false ) const;
+virtual void  operator = ( const DataItemBA &di );
         void  operator = ( const Data16 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
         void  operator = ( const qint16 &d ) { v = d; }
       Data16  operator + ( const Data16 &d ) { Data16 c(*this); c.v = v + d.v; return c; }

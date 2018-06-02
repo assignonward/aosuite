@@ -45,26 +45,27 @@ Hash::Hash( typeCode_t tc, QObject *p ) : DataItem( tc, p )
  * @param di - data item to construct from
  * @param p - object parent, if any
  */
-Hash::Hash( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+Hash::Hash( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 { if ( di.size() < 4 )
     { qDebug( "passed data item too small to be a hash" ); // TODO: log error
       typeCode = AO_UNDEFINED_DATAITEM;
       return;
     }
+  qDebug( "    di:%s",qPrintable( QString::fromUtf8( di.toHex() ) ) );
   switch ( typeCodeOf( di ) )
     { case AO_HASH256:
         typeCode = AO_HASH256;
-        hash256 = Hash256( di, this );
+        hash256 = Hash256( di.mid(1), this );
         break;
 
       case AO_HASH512:
         typeCode = AO_HASH512;
-        hash512 = Hash512( di, this );
+        hash512 = Hash512( di.mid(1), this );
         break;
 
       case AO_HASH224SALT32:
         typeCode = AO_HASH224SALT32;
-        hash224salt32 = Hash224Salt32( di, this );
+        hash224salt32 = Hash224Salt32( di.mid(1), this );
         break;
 
       default:
@@ -78,7 +79,7 @@ Hash::Hash( const QByteArray &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM
  * @param cf - compact (or chain) form, passed on to children
  * @return Data Item representing this hash
  */
-QByteArray Hash::toDataItem( bool cf ) const
+DataItemBA Hash::toDataItem( bool cf ) const
 { switch ( typeCode )
     { case AO_HASH256:
         return hash256.toDataItem(cf);
@@ -87,8 +88,8 @@ QByteArray Hash::toDataItem( bool cf ) const
       case AO_HASH224SALT32:
         return hash224salt32.toDataItem(cf);
     }
-  // TODO: log warning
-  return QByteArray();
+  qDebug( "typeCode not set to a recognized Hash type" ); // TODO: log warning
+  return DataItemBA();
 }
 
 /**

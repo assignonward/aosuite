@@ -29,7 +29,7 @@
  * @param di - optional data item
  * @param p - object parent
  */
-Assignment::Assignment(const QByteArray &di, QObject *p)
+Assignment::Assignment(const DataItemBA &di, QObject *p)
   : DataVarLength( AO_ASSIGNMENT, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -41,7 +41,7 @@ Assignment::Assignment(const QByteArray &di, QObject *p)
         { randomizeSalt();                    // Incase it is not yet created
           DataVarLength temp( di );          // It's our type
           if ( temp.checksumValidated() )
-            { QByteArray items = temp.get();  // typeCode and checksum have been stripped off
+            { DataItemBA items = temp.get();  // typeCode has been stripped off
               while ( items.size() > 0 )
                 { int sz = typeSize( items );
                   if ( sz <= 0 )
@@ -93,7 +93,7 @@ Assignment::Assignment(const QByteArray &di, QObject *p)
     }
 }
 
-void Assignment::operator = ( const QByteArray &di )
+void Assignment::operator = ( const DataItemBA &di )
 { Assignment temp( di );
   salt              = temp.salt;
   proposedChain     = temp.proposedChain;
@@ -106,7 +106,7 @@ void Assignment::operator = ( const QByteArray &di )
   return;
 }
 
-QByteArray  Assignment::toDataItem( bool cf )
+DataItemBA  Assignment::toDataItem( bool cf )
 { QByteArrayList dil;
   if ( salt.isValid() )
     dil.append( salt.toDataItem(cf) );
