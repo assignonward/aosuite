@@ -23,7 +23,7 @@
 #ifndef APPNAME_H
 #define APPNAME_H
 
-#define APPNAME_SHORT "Tao C"
+#define APPNAME_SHORT "TaoC"
 #define APPNAME "Test Assign Onward Components"
 
 #endif // APPNAME_H

@@ -155,11 +155,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="testTab">
-       <attribute name="title">
-        <string>Tests</string>
-       </attribute>
-      </widget>
      </widget>
     </item>
    </layout>

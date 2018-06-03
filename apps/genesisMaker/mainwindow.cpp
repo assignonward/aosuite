@@ -21,7 +21,6 @@
  * SOFTWARE.
  */
 #include "mainwindow.h"
-#include "testform.h"
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -29,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
   new GenesisForm( ui->genesisTab,this );
-  new TestForm( ui->testTab,this );
   restoreConfig();
 }
 
