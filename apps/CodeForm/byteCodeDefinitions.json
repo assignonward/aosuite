@@ -111,13 +111,13 @@
         "size": 16,
         "type": "Shares"
     },
-{
-    "code": 44,
-    "desc": "Number of coins, as a fixed point 64.64 bit number",
-    "pdef": "AO_N_COINS",
-    "size": 16,
-    "type": "AOCoins"
-},
+    {
+        "code": 44,
+        "desc": "Number of coins, as a fixed point 64.64 bit number",
+        "pdef": "AO_N_COINS",
+        "size": 16,
+        "type": "AOCoins"
+    },
     {
         "code": 47,
         "desc": "8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)",
@@ -153,13 +153,13 @@
         "size": 384,
         "type": "SigRsa3072"
     },
-{
-    "code": 54,
-    "desc": "An ECDSA signature",
-    "pdef": "AO_ECDSA_SIG",
-    "size": -1,
-    "type": "SigEcdsa"
-},
+    {
+        "code": 54,
+        "desc": "An ECDSA signature",
+        "pdef": "AO_ECDSA_SIG",
+        "size": -1,
+        "type": "SigEcdsa"
+    },
     {
         "code": 10,
         "desc": "Shares Assignment agreement before signatures",
@@ -277,14 +277,14 @@
         "size": -1,
         "type": "KeyPair"
     },
-{
-    "code": 106,
-    "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
-    "pdef": "AO_NETADDRESS",
-    "sepr": true,
-    "size": -1,
-    "type": "NetAddress"
-},
+    {
+        "code": 106,
+        "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
+        "pdef": "AO_NETADDRESS",
+        "sepr": true,
+        "size": -1,
+        "type": "NetAddress"
+    },
     {
         "code": 128,
         "desc": "Contact information for an asset organizer (user software)",
@@ -299,20 +299,27 @@
         "size": -1,
         "type": "Recorder"
     },
-{
-    "code": 55,
-    "desc": "A full chain block, including all data - though potentially censored as required by local laws",
-    "pdef": "CB_CHAIN_BLOCK",
-    "size": -1,
-    "type": "GenericCollection"
-},
-{
-    "code": 135,
-    "desc": "A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it",
-    "pdef": "GB_GENESIS_BLOCK",
-    "size": -1,
-    "type": "GenericCollection"
-},
+    {
+        "code": 55,
+        "desc": "A full chain block, including all data - though potentially censored as required by local laws",
+        "pdef": "CB_CHAIN_BLOCK",
+        "size": -1,
+        "type": "GenericCollection"
+    },
+    {
+        "code": 56,
+        "desc": "ID (public key) of the blockmaker, which holds claim on the residual shares in the block",
+        "pdef": "CB_BLOCKMAKER",
+        "size": -1,
+        "type": "PubKey"
+    },
+    {
+        "code": 135,
+        "desc": "A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it",
+        "pdef": "GB_GENESIS_BLOCK",
+        "size": -1,
+        "type": "GenericCollection"
+    },
     {
         "code": 263,
         "desc": "Basic level of protocol, identifies functionality",

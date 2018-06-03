@@ -75,6 +75,7 @@
 #define AO_ORGANIZER               0x80 // (8001+var) Organizer: Contact information for an asset organizer (user software)
 #define AO_RECORDER                0x81 // (8101+var) Recorder: Contact information for a recorder (chainmaker software)
 #define CB_CHAIN_BLOCK             0x37 // (37+var) GenericCollection: A full chain block, including all data - though potentially censored as required by local laws
+#define CB_BLOCKMAKER              0x38 // (38+var) PubKey: ID (public key) of the blockmaker, which holds claim on the residual shares in the block
 #define GB_GENESIS_BLOCK           0x87 // (8701+var) GenericCollection: A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it
 #define GB_PROTOCOL                0x107 // (8702+2) Data16: Basic level of protocol, identifies functionality
 #define GB_PROTOCOL_REV            0x187 // (8703+2) Data16: Revision of the protocol, may indicate additional types supported

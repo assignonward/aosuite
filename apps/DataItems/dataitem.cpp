@@ -153,12 +153,13 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
     case AO_UNDERWRITING_AMT:        return new Shares( di, p );
     case AO_RECORDING_BID:           return new Shares( di, p );
     case AO_SHARES_OUT:              return new Shares( di, p );
-    case AO_SHARE_STATE:             return new ShareState( di, p );
     case AO_N_COINS:                 return new AOCoins( di, p );
+    case AO_SHARE_STATE:             return new ShareState( di, p );
     case AO_LISTSIZE:                return new Data16( di, p );
     case AO_INDEX:                   return new Data16( di, p );
     case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( di, p );
     case AO_RSA3072_SIG:             return new SigRsa3072( di, p );
+    case AO_ECDSA_SIG:               return new SigEcdsa( di, p );
     case AO_ASSIGNMENT:              return new Assignment( di, p );
     case AO_PARTICIPANT:             return new Participant( di, p );
     case AO_PARTICIPANT_CF:          return new Participant( di, p );
@@ -175,11 +176,11 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
     case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( di, p );
     case AO_RSA3072_PRI_KEY:         return new PrivateKeyRsa3072( di, p );
     case AO_KEYPAIR:                 return new KeyPair( di, p );
+    case AO_NETADDRESS:              return new NetAddress( di, p );
     case AO_ORGANIZER:               return new Organizer( di, p );
     case AO_RECORDER:                return new Recorder( di, p );
-    case AO_NETADDRESS:              return new NetAddress( di, p );
-    case AO_ECDSA_SIG:               return new SigEcdsa( di, p );
     case CB_CHAIN_BLOCK:             return new GenericCollection( di, p );
+    case CB_BLOCKMAKER:              return new PubKey( di, p );
     case GB_GENESIS_BLOCK:           return new GenericCollection( di, p );
     case GB_PROTOCOL:                return new Data16( di, p );
     case GB_PROTOCOL_REV:            return new Data16( di, p );
@@ -213,12 +214,13 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_UNDERWRITING_AMT:        return new Shares( *((Shares *)ditm), p );
     case AO_RECORDING_BID:           return new Shares( *((Shares *)ditm), p );
     case AO_SHARES_OUT:              return new Shares( *((Shares *)ditm), p );
-    case AO_SHARE_STATE:             return new ShareState( *((ShareState *)ditm), p );
     case AO_N_COINS:                 return new AOCoins( *((AOCoins *)ditm), p );
+    case AO_SHARE_STATE:             return new ShareState( *((ShareState *)ditm), p );
     case AO_LISTSIZE:                return new Data16( *((Data16 *)ditm), p );
     case AO_INDEX:                   return new Data16( *((Data16 *)ditm), p );
     case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( *((PublicKeyRsa3072 *)ditm), p );
     case AO_RSA3072_SIG:             return new SigRsa3072( *((SigRsa3072 *)ditm), p );
+    case AO_ECDSA_SIG:               return new SigEcdsa( *((SigEcdsa *)ditm), p );
     case AO_ASSIGNMENT:              return new Assignment( *((Assignment *)ditm), p );
     case AO_PARTICIPANT:             return new Participant( *((Participant *)ditm), p );
     case AO_PARTICIPANT_CF:          return new Participant( *((Participant *)ditm), p );
@@ -235,11 +237,11 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( *((PrivateKeyEcdsa *)ditm), p );
     case AO_RSA3072_PRI_KEY:         return new PrivateKeyRsa3072( *((PrivateKeyRsa3072 *)ditm), p );
     case AO_KEYPAIR:                 return new KeyPair( *((KeyPair *)ditm), p );
+    case AO_NETADDRESS:              return new NetAddress( *((NetAddress *)ditm), p );
     case AO_ORGANIZER:               return new Organizer( *((Organizer *)ditm), p );
     case AO_RECORDER:                return new Recorder( *((Recorder *)ditm), p );
-    case AO_NETADDRESS:              return new NetAddress( *((NetAddress *)ditm), p );
-    case AO_ECDSA_SIG:               return new SigEcdsa( *((SigEcdsa *)ditm), p );
     case CB_CHAIN_BLOCK:             return new GenericCollection( *((GenericCollection *)ditm), p );
+    case CB_BLOCKMAKER:              return new PubKey( *((PubKey *)ditm), p );
     case GB_GENESIS_BLOCK:           return new GenericCollection( *((GenericCollection *)ditm), p );
     case GB_PROTOCOL:                return new Data16( *((Data16 *)ditm), p );
     case GB_PROTOCOL_REV:            return new Data16( *((Data16 *)ditm), p );
@@ -251,6 +253,7 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case GB_MIN_BLOCK_INT:           return new AOTime( *((AOTime *)ditm), p );
     case GB_N_COINS_TOTAL:           return new AOCoins( *((AOCoins *)ditm), p );
     case GB_RECORDING_TAX:           return new AOCoins( *((AOCoins *)ditm), p );
+    case AO_UNDEFINED_DATAITEM:      return new DataItem( *((DataItem *)ditm), p );
     }
   return new DataItem( AO_UNDEFINED_DATAITEM, p );
 }
