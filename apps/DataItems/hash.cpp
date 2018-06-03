@@ -51,25 +51,25 @@ Hash::Hash( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM
       typeCode = AO_UNDEFINED_DATAITEM;
       return;
     }
-  qDebug( "    di:%s",qPrintable( QString::fromUtf8( di.toHex() ) ) );
+  // qDebug( "    di:%s",qPrintable( QString::fromUtf8( di.toHex() ) ) );
   switch ( typeCodeOf( di ) )
     { case AO_HASH256:
         typeCode = AO_HASH256;
-        hash256 = Hash256( di.mid(1), this );
+        hash256 = Hash256( (DataItemBA)di, this );
         break;
 
       case AO_HASH512:
         typeCode = AO_HASH512;
-        hash512 = Hash512( di.mid(1), this );
+        hash512 = Hash512( (DataItemBA)di, this );
         break;
 
       case AO_HASH224SALT32:
         typeCode = AO_HASH224SALT32;
-        hash224salt32 = Hash224Salt32( di.mid(1), this );
+        hash224salt32 = Hash224Salt32( (DataItemBA)di, this );
         break;
 
       default:
-        qDebug( "passed data item's type is not a recognized hash type" ); // TODO: log error
+        // qDebug( "passed data item's type is not a recognized hash type" ); // TODO: log error
         typeCode = AO_UNDEFINED_DATAITEM;
     }
 }

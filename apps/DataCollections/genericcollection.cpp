@@ -74,25 +74,43 @@ void GenericCollection::operator = ( const DataItemBA &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-DataItemBA  GenericCollection::toDataItem( bool cf )
-{ QByteArrayList dil;
+DataItemBA  GenericCollection::toDataItem( bool cf ) const
+{ // qDebug( "GenericCollection::toDataItem" );
+  QByteArrayList dil;
   QList<typeCode_t>keys = properties.keys();
   foreach ( typeCode_t key, keys )
     { dil.append( properties.value(key)->toDataItem(cf) );
       // qDebug( "appending key %x", key );
     }
   std::sort( dil.begin(), dil.end() );
-  ba = dil.join();
-  return DataVarLength::toDataItem(cf);
+  QByteArray dba = dil.join();
+  DataItemBA di;
+  di.append( codeToBytes( typeCode   ) );
+  di.append( codeToBytes( dba.size() ) ); // variable length form...
+  di.append( dba );
+  return di;
 }
 
-QByteArray  GenericCollection::toHashData( bool cf )
-{ QByteArrayList dil;
+DataItemBA  GenericCollection::toHashData( bool cf ) const
+{ // qDebug( "GenericCollection::toHashData" );
+  QList<DataItemBA> dil;
   QList<typeCode_t>keys = properties.keys();
   foreach ( typeCode_t key, keys )
-    dil.append( properties.value(key)->toHashData(cf) );
+    dil.append( properties.value(key)->toDataItem(cf) );
   std::sort( dil.begin(), dil.end() );
-  ba = dil.join();
-  return DataVarLength::toDataItem(cf);
+  QByteArrayList hdl;
+  foreach ( QByteArray di, dil )
+    { if ( typeCodeOf( di ) & AO_SEPARABLE_TYPE )
+        hdl.append( properties.value(typeCodeOf( di ))->toHashData(cf) );
+       else
+        hdl.append( di );
+    }
+  QByteArray dba = hdl.join();
+  QByteArray hd;
+  hd.append( codeToBytes( typeCode   ) );
+  hd.append( codeToBytes( dba.size() ) ); // variable length form...
+  hd.append( dba );
+  // qDebug( "  hdat:%s",qPrintable( QString::fromUtf8( hd.toHex() ) ) );
+  return hd;
 }
 

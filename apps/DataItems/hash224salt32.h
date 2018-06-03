@@ -30,6 +30,8 @@ class Hash224Salt32 : public DataFixedLength
     Q_OBJECT
 public:
       explicit  Hash224Salt32( QByteArray text = QByteArray(), QObject *p = NULL );
+                Hash224Salt32( const DataItemBA &di, QObject *p )
+                  : DataFixedLength( di, p ), verified( false ) {}
                 Hash224Salt32( const Hash224Salt32 &h, QObject *p = NULL )
                   : DataFixedLength( AO_HASH224SALT32, h.ba, p ? p : h.parent() ), verified( h.verified ) { /* if ( h.typeCode != AO_HASH224SALT32 ) TODO: log error */ }
  Hash224Salt32 &calculate( QByteArray text );

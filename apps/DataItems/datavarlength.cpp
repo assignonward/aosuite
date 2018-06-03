@@ -62,7 +62,8 @@ void DataVarLength::operator = ( const DataItemBA &di )
  * @return serialized bytearray with typeCode, size, data and checksum
  */
 DataItemBA DataVarLength::toDataItem( bool cf ) const
-{ DataItemBA di; (void)cf;
+{ // qDebug( "DataVarLength::toDataItem" );
+  DataItemBA di; (void)cf;
   di.append( codeToBytes( typeCode ) );
   di.append( codeToBytes( ba.size() ) );
   di.append( ba );

@@ -255,15 +255,21 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
   return new DataItem( AO_UNDEFINED_DATAITEM, p );
 }
 
+DataItemBA  DataItem::toDataItem( bool cf ) const
+{ qDebug( "DataItem:toDataItem ERROR!" );
+  (void)cf; return DataItemBA();
+} // Implemented in all child classes
+
 /**
  * @brief DataItem::toHashData
  * @param cf - chain/compact form?
  * @return the data item as a type identified byte array, with separable items replaced
  *   with a salted hash.
  */
-QByteArray  DataItem::toHashData( bool cf ) const
-{ if ( typeCode & AO_SEPARABLE_TYPE )
-    { Hash224Salt32 h;
+DataItemBA DataItem::toHashData( bool cf ) const
+{ //qDebug( "DataItem:toHashData" );
+  if ( typeCode & AO_SEPARABLE_TYPE )
+    { Hash256 h;
       return h.calculate( toDataItem(cf) ).toDataItem(cf);
     }
   return toDataItem(cf);
@@ -314,10 +320,10 @@ bool DataItem::testHashVerify()
  */
 bool DataItem::testHashVerifyType( typeCode_t ht )
 { qDebug( "testHashVerifyType( %x )", ht );
-  qDebug( "  data:%s",qPrintable( QString::fromUtf8( toDataItem().toHex() ) ) );
-  qDebug( "  sepr:%s",qPrintable( QString::fromUtf8( toHashData().toHex() ) ) );
-  QByteArray hdi = getHash( ht );
-  qDebug( "  hash:%s",qPrintable( QString::fromUtf8( hdi.toHex() ) ) );
+  // qDebug( "  data:%s",qPrintable( QString::fromUtf8( toDataItem().toHex() ) ) );
+  // qDebug( "  sepr:%s",qPrintable( QString::fromUtf8( toHashData().toHex() ) ) );
+  DataItemBA hdi = getHash( ht );
+  // qDebug( "  hash:%s",qPrintable( QString::fromUtf8( hdi.toHex() ) ) );
   if ( verifyHash( hdi ) )
     qDebug( "  verified when hash is unaltered." );
    else
@@ -336,6 +342,7 @@ bool DataItem::testHashVerifyType( typeCode_t ht )
             }
         }
     }
+  qDebug( "  no single bit flips verified." );
   if ( verifyHash( hdi ) )
     qDebug( "  re-verified unaltered hash." );
    else

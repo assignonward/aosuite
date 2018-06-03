@@ -106,8 +106,8 @@ public:
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const DataItemBA &di );
                bool  checksumValidated() const { return csVal; }
- virtual DataItemBA  toDataItem( bool cf = false ) const { (void)cf; return DataItemBA(); } // Implemented in all child classes
- virtual QByteArray  toHashData( bool cf = false ) const;
+ virtual DataItemBA  toDataItem( bool cf = false ) const;
+ virtual DataItemBA  toHashData( bool cf = false ) const;
          DataItemBA  getHash( typeCode_t ht = AO_HASH256 ) const;
                bool  verifyHash( const DataItemBA &hdi ) const;
          typeCode_t  getTypeCode() const { return typeCode; }

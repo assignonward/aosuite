@@ -30,7 +30,8 @@
  */
 Hash256::Hash256( QByteArray text, QObject *p )
         : DataFixedLength( AO_HASH256, p ), verified( false )
-{ if ( text.size() < 1 )
+{ // qDebug( "Hash256 construct from text" );
+  if ( text.size() < 1 )
     return;
   QCryptographicHash ho( QCryptographicHash::Sha256 );
   ho.addData( text );
@@ -55,11 +56,12 @@ Hash256 &Hash256::calculate( QByteArray text )
  * @return true if hash of text matches this hash
  */
 bool Hash256::verify( QByteArray text )
-{ QCryptographicHash ho( QCryptographicHash::Sha256 );
+{ // qDebug( "  text:%s",qPrintable( QString::fromUtf8( text.toHex() ) ) );
+  QCryptographicHash ho( QCryptographicHash::Sha256 );
   ho.addData( text );
   verified = (ho.result() == ba);
-  qDebug( "  result:%s",qPrintable( QString::fromUtf8( ho.result().toHex() ) ) );
-  qDebug( "      ba:%s",qPrintable( QString::fromUtf8( ba.toHex() ) ) );
+//  qDebug( "  result:%s",qPrintable( QString::fromUtf8( ho.result().toHex() ) ) );
+//  qDebug( "      ba:%s",qPrintable( QString::fromUtf8( ba.toHex() ) ) );
   return verified;
 }
 

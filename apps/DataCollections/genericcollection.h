@@ -43,12 +43,13 @@ public:
                   : DataVarLength( QByteArray(), r.typeCode, p ? p : r.parent() ),
                     properties( r.properties ) {}
           void  operator = ( const DataItemBA &di );
-    DataItemBA  toDataItem( bool cf = false );
-    QByteArray  toHashData( bool cf = false );
+    DataItemBA  toDataItem( bool cf = false ) const;
+    DataItemBA  toHashData( bool cf = false ) const;
       DataItem *getProp( typeCode_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : NULL; }
           void  add( const typeCode_t& key, DataItem *value ) { properties.insert( key, value ); }
+
 private:
-    DataItemMap  properties;  // Collection of properties that describe the chain
+   DataItemMap  properties;  // Collection of properties that describe the chain
 };
 
 #endif // GENERICCOLLECTION_H
