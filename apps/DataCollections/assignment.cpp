@@ -49,11 +49,7 @@ Assignment::Assignment(const DataItemBA &di, QObject *p)
                else
                 { Participant part;
                   switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                    { case AO_SALT256:
-                        salt = items;
-                        break;
-
-                      case AO_PAGE_REF:
+                    { case AO_PAGE_REF:
                         proposedChain = items;
                         break;
 
@@ -92,7 +88,6 @@ Assignment::Assignment(const DataItemBA &di, QObject *p)
 
 void Assignment::operator = ( const DataItemBA &di )
 { Assignment temp( di );
-  salt              = temp.salt;
   proposedChain     = temp.proposedChain;
   recordingDeadline = temp.recordingDeadline;
   recordingBid      = temp.recordingBid;
@@ -105,8 +100,6 @@ void Assignment::operator = ( const DataItemBA &di )
 
 DataItemBA  Assignment::toDataItem( bool cf )
 { QByteArrayList dil;
-  if ( salt.isValid() )
-    dil.append( salt.toDataItem(cf) );
   if ( proposedChain.isValid() )
     dil.append( proposedChain.toDataItem(cf) );
   if ( recordingDeadline.future() )

@@ -46,7 +46,7 @@ class Assignment : public DataVarLength
 public:
     explicit  Assignment( const DataItemBA &di = QByteArray(), QObject *p = NULL );
               Assignment( const Assignment &a, QObject *p = NULL )
-                : DataVarLength( AO_ASSIGNMENT, p ? p : a.parent() ), salt( a.salt ), proposedChain( a.proposedChain ),
+                : DataVarLength( AO_ASSIGNMENT, p ? p : a.parent() ), proposedChain( a.proposedChain ),
                   recordingDeadline( a.recordingDeadline ), recordingBid( a.recordingBid ), note( a.note ),
                   participants( a.participants ) {}
         void  operator = ( const DataItemBA &di );
@@ -58,7 +58,6 @@ public:
         bool  validTimeline();
 
 private:
-            Salt256  salt;
             PageRef  proposedChain;     // Reference to the signature page of a recent block in the chain this assignment is proposed to be recorded on, and valid child of this block should also be acceptable
              AOTime  recordingDeadline; // When the assignment contract is expected to be recorded in the chain
              Shares  recordingBid;      // Positive amount to bid for all underwriting and recording taxes
