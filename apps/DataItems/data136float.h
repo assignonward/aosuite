@@ -41,7 +41,7 @@ public:
               Data136Float( const DataItemBA &di, QObject *p = NULL );
   DataItemBA  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const DataItemBA &di );
-        void  operator = ( const  Data136Float &d ) { v = d.v; e = d.e; typeCode = d.typeCode; csVal = d.csVal; }
+        void  operator = ( const  Data136Float &d ) { v = d.v; e = d.e; typeCode = d.typeCode; }
         void  operator = ( const __int128 &d ) { v = d; e = 0; }
 
 protected:

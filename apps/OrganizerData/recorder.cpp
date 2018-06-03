@@ -31,36 +31,34 @@ Recorder::Recorder( DataItemBA di, QObject *p ) : DataVarLength( AO_RECORDER, p 
         }
        else
         { typeCode = typeCodeOf( di );
-          DataVarLength temp( di );          // It's our type
-          if ( temp.checksumValidated() )
-            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
-              while ( items.size() > 0 )
-                { int sz = typeSize( items );
-                  if ( sz <= 0 )
-                    { // TODO: log error
-                      return;
+          DataVarLength temp( di );        // It's our type
+          DataItemBA items = temp.get();  // typeCode has been stripped off
+          while ( items.size() > 0 )
+            { int sz = typeSize( items );
+              if ( sz <= 0 )
+                { // TODO: log error
+                  return;
+                }
+               else
+                { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                    { case AO_NETADDRESS:
+                        netAddress = items;
+                        break;
+
+                      case AO_ECDSA_PUB_KEY2:
+                      case AO_ECDSA_PUB_KEY3:
+                      case AO_RSA3072_PUB_KEY:
+                        pubKey = items;
+                        break;
+
+                      case AO_NOTE:
+                        note = items;
+
+                      default:
+                        // TODO: log anomaly - unrecognized data type
+                        break;
                     }
-                   else
-                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_NETADDRESS:
-                            netAddress = items;
-                            break;
-
-                          case AO_ECDSA_PUB_KEY2:
-                          case AO_ECDSA_PUB_KEY3:
-                          case AO_RSA3072_PUB_KEY:
-                            pubKey = items;
-                            break;
-
-                          case AO_NOTE:
-                            note = items;
-
-                          default:
-                            // TODO: log anomaly - unrecognized data type
-                            break;
-                        }
-                      items = items.mid( sz ); // move on to the next
-                    }
+                  items = items.mid( sz ); // move on to the next
                 }
             }
         }

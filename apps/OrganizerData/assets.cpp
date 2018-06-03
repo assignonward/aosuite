@@ -27,7 +27,8 @@
  * @param di - optional data item
  * @param p - object parent
  */
-Assets::Assets(const DataItemBA &di, QObject *p) : DataVarLength( AO_ASSETS, p )
+Assets::Assets(const DataItemBA &di, QObject *p)
+          : DataVarLength( AO_ASSETS, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_ASSETS )
@@ -35,47 +36,45 @@ Assets::Assets(const DataItemBA &di, QObject *p) : DataVarLength( AO_ASSETS, p )
           return;
         }
        else
-        { DataVarLength temp( di );          // It's our type
-          if ( temp.checksumValidated() )
-            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
-              while ( items.size() > 0 )
-                { int sz = typeSize( items );
-                  if ( sz <= 0 )
-                    { // TODO: log error
-                      return;
+        { DataVarLength temp( di );        // It's our type
+          DataItemBA items = temp.get();  // typeCode has been stripped off
+          while ( items.size() > 0 )
+            { int sz = typeSize( items );
+              if ( sz <= 0 )
+                { // TODO: log error
+                  return;
+                }
+               else
+                { Organizer org;
+                  Recorder rec;
+                  SharesRef shr;
+                  KeyPair kpr;
+                  switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                    { case AO_ORGANIZER:
+                        org = items;
+                        organizers.append( org );
+                        break;
+
+                      case AO_RECORDER:
+                        rec = items;
+                        recorders.append( rec );
+                        break;
+
+                      case AO_SHARES_REF:
+                        shr = items;
+                        sharesRefs.append( shr );
+                        break;
+
+                      case AO_KEYPAIR:
+                        kpr = items;
+                        keyPairs.append( kpr );
+                        break;
+
+                      default:
+                        // TODO: log anomaly - unrecognized data type
+                        break;
                     }
-                   else
-                    { Organizer org;
-                      Recorder rec;
-                      SharesRef shr;
-                      KeyPair kpr;
-                      switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_ORGANIZER:
-                            org = items;
-                            organizers.append( org );
-                            break;
-
-                          case AO_RECORDER:
-                            rec = items;
-                            recorders.append( rec );
-                            break;
-
-                          case AO_SHARES_REF:
-                            shr = items;
-                            sharesRefs.append( shr );
-                            break;
-
-                          case AO_KEYPAIR:
-                            kpr = items;
-                            keyPairs.append( kpr );
-                            break;
-
-                          default:
-                            // TODO: log anomaly - unrecognized data type
-                            break;
-                        }
-                      items = items.mid( sz ); // move on to the next
-                    }
+                  items = items.mid( sz ); // move on to the next
                 }
             }
         }

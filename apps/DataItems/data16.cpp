@@ -52,7 +52,6 @@ void Data16::operator = ( const DataItemBA &di )
 { Data16 temp( di );
   v        = temp.v;
   typeCode = temp.typeCode;
-  csVal    = temp.csVal;
   return;
 }
 

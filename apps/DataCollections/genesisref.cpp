@@ -36,28 +36,26 @@ GenesisRef::GenesisRef( DataItemBA di, QObject *p )
           return;
         }
        else
-        { DataVarLength temp( di );          // It's our type
-          if ( temp.checksumValidated() )
-            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
-              while ( items.size() > 0 )
-                { int sz = typeSize( items );
-                  if ( sz <= 0 )
-                    { // TODO: log error
-                      return;
-                    }
-                   else
-                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_HASH256:
-                          case AO_HASH512:
-                            hash = items;
-                            break;
+        { DataVarLength temp( di );        // It's our type
+          DataItemBA items = temp.get();  // typeCode has been stripped off
+          while ( items.size() > 0 )
+            { int sz = typeSize( items );
+              if ( sz <= 0 )
+                { // TODO: log error
+                  return;
+                }
+               else
+                { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                    { case AO_HASH256:
+                      case AO_HASH512:
+                        hash = items;
+                        break;
 
-                          default:
-                            // TODO: log anomaly - unrecognized data type
-                            break;
-                        }
-                      items = items.mid( sz ); // move on to the next
+                      default:
+                        // TODO: log anomaly - unrecognized data type
+                        break;
                     }
+                  items = items.mid( sz ); // move on to the next
                 }
             }
         }

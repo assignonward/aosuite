@@ -51,7 +51,6 @@ void Data8::operator = ( const DataItemBA &di )
 { Data8 temp( di );
   v        = temp.v;
   typeCode = temp.typeCode;
-  csVal    = temp.csVal;
   return;
 }
 

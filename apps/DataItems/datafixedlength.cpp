@@ -46,7 +46,6 @@ void DataFixedLength::operator = ( const DataItemBA &di )
 { DataFixedLength temp( di );
   ba       = temp.ba;
   typeCode = temp.typeCode;
-  csVal    = temp.csVal;
   return;
 }
 
@@ -69,7 +68,6 @@ DataItemBA DataFixedLength::toDataItem( bool cf ) const
 void DataFixedLength::set( QByteArray sba )
 { if ( sba.size() == (typeSize() - 2) )
     { ba    = sba;
-      csVal = true;
     }
   // else
   // TODO: log warning

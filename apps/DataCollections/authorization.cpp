@@ -36,41 +36,39 @@ Authorization::Authorization(const DataItemBA &di, QObject *p)
           return;
         }
        else
-        { DataVarLength temp( di );          // It's our type
-          if ( temp.checksumValidated() )
-            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
-              while ( items.size() > 0 )
-                { int sz = typeSize( items );
-                  if ( sz <= 0 )
-                    { // TODO: log error
-                      return;
-                    }
-                   else
-                    { Signature sig;
-                      switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_ASSIGNMENT:
-                            assignment = items;
-                            break;
-
-                          case AO_SIG_WITH_TIME:
-                            sig = items;
-                            sigs.append( sig );
-                            break;
-
-                          case AO_LISTSIZE:
-                            nSigs = items;
-                            break;
-
-                          default:
-                            // TODO: log anomaly - unrecognized data type
-                            break;
-                        }
-                      items = items.mid( sz ); // move on to the next
-                    }
+        { DataVarLength temp( di );        // It's our type
+          DataItemBA items = temp.get();  // typeCode has been stripped off
+          while ( items.size() > 0 )
+            { int sz = typeSize( items );
+              if ( sz <= 0 )
+                { // TODO: log error
+                  return;
                 }
-              // if ( nSigs != sigs.size() )
-              //   TODO: log error and cleanup.
+               else
+                { Signature sig;
+                  switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                    { case AO_ASSIGNMENT:
+                        assignment = items;
+                        break;
+
+                      case AO_SIG_WITH_TIME:
+                        sig = items;
+                        sigs.append( sig );
+                        break;
+
+                      case AO_LISTSIZE:
+                        nSigs = items;
+                        break;
+
+                      default:
+                        // TODO: log anomaly - unrecognized data type
+                        break;
+                    }
+                  items = items.mid( sz ); // move on to the next
+                }
             }
+          // if ( nSigs != sigs.size() )
+          //   TODO: log error and cleanup.
         }
     }
 }

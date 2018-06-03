@@ -37,9 +37,10 @@
 #include "participant.h"
 
 Participant::Participant( DataItemBA di, QObject *p )
-  : DataVarLength( AO_PARTICIPANT, p )
+  : DataVarLength( typeCodeOf( di ), p )
 { // See if there's anything interesting in the data item
   index = -1;
+  index.setTypeCode( AO_INDEX );
   if ( di.size() > 0 )
     { if (( typeCodeOf( di ) != AO_PARTICIPANT ) &&
           ( typeCodeOf( di ) != AO_PARTICIPANT_CF ))
@@ -47,46 +48,43 @@ Participant::Participant( DataItemBA di, QObject *p )
           return;
         }
        else
-        { typeCode = typeCodeOf( di );
-          DataVarLength temp( di );          // It's our type
-          if ( temp.checksumValidated() )
-            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
-              while ( items.size() > 0 )
-                { int sz = typeSize( items );
-                  if ( sz <= 0 )
-                    { // TODO: log error
-                      return;
+        { DataVarLength temp( di );        // It's our type
+          DataItemBA items = temp.get();  // typeCode has been stripped off
+          while ( items.size() > 0 )
+            { int sz = typeSize( items );
+              if ( sz <= 0 )
+                { // TODO: log error
+                  return;
+                }
+               else
+                { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                    { case AO_ASSIGNMENT_AMT:
+                        amount = items;
+                        break;
+
+                      case AO_ECDSA_PUB_KEY2:
+                      case AO_ECDSA_PUB_KEY3:
+                      case AO_RSA3072_PUB_KEY:
+                        key = items;
+                        break;
+
+                      case AO_PUB_RSA3072_ID:
+                        keyHash = items;
+
+                      case AO_PAGE_REF:
+                        page = items;
+
+                      case AO_NOTE:
+                        note = items;
+
+                      case AO_INDEX:
+                        index = items;
+
+                      default:
+                        // TODO: log anomaly - unrecognized data type
+                        break;
                     }
-                   else
-                    { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_ASSIGNMENT_AMT:
-                            amount = items;
-                            break;
-
-                          case AO_ECDSA_PUB_KEY2:
-                          case AO_ECDSA_PUB_KEY3:
-                          case AO_RSA3072_PUB_KEY:
-                            key = items;
-                            break;
-
-                          case AO_PUB_RSA3072_ID:
-                            keyHash = items;
-
-                          case AO_PAGE_REF:
-                            page = items;
-
-                          case AO_NOTE:
-                            note = items;
-
-                          case AO_INDEX:
-                            index = items;
-
-                          default:
-                            // TODO: log anomaly - unrecognized data type
-                            break;
-                        }
-                      items = items.mid( sz ); // move on to the next
-                    }
+                  items = items.mid( sz ); // move on to the next
                 }
             }
         }

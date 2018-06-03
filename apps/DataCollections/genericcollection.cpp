@@ -40,20 +40,19 @@ GenericCollection::GenericCollection( DataItemBA di, QObject *p )
         }
        else
         { DataVarLength temp( di );          // It's our type
-          if ( temp.checksumValidated() )
-            { DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
-              while ( items.size() > 0 )
-                { int sz = typeSize( items );
-                  if ( sz <= 0 )
-                    { // TODO: log error
-                      return;
-                    }
-                   else
-                    { properties.insert( typeCodeOf( items ), DataItem::fromDataItem( items, this ) );
-                      items = items.mid( sz ); // move on to the next
-                    }
+          DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
+          while ( items.size() > 0 )
+            { int sz = typeSize( items );
+              if ( sz <= 0 )
+                { // TODO: log error
+                  return;
+                }
+               else
+                { properties.insert( typeCodeOf( items ), DataItem::fromDataItem( items, this ) );
+                  items = items.mid( sz ); // move on to the next
                 }
             }
+
         }
     }
 }

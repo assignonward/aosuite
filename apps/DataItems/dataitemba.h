@@ -27,7 +27,26 @@
 
 /**
  * @brief The DataItemBA class - just a QByteArray that contains
- *   a serialized DataItem.
+ *   a serialized DataItem.  Used to distinguish between generic
+ *   byte arrays and serialized data items.  Serialized data items
+ *   take the form of:
+ *   typeCode: 1 or more bytes
+ *   if typeCode has a variable size, then size: 1 or more bytes
+ *   data corresponding with the typeCode
+ *
+ *   The one or more bytes code:
+ *     Values 0-127 are contained in a single byte, with MSbit = 0.
+ *     If the first byte MSbit is 1, then the following byte contains
+ *     the next 7 most significant bits - same scheme, if MSbit == 0
+ *     then this is the end, otherwise the following byte contsins
+ *     the next 7 most significant bits, rinse, lather, repeat.
+ *
+ *   For purposes of typeCode_t and sizes, a max of 4 bytes are allowed
+ *     so, 2^28 or a range of 0 through 268,435,455
+ *
+ *   Considering moving those functions out of DataItem into here, but...
+ *     they are more conveniently included in the project and accessed
+ *     via DataItem.
  */
 class DataItemBA : public QByteArray
 {

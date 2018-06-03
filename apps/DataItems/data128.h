@@ -40,7 +40,7 @@ public:
               Data128( const DataItemBA &di, QObject *p = NULL );
   DataItemBA  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const DataItemBA &di );
-        void  operator = ( const  Data128 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
+        void  operator = ( const  Data128 &d ) { v = d.v; typeCode = d.typeCode; }
         void  operator = ( const __int128 &d ) { v = d; }
      Data128  operator + ( const  Data128 &d ) { Data128 c(*this); c.v = v + d.v; return c; }
      Data128  operator + ( const __int128 &d ) { Data128 c(*this); c.v = v + d;   return c; }

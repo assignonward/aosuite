@@ -308,7 +308,7 @@ bool DataItem::testHashVerify()
 { if ( !testHashVerifyType( AO_HASH256       ) ) return false;
   if ( !testHashVerifyType( AO_HASH512       ) ) return false;
   if ( !testHashVerifyType( AO_HASH224SALT32 ) ) return false;
-  qDebug( "  PASS all types" );
+  qDebug( "testHashVerify() PASS all types" );
   return true;
 }
 
@@ -319,13 +319,14 @@ bool DataItem::testHashVerify()
  * @return true if all tests pass
  */
 bool DataItem::testHashVerifyType( typeCode_t ht )
-{ qDebug( "testHashVerifyType( %x )", ht );
+{ // qDebug( "testHashVerifyType( %x )", ht );
   // qDebug( "  data:%s",qPrintable( QString::fromUtf8( toDataItem().toHex() ) ) );
   // qDebug( "  sepr:%s",qPrintable( QString::fromUtf8( toHashData().toHex() ) ) );
   DataItemBA hdi = getHash( ht );
   // qDebug( "  hash:%s",qPrintable( QString::fromUtf8( hdi.toHex() ) ) );
   if ( verifyHash( hdi ) )
-    qDebug( "  verified when hash is unaltered." );
+    { // qDebug( "  verified when hash is unaltered." );
+    }
    else
     { qDebug( "  FAIL, did not verify." );
       return false;
@@ -342,15 +343,16 @@ bool DataItem::testHashVerifyType( typeCode_t ht )
             }
         }
     }
-  qDebug( "  no single bit flips verified." );
+  // qDebug( "  no single bit flips verified." );
   if ( verifyHash( hdi ) )
-    qDebug( "  re-verified unaltered hash." );
+    { // qDebug( "  re-verified unaltered hash." );
+    }
    else
     { qDebug( "  FAIL, unaltered hash did not re-verify." );
       qDebug( "  hash:%s",qPrintable( QString::fromUtf8( hdi.toHex() ) ) );
       return false;
     }
-  qDebug( "  PASS type %x", ht );
+  // qDebug( "  PASS type %x", ht );
   return true;
 }
 

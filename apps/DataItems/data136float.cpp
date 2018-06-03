@@ -75,7 +75,6 @@ void Data136Float::operator = ( const DataItemBA &di )
   v        = temp.v;
   e        = temp.e;
   typeCode = temp.typeCode;
-  csVal    = temp.csVal;
   return;
 }
 

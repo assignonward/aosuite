@@ -38,10 +38,10 @@ public:
                     DataVarLength( const DataItemBA &di, QObject *p = NULL );
         DataItemBA  toDataItem( bool cf = false ) const;
       virtual void  operator =  ( const DataItemBA &di );
-              void  operator =  ( const DataVarLength &d ) { ba = d.ba; typeCode = d.typeCode; csVal = d.csVal; }
+              void  operator =  ( const DataVarLength &d ) { ba = d.ba; typeCode = d.typeCode; }
               bool  operator == ( const DataVarLength &d ) { return ba == d.ba; }
               bool  operator != ( const DataVarLength &d ) { return ba != d.ba; }
-        QByteArray  get() const { return ba; } // Just the meat, without typecode or checksum
+        QByteArray  get() const { return ba; } // Just the meat, without typecode
               void  set( QByteArray sba ) { ba = sba; }
             qint32  size() const { return ba.size(); }
 

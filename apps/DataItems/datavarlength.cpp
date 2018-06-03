@@ -29,8 +29,7 @@
  */
 DataVarLength::DataVarLength( const DataItemBA &di, QObject *p )
   : DataItem( DataItem::typeCodeOf(di), p )
-{ csVal = false;
-  if ( di.size() < 2 ) // Shortest valid varlenlong serialized data (1 type + 1 length + 0 data)
+{ if ( di.size() < 2 ) // Shortest valid varlenlong serialized data (1 type + 1 length + 0 data)
     { // TODO: log an exception
       return;
     }
@@ -52,7 +51,6 @@ void DataVarLength::operator = ( const DataItemBA &di )
 { DataVarLength temp( di );
   ba       = temp.ba;
   typeCode = temp.typeCode;
-  csVal    = temp.csVal;
   return;
 }
 

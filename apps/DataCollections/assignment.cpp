@@ -38,55 +38,52 @@ Assignment::Assignment(const DataItemBA &di, QObject *p)
           return;
         }
        else
-        { randomizeSalt();                    // Incase it is not yet created
-          DataVarLength temp( di );          // It's our type
-          if ( temp.checksumValidated() )
-            { DataItemBA items = temp.get();  // typeCode has been stripped off
-              while ( items.size() > 0 )
-                { int sz = typeSize( items );
-                  if ( sz <= 0 )
-                    { // TODO: log error
-                      return;
+        { DataVarLength temp( di );          // It's our type
+          DataItemBA items = temp.get();  // typeCode has been stripped off
+          while ( items.size() > 0 )
+            { int sz = typeSize( items );
+              if ( sz <= 0 )
+                { // TODO: log error
+                  return;
+                }
+               else
+                { Participant part;
+                  switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                    { case AO_SALT256:
+                        salt = items;
+                        break;
+
+                      case AO_PAGE_REF:
+                        proposedChain = items;
+                        break;
+
+                      case AO_RECORDING_DEADLINE:
+                        recordingDeadline = items;
+                        break;
+
+                      case AO_RECORDING_BID:
+                        recordingBid = items;
+                        break;
+
+                      case AO_NOTE:
+                        note = items;
+                        break;
+
+                      case AO_PARTICIPANT:
+                      case AO_PARTICIPANT_CF:
+                        part = items;
+                        participants.append( part );
+                        break;
+
+                      case AO_LISTSIZE:
+                        nParticipants = items;
+                        break;
+
+                      default:
+                        // TODO: log anomaly - unrecognized data type
+                        break;
                     }
-                   else
-                    { Participant part;
-                      switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                        { case AO_SALT256:
-                            salt = items;
-                            break;
-
-                          case AO_PAGE_REF:
-                            proposedChain = items;
-                            break;
-
-                          case AO_RECORDING_DEADLINE:
-                            recordingDeadline = items;
-                            break;
-
-                          case AO_RECORDING_BID:
-                            recordingBid = items;
-                            break;
-
-                          case AO_NOTE:
-                            note = items;
-                            break;
-
-                          case AO_PARTICIPANT:
-                          case AO_PARTICIPANT_CF:
-                            part = items;
-                            participants.append( part );
-                            break;
-
-                          case AO_LISTSIZE:
-                            nParticipants = items;
-                            break;
-
-                          default:
-                            // TODO: log anomaly - unrecognized data type
-                            break;
-                        }
-                      items = items.mid( sz ); // move on to the next
-                    }
+                  items = items.mid( sz ); // move on to the next
                 }
             }
         }

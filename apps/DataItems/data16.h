@@ -37,7 +37,7 @@ public:
       qint16  value() { return v; }
   DataItemBA  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const DataItemBA &di );
-        void  operator = ( const Data16 &d ) { v = d.v; typeCode = d.typeCode; csVal = d.csVal; }
+        void  operator = ( const Data16 &d ) { v = d.v; typeCode = d.typeCode; }
         void  operator = ( const qint16 &d ) { v = d; }
       Data16  operator + ( const Data16 &d ) { Data16 c(*this); c.v = v + d.v; return c; }
       Data16  operator + ( const qint16 &d ) { Data16 c(*this); c.v = v + d;   return c; }

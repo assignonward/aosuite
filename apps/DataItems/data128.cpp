@@ -66,7 +66,6 @@ void Data128::operator = ( const DataItemBA &di )
 { Data128 temp( di );
   v        = temp.v;
   typeCode = temp.typeCode;
-  csVal    = temp.csVal;
   return;
 }
 

@@ -93,19 +93,18 @@ class DataItem : public QObject, public VarSizeCode
     Q_OBJECT
 public:
            explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
-                       : QObject(p), typeCode( tc ), csVal( false ) {}
+                       : QObject(p), typeCode( tc ) {}
                      DataItem( const DataItem &i, QObject *p = NULL )
-                       : QObject(p ? p : i.parent()), typeCode( i.typeCode ), csVal( i.csVal ) {}
+                       : QObject(p ? p : i.parent()), typeCode( i.typeCode ) {}
                void  operator = ( const DataItem &i )
-                       { typeCode = i.typeCode; csVal = i.csVal; }
-       virtual void  operator = ( const DataItemBA &di ) { typeCode = typeCodeOf(di); csVal=false; }
+                       { typeCode = i.typeCode; }
+       virtual void  operator = ( const DataItemBA &di ) { typeCode = typeCodeOf(di); }
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
              qint32  typeSize( const DataItemBA &di ) const;
   static   DataItem *fromDataItem( const DataItemBA &di, QObject *p = NULL );
   static   DataItem *fromDataItem( const DataItem *di, QObject *p = NULL );
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const DataItemBA &di );
-               bool  checksumValidated() const { return csVal; }
  virtual DataItemBA  toDataItem( bool cf = false ) const;
  virtual DataItemBA  toHashData( bool cf = false ) const;
          DataItemBA  getHash( typeCode_t ht = AO_HASH256 ) const;
@@ -121,7 +120,6 @@ public:
 
 protected:
   typeCode_t  typeCode; // what kind of data item is this?
-        bool  csVal;   // has the checksum been validated (during a data item initialization, or assignment)?
 };
 
 #endif // DATAITEM_H
