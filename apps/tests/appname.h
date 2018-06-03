@@ -20,31 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef APPNAME_H
+#define APPNAME_H
 
-#include "assets.h"
-#include "codeform.h"
-#include "MainWinCommon.h"
-#include "ui_mainwindow.h"
+#define APPNAME_SHORT "Tao C"
+#define APPNAME "Test Assign Onward Components"
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public MainWinCommon
-{
-    Q_OBJECT
-
-public:
-    explicit  MainWindow(QWidget *parent = 0);
-             ~MainWindow();
-        void  closeEvent(QCloseEvent *event);
-        void  restoreConfig();
-        void  saveConfig();
-
-private:
-      Ui::MainWindow *ui;
-};
-
-#endif // MAINWINDOW_H
+#endif // APPNAME_H

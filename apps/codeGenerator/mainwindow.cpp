@@ -47,8 +47,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
  */
 void MainWindow::restoreConfig()
 { MainWinCommon::restoreConfig();
-  QSettings settings;
-  assets = settings.value( "assets" ).toByteArray();
+//  QSettings settings;
+//  assets = settings.value( "assets" ).toByteArray();
 }
 
 /**
@@ -57,6 +57,6 @@ void MainWindow::restoreConfig()
  */
 void MainWindow::saveConfig()
 { MainWinCommon::saveConfig();
-  QSettings settings;
-  settings.setValue( "assets", assets.toDataItem() );
+//  QSettings settings;
+//  settings.setValue( "assets", assets.toDataItem() );
 }
