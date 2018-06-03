@@ -24,6 +24,7 @@
 #define GENESISFORM_H
 
 #include <QtGui>
+#include "genericcollection.h"
 #include "ui_genesisForm.h"
 #include "MainWinCommon.h"
 
@@ -36,14 +37,17 @@ class GenesisForm : public QScrollArea
     Q_OBJECT
 
 public:
-  explicit  GenesisForm( QWidget *cw, MainWinCommon *mw = NULL );
-           ~GenesisForm();
+         explicit  GenesisForm( QWidget *cw, MainWinCommon *mw = NULL );
+                  ~GenesisForm();
+GenericCollection  calculateGenesisBlock();
+
 public:
     Ui::GenesisForm *ui;
 
 public slots:
       void  restoreConfig();
       void  saveConfig();
+      void  updateHash();
       void  on_chooseIcon_clicked();
       void  on_chooseImage_clicked();
       void  on_importGenesisBlock_clicked();

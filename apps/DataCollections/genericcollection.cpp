@@ -109,7 +109,7 @@ DataItemBA  GenericCollection::toHashData( bool cf ) const
   hd.append( codeToBytes( typeCode   ) );
   hd.append( codeToBytes( dba.size() ) ); // variable length form...
   hd.append( dba );
-  qDebug( "  hdat:%s",qPrintable( QString::fromUtf8( hd.toHex() ) ) );
+  // qDebug( "  hdat:%s",qPrintable( QString::fromUtf8( hd.toHex() ) ) );
   return hd;
 }
 

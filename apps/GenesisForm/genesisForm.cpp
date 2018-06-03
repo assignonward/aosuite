@@ -33,6 +33,17 @@ GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw ) :
     { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));
       connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
     }
+  connect( ui->hashType, SIGNAL(currentIndexChanged(int)), SLOT(updateHash()) );
+  connect( ui->protocol, SIGNAL(currentIndexChanged(int)), SLOT(updateHash()) );
+  connect( ui->protocolRev, SIGNAL(    valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->symbol,      SIGNAL( textChanged(QString)), SLOT(updateHash()) );
+  connect( ui->description, SIGNAL(        textChanged()), SLOT(updateHash()) );
+  connect( ui->startingShares, SIGNAL( valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->minBlockTime, SIGNAL(valueChanged(double)), SLOT(updateHash()) );
+  connect( ui->totalCoins,   SIGNAL(   valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->recordingTax, SIGNAL(   valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->hashData,     SIGNAL(       clicked(bool)), SLOT(updateHash()) );
+  updateHash();
 }
 
 GenesisForm::~GenesisForm()
@@ -97,15 +108,25 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
 { QString name = QFileDialog::getSaveFileName( this, "save Genesis Block to file:" );
   if ( name.size() < 1 )
     return;
-  GenericCollection gb( GB_GENESIS_BLOCK );
+  GenericCollection gb = calculateGenesisBlock();
+  QFile file( name );
+  if ( !file.open( QIODevice::WriteOnly ) )
+    { qDebug() << gb.toDataItem();
+      return;
+    }
+  file.write( ui->hashData->isChecked() ? gb.toHashData() : gb.toDataItem() );
+}
+
+GenericCollection GenesisForm::calculateGenesisBlock()
+{ GenericCollection gb( GB_GENESIS_BLOCK );
   __int128_t tv;
   gb.add( GB_PROTOCOL    , new Data16       ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
   gb.add( GB_PROTOCOL_REV, new Data16       ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
   gb.add( GB_TEXT_SYMBOL , new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  &gb ) );
   if ( ui->description->toPlainText().size() > 0 )
   gb.add( GB_DESCRIPTION , new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  &gb ) );
-//  gb.add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
-//  gb.add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
+  //  gb.add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
+  //  gb.add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
   gb.add( GB_STARTING_SHARES, new Shares( tv, GB_STARTING_SHARES, &gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
@@ -114,12 +135,11 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
   gb.add( GB_N_COINS_TOTAL  , new AOCoins( tv, GB_N_COINS_TOTAL, &gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
   gb.add( GB_RECORDING_TAX  , new AOCoins( tv, GB_RECORDING_TAX, &gb ) );
-  QFile file( name );
-  if ( !file.open( QIODevice::WriteOnly ) )
-    { qDebug() << gb.toDataItem();
-      return;
-    }
-  file.write( ui->hashData->isChecked() ? gb.toHashData() : gb.toDataItem() );
+  return gb;
+}
+
+void GenesisForm::updateHash()
+{ GenericCollection gb = calculateGenesisBlock();
   typeCode_t ht = AO_HASH256;
   switch( ui->hashType->currentIndex() )
     { case 0: ht = AO_HASH256; break;
@@ -127,5 +147,5 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
       case 2: ht = AO_HASH224SALT32; break;
     }
   ui->hash->setPlainText( QString::fromUtf8( gb.getHash(ht).toHex() ) );
-  gb.testHashVerify();
+  ui->block->setPlainText( QString::fromUtf8( ui->hashData->isChecked() ? gb.toHashData().toHex() : gb.toDataItem().toHex() ) );
 }
