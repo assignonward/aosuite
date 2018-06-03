@@ -84,21 +84,19 @@
 </style>
 
 <meta charset="UTF-8"/>
-<title>Separable Items</title>
+<title>Variable Byte Coding</title>
 </head>
 
 <body>
 <div class="page">
 <div class="zoom">
 
-<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Separable Items</h1>
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Variable Byte Coding</h1>
 
 
-<span itemprop="articleBody">In an ideal, rational world, there would be no need for separable items.  No combination of bits on a computer is inherently dangerous, but... there are parts of the world governed by people who believe that some information should not be allowed to freely circulate in their jurisdiction.  Since a central concept of the <a href="BlockchainBasics.html">blockchain</a> includes public dissemination of a consistent global public record, it is inevitable that persons innocent or malicious will<div class="tooltip"><sup>1</sup><span class="tooltiptext">illegally, or even legally</span></div> record something on the blockchain which is illegal in some jurisdiction.  Rather than attempt to fight local censorship laws or extend their reach globally, the Assign Onward blockchain incorporates the concept of "Separable Items" - items which are included in the blockchain by their hash, and thus can be separated (and censored) without impacting other portions of the blockchain's integrity checking.<br/><br/>
+<span itemprop="articleBody">Assign Onward uses a variable byte encoding scheme<div class="tooltip"><sup>1</sup><span class="tooltiptext">vaguely related to <a href="https://en.wikipedia.org/wiki/Golomb_coding#Rice_coding">Rice Coding</a></span></div> to represent data type codes and sizes of variable length data.  The scheme represents numbers in the range from 0 through 268,435,455 (2^28) using one to 4 bytes.  In the range 0-127, the coding scheme is the same as a single unsigned byte.  When a byte has the most significant bit set, that indicates that the following byte is also included in the code.<div class="tooltip"><sup>2</sup><span class="tooltiptext">Currently, Assign Onward only recognizes variable byte codes up to 4 bytes in length, so a 1 in the most significant bit of the 4th byte is an error, unrecognized code.</span></div>  Each byte encodes 7 bits in little-endian form.<br/><br/>
 
-Without censorship considerations, the blockchain would be served in its entirety to all jurisdictions, but when certain information in the blockchain is objected to by certain jurisdictions, then servers outside those jurisdictions may provide a "scrubbed" blockchain which removes the offending data before sending blocks into the restrictive jursidictions.  Note that transactional data, such as public keys, share amounts and signatures, are not separable items and hopefully should not run afoul of censorship concerns.<br/><br/>
-
-The item type code includes a bit which indicates separability of the item.<div class="tooltip"><sup>2</sup><span class="tooltiptext">in this example the 0x40 bit was used to indicate separability.  Serious consideration is being given to moving that bit higher to free up space in the single byte codes for more (twice as many) non-separable items.</span></div>  This is a block which contains all items, none separated:<div class="tooltip"><sup>3</sup><span class="tooltiptext">the <a href="VariableByteCoding.html">Variable Byte Coding</a> page gives more explanation of how the binary block encoding is implemented.</span></div>
+The following is an example binary encoded block:
 
 <pre>
 <font color="008000"><b>87 01</b></font> <font color="A00000"><b>AB 01</b></font> <font color="008000">87 02</font> 01 00 <font color="008000">87 03</font> 00 00 <font color="008000">87 10</font> 00 00 00 00 00 00 00 00 00 00 40 00 00 00 00 00 <font color="008000">87 11</font> 
@@ -109,15 +107,25 @@ The item type code includes a bit which indicates separability of the item.<div 
 2C 20 74 65 73 74 20 63 68 61 69 6E 20 41 2E
 </pre>
 
-This is the same block with the separable item (<font color="008080">C7 31</font> <font color="A00000">4F</font>...) replaced with its hash (<font color="008000">06</font>...):
-
-<pre>
-<font color="008000"><b>87 01</b></font> <font color="A00000"><b>7A</b></font> <font color="008000">87 02</font> 01 00 <font color="008000">87 03</font> 00 00 <font color="008000">87 10</font> 00 00 00 00 00 00 00 00 00 00 40 00 00 00 00 00 <font color="008000">87 11</font> 00 
-00 00 00 00 00 00 00 58 02 00 00 00 00 00 00 <font color="008000">87 12</font> 00 00 00 00 00 00 00 00 00 00 00 00 02 00 00 
-00 <font color="008000">87 13</font> 00 00 00 00 04 00 00 00 00 00 00 00 00 00 00 00 <font color="008000">87 30</font> <font color="A00000">06</font> 54 E2 92 B6 31 61 <font color="008000">06</font> 90 ED 0D
-37 60 8A F1 89 6B 31 E8 C8 24 30 7C 7C EE D6 56 83 96 47 74 76 E9 45 5A 57 DA 66 42 C8
-</pre>
-
+<ul>
+<li><font color="008000"><b>87 01</b></font>: a variable length wrapper item that contains all the following data.</li>
+<li><font color="A00000"><b>AB 01</b></font>: the length of the wrapped data: 171 (0xAB) bytes.</li>
+<li><font color="008000">87 02</font>: a fixed length data item, coincidentally 2 bytes long</li>
+<li>01 00: the value contained in the <font color="008000">87 02</font> item.</li>
+<li><font color="008000">87 03</font>: another 2 byte fixed length data item</li>
+<li>00 00: the value contained in the <font color="008000">87 03</font> item.</li>
+<li><font color="008000">87 10</font>: a fixed length data item, coincidentally 16 bytes long</li>
+<li>00 00 00 00 00 00 00 00 00 00 40 00 00 00 00 00: the value contained in the <font color="008000">87 10</font> item.</li>
+<li><font color="008000">87 11</font>: another 16 byte fixed length data item</li>
+<li>00 00 00 00 00 00 00 00 58 02 00 00 00 00 00 00: the value contained in the <font color="008000">87 11</font> item.</li>
+<li>...
+<li><font color="008000">87 30</font>: a variable length data item</li>
+<li><font color="A00000">06</font>: the length of the <font color="008000">87 30</font> data item: 6 bytes</li>
+<li>54 E2 92 B6 31 61: the data contained in the <font color="008000">87 30</font> <font color="A00000">06</font> item.</li>
+<li><font color="008080">C7 31</font>: a variable length <a href="SeparableItems.html">separable</a> data item</li>
+<li><font color="A00000">4F</font>: the length of the <font color="008080">C7 31</font> data item: 79 bytes</li>
+<li>54 61 6F 20...: the data contained in the <font color="008080">C7 31</font> <font color="A00000">4F</font> data item.</li>
+</ul>
 
 </span>
 </div>
