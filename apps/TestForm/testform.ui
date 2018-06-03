@@ -27,85 +27,14 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>bytecode definitions</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPlainTextEdit" name="bytecodeDefinitions">
-      <property name="font">
-       <font>
-        <family>Ubuntu Mono</family>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>typeSizeTable</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPlainTextEdit" name="typeSizeTable">
-      <property name="font">
-       <font>
-        <family>Ubuntu Mono</family>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>copyDataItem</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPlainTextEdit" name="copyDataItem">
-      <property name="font">
-       <font>
-        <family>Ubuntu Mono</family>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>copyDataItemFromBytes</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPlainTextEdit" name="copyDataItemFromBytes">
-      <property name="font">
-       <font>
-        <family>Ubuntu Mono</family>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="topMargin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>json massaged</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="massage">
-        <property name="text">
-         <string>Massage</string>
+         <string>Results</string>
         </property>
        </widget>
       </item>
@@ -122,10 +51,17 @@
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QPushButton" name="test">
+        <property name="text">
+         <string>Test</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
-     <widget class="QPlainTextEdit" name="json">
+     <widget class="QPlainTextEdit" name="results">
       <property name="font">
        <font>
         <family>Ubuntu Mono</family>

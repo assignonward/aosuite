@@ -37,9 +37,11 @@ class TestForm : public QScrollArea
 
 public:
     explicit  TestForm( QWidget *cw, MainWinCommon *mw = NULL);
-    ~TestForm();
+             ~TestForm();
+        void  testGenesisBlock();
 
 public slots:
+        void  on_test_clicked();
 
 private:
     Ui::TestForm *ui;
