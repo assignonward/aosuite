@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>531</width>
     <height>300</height>
    </rect>
   </property>
@@ -154,11 +154,6 @@
          <widget class="QTextEdit" name="assignmentsView"/>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="codeTab">
-       <attribute name="title">
-        <string>Code</string>
-       </attribute>
       </widget>
      </widget>
     </item>

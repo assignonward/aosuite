@@ -24,7 +24,7 @@
 #define MAINWINDOW_H
 
 #include "assets.h"
-#include "genesisForm.h"
+#include "codeform.h"
 #include "MainWinCommon.h"
 #include "ui_mainwindow.h"
 
