@@ -20,45 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "mainwindow.h"
 #include "testform.h"
-#include <QSettings>
 
-MainWindow::MainWindow(QWidget *parent) :
-    MainWinCommon(parent),
-    ui(new Ui::MainWindow)
+TestForm::TestForm( QWidget *cw, MainWinCommon *mw ) :
+    QScrollArea(cw),
+    ui(new Ui::TestForm)
 { ui->setupUi(this);
-  new GenesisForm( ui->genesisTab,this );
-  new TestForm( ui->testTab,this );
-  restoreConfig();
+  new QVBoxLayout( cw );
+  cw->layout()->addWidget( this );
+
+  /*
+    if ( mw )
+      { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));
+        connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
+      }
+  */
 }
 
-MainWindow::~MainWindow()
+TestForm::~TestForm()
 { delete ui;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{ saveConfig();
-  QApplication::processEvents( QEventLoop::AllEvents,100 );
-  QMainWindow::closeEvent(event);
-}
-
-/**
- * @brief MainWindow::restoreConfig - in addition to the window size and
- *   placement saved in MainWinCommon, this app is also restoring assets.
- */
-void MainWindow::restoreConfig()
-{ MainWinCommon::restoreConfig();
-  QSettings settings;
-  assets = settings.value( "assets" ).toByteArray();
-}
-
-/**
- * @brief MainWindow::saveConfig - in addition to the window size and
- *   placement saved in MainWinCommon, this app is also saving assets.
- */
-void MainWindow::saveConfig()
-{ MainWinCommon::saveConfig();
-  QSettings settings;
-  settings.setValue( "assets", assets.toDataItem() );
-}

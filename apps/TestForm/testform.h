@@ -20,45 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "mainwindow.h"
-#include "testform.h"
-#include <QSettings>
+#ifndef TESTFORM_H
+#define TESTFORM_H
 
-MainWindow::MainWindow(QWidget *parent) :
-    MainWinCommon(parent),
-    ui(new Ui::MainWindow)
-{ ui->setupUi(this);
-  new GenesisForm( ui->genesisTab,this );
-  new TestForm( ui->testTab,this );
-  restoreConfig();
+#include <QScrollArea>
+#include "MainWinCommon.h"
+#include "ui_testform.h"
+
+namespace Ui {
+class TestForm;
 }
 
-MainWindow::~MainWindow()
-{ delete ui;
-}
+class TestForm : public QScrollArea
+{
+    Q_OBJECT
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{ saveConfig();
-  QApplication::processEvents( QEventLoop::AllEvents,100 );
-  QMainWindow::closeEvent(event);
-}
+public:
+    explicit  TestForm( QWidget *cw, MainWinCommon *mw = NULL);
+    ~TestForm();
 
-/**
- * @brief MainWindow::restoreConfig - in addition to the window size and
- *   placement saved in MainWinCommon, this app is also restoring assets.
- */
-void MainWindow::restoreConfig()
-{ MainWinCommon::restoreConfig();
-  QSettings settings;
-  assets = settings.value( "assets" ).toByteArray();
-}
+public slots:
 
-/**
- * @brief MainWindow::saveConfig - in addition to the window size and
- *   placement saved in MainWinCommon, this app is also saving assets.
- */
-void MainWindow::saveConfig()
-{ MainWinCommon::saveConfig();
-  QSettings settings;
-  settings.setValue( "assets", assets.toDataItem() );
-}
+private:
+    Ui::TestForm *ui;
+};
+
+#endif // CODEFORM_H
