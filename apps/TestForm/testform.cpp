@@ -46,6 +46,12 @@ void TestForm::on_test_clicked()
 { testGenesisBlock();
 }
 
+#include "keypair.h"
+void TestForm::on_generateKey_clicked()
+{ KeyPair kp;
+  kp.makeNewPair( AO_ECDSA_PRI_KEY );
+}
+
 #include "aotime.h"
 #include "aocoins.h"
 #include "data16.h"

@@ -67,9 +67,10 @@ DataItemBA DataFixedLength::toDataItem( bool cf ) const
  * @param sba - byte array to set
  */
 void DataFixedLength::set( QByteArray sba )
-{ if ( sba.size() == (typeSize() - 2) )
-    { ba    = sba;
+{ if ( sba.size() == typeSize() )
+    { ba = sba;
     }
-  // else
-  // TODO: log warning
+   else
+    { qDebug( "DataFixedLength::set, size of passed array (%d) does not match the expected size (%d) for type (0x%x)", sba.size(), typeSize(), typeCode );
+    }
 }

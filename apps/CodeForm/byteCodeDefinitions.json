@@ -233,13 +233,6 @@
         "type": "GenesisRef"
     },
     {
-        "code": 26,
-        "desc": "All signatures include the time of signature",
-        "pdef": "AO_SIG_WITH_TIME",
-        "size": -1,
-        "type": "Signature"
-    },
-    {
         "code": 25,
         "desc": "Reference to shares received potentially including info on their current state in the chain",
         "pdef": "AO_SHARES_REF",
@@ -312,6 +305,27 @@
         "pdef": "CB_BLOCKMAKER",
         "size": -1,
         "type": "PubKey"
+    },
+    {
+        "code": 57,
+        "desc": "Blockmaker's signature, includes a AO_TIME_OF_SIG time and CB_BLOCKMAKER PubKey",
+        "pdef": "CB_BLOCK_SIG",
+        "size": -1,
+        "type": "Signature"
+    },
+    {
+        "code": 58,
+        "desc": "Authorization signature, includes a AO_TIME_OF_SIG time and AO_INDEX index of the participant doing the signing",
+        "pdef": "AO_AUTH_SIG",
+        "size": -1,
+        "type": "Signature"
+    },
+    {
+        "code": 59,
+        "desc": "Generic signature with All signatures include AO_TIME_OF_SIG time of signature, but no Index or PubKey",
+        "pdef": "AO_SIG_WITH_TIME",
+        "size": -1,
+        "type": "Signature"
     },
     {
         "code": 135,

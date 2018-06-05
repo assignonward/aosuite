@@ -48,6 +48,11 @@ qint32 DataItem::typeSize( typeCode_t tc ) const
   return typeSizeTable( tc );
 }
 
+/**
+ * @brief DataItem::typeSizeTable - for fixed size types, return the number of data bytes that follow the typeCode
+ * @param tc - typecode to interpret
+ * @return size of type, if it is a known fixed size type, otherwise return -1
+ */
 qint32 DataItem::typeSizeTable( typeCode_t tc )
 { switch ( tc )
   { case AO_ECDSA_PUB_KEY2:          return 32;
@@ -89,17 +94,19 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
  *   byte array starts with the variable length type code and if the
  *   type code is not for a fixed length data item, then the variable
  *   length value is decoded and returned.
+ * @return total size of this data item, including typeCode and size data, if any
  */
 qint32 DataItem::typeSize( const DataItemBA &di ) const
 { if ( di.size() < 1 )
     return -1;
-  int tcSz = 0;
+  qint32 tcSz = 0; // Size of the typeCode
   typeCode_t tc = bytesToCode( di, tcSz );
-  qint32 sz = typeSizeTable( tc ); // See if fixed size, or variable, based on type
-  if ( sz >= 0 )
-    return sz; // fixed size
-  int i = 0;
-  return bytesToCode( di.mid( tcSz ), i ); // Variable size
+  qint32 fdSz = typeSizeTable( tc ); // See if fixed size, or variable, based on type
+  if ( fdSz >= 0 )
+    return tcSz+fdSz; // Total size of the data item's byte array, including type code and its fixed size data
+  qint32 scSz = 0; // Size of the size code
+  qint32 vdSz = bytesToCode( di.mid( tcSz ), scSz ); // Size of the variable data
+  return tcSz+scSz+vdSz; // Total size of the data item's byte array, including type and size codes
 }
 
 #include "aocoins.h"
@@ -170,7 +177,6 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
     case AO_BLOCK_REF:               return new BlockRef( di, p );
     case AO_PAGE_REF:                return new PageRef( di, p );
     case AO_GENESIS_REF:             return new GenesisRef( di, p );
-    case AO_SIG_WITH_TIME:           return new Signature( di, p );
     case AO_SHARES_REF:              return new SharesRef( di, p );
     case AO_ASSETS:                  return new Assets( di, p );
     case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( di, p );
@@ -181,6 +187,9 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
     case AO_RECORDER:                return new Recorder( di, p );
     case CB_CHAIN_BLOCK:             return new GenericCollection( di, p );
     case CB_BLOCKMAKER:              return new PubKey( di, p );
+    case CB_BLOCK_SIG:               return new Signature( di, p );
+    case AO_AUTH_SIG:                return new Signature( di, p );
+    case AO_SIG_WITH_TIME:           return new Signature( di, p );
     case GB_GENESIS_BLOCK:           return new GenericCollection( di, p );
     case GB_PROTOCOL:                return new Data16( di, p );
     case GB_PROTOCOL_REV:            return new Data16( di, p );
@@ -231,7 +240,6 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_BLOCK_REF:               return new BlockRef( *((BlockRef *)ditm), p );
     case AO_PAGE_REF:                return new PageRef( *((PageRef *)ditm), p );
     case AO_GENESIS_REF:             return new GenesisRef( *((GenesisRef *)ditm), p );
-    case AO_SIG_WITH_TIME:           return new Signature( *((Signature *)ditm), p );
     case AO_SHARES_REF:              return new SharesRef( *((SharesRef *)ditm), p );
     case AO_ASSETS:                  return new Assets( *((Assets *)ditm), p );
     case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( *((PrivateKeyEcdsa *)ditm), p );
@@ -242,6 +250,9 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_RECORDER:                return new Recorder( *((Recorder *)ditm), p );
     case CB_CHAIN_BLOCK:             return new GenericCollection( *((GenericCollection *)ditm), p );
     case CB_BLOCKMAKER:              return new PubKey( *((PubKey *)ditm), p );
+    case CB_BLOCK_SIG:               return new Signature( *((Signature *)ditm), p );
+    case AO_AUTH_SIG:                return new Signature( *((Signature *)ditm), p );
+    case AO_SIG_WITH_TIME:           return new Signature( *((Signature *)ditm), p );
     case GB_GENESIS_BLOCK:           return new GenericCollection( *((GenericCollection *)ditm), p );
     case GB_PROTOCOL:                return new Data16( *((Data16 *)ditm), p );
     case GB_PROTOCOL_REV:            return new Data16( *((Data16 *)ditm), p );
@@ -254,7 +265,7 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case GB_N_COINS_TOTAL:           return new AOCoins( *((AOCoins *)ditm), p );
     case GB_RECORDING_TAX:           return new AOCoins( *((AOCoins *)ditm), p );
     case AO_UNDEFINED_DATAITEM:      return new DataItem( *((DataItem *)ditm), p );
-    }
+  }
   return new DataItem( AO_UNDEFINED_DATAITEM, p );
 }
 

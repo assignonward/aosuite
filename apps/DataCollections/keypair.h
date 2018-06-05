@@ -41,6 +41,7 @@ public:
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false );
         bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
+        bool  makeNewPair( typeCode_t tc );
 
 private:
       PubKey  pubKey;

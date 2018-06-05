@@ -185,7 +185,7 @@ void MainWindow::saveConfig()
  *   Minimum number of unique ROOT in a transaction: 1
  *   Maximum number of unique ROOT in a transaction: 2
  *   Minimum recorder list length: 1 per unique ROOT
- *   Maximum recorder list length: 8
+ *   Maximum recorder list length: 2000
  *   Each recorder KEY may only appear in the list one time.
  *   Each ROOT must have at least one recorder serving it
  *   Sum of transaction TRAN(PART(AMT)) amounts must equal TRAN(RBID)
@@ -213,16 +213,6 @@ void MainWindow::saveConfig()
  *   Transaction processors shall run NTP clients and maintain good synchronization
  *   NEXT-TREC and NEXT-ID are not involved in signature checks, but must either link
  *     properly to pages that point back to this page or be zero-filled
- *
- * Ledger shortcuts:
- *   List of all KEYs, including the ID-TREC of their initial transaction
- *     bonus: include the ID-TREC of their most recent transaction, including HOLD transactions.
- *
- *   The NEXT list, optionally filled out when each participant performs another transaction
- *
- *   PAGEs are sorted by their TREC times
- *
- *   TREC+ID uniquely identifies each PAGE
  *
  * Ledger synchronization:
  *   Only transactions which meet all of the above requirements are admitted to the ledger.
@@ -541,192 +531,6 @@ void MainWindow::saveConfig()
  *   value.  Who is going to accept aoncoin for valuable goods or services?  That's one that bitcoin is still struggling to
  *   answer definitively nearly 10 years after launch.  Some people do take it for some things - mostly speculation, but it's
  *   still very scattered for acceptance.
- *
- ********************************************************************************************************************************
- *
- * ICOs for everyone, or Liberation through Fragmentation?
- *   What if every new wallet was instantiated with 1025 private keys?  (One master key to sign the other 1024.)
- *   In a modern PC 2048 bit RSA keys take on the order of 4 seconds to create, so this type of wallet
- *   instantiation might take around 90 minutes of compute time (YMMV).  Then, every transfer of value to a new
- *   wallet might be automatically fragmented into 1024 pieces, each to be recorded in its own sub-ledger at
- *   such time as the value is transferred to another, but the initial transfer would be a record with 1024
- *   receivers of value coming from one or more givers of value.
- *   When a sub-ledger has given all its value, it is closed, done, will change no more.  It is now only referenced
- *   by child sub-ledgers which point to it as a source of value.
- *     Update: Atomic assignment seems more attractive than subledgers and locks.  Underwriting is still a form
- *     of time-locking shares, with the risk of loss if the underwriter is promising something that is false.
- *
- * We need to tackle the double-spend problem.  When value is given, that is what must be ensured as recorded in
- *   the public ledgers.  How is a receiver of value satisfied that their transaction has been advertised and
- *   accepted by the permanent record?  You've got a transaction with a time-stamp demonstrating your claim,
- *   fine, but a bad actor creates a transaction with a back-dated time-stamp apparently invalidating yours - how
- *   do you prove that your preceeded theirs?  The essence of this is proof that your transaction took place before
- *   a competing forgery might take place, which seems only possible through advertisement of at least the page hash
- *   and probably the page hash and timestamp too.  It is not enough to advertise, but the advertisement must be
- *   establish that a coin has been transferred, to all the wide corners of the network simultaneously (as measured
- *   in discrete time intervals - if the time interval of network wide advertisement is 5 minutes, then a waiting period
- *   of 15 should be sufficient to ensure that you haven't "missed" a double spend attempt.)
- *
- * News bulletins could summarize all transactions by listing the sub-ledgers (can we just accept that there are multiple
- *   ledgers?) which have been spent against.  How to quickly search the news bulletins for your sub-ledger of interest?
- *   If they are organized into binary tree, that might help.  A bulletin entry might contain the page descriptor along with
- *   the signature of the spender.
- *
- *   <LOCK> a news bulletin advertising that a spend is being negotiated, when published places a credit hold on the page
- *     [SALT] 256 random bits
- *     [KEY]  public key of the spender who is locking their asset
- *     [TRMX] time the hold expires, either by transaction processing, or not
- *     <PAGE> the ledger entry which is being spent against
- *       [TREC] time of LOCK(PAGE)
- *       [HASH] hash of LOCK(PAGE)
- *       <ROOT> the root page of the ledger this recorder is recording in, must be the root of RECP(RCRD(PAGE))'s ledger
- *         [TREC] time of LOCK(PAGE(ROOT))
- *         [HASH] hash of LOCK(PAGE(ROOT))
- *      <TRAN> proposed transaction that this lock is serving
- *      <AUTH> authorization of transaction by all parties
- *   [TSIG] Time that the signature of LOCK was generated
- *   [SIG]  signature with private key corresponding to LOCK(KEY)
- *
- * Great, so this signed lock can propagate through the network and all parties to a transaction can be assured that the
- *   giver will not double-spend if they have verified that the lock got out.  Did this really gain us anything?  It is
- *   an additional layer of assurance, a step in the process that allows the process to fail if it does not get verified.
- *   A timeline would seem to be in order:
- *
- * time  | event
- * ------+---------------------
- * ...0  | TRAN is proposed with TRMX of 10
- *       | TRAN is AUTHed by all parties
- *       | all givers in TRAN publish appropriate LOCKs with TRMX of 10
- * ------+---------------------
- * 1     | waiting for LOCKs to propagate
- * ------+---------------------
- * 2     | validating (how?) that locks have propagated
- * ------+---------------------
- * 3     | waiting for any potential double spends to appear
- * ------+---------------------
- * 4     | validating (how?) that no double spends exist
- * ------+---------------------
- * 5     | satisfied that LOCKs are in place and no double spends
- *       |   exist, the transaction is published
- * ------+---------------------
- * 6     | waiting for transaction to propagate
- * ------+---------------------
- * 7     | validating (how?) that the transaction has propagated
- * ------+---------------------
- * 8,9,10| satisfied that transaction has propagated
- *       |   but receivers will wait until 11 before
- *       |   attempting to do anything with their new coin.
- * ------+---------------------
- * 11    | New holders of coin are free to propose transactions
- *       |   of their own.
- * ------+---------------------
- * ...   | ...
- *
- * And, the question remains: what does the LOCK do for us?
- *   For one thing, if a copy of the private key exists elsewhere,
- *   the lock assures that the two (or more) key holders will not
- *   be able to double-spend the same coin because there is sufficient
- *   cooling off time between publication of the LOCK and recording of
- *   the transaction to prevent the second and later transactions from
- *   being able to publish.  The LOCK-TRAN publishing delay is 5, while
- *   the proposed time to validate that a transaction has published is
- *   only 2.
- *
- * Which leaves the question: in a distributed network, how can we be
- *   sure that a record has been published and distributed to all
- *   interested parties?  From: http://scet.berkeley.edu/wp-content/uploads/AIR-2016-Blockchain.pdf
- *
- *   creating a distributed consensus in the digital online world. This
- *   allows participating entities to know for certain that a digital event
- *   happened by creating an irrefutable record in a public ledger.
- *
- * Yes, but how?
- *
- *   Each transaction in the public ledger is verified by consensus of a
- *   majority of the participants in the system.
- *
- * Yes, but how?
- *
- *   So, I'm getting that proof of work introduces an asymmetry between
- *   the time it takes to create a valid transaction and the time it
- *   takes to validate a transaction.  What I'm striving toward is a
- *   system that does not require this work but still has the delay.
- *   If a node proposes a LOCK, we need to establish network consensus
- *   that the LOCK exists.  It is easy for the coin owner to generate
- *   a LOCK on their coin, and virtually impossible for a non-owner to
- *   generate a valid LOCK.  What is needed now is 50% network consensus
- *   that the LOCK has a valid time stamp.  It seems like the main thing
- *   that the network needs to agree on is time, and the validity of
- *   processing nodes.
- *
- * So, how to establish that a node on the processor network is valid?
- *
- *   Well, first, they have to keep reasonably accurate time.  And they
- *   have to communicate with each other quickly and efficiently - this
- *   is starting to sound like a job for RabbitMQ.
- *
- * Suppose that the block-time interval is set to one minute.
- *
- * time | es
- * -----+-----------------------------+
- * 0    | events for block 0 are sent | we
- * -----+-----------------------------+----------------------------+
- * 1    | events for block 1 are sent | waiting for block 0 events |
- *      |                             | to arrive at most nodes    | ba
- * -----+-----------------------------+----------------------------+------------------------------+
- * 2    | events for block 2 are sent | waiting for block 1 events | Valid block 0 events are     |
- *      |                             | to arrive at most nodes    | assembled into a proposed    |
- *      |                             |                            | block and sent for consensus | wb
- * -----+-----------------------------+----------------------------+------------------------------+------------------------------+
- * 3    | events for block 3 are sent | waiting for block 2 events | Valid block 1 events are     | Waiting for proposed block 0 |
- *      |                             | to arrive at most nodes    | assembled into a proposed    | to arrive at most nodes      |
- *      |                             |                            | block and sent for consensus |                              |
- * -----+-----------------------------+----------------------------+------------------------------+------------------------------+
- * 4    | es4 | we3 | ba2 | wb1 | If one form of block has a clear (3/4) majority, it is accepted, otherwise    |
- *      |     |     |     |     | dissenting blocks (and late events for block 0) have been being examined and  |
- *      |     |     |     |     | an updated locally generated block 0 is created and transmitted to attempt to |
- *      |     |     |     |     | reach consensus.                                                              |
- * -----+-----+-----+-----+-----+-------------------------------------------------------------------------------+
- *
- * So, there is a block-chain ledger after all.
- *
- * Once a consensus block 0 has been established and (generally within 5 minutes, maybe 6 or 7), any transactions
- *   which were attempting to get in the block but failed will need to try again with a new timestamp.  As such,
- *   a typical transfer negotiation might propose a TRMX of up to 24 hours to ensure ample chances to get the
- *   transfer registered.
- *
- * So, instead of transaction order protected by race, this becomes transaction order protected by declaration and
- *   patience.  If you declare a time (too far) in the future or the past, your transaction will not be considered for
- *   inclusion in the official record.  If multiple agents attempt to spend a single coin asset "simultaneouslty,"
- *   that will be prevented by invalidation of the transaction with the later timestamp, or in the case of an exact
- *   timestamp match, with differing content, then both become invalid.
- *
- * Declaration and patience would seem to be more efficient than:
- *  "However, the math needed
- *   to be solved is very complicated and
- *   hence the blockchain quickly stabilizes:"
- *
- * with both approaches: after this, every node is in agreement about the ordering of blocks.
- *
- * Incentive time!  Suspending the idea of negotiating commission with a short list of validating servers,
- *   perhaps a better scheme is to take the RBID commission and divide it equally among all blockchain
- *   maintainers who validate and sign the transaction.
- *
- * Back to Bob and Alice, they have agreed on a TRAN and they have AUTH'ed it, now - either, or both of them
- *   submit it to a transaction processor.  That transaction processor validates, timestamps and signs it and
- *   submits it to the blockchain consensus network for inclusion in the block that corresponds with its
- *   timestamp.  Other transaction processors on the network also validate, timestamp and sign it as they receive
- *   it, and assemble it into their version of "what is this block."  After the cutoff time for block assembly,
- *   transaction processors sign their list of pages for the block  The block contains a list of pages, sorted by first
- *   signoff time on the page, and the block hash to break any time-ties.  This is an opportunity for processors
- *   that may have missed some pages to validate and sign those pages, and thereby collect part of the transaction
- *   commission.  The commission scheme is round-based as described above: 1/2 to round 0 participants (named by the
- *   participants in the transaction), 1/4 to round 1, 1/8 to round 2, etc. and any residual in this case would be
- *   divided among the round 1 participants.
- *
- * The largest problem I see is with transaction processors who fork off from the main group.  I believe the above
- *   commission division scheme removes incentive for that, but maybe not enough?  A forked transaction block might be
- *   re-merged with the main chain, but it would have to be checked for double-spend conflict.
  *
  *************************************************************************************************************************
  *

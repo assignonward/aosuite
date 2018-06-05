@@ -95,3 +95,83 @@ DataItemBA  KeyPair::toDataItem( bool cf )
   ba = dil.join();
   return DataVarLength::toDataItem(cf);
 }
+
+#include "gpgme.h"
+#include "gpg-error.h"
+/**
+ * @brief KeyPair::makeNewPair
+ * @param tc - type of keyPair to make (using the private key type).
+ * @return true if successful;
+ */
+bool KeyPair::makeNewPair( typeCode_t tc )
+{ qDebug( "KeyPair::makeNewPair( 0x%x )", tc );
+  if (( tc != AO_ECDSA_PRI_KEY ) &&
+      ( tc != AO_RSA3072_PRI_KEY ))
+    { qDebug( "KeyPair::makeNewPair unrecognized type (0x%x)", tc );
+      return false;
+    }
+  gpgme_ctx_t mContext;
+  gpgme_engine_info_t info;
+  gpgme_error_t  error;
+  const char * CONFIG_DIR = "~/";
+
+  // Initializes gpgme
+  gpgme_check_version(NULL);
+
+  // Initialize the locale environment.
+  setlocale(LC_ALL, "");
+  gpgme_set_locale(NULL, LC_CTYPE, setlocale(LC_CTYPE, NULL));
+  #ifdef LC_MESSAGES
+    gpgme_set_locale(NULL, LC_MESSAGES, setlocale(LC_MESSAGES, NULL));
+  #endif
+  error = gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR);
+  if (error)
+    return false;
+  error = gpgme_new(&mContext);
+  if (error)
+    return false;
+  // Check OpenPGP
+  error = gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP);
+  if ( error )
+    return false;
+  // load engine info
+  error = gpgme_get_engine_info(&info);
+  if ( error )
+    return false;
+  while ( info && info->protocol != gpgme_get_protocol(mContext) )
+    info = info->next;
+
+  // set path to our config file
+  error = gpgme_ctx_set_engine_info(mContext, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR);
+  if ( error )
+    return false;
+
+  std::string def = "<GnupgKeyParms format=\"internal\"> \n"
+                             " Key-Type: ECDSA \n"
+                             " Key-Length: 256 \n"
+                             " Subkey-Type: ECDSA \n"
+                             " Name-Real: Joe Tester3 \n"
+                             " Name-Comment: with stupid passphrase \n"
+                             " Name-Email: joe3 at foo.bar \n"
+                             " Expire-Date: 0 \n"
+                             " Passphrase: abc \n"
+                             " </GnupgKeyParms> \n";
+
+  error = gpgme_op_genkey(mContext, def.c_str(), NULL, NULL );
+
+  if ( GPG_ERR_INV_VALUE  == gpgme_err_code(error) )
+    qDebug( "Value error" );
+  if ( GPG_ERR_NOT_SUPPORTED == gpgme_err_code(error) )
+    qDebug( "Not supported error" );
+  if ( GPG_ERR_GENERAL  ==  gpgme_err_code(error) )
+    qDebug( "general error" );
+  if (error == gpgme_err_code(GPG_ERR_NO_ERROR) )
+    { gpgme_genkey_result_t res = gpgme_op_genkey_result(mContext);
+      if (res->primary && res->sub)
+        { qDebug( "KeyPair::makeNewPair( 0x%x ) success?", tc );
+          return true;
+        }
+    }
+  qDebug( "fallthrough" );
+  return false;
+}

@@ -65,7 +65,6 @@
 #define AO_BLOCK_REF               0x1d // (1d+var) BlockRef: Describes a whole block in the chain
 #define AO_PAGE_REF                0x1c // (1c+var) PageRef: UTF-8 free text, no specific function, but recorded in the blockchain
 #define AO_GENESIS_REF             0x1b // (1b+var) GenesisRef: Uniquely describes a genesis block, includes list of properties used to calculate new blocks
-#define AO_SIG_WITH_TIME           0x1a // (1a+var) Signature: All signatures include the time of signature
 #define AO_SHARES_REF              0x19 // (19+var) SharesRef: Reference to shares received potentially including info on their current state in the chain
 #define AO_ASSETS                  0x18 // (18+var) Assets: A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
 #define AO_ECDSA_PRI_KEY           0x60 // (60+var) PrivateKeyEcdsa:separable An ECDSA private key
@@ -76,6 +75,9 @@
 #define AO_RECORDER                0x81 // (8101+var) Recorder: Contact information for a recorder (chainmaker software)
 #define CB_CHAIN_BLOCK             0x37 // (37+var) GenericCollection: A full chain block, including all data - though potentially censored as required by local laws
 #define CB_BLOCKMAKER              0x38 // (38+var) PubKey: ID (public key) of the blockmaker, which holds claim on the residual shares in the block
+#define CB_BLOCK_SIG               0x39 // (39+var) Signature: Blockmaker's signature, includes a AO_TIME_OF_SIG time and CB_BLOCKMAKER PubKey
+#define AO_AUTH_SIG                0x3a // (3a+var) Signature: Authorization signature, includes a AO_TIME_OF_SIG time and AO_INDEX index of the participant doing the signing
+#define AO_SIG_WITH_TIME           0x3b // (3b+var) Signature: Generic signature with All signatures include AO_TIME_OF_SIG time of signature, but no Index or PubKey
 #define GB_GENESIS_BLOCK           0x87 // (8701+var) GenericCollection: A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it
 #define GB_PROTOCOL                0x107 // (8702+2) Data16: Basic level of protocol, identifies functionality
 #define GB_PROTOCOL_REV            0x187 // (8703+2) Data16: Revision of the protocol, may indicate additional types supported

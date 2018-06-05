@@ -32,6 +32,8 @@ CodeForm::CodeForm( QWidget *cw, MainWinCommon *mw ) :
     ui->setupUi(this);
     new QVBoxLayout( cw );
     cw->layout()->addWidget( this );
+
+    (void)mw;
     /*
     if ( mw )
       { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));

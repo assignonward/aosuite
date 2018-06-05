@@ -1,0 +1,152 @@
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Art Patronage</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Art Patronage</h1>
+
+
+<span itemprop="articleBody">
+<h2>A deeper look at Patronage</h2>
+
+As an <a href="Applications.html">application</a> of <a href="BlockchainBasics.html">blockchain</a> technology, patronage of the arts has some interesting potential.  Patrons can acquire shares in works for a reasonable price, like paying $0.99 for a song when it is released, and if that is the end of the transaction there's no "loss of value" as compared to today's markets; but... as a shareholder, they may have other rights in the future like preferential seating at concerts, admission to opening nights of shows or performances, early access to newly released works, etc.  They may trade some of their shares for these perks back to the artist or venue, or sell them to other fans who want the perks - potentially recovering their original purchase price or even profiting.  Popular artists who are receiving these shares back from their fans might resell them to new patrons for additional income.<br/><br/>
+
+<h3>Serialized Shares</h3>
+An artist might issue a large number of general shares, giving a few of those general shares to each patron, and possibly also do special releases of smaller number of shares in particular works.  For example: a musician might issue 100 billion shares in themselves as an artist, but also produce a first-run limited edition of shares for a particular song, maybe ten-thousand shares for the first-run and if/when those sell out, the second-run could go on sale with a million shares available.  Each purchase of the song gets one share of the song, and maybe 100 shares in the artist.  This might be better and more simply realized with the concept of <b><i>serialized shares</i></b> which doesn't make much sense for pools with large numbers of shares, but for something like a long-term held limited edition, the lower the share number the better.  If the front row of a concert, or opening night of an exhibition or play is open for purchase to the fans with the lowest serial numbers on their shares for a particular group of works, that would create an interesting market with higher perceived value for the lower serial numbers, yet also the potential to sell a large number of higher numbered serialized shares when demand is present.  Simply holding those serial numbers could confer rights of ownership without assigning the shares to others, or, of course, the shares could also be assigned.  The artist's general shares could be "countersigned" with owners' signatures from the serialized shares.
+
+<h3>Gallery Exhibitions</h3>
+
+In the world of gallery exhibitions, a screen display of digital art can instantly transport works around the world.  Along with the image itself could come a right to display the work, shown either in a corner of the screen or on another screen beside it.  This could include the artist's name, name of the work, description or backstory, and traceability to when the work was issued, how many rights to display were issued with it, ownership of those rights, etc.  An app on a cell phone could scan a QR code on the information panel and independently retrieve the same information from a publically shared blockchain.  While anybody could easily make lower resolution copies of the work, and someone with a little access to the equipment could make a perfect copy of the work, what they could not fake would be the artist or share owner's digital signature transferring rights to the work to be displayed in the current venue.
+
+Of course, all forms of multi-media are also possible, from an audio narration to accompany the visual piece to various forms of specialization of a standard display to enhance the experience - but for the larger field of digital images and video, the concept of a recognized expression of ownership might find a place in the high-end art world to finally get some recognition of digital art as valuable.
+
+<h3>Subchains</h3>
+
+Individual art works may be "thinly traded" and therefore not well supported by normal blockchain processing networks.  They could still be realized with their own genesis blocks and chains, but instead of attempting to support a blockchain that may go years between assignments, records of these low-volume chain assignments can be recorded on other, presumably more robust, higher volume chains.  Furthermore, nothing ties this recordkeeping to any particular recording chain, as long as traders of the shares know where to look, the low volume chains can migrate or replicate to any number of more actively updated chains.
+
+<h3>Expiry of shares</h3>
+
+At time of issuance, shares may be set to expire if not assigned onward within a certain timeframe, perhaps 7 years.  This would be a good way to identify continued interest in a work, and also retire processing of ownership information in works which are no longer interesting to anyone.  Simply assigning the shares to yourself (for the cost of a minimal recording fee in the recording chain) would extend their life for another round, in the example: 7 years.
+
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-06-04"><div class="tooltip">4 June 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
+

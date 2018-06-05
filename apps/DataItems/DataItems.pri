@@ -25,6 +25,7 @@ INCLUDEPATH += $${PWD}
 INCLUDEPATH += /usr/include
 # sudo apt-get install libgpgme11-dev libgcrypt11-dev
 LIBS        += -lgpgme -lgcrypt -ldl -lgpg-error
+DEFINES     += _FILE_OFFSET_BITS=64
 
 SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/aotime.cpp            \
@@ -52,9 +53,9 @@ SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/shares.cpp            \
                $${PWD}/sharestate.cpp        \
                $${PWD}/sigecdsa.cpp          \
-               $${PWD}/sigrsa3072.cpp \
-    $$PWD/varsizecode.cpp \
-    $$PWD/dataitemba.cpp
+               $${PWD}/sigrsa3072.cpp        \
+               $${PWD}/varsizecode.cpp       \
+               $${PWD}/dataitemba.cpp
 
 HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/aotime.h            \
@@ -82,6 +83,6 @@ HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/shares.h            \
                $${PWD}/sharestate.h        \
                $${PWD}/sigecdsa.h          \
-               $${PWD}/sigrsa3072.h \
-    $$PWD/varsizecode.h \
-    $$PWD/dataitemba.h
+               $${PWD}/sigrsa3072.h        \
+               $${PWD}/varsizecode.h       \
+               $${PWD}/dataitemba.h

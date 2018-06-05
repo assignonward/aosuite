@@ -26,6 +26,7 @@
 #include "aotime.h"
 #include "data16.h"
 #include "datavarlength.h"
+#include "pubkey.h"
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
 
@@ -70,13 +71,14 @@ public:
 
 private:
   // Every signature has a time of signing
-      AOTime  sigTime;
+      AOTime  sigTime;      // AO_TIME_OF_SIG
   // Only one of these types of signatures is used at a time
-  typeCode_t  sigType;
+  typeCode_t  sigType;      // This is needed because of the inclusion of sigTime and index in the Signature object, might restructure and have a generic signature container without time and index that could be included here
     SigEcdsa  sigEcdsa;
   SigRsa3072  sigRsa3072;
-  // Index, used in Authorizations to match to index numbers in the participant list
-      Data16  index;
+
+      Data16  index;   // AO_INDEX, Optional: used in Authorizations to match to index numbers in the participant list
+      PubKey  pubKey;  // Optional: when included, contains the pubKey used to sign
 };
 
 #endif // SIGNATURE_H

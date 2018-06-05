@@ -42,6 +42,7 @@ public:
 
 public slots:
         void  on_test_clicked();
+        void  on_generateKey_clicked();
 
 private:
     Ui::TestForm *ui;
