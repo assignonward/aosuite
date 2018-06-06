@@ -62,8 +62,6 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
     case AO_PUB_RSA3072_ID:          return 32;
     case AO_HASH224SALT32:           return 32;
     case AO_HASH512:                 return 64;
-    case AO_RSA3072_PUB_KEY:         return 384;
-    case AO_RSA3072_SIG:             return 384;
     case AO_TIME_OF_SIG:             return 16;
     case AO_TIME_RECORDED:           return 16;
     case AO_RECORDING_DEADLINE:      return 16;
@@ -77,6 +75,11 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
     case AO_SHARE_STATE:             return 1;
     case AO_LISTSIZE:                return 2;
     case AO_INDEX:                   return 2;
+    case CB_FIRST_ID_SEQ_NUM:        return 8;
+    case CB_N_ID_SEQ_NUM:            return 2;
+    case AO_ID_SEQ_NUM:              return 8;
+    case AO_RSA3072_PUB_KEY:         return 384;
+    case AO_RSA3072_SIG:             return 384;
     case GB_PROTOCOL:                return 2;
     case GB_PROTOCOL_REV:            return 2;
     case GB_STARTING_SHARES:         return 16;
@@ -113,6 +116,7 @@ qint32 DataItem::typeSize( const DataItemBA &di ) const
 #include "aotime.h"
 #include "assets.h"
 #include "databytearray.h"
+#include "data64.h"
 #include "hash224salt32.h"
 #include "hash256.h"
 #include "hash512.h"
@@ -164,6 +168,9 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
     case AO_SHARE_STATE:             return new ShareState( di, p );
     case AO_LISTSIZE:                return new Data16( di, p );
     case AO_INDEX:                   return new Data16( di, p );
+    case CB_FIRST_ID_SEQ_NUM:        return new Data64( di, p );
+    case CB_N_ID_SEQ_NUM:            return new Data16( di, p );
+    case AO_ID_SEQ_NUM:              return new Data64( di, p );
     case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( di, p );
     case AO_RSA3072_SIG:             return new SigRsa3072( di, p );
     case AO_ECDSA_SIG:               return new SigEcdsa( di, p );
@@ -227,6 +234,9 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_SHARE_STATE:             return new ShareState( *((ShareState *)ditm), p );
     case AO_LISTSIZE:                return new Data16( *((Data16 *)ditm), p );
     case AO_INDEX:                   return new Data16( *((Data16 *)ditm), p );
+    case CB_FIRST_ID_SEQ_NUM:        return new Data64( *((Data64 *)ditm), p );
+    case CB_N_ID_SEQ_NUM:            return new Data16( *((Data16 *)ditm), p );
+    case AO_ID_SEQ_NUM:              return new Data64( *((Data64 *)ditm), p );
     case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( *((PublicKeyRsa3072 *)ditm), p );
     case AO_RSA3072_SIG:             return new SigRsa3072( *((SigRsa3072 *)ditm), p );
     case AO_ECDSA_SIG:               return new SigEcdsa( *((SigEcdsa *)ditm), p );

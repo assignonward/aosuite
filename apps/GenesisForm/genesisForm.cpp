@@ -96,7 +96,7 @@ void  GenesisForm::on_importGenesisBlock_clicked()
 #include "aotime.h"
 #include "databytearray.h"
 #include "data16.h"
-#include "data16.h"
+#include "data64.h"
 #include "genericcollection.h"
 #include "shares.h"
 
@@ -128,13 +128,15 @@ GenericCollection GenesisForm::calculateGenesisBlock()
   //  gb.add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
   //  gb.add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.add( GB_STARTING_SHARES, new Shares( tv, GB_STARTING_SHARES, &gb ) );
+  gb.add( GB_STARTING_SHARES , new Shares( tv, GB_STARTING_SHARES, &gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
-  gb.add( GB_MIN_BLOCK_INT  , new AOTime( tv, GB_MIN_BLOCK_INT  , &gb ) );
+  gb.add( GB_MIN_BLOCK_INT   , new AOTime( tv, GB_MIN_BLOCK_INT  , &gb ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb.add( GB_N_COINS_TOTAL  , new AOCoins( tv, GB_N_COINS_TOTAL, &gb ) );
+  gb.add( GB_N_COINS_TOTAL   , new AOCoins( tv, GB_N_COINS_TOTAL , &gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb.add( GB_RECORDING_TAX  , new AOCoins( tv, GB_RECORDING_TAX, &gb ) );
+  gb.add( GB_RECORDING_TAX   , new AOCoins( tv, GB_RECORDING_TAX , &gb ) );
+  gb.add( CB_FIRST_ID_SEQ_NUM, new Data64( 0, CB_FIRST_ID_SEQ_NUM, &gb ) );
+  gb.add( CB_N_ID_SEQ_NUM    , new Data16( 1, CB_N_ID_SEQ_NUM    , &gb ) );
   return gb;
 }
 

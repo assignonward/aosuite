@@ -23,7 +23,7 @@
 #ifndef PUBKEY_H
 #define PUBKEY_H
 
-#include "dataitem.h"
+#include "data64.h"
 #include "publickeyecdsa.h"
 #include "publickeyrsa3072.h"
 
@@ -46,6 +46,7 @@ public:
         bool  isValid() const;
 
 private:
+            Data64  publicKeyIndex;  // index number of a public key on the blockchain
     PublicKeyEcdsa  publicKeyEcdsa;
   PublicKeyRsa3072  publicKeyRsa3072;
 };

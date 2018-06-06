@@ -58,7 +58,6 @@ public:
 private:
       Shares  amount;  // Negative for givers, positive for receivers, 0 is invalid
       PubKey  key;     // Full public key, suitable for checking signatures
-        Hash  keyHash; // Hash of the public key, not always suitable to check signatures, but good enough for unique Id
      PageRef  page;    // Reference for givers
         Note  note;    // Arbitrary data to record with the transaction
       Data16  index;   // When part of a participant list, this is the index number (starting with 0)

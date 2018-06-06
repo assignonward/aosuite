@@ -52,6 +52,9 @@
 #define AO_SHARE_STATE             0x2f // (2f+1) ShareState: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
 #define AO_LISTSIZE                0x30 // (30+2) Data16: 16 bit signed integer declares the size of a list, as a check that all intended data is present.
 #define AO_INDEX                   0x31 // (31+2) Data16: 16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.
+#define CB_FIRST_ID_SEQ_NUM        0xb3 // (b301+8) Data64: First sequential ID number (of public keys) recorded in this block.
+#define CB_N_ID_SEQ_NUM            0xb4 // (b401+2) Data16: Number of sequential ID numbers (of public keys) recorded in this block, redundant check.
+#define AO_ID_SEQ_NUM              0x33 // (33+8) Data64: 64 bit integer that identifies a particular public key in the chain.
 #define AO_RSA3072_PUB_KEY         0x34 // (34+384) PublicKeyRsa3072: an RSA3072 public key
 #define AO_RSA3072_SIG             0x35 // (35+384) SigRsa3072: an RSA3072 signature
 #define AO_ECDSA_SIG               0x36 // (36+var) SigEcdsa: An ECDSA signature

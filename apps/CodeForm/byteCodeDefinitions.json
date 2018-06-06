@@ -140,6 +140,27 @@
         "type": "Data16"
     },
     {
+        "code": 179,
+        "desc": "First sequential ID number (of public keys) recorded in this block.",
+        "pdef": "CB_FIRST_ID_SEQ_NUM",
+        "size": 8,
+        "type": "Data64"
+    },
+    {
+        "code": 180,
+        "desc": "Number of sequential ID numbers (of public keys) recorded in this block, redundant check.",
+        "pdef": "CB_N_ID_SEQ_NUM",
+        "size": 2,
+        "type": "Data16"
+    },
+    {
+        "code": 51,
+        "desc": "64 bit integer that identifies a particular public key in the chain.",
+        "pdef": "AO_ID_SEQ_NUM",
+        "size": 8,
+        "type": "Data64"
+    },
+    {
         "code": 52,
         "desc": "an RSA3072 public key",
         "pdef": "AO_RSA3072_PUB_KEY",

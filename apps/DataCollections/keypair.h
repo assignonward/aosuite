@@ -27,6 +27,11 @@
 #include "prikey.h"
 #include "pubkey.h"
 
+#include "gpgme.h"
+#include "gpg-error.h"
+
+#define MAX_KEYS 1000
+
 /**
  * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
  */
@@ -34,18 +39,22 @@ class KeyPair : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
-              KeyPair( const KeyPair &k, QObject *p = NULL )
-                : DataVarLength( AO_KEYPAIR, p ? p : k.parent() ),
-                  pubKey( k.pubKey ), priKey( k.priKey ) {}
-        void  operator = ( const DataItemBA &di );
-  DataItemBA  toDataItem( bool cf = false );
-        bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
-        bool  makeNewPair( typeCode_t tc );
+      explicit  KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
+                KeyPair( const KeyPair &k, QObject *p = NULL )
+                  : DataVarLength( AO_KEYPAIR, p ? p : k.parent() ),
+                    pubKey( k.pubKey ), priKey( k.priKey ) {}
+          void  operator = ( const DataItemBA &di );
+    DataItemBA  toDataItem( bool cf = false );
+          bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
+          bool  makeNewPair( typeCode_t tc );
+
+ gpgme_error_t  initGpgme();
+          bool  getGpgKeys();
 
 private:
-      PubKey  pubKey;
-      PriKey  priKey;
+        PubKey  pubKey;
+        PriKey  priKey;
+   gpgme_key_t  gpgKeys[MAX_KEYS+1];
 };
 
 #endif // KEYPAIR_H

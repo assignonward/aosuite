@@ -65,11 +65,9 @@ Participant::Participant( DataItemBA di, QObject *p )
                       case AO_ECDSA_PUB_KEY2:
                       case AO_ECDSA_PUB_KEY3:
                       case AO_RSA3072_PUB_KEY:
+                      case AO_ID_SEQ_NUM:
                         key = items;
                         break;
-
-                      case AO_PUB_RSA3072_ID:
-                        keyHash = items;
 
                       case AO_PAGE_REF:
                         page = items;
@@ -99,7 +97,6 @@ void Participant::operator = ( const DataItemBA &di )
 { Participant temp( di );
   amount   = temp.amount;
   key      = temp.key;
-  keyHash  = temp.keyHash;
   page     = temp.page;
   note     = temp.note;
   index    = temp.index;
@@ -139,8 +136,6 @@ DataItemBA Participant::toDataItem( bool cf )
           dil.append( amount.toDataItem(true) );
         if ( key.isValid() )
           dil.append( key.getId(true) );
-         else if ( keyHash.isValid() )
-          dil.append( keyHash.toDataItem(true) );
         if ( note.size() > 0 )
           dil.append( note.toDataItem(true) );
         if ( index > -1 )
