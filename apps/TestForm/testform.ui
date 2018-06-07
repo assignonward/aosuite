@@ -52,6 +52,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="examineKeys">
+        <property name="text">
+         <string>Examine Keys</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="generateKey">
         <property name="text">
          <string>Generate Key</string>

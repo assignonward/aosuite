@@ -52,6 +52,11 @@ void TestForm::on_generateKey_clicked()
   kp.makeNewPair( AO_ECDSA_PRI_KEY );
 }
 
+void TestForm::on_examineKeys_clicked()
+{ KeyPair kp;
+  kp.getGpgKeys();
+}
+
 #include "aotime.h"
 #include "aocoins.h"
 #include "data16.h"
