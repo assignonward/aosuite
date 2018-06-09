@@ -78,6 +78,8 @@ gpgme_error_t CryptoForm::initGpgme()
   setlocale( LC_ALL, "" );
   gpgme_set_locale( NULL, LC_CTYPE   , setlocale( LC_CTYPE   , NULL ) );
   gpgme_set_locale( NULL, LC_MESSAGES, setlocale( LC_MESSAGES, NULL ) );
+  gpgme_error_t err;
+  FAIL_IF_GPGERR( gpgme_set_engine_info( GPGME_PROTOCOL_OpenPGP, "/usr/local/gpgbin/gpg", NULL ) )
   return gpgme_engine_check_version( GPGME_PROTOCOL_OpenPGP );
 }
 
@@ -154,7 +156,7 @@ bool CryptoForm::getGpgKeys()
 
   FAIL_IF_GPGERR( initGpgme() )
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
-  FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
+  // FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
 
   FAIL_IF_GPGERR( gpgme_data_new(&keydata) )
   FAIL_IF_GPGERR( gpgme_op_keylist_start( ctx, NULL, 0 ) )
