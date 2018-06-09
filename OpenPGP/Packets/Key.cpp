@@ -121,6 +121,7 @@ void Key::read_common(const std::string & data, std::string::size_type & pos){
         }
         #endif
         else{
+            std::cout << "size " << size << " version " << version << " time " << time << " pka " << pka << "\n";
             throw std::runtime_error("Algorithm not found");
         }
     }
