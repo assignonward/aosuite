@@ -28,7 +28,7 @@ DEPTH = ../..
 
 # sudo apt-get install libgpgme11-dev libgcrypt11-dev libbz2-dev lib64z1-dev
 INCLUDEPATH += $${DEPTH}/OpenPGP
-LIBS        += -lOpenPGP -L$$PWD/$${DEPTH}/OpenPGP -lgcrypt -lgpgme -lgpg-error
+LIBS        += -lOpenPGP -lgmp -lgmpxx -lbz2 -lz -ldl -lgcrypt -lgpgme -lgpg-error -L$$PWD/$${DEPTH}/OpenPGP
 DEFINES     += _FILE_OFFSET_BITS=64
 
 include($${DEPTH}/qamqp.pri)

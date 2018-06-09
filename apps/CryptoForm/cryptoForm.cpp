@@ -35,6 +35,7 @@ CryptoForm::CryptoForm( QWidget *cw, MainWinCommon *mw ) :
       connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
     }
   getGpgInfo();
+  getKeyInfo();
 }
 
 CryptoForm::~CryptoForm()
@@ -349,9 +350,12 @@ bool CryptoForm::getKeyInfo()
   QByteArray ba( buf, sz );
   qDebug( "%s", qPrintable( QString::fromUtf8( ba.toHex() ) ) );
 
-//  OpenPGP::Key ks( ba.toStdString() );
-//  std::cout << ks.keyid();
+  qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 
+  OpenPGP::Key ks( ba.toStdString() );
+  qDebug( "ks.keyid():%s", qPrintable( QString::fromStdString( ks.keyid() ) ) );
+
+  qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 
   gpgme_data_seek( keydata, 0, SEEK_SET );
   SHOW_IF_GPGERR( gpgme_op_export_keys( ctx, gpgKeys, GPGME_EXPORT_MODE_MINIMAL, keydata ) )
