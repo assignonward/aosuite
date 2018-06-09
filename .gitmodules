@@ -1,0 +1,21 @@
+[submodule "gpg/npth"]
+	path = gpg/npth
+	url = git://git.gnupg.org/npth.git
+[submodule "gpg/libgpg-error"]
+	path = gpg/libgpg-error
+	url = git://git.gnupg.org/libgpg-error.git
+[submodule "gpg/libgcrypt"]
+	path = gpg/libgcrypt
+	url = git://git.gnupg.org/libgcrypt.git
+[submodule "gpg/libksba"]
+	path = gpg/libksba
+	url = git://git.gnupg.org/libksba.git
+[submodule "gpg/libassuan"]
+	path = gpg/libassuan
+	url = git://git.gnupg.org/libassuan.git
+[submodule "gpg/gnupg"]
+	path = gpg/gnupg
+	url = git://git.gnupg.org/gnupg.git
+[submodule "gpg/gpgme"]
+	path = gpg/gpgme
+	url = git://git.gnupg.org/gpgme.git

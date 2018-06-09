@@ -300,6 +300,7 @@ bool CryptoForm::getKeyInfo()
   FAIL_IF_GPGERR( initGpgme() )
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
   FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
+  gpgme_set_armor( ctx, 1 );
 
   FAIL_IF_GPGERR( gpgme_data_new(&keydata) )
   FAIL_IF_GPGERR( gpgme_op_keylist_start( ctx, NULL, 0 ) )
@@ -348,11 +349,14 @@ bool CryptoForm::getKeyInfo()
   ssize_t sz = gpgme_data_read( keydata, buf, 8192 );
   qDebug( "Read %ld bytes", sz );
   QByteArray ba( buf, sz );
-  qDebug( "%s", qPrintable( QString::fromUtf8( ba.toHex() ) ) );
+  qDebug( "%s", qPrintable( QString::fromUtf8( ba ) ) );
 
   qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 
   OpenPGP::Key ks( ba.toStdString() );
+
+  qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
+
   qDebug( "ks.keyid():%s", qPrintable( QString::fromStdString( ks.keyid() ) ) );
 
   qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
