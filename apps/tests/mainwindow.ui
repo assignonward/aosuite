@@ -41,6 +41,11 @@
         <string>Tests</string>
        </attribute>
       </widget>
+      <widget class="QWidget" name="cryptoTab">
+       <attribute name="title">
+        <string>Crypto</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
    </layout>

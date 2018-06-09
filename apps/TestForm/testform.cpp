@@ -22,8 +22,9 @@
  */
 #include "testform.h"
 
-TestForm::TestForm( QWidget *cw, MainWinCommon *mw ) :
+TestForm::TestForm( CryptoForm *cp, QWidget *cw, MainWinCommon *mw ) :
     QScrollArea(cw),
+    cf(cp),
     ui(new Ui::TestForm)
 { (void)mw;
   ui->setupUi(this);
@@ -46,15 +47,14 @@ void TestForm::on_test_clicked()
 { testGenesisBlock();
 }
 
-#include "keypair.h"
 void TestForm::on_generateKey_clicked()
-{ KeyPair kp;
-  kp.makeNewPair( AO_ECDSA_PRI_KEY );
+{ if ( cf )
+    cf->makeNewPair( AO_ECDSA_PRI_KEY );
 }
 
 void TestForm::on_examineKeys_clicked()
-{ KeyPair kp;
-  kp.getGpgKeys();
+{ if ( cf )
+    cf->getGpgKeys();
 }
 
 #include "aotime.h"

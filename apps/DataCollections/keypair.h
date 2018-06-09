@@ -27,11 +27,6 @@
 #include "prikey.h"
 #include "pubkey.h"
 
-#include "gpgme.h"
-#include "gpg-error.h"
-
-#define MAX_KEYS 1000
-
 /**
  * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
  */
@@ -46,15 +41,10 @@ public:
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false );
           bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
-          bool  makeNewPair( typeCode_t tc );
-
- gpgme_error_t  initGpgme();
-          bool  getGpgKeys();
 
 private:
         PubKey  pubKey;
         PriKey  priKey;
-   gpgme_key_t  gpgKeys[MAX_KEYS+1];
 };
 
 #endif // KEYPAIR_H

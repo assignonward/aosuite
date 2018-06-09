@@ -25,11 +25,18 @@ QT          += core gui widgets
 TEMPLATE     = app
 
 DEPTH = ../..
+
+# sudo apt-get install libgpgme11-dev libgcrypt11-dev libbz2-dev lib64z1-dev
+INCLUDEPATH += $${DEPTH}/OpenPGP
+LIBS        += -lOpenPGP -L$$PWD/$${DEPTH}/OpenPGP -lgcrypt -lgpgme -lgpg-error
+DEFINES     += _FILE_OFFSET_BITS=64
+
 include($${DEPTH}/qamqp.pri)
 INCLUDEPATH += $${QAMQP_INCLUDEPATH}
 LIBS        += -L$${DEPTH}/src $${QAMQP_LIBS}
 macx:CONFIG -= app_bundle
 
+include(../CryptoForm/CryptoForm.pri)
 include(../DataCollections/DataCollections.pri)
 include(../DataItems/DataItems.pri)
 include(../OrganizerData/OrganizerData.pri)

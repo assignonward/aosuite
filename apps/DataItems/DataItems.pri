@@ -23,9 +23,6 @@
 
 INCLUDEPATH += $${PWD}
 INCLUDEPATH += /usr/include
-# sudo apt-get install libgpgme11-dev libgcrypt11-dev
-LIBS        += -lgpgme -lgcrypt -ldl -lgpg-error
-DEFINES     += _FILE_OFFSET_BITS=64
 
 SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/aotime.cpp            \

@@ -21,13 +21,14 @@
  * SOFTWARE.
  */
 #include "mainwindow.h"
+#include "cryptoForm.h"
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     MainWinCommon(parent),
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
-  new TestForm( ui->testsTab,this );
+  new TestForm( new CryptoForm( ui->cryptoTab, this ), ui->testsTab , this );
   restoreConfig();
 }
 

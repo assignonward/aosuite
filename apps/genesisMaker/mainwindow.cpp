@@ -21,13 +21,15 @@
  * SOFTWARE.
  */
 #include "mainwindow.h"
+#include "cryptoForm.h"
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     MainWinCommon(parent),
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
-  new GenesisForm( ui->genesisTab,this );
+  new GenesisForm( ui->genesisTab, this );
+  new CryptoForm ( ui->cryptoTab , this );
   restoreConfig();
 }
 

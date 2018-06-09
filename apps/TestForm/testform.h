@@ -25,6 +25,7 @@
 
 #include <QScrollArea>
 #include "MainWinCommon.h"
+#include "cryptoForm.h"
 #include "ui_testform.h"
 
 namespace Ui {
@@ -36,7 +37,7 @@ class TestForm : public QScrollArea
     Q_OBJECT
 
 public:
-    explicit  TestForm( QWidget *cw, MainWinCommon *mw = NULL);
+    explicit  TestForm( CryptoForm *cp, QWidget *cw, MainWinCommon *mw = NULL);
              ~TestForm();
         void  testGenesisBlock();
 
@@ -46,7 +47,8 @@ public slots:
         void  on_examineKeys_clicked();
 
 private:
-    Ui::TestForm *ui;
+QPointer<CryptoForm> cf;
+       Ui::TestForm *ui;
 };
 
 #endif // CODEFORM_H
