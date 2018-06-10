@@ -1,3 +1,5 @@
 <RCC>
-    <qresource prefix="/files"/>
+    <qresource prefix="/icons">
+        <file>checklist.png</file>
+    </qresource>
 </RCC>
