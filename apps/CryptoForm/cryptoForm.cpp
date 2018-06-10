@@ -297,12 +297,12 @@ bool CryptoForm::getGpgInfo()
 bool CryptoForm::getKeyInfo()
 { gpgme_ctx_t   ctx;
   gpgme_error_t err;
-  gpgme_data_t  keydata;
+  gpgme_data_t  keydata,tempkeydata;
 
   FAIL_IF_GPGERR( initGpgme() )
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
   FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
-  gpgme_set_armor( ctx, 1 );
+  // gpgme_set_armor( ctx, 1 );
 
   FAIL_IF_GPGERR( gpgme_data_new(&keydata) )
   FAIL_IF_GPGERR( gpgme_op_keylist_start( ctx, NULL, 0 ) )
@@ -351,7 +351,7 @@ bool CryptoForm::getKeyInfo()
   ssize_t sz = gpgme_data_read( keydata, buf, 8192 );
   qDebug( "Read %ld bytes", sz );
   QByteArray ba( buf, sz );
-  qDebug( "%s", qPrintable( QString::fromUtf8( ba ) ) );
+  qDebug( "%s", qPrintable( QString::fromUtf8( ba.toHex() ) ) );
 
   qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 
@@ -359,7 +359,7 @@ bool CryptoForm::getKeyInfo()
 
   qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 
-  qDebug( "ks.keyid():%s", qPrintable( QString::fromStdString( ks.keyid() ) ) );
+  qDebug( "ks.show():%s", qPrintable( QString::fromStdString( ks.show() ) ) );
 
   qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 
@@ -384,6 +384,24 @@ bool CryptoForm::getKeyInfo()
                .arg( n, 4 ).arg( key->subkeys->keyid )
                .arg( (key->uids && key->uids->name ) ? key->uids->name  : "undefined" )
                .arg( (key->uids && key->uids->email) ? key->uids->email : "undefined" ) ) );
+
+          FAIL_IF_GPGERR( gpgme_data_new(&tempkeydata) )
+          gpgme_key_t showKeyList[2];
+          showKeyList[0] = key;
+          showKeyList[1] = NULL;
+          gpgme_data_seek( keydata, 0, SEEK_SET );
+          SHOW_IF_GPGERR( gpgme_op_export_keys( ctx, showKeyList, GPGME_EXPORT_MODE_MINIMAL, tempkeydata ) )
+          gpgme_data_seek( tempkeydata, 0, SEEK_SET );
+          dt = gpgme_data_identify(tempkeydata,0);
+          qDebug( "keydata type %d %s", dt, dt == GPGME_DATA_TYPE_PGP_KEY ? "That's a PGP KEY" : "unexpected type" );
+          ssize_t sz = gpgme_data_read( tempkeydata, buf, 8192 );
+          qDebug( "Read %ld bytes", sz );
+          ba = QByteArray( buf, sz );
+          qDebug( "%s", qPrintable( QString::fromUtf8( ba.toHex() ) ) );
+          OpenPGP::Key sk( ba.toStdString() );
+          qDebug( "sk.show():%s", qPrintable( QString::fromStdString( sk.show() ) ) );
+          gpgme_data_release( tempkeydata );
+
           gpgme_subkey_t subkey = key->subkeys;
           err = 0;
           while ( subkey && !err )

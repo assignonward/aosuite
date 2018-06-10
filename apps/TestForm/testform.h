@@ -46,7 +46,7 @@ public slots:
         void  on_generateKey_clicked();
         void  on_examineKeys_clicked();
 
-private:
+public:
 QPointer<CryptoForm> cf;
        Ui::TestForm *ui;
 };

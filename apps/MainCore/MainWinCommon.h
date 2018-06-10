@@ -36,11 +36,15 @@ public:
             void  saveConfig();
 
 signals:
+            void  message( QString );
             void  restoringConfig();
             void  savingConfig();
 
 public slots:
             void  additionalInstanceStarted();
+
+public:
+            bool  messageConnected = false;
 };
 
 #endif // MAINWINCOMMON_H
