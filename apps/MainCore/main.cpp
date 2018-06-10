@@ -34,26 +34,36 @@ using namespace std;
 MainWindow *mw;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{ switch (type)
+{ QString m;
+  switch (type)
     { default:
       case QtDebugMsg:
-        printf( "Debug %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
+        m = QString( "Debug %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
+        if ( mw ) { if ( mw->messageConnected ) emit mw->message( m ); }
+         else printf( "%s\n", qPrintable(m) );
         break;
       case QtInfoMsg:
-        printf( "Info %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
+        m = QString( "Info %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
+        if ( mw ) { if ( mw->messageConnected ) emit mw->message( m ); }
+          else printf( "%s\n", qPrintable(m) );
         break;
       case QtWarningMsg:
-        printf( "Warning %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
+        m = QString( "Warning %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
+        if ( mw ) { if ( mw->messageConnected ) emit mw->message( m ); }
+         else printf( "%s\n", qPrintable(m) );
         break;
       case QtCriticalMsg:
-        printf( "Critical %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
+        m = QString( "Critical %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
+        if ( mw ) { if ( mw->messageConnected ) emit mw->message( m ); }
+         else printf( "%s\n", qPrintable(m) );
         break;
       case QtFatalMsg:
-        printf( "Fatal %s\n", qPrintable( QString( "%1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) ) );
+        m = QString( "Fatall %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
+        if ( mw ) { if ( mw->messageConnected ) emit mw->message( m ); }
+         else printf( "%s\n", qPrintable(m) );
         abort();
     }
   fflush(stdout);
-  // (void)context; (void)msg;
 }
 
 int main(int argc, char *argv[])

@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
   TestForm *tf = new TestForm( new CryptoForm( ui->cryptoTab, this ), ui->testsTab , this );
   restoreConfig();
   connect( this, SIGNAL(message(QString)),tf->ui->results,SLOT(appendPlainText(QString)) );
+  messageConnected = true;
 }
 
 MainWindow::~MainWindow()
