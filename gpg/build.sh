@@ -2,8 +2,6 @@
 #
 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob;f=README
 
-./setVersions.sh
-
 set -e
 
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH

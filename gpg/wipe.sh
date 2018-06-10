@@ -11,4 +11,5 @@ sudo rm -rf gnupg
 sudo rm -rf gpgme
 git submodule init
 git submodule update
+./setVersions.sh
 
