@@ -85,14 +85,14 @@
 #define GB_GENESIS_BLOCK           0x87 // (8701+var) GenericCollection: A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it
 #define GB_PROTOCOL                0x107 // (8702+2) Data16: Basic level of protocol, identifies functionality
 #define GB_PROTOCOL_REV            0x187 // (8703+2) Data16: Revision of the protocol, may indicate additional types supported
-#define GB_TEXT_SYMBOL             0x1107 // (8722+var) Note: Short unique symbol that uniquely identifies the chain e.g. TⒶ1a
+#define GB_TEXT_SYMBOL             0x3287 // (8765+var) Note: Short unique symbol that uniquely identifies the chain e.g. TⒶ1a
 #define GB_DESCRIPTION             0x887 // (8711+var) Note:separable Text description of the chain
 #define GB_ICON                    0x1887 // (8731+var) DataByteArray:separable Image suitable for icon use to represent the chain
 #define GB_IMAGE                   0x1907 // (8732+var) DataByteArray:separable Large format image to represent the chain
 #define GB_STARTING_SHARES         0x1007 // (8720+16) Shares: Starting number of shares
 #define GB_MIN_BLOCK_INT           0x1087 // (8721+16) AOTime: Minimuim block interval time
-#define GB_N_COINS_TOTAL           0x1187 // (8723+16) AOCoins: Number of coins that the sum of all shares outstanding represents
-#define GB_RECORDING_TAX           0x1207 // (8724+16) AOCoins: Recording Tax in coins per byte (usually a very small number)
+#define GB_N_COINS_TOTAL           0x1107 // (8722+16) AOCoins: Number of coins that the sum of all shares outstanding represents
+#define GB_RECORDING_TAX           0x1187 // (8723+16) AOCoins: Recording Tax in coins per byte (usually a very small number)
 #define AO_UNDEFINED_DATAITEM      0x7f // (7f+0) DataItem: An undefined data item, usually an error
 
 class DataItem : public QObject, public VarSizeCode

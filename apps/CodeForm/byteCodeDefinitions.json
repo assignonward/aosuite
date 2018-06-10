@@ -379,7 +379,7 @@
         "type": "Data16"
     },
     {
-        "code": 4359,
+        "code": 12935,
         "desc": "Short unique symbol that uniquely identifies the chain e.g. TⒶ1a",
         "gbcr": "Text",
         "pdef": "GB_TEXT_SYMBOL",
@@ -430,7 +430,7 @@
         "type": "AOTime"
     },
     {
-        "code": 4487,
+        "code": 4359,
         "desc": "Number of coins that the sum of all shares outstanding represents",
         "gbcr": "Pow2",
         "pdef": "GB_N_COINS_TOTAL",
@@ -438,7 +438,7 @@
         "type": "AOCoins"
     },
     {
-        "code": 4615,
+        "code": 4487,
         "desc": "Recording Tax in coins per byte (usually a very small number)",
         "gbcr": "Pow2",
         "pdef": "GB_RECORDING_TAX",
