@@ -224,7 +224,7 @@
         "type": "AssignRef"
     },
     {
-        "code": 74,
+        "code": 2048,
         "desc": "Arbitrary data of any form, may contain NULL bytes, any length (within reason)",
         "pdef": "AO_DATABYTEARRAY",
         "sepr": true,
@@ -232,7 +232,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": 75,
+        "code": 2049,
         "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
         "pdef": "AO_NOTE",
         "sepr": true,
@@ -275,7 +275,7 @@
         "type": "Assets"
     },
     {
-        "code": 96,
+        "code": 14336,
         "desc": "An ECDSA private key",
         "pdef": "AO_ECDSA_PRI_KEY",
         "sepr": true,
@@ -283,7 +283,7 @@
         "type": "PrivateKeyEcdsa"
     },
     {
-        "code": 97,
+        "code": 14337,
         "desc": "An RSA3072 private key",
         "pdef": "AO_RSA3072_PRI_KEY",
         "sepr": true,
@@ -291,7 +291,7 @@
         "type": "PrivateKeyRsa3072"
     },
     {
-        "code": 98,
+        "code": 14338,
         "desc": "A (hopefully matching) public-private key pair",
         "pdef": "AO_KEYPAIR",
         "sepr": true,
@@ -299,7 +299,7 @@
         "type": "KeyPair"
     },
     {
-        "code": 106,
+        "code": 14339,
         "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
         "pdef": "AO_NETADDRESS",
         "sepr": true,
@@ -379,7 +379,7 @@
         "type": "Data16"
     },
     {
-        "code": 6151,
+        "code": 4359,
         "desc": "Short unique symbol that uniquely identifies the chain e.g. TⒶ1a",
         "gbcr": "Text",
         "pdef": "GB_TEXT_SYMBOL",
@@ -387,7 +387,7 @@
         "type": "Note"
     },
     {
-        "code": 6343,
+        "code": 2183,
         "desc": "Text description of the chain",
         "gbcr": "Text",
         "pdef": "GB_DESCRIPTION",
@@ -396,7 +396,7 @@
         "type": "Note"
     },
     {
-        "code": 8263,
+        "code": 6279,
         "desc": "Image suitable for icon use to represent the chain",
         "gbcr": "File",
         "pdef": "GB_ICON",
@@ -405,7 +405,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": 8391,
+        "code": 6407,
         "desc": "Large format image to represent the chain",
         "gbcr": "File",
         "pdef": "GB_IMAGE",
@@ -414,7 +414,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": 2055,
+        "code": 4103,
         "desc": "Starting number of shares",
         "gbcr": "Pow2",
         "pdef": "GB_STARTING_SHARES",
@@ -422,7 +422,7 @@
         "type": "Shares"
     },
     {
-        "code": 2183,
+        "code": 4231,
         "desc": "Minimuim block interval time",
         "gbcr": "f64.64",
         "pdef": "GB_MIN_BLOCK_INT",
@@ -430,7 +430,7 @@
         "type": "AOTime"
     },
     {
-        "code": 2311,
+        "code": 4487,
         "desc": "Number of coins that the sum of all shares outstanding represents",
         "gbcr": "Pow2",
         "pdef": "GB_N_COINS_TOTAL",
@@ -438,7 +438,7 @@
         "type": "AOCoins"
     },
     {
-        "code": 2439,
+        "code": 4615,
         "desc": "Recording Tax in coins per byte (usually a very small number)",
         "gbcr": "Pow2",
         "pdef": "GB_RECORDING_TAX",
@@ -446,7 +446,7 @@
         "type": "AOCoins"
     },
     {
-        "code": 63,
+        "code": 127,
         "desc": "An undefined data item, usually an error",
         "pdef": "AO_UNDEFINED_DATAITEM",
         "size": 0,
