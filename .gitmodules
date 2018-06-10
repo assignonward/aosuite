@@ -19,3 +19,6 @@
 [submodule "gpg/gpgme"]
 	path = gpg/gpgme
 	url = git://git.gnupg.org/gpgme.git
+[submodule "OpenPGP"]
+	path = OpenPGP
+	url = https://github.com/calccrypto/OpenPGP.git
