@@ -24,13 +24,14 @@
 
 /**
  * @brief PublicKeyECDSA::get
- * @return the key with the type code in front (standard 33 byte compressed format)
+ * @return the key with the type code in front (standard 33 or 65 byte formats)
  */
 QByteArray  PublicKeyEcdsa::get() const
 { QByteArray k;
   switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
+      case AO_ECDSA_PUB_KEY4:
         k.append( typeCode );
         k.append( ba );
     }
@@ -39,16 +40,25 @@ QByteArray  PublicKeyEcdsa::get() const
 
 /**
  * @brief PublicKeyECDSA::set
- * @param k - 33 byte compressed key
+ * @param k - 33 byte compressed or 65 byte uncompressed key
  */
 void  PublicKeyEcdsa::set( QByteArray k )
-{ if ( k.size() != 33 )
-    { // TODO: log error
-      return;
-    }
-  switch ( k.at(0) )
+{ switch ( k.at(0) )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
+        if ( k.size() != 33 )
+            { // TODO: log error
+              return;
+            }
+        typeCode = k.at(0);
+        ba = k.mid(1);
+        return;
+
+      case AO_ECDSA_PUB_KEY4:
+        if ( k.size() != 65 )
+            { // TODO: log error
+              return;
+            }
         typeCode = k.at(0);
         ba = k.mid(1);
         return;

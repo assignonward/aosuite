@@ -14,6 +14,20 @@
         "type": "PublicKeyEcdsa"
     },
     {
+        "code": 4,
+        "desc": "ECDSA Public Key, type 4 uncompressed",
+        "pdef": "AO_ECDSA_PUB_KEY4",
+        "size": 64,
+        "type": "PublicKeyEcdsa"
+    },
+    {
+        "code": 5,
+        "desc": "SHA3-512 hash of some data",
+        "pdef": "AO_HASH512",
+        "size": 64,
+        "type": "Hash512"
+    },
+    {
         "code": 6,
         "desc": "SHA2-256 hash of some data",
         "pdef": "AO_HASH256",
@@ -40,13 +54,6 @@
         "pdef": "AO_HASH224SALT32",
         "size": 32,
         "type": "Hash224Salt32"
-    },
-    {
-        "code": 16,
-        "desc": "SHA3-512 hash of some data",
-        "pdef": "AO_HASH512",
-        "size": 64,
-        "type": "Hash512"
     },
     {
         "code": 32,

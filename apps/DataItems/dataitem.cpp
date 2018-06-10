@@ -57,11 +57,12 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
 { switch ( tc )
   { case AO_ECDSA_PUB_KEY2:          return 32;
     case AO_ECDSA_PUB_KEY3:          return 32;
+    case AO_ECDSA_PUB_KEY4:          return 64;
+    case AO_HASH512:                 return 64;
     case AO_HASH256:                 return 32;
     case AO_SALT256:                 return 32;
     case AO_PUB_RSA3072_ID:          return 32;
     case AO_HASH224SALT32:           return 32;
-    case AO_HASH512:                 return 64;
     case AO_TIME_OF_SIG:             return 16;
     case AO_TIME_RECORDED:           return 16;
     case AO_RECORDING_DEADLINE:      return 16;
@@ -150,11 +151,12 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
 { switch ( typeCodeOf( di ) )
   { case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( di, p );
     case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( di, p );
+    case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( di, p );
+    case AO_HASH512:                 return new Hash512( di, p );
     case AO_HASH256:                 return new Hash256( di, p );
     case AO_SALT256:                 return new Salt256( di, p );
     case AO_PUB_RSA3072_ID:          return new Hash256( di, p );
     case AO_HASH224SALT32:           return new Hash224Salt32( di, p );
-    case AO_HASH512:                 return new Hash512( di, p );
     case AO_TIME_OF_SIG:             return new AOTime( di, p );
     case AO_TIME_RECORDED:           return new AOTime( di, p );
     case AO_RECORDING_DEADLINE:      return new AOTime( di, p );
@@ -216,11 +218,12 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
 { switch ( ditm->typeCode )
   { case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
     case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
+    case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
+    case AO_HASH512:                 return new Hash512( *((Hash512 *)ditm), p );
     case AO_HASH256:                 return new Hash256( *((Hash256 *)ditm), p );
     case AO_SALT256:                 return new Salt256( *((Salt256 *)ditm), p );
     case AO_PUB_RSA3072_ID:          return new Hash256( *((Hash256 *)ditm), p );
     case AO_HASH224SALT32:           return new Hash224Salt32( *((Hash224Salt32 *)ditm), p );
-    case AO_HASH512:                 return new Hash512( *((Hash512 *)ditm), p );
     case AO_TIME_OF_SIG:             return new AOTime( *((AOTime *)ditm), p );
     case AO_TIME_RECORDED:           return new AOTime( *((AOTime *)ditm), p );
     case AO_RECORDING_DEADLINE:      return new AOTime( *((AOTime *)ditm), p );

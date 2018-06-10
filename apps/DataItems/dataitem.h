@@ -34,11 +34,12 @@
 
 #define AO_ECDSA_PUB_KEY2          0x02 // (02+32) PublicKeyEcdsa: ECDSA Public Key, type 2 compressed
 #define AO_ECDSA_PUB_KEY3          0x03 // (03+32) PublicKeyEcdsa: ECDSA Public Key, type 3 compressed
+#define AO_ECDSA_PUB_KEY4          0x04 // (04+64) PublicKeyEcdsa: ECDSA Public Key, type 4 uncompressed
+#define AO_HASH512                 0x05 // (05+64) Hash512: SHA3-512 hash of some data
 #define AO_HASH256                 0x06 // (06+32) Hash256: SHA2-256 hash of some data
 #define AO_SALT256                 0x07 // (07+32) Salt256: 256 random bits
 #define AO_PUB_RSA3072_ID          0x08 // (08+32) Hash256: Hash256 of a PublicKeyRsa3072
 #define AO_HASH224SALT32           0x0c // (0c+32) Hash224Salt32: Hash224 of some data including a 32 bit salt
-#define AO_HASH512                 0x10 // (10+64) Hash512: SHA3-512 hash of some data
 #define AO_TIME_OF_SIG             0x20 // (20+16) AOTime: UTC time (secs since epoch << 64) when a signature was made
 #define AO_TIME_RECORDED           0x21 // (21+16) AOTime: UTC time (secs since epoch << 64) when a record was made
 #define AO_RECORDING_DEADLINE      0x22 // (22+16) AOTime: UTC time (secs since epoch << 64) when a record is contracted to be recorded
