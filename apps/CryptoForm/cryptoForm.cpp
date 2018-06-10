@@ -186,13 +186,43 @@ bool CryptoForm::getKeyInfo()
 void CryptoForm::on_selectedKeyNumber_valueChanged( int v )
 { QString info;
   int n = v-1;
-  gpgme_key_t key = gpgKeys[n];
+  gpgme_ctx_t   ctx;
+  gpgme_error_t err;
+  SHOW_IF_GPGERR( gpgme_new( &ctx ) )
+  gpgme_data_t keydata;
+  gpgme_key_t  key = gpgKeys[n];
   info.append( QString( "id:%1\nname:%2\nemail:%3\ncomment:%4" )
                .arg( key->subkeys->keyid )
                .arg( (key->uids && key->uids->name   ) ? key->uids->name    : "undefined" )
                .arg( (key->uids && key->uids->email  ) ? key->uids->email   : "undefined" )
                .arg( (key->uids && key->uids->comment) ? key->uids->comment : "undefined" )
              );
+  ui->selectedKeyInfo->setText( info );
+
+  SHOW_IF_GPGERR( gpgme_data_new(&keydata) )
+  gpgme_key_t showKeyList[2];
+  showKeyList[0] = key;
+  showKeyList[1] = NULL;
+  gpgme_data_seek( keydata, 0, SEEK_SET );
+  SHOW_IF_GPGERR( gpgme_op_export_keys( ctx, showKeyList, GPGME_EXPORT_MODE_MINIMAL, keydata ) )
+  gpgme_data_seek( keydata, 0, SEEK_SET );
+  gpgme_data_type_t dt = gpgme_data_identify(keydata,0);
+  if ( dt != GPGME_DATA_TYPE_PGP_KEY )
+    { ui->openPGPkeyInfo->setText( QString( "Unexpected data type %1" ).arg( dt ) );
+    }
+   else
+    { char buf[8192];
+      ssize_t sz = gpgme_data_read( keydata, buf, 8192 );
+      info = QString( "Read %1 bytes\n" ).arg( sz );
+      QByteArray ba = QByteArray( buf, sz );
+      // info.append( ba.toHex() );
+      OpenPGP::Key sk( ba.toStdString() );
+      info.append( QString::fromStdString( sk.show() ) );
+      ui->openPGPkeyInfo->setText( info );
+    }
+  gpgme_data_release( keydata );
+  gpgme_release( ctx );
+
   // Count the subkeys
   gpgme_subkey_t subkey = key->subkeys;
   n = 0;
@@ -210,7 +240,6 @@ void CryptoForm::on_selectedKeyNumber_valueChanged( int v )
       ui->selectedSubkeyNumber->setMinimum( 0 );
       ui->selectedSubkeyNumber->setMaximum( 0 );
     }
-  ui->selectedKeyInfo->setText( info );
   on_selectedSubkeyNumber_valueChanged( ui->selectedSubkeyNumber->value() );
 }
 
