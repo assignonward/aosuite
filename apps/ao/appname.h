@@ -24,6 +24,9 @@
 #define APPNAME_H
 // Ⓐ
 #define APPNAME_SHORT "AOAO"
-#define APPNAME "Assign Onward Asset Organizer"
+#define APPNAME    "Assign Onward Asset Organizer"
+#define APPDESC    "The end-user interface/wallet.  Keeps track of addresses and keys."
+#define APPVERSION "0.1"
+#define APPSTATUS  "Pre alpha, design development mule."
 
 #endif // APPNAME_H

@@ -20,13 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef APPNAME_H
-#define APPNAME_H
+#include "aboutform.h"
+#include "appname.h"
 
-#define APPNAME_SHORT "AOCG"
-#define APPNAME    "Assign Onward Code Generator"
-#define APPDESC    "A tool to translate the packet code definition .json into C++ code for the applications."
-#define APPVERSION "0.1"
-#define APPSTATUS  "Developer tool."
+AboutForm::AboutForm( QWidget *cw ) :
+    QScrollArea(cw),
+    ui(new Ui::AboutForm)
+{ ui->setupUi(this);
+  new QVBoxLayout( cw );
+  cw->layout()->addWidget( this );
+  ui->appName   ->setText( APPNAME    );
+  ui->appDesc   ->setText( APPDESC    );
+  ui->appVersion->setText( APPVERSION );
+  ui->appStatus ->setText( APPSTATUS  );
+}
 
-#endif // APPNAME_H
+AboutForm::~AboutForm()
+{ delete ui;
+}
+

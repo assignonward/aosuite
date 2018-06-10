@@ -24,6 +24,9 @@
 #define APPNAME_H
 
 #define APPNAME_SHORT "AOGM"
-#define APPNAME "Assign Onward Genesis Block Maker"
+#define APPNAME    "Assign Onward Genesis Block Maker"
+#define APPDESC    "A GUI to help create a proper Genesis Block."
+#define APPVERSION "0.1"
+#define APPSTATUS  "Pre alpha, design development mule."
 
 #endif // APPNAME_H

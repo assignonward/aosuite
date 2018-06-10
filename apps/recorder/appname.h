@@ -24,6 +24,9 @@
 #define APPNAME_H
 
 #define APPNAME_SHORT "AOAR"
-#define APPNAME "Assign Onward Assignment Recorder"
+#define APPNAME    "Assign Onward Assignment Recorder"
+#define APPDESC    "A server application which records assignments in new blocks and publishes them on their blockchains"
+#define APPVERSION "0.1"
+#define APPSTATUS  "Pre alpha, design development mule."
 
 #endif // APPNAME_H

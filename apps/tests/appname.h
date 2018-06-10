@@ -24,6 +24,8 @@
 #define APPNAME_H
 
 #define APPNAME_SHORT "TaoC"
-#define APPNAME "Test Assign Onward Components"
-
+#define APPNAME    "Test Assign Onward Components"
+#define APPDESC    "A demonstration of functionality used in other apps in the AO suite."
+#define APPVERSION "0.1"
+#define APPSTATUS  "Pre alpha, design development mule."
 #endif // APPNAME_H

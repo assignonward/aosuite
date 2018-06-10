@@ -211,13 +211,13 @@ void CryptoForm::on_selectedKeyNumber_valueChanged( int v )
     { ui->openPGPkeyInfo->setText( QString( "Unexpected data type %1" ).arg( dt ) );
     }
    else
-    { char buf[8192];
-      ssize_t sz = gpgme_data_read( keydata, buf, 8192 );
+    { char buf[131072];
+      ssize_t sz = gpgme_data_read( keydata, buf, 131072 );
       info = QString( "Read %1 bytes\n" ).arg( sz );
       QByteArray ba = QByteArray( buf, sz );
       // info.append( ba.toHex() );
       OpenPGP::Key sk( ba.toStdString() );
-      info.append( QString::fromStdString( sk.show() ) );
+      info.append( QString::fromStdString( sk.show(1,2) ) );
       ui->openPGPkeyInfo->setText( info );
     }
   gpgme_data_release( keydata );

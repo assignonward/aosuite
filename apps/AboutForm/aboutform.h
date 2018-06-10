@@ -20,13 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef APPNAME_H
-#define APPNAME_H
+#ifndef ABOUTFORM_H
+#define ABOUTFORM_H
 
-#define APPNAME_SHORT "AOCG"
-#define APPNAME    "Assign Onward Code Generator"
-#define APPDESC    "A tool to translate the packet code definition .json into C++ code for the applications."
-#define APPVERSION "0.1"
-#define APPSTATUS  "Developer tool."
+#include <QScrollArea>
+#include "MainWinCommon.h"
+#include "ui_aboutform.h"
 
-#endif // APPNAME_H
+namespace Ui {
+class AboutForm;
+}
+
+class AboutForm : public QScrollArea
+{
+    Q_OBJECT
+
+public:
+    explicit  AboutForm( QWidget *cw );
+             ~AboutForm();
+
+public:
+       Ui::AboutForm *ui;
+};
+
+#endif // ABOUTFORM_H
