@@ -160,6 +160,11 @@
         <string>Crypto</string>
        </attribute>
       </widget>
+      <widget class="QWidget" name="aboutTab">
+       <attribute name="title">
+        <string>About</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
    </layout>

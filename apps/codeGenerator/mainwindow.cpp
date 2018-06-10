@@ -21,12 +21,14 @@
  * SOFTWARE.
  */
 #include "mainwindow.h"
+#include "aboutform.h"
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     MainWinCommon(parent),
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
+  new AboutForm( ui->aboutTab );
   new CodeForm( ui->codeTab,this );
   restoreConfig();
 }

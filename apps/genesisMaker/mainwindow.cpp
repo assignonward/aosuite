@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 #include "mainwindow.h"
+#include "aboutform.h"
 #include "cryptoForm.h"
 #include <QSettings>
 
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     MainWinCommon(parent),
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
+  new AboutForm( ui->aboutTab );
   new GenesisForm( ui->genesisTab, this );
   new CryptoForm ( ui->cryptoTab , this );
   restoreConfig();
