@@ -144,124 +144,127 @@ bool CryptoForm::makeNewPair( typeCode_t tc )
   return false;
 }
 
-
 /**
- * @brief CryptoForm::getGpgKeys - various ways of looking at the keys
+ * @brief CryptoForm::getKeyInfo - count the keys and store them for individual display
  * @return false if failed somewhere
  */
-bool CryptoForm::getGpgKeys()
+bool CryptoForm::getKeyInfo()
 { gpgme_ctx_t   ctx;
   gpgme_error_t err;
-  gpgme_data_t  keydata;
-
   FAIL_IF_GPGERR( initGpgme() )
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
-  // FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
 
-  FAIL_IF_GPGERR( gpgme_data_new(&keydata) )
+  // Count the keys:
   FAIL_IF_GPGERR( gpgme_op_keylist_start( ctx, NULL, 0 ) )
-
-  int maxLoops = 3;
   int n = 0;
   bool done = false;
   while ( !done )
-    { qDebug( "Getting key %d", n );
-      err = gpgme_op_keylist_next( ctx, &(gpgKeys[n]) );
+    { err = gpgme_op_keylist_next( ctx, &(gpgKeys[n]) );
       if ( gpg_err_code(err) == GPG_ERR_EOF )
         done = true;
        else
         { FAIL_IF_GPGERR(err)
-          gpgme_key_t key = gpgKeys[n];
-          qDebug( "%s", qPrintable( QString( " got key %1 id:%2 name:%3 email:%4" )
-                       .arg( n, 4 ).arg( key->subkeys->keyid )
-                       .arg( (key->uids && key->uids->name ) ? key->uids->name  : "undefined" )
-                       .arg( (key->uids && key->uids->email) ? key->uids->email : "undefined" ) ) );
-          gpgme_subkey_t subkey = key->subkeys;
-          err = 0;
-          while ( subkey && !err )
-            { qDebug( "Examining subkey:%s", subkey->keyid );
-              subkey = subkey->next;
-            }
-
           if ( ++n >= MAX_KEYS )
             { qDebug( "ran out of GPG keys storage, coded max of %d, looping.", MAX_KEYS );
-              n = 0;
-              if ( maxLoops-- <= 0 )
-                { qDebug( "too many keys in GPG keyring, stopping." );
-                  FAIL_IF_GPGERR( gpgme_op_keylist_end( ctx ) )
-                  done = true;
-                }
+              done = true;
             }
         }
     }
-  qDebug( "%d keys found", n );
+  ui->selectedKeyNumber->setSuffix( QString( " of %1" ).arg(n) );
+  ui->selectedKeyNumber->setMinimum( 1 );
+  ui->selectedKeyNumber->setMaximum( n );
 
-  qDebug( "Looking for key Ⓐ" );
-  SHOW_IF_GPGERR( gpgme_op_export( ctx, "Ⓐ", GPGME_EXPORT_MODE_MINIMAL, keydata ) )
-  gpgme_data_seek( keydata, 0, SEEK_SET );
-  gpgme_data_type_t dt = gpgme_data_identify(keydata,0);
-  qDebug( "keydata type %d %s", dt, dt == GPGME_DATA_TYPE_PGP_KEY ? "That's a PGP KEY" : "unexpected type" );
-  char buf[8192];
-  ssize_t sz = gpgme_data_read( keydata, buf, 8192 );
-  qDebug( "Read %ld bytes", sz );
-  QByteArray ba( buf, sz );
-  qDebug( "%s", qPrintable( QString::fromUtf8( ba.toHex() ) ) );
-
-  gpgme_data_seek( keydata, 0, SEEK_SET );
-  SHOW_IF_GPGERR( gpgme_op_export_keys( ctx, gpgKeys, GPGME_EXPORT_MODE_MINIMAL, keydata ) )
-  gpgme_data_seek( keydata, 0, SEEK_SET );
-  dt = gpgme_data_identify(keydata,0);
-  qDebug( "keydata type %d %s", dt, dt == GPGME_DATA_TYPE_PGP_KEY ? "That's a PGP KEY" : "unexpected type" );
-  sz = gpgme_data_read( keydata, buf, 8192 );
-  qDebug( "Read %ld bytes", sz );
-//  QByteArray ba2( buf, sz );
-//  qDebug( "%s", qPrintable( QString::fromUtf8( ba2.toHex() ) ) );
-
-  n = 0;
-  done = false;
-  while ( !done )
-    { gpgme_key_t key = gpgKeys[n];
-      if ( !key )
-        done = true;
-       else
-        { qDebug( "%s", qPrintable( QString( " got key %1 id: %2 name:%3 email:%4" )
-               .arg( n, 4 ).arg( key->subkeys->keyid )
-               .arg( (key->uids && key->uids->name ) ? key->uids->name  : "undefined" )
-               .arg( (key->uids && key->uids->email) ? key->uids->email : "undefined" ) ) );
-          gpgme_subkey_t subkey = key->subkeys;
-          err = 0;
-          while ( subkey && !err )
-            { qDebug( "Examining subkey:" );
-              qDebug( "           keyid: %s", subkey->keyid            );
-              qDebug( "Can authenticate: %d", subkey->can_authenticate );
-              qDebug( "     Can certify: %d", subkey->can_certify      );
-              qDebug( "     Can encrypt: %d", subkey->can_encrypt      );
-              qDebug( "        Can sign: %d", subkey->can_sign         );
-              qDebug( "     Card number: %s", subkey->card_number      );
-              qDebug( "           Curve: %s", subkey->curve            );
-              qDebug( "        Disabled: %d", subkey->disabled         );
-              qDebug( "         Expired: %d", subkey->expired          );
-              qDebug( "         Expires: %ld",subkey->expires          );
-              qDebug( "     fingerprint: %s", subkey->fpr              );
-              qDebug( "         invalid: %d", subkey->invalid          );
-              qDebug( "     is card key: %d", subkey->is_cardkey       );
-              qDebug( "        is de vs: %d", subkey->is_de_vs         );
-              qDebug( "    is qualified: %d", subkey->is_qualified     );
-              qDebug( "         keygrip: %s", subkey->keygrip          );
-              qDebug( "          length: %d", subkey->length           );
-              qDebug( "         revoked: %d", subkey->revoked          );
-              qDebug( "          secret: %d", subkey->secret           );
-              qDebug( "       timestamp: %ld",subkey->timestamp        );
-              subkey = subkey->next;
-            }
-          n++;
-        }
-    }
-
-  gpgme_data_release( keydata );
+  FAIL_IF_GPGERR( gpgme_op_keylist_end( ctx ) )
   gpgme_release( ctx );
   return true;
 }
+
+/**
+ * @brief CryptoForm::on_selectedKeyNumber_valueChanged - display info about the selected key
+ * @param v - 1 based index of which key to display
+ */
+void CryptoForm::on_selectedKeyNumber_valueChanged( int v )
+{ QString info;
+  int n = v-1;
+  gpgme_key_t key = gpgKeys[n];
+  info.append( QString( "id:%1\nname:%2\nemail:%3\ncomment:%4" )
+               .arg( key->subkeys->keyid )
+               .arg( (key->uids && key->uids->name   ) ? key->uids->name    : "undefined" )
+               .arg( (key->uids && key->uids->email  ) ? key->uids->email   : "undefined" )
+               .arg( (key->uids && key->uids->comment) ? key->uids->comment : "undefined" )
+             );
+  // Count the subkeys
+  gpgme_subkey_t subkey = key->subkeys;
+  n = 0;
+  while ( subkey )
+    { n++;
+      subkey = subkey->next;
+    }
+  if ( n > 0 )
+    { ui->selectedSubkeyNumber->setSuffix( QString( " of %1" ).arg(n) );
+      ui->selectedSubkeyNumber->setMinimum( 1 );
+      ui->selectedSubkeyNumber->setMaximum( n );
+    }
+   else
+    { ui->selectedSubkeyNumber->setSuffix( " of none" );
+      ui->selectedSubkeyNumber->setMinimum( 0 );
+      ui->selectedSubkeyNumber->setMaximum( 0 );
+    }
+  ui->selectedKeyInfo->setText( info );
+  on_selectedSubkeyNumber_valueChanged( ui->selectedSubkeyNumber->value() );
+}
+
+/**
+ * @brief CryptoForm::on_selectedSubkeyNumber_valueChanged - show the subkey info
+ * @param v - which subkey to show
+ */
+void CryptoForm::on_selectedSubkeyNumber_valueChanged( int v )
+{ if ( v <= 0 )
+    { ui->selectedSubkeyInfo->setText( "no subkeys" );
+      return;
+    }
+  int n = ui->selectedKeyNumber->value() - 1;
+  if ( n < 0 )
+    { ui->selectedSubkeyInfo->setText( "no keys" );
+      return;
+    }
+  gpgme_subkey_t subkey = gpgKeys[n]->subkeys;
+  if ( !subkey )
+    { ui->selectedSubkeyInfo->setText( "subkeys empty" );
+      return;
+    }
+  while ( v > 1 )
+    { subkey = subkey->next;
+      v--;
+      if ( !subkey )
+        { ui->selectedSubkeyInfo->setText( QString( "subkey list %d short" ).arg( v ) );
+          return;
+        }
+    }
+  QString info;
+  info.append( QString( "           keyid: %1\n" ).arg(subkey->keyid            ));
+  info.append( QString( "Can authenticate: %1\n" ).arg(subkey->can_authenticate ));
+  info.append( QString( "     Can certify: %1\n" ).arg(subkey->can_certify      ));
+  info.append( QString( "     Can encrypt: %1\n" ).arg(subkey->can_encrypt      ));
+  info.append( QString( "        Can sign: %1\n" ).arg(subkey->can_sign         ));
+  info.append( QString( "     Card number: %1\n" ).arg(subkey->card_number      ));
+  info.append( QString( "           Curve: %1\n" ).arg(subkey->curve            ));
+  info.append( QString( "        Disabled: %1\n" ).arg(subkey->disabled         ));
+  info.append( QString( "         Expired: %1\n" ).arg(subkey->expired          ));
+  info.append( QString( "         Expires: %1\n" ).arg(subkey->expires          ));
+  info.append( QString( "     fingerprint: %1\n" ).arg(subkey->fpr              ));
+  info.append( QString( "         invalid: %1\n" ).arg(subkey->invalid          ));
+  info.append( QString( "     is card key: %1\n" ).arg(subkey->is_cardkey       ));
+  info.append( QString( "        is de vs: %1\n" ).arg(subkey->is_de_vs         ));
+  info.append( QString( "    is qualified: %1\n" ).arg(subkey->is_qualified     ));
+  info.append( QString( "         keygrip: %1\n" ).arg(subkey->keygrip          ));
+  info.append( QString( "          length: %1\n" ).arg(subkey->length           ));
+  info.append( QString( "         revoked: %1\n" ).arg(subkey->revoked          ));
+  info.append( QString( "          secret: %1\n" ).arg(subkey->secret           ));
+  info.append( QString( "       timestamp: %1\n" ).arg(subkey->timestamp        ));
+  ui->selectedSubkeyInfo->setText(info);
+}
+
 
 /**
  * @brief CryptoForm::getGpgInfo - populate the form with basic library info
@@ -291,10 +294,10 @@ bool CryptoForm::getGpgInfo()
 }
 
 /**
- * @brief CryptoForm::getKeyInfo - populate the form with keyring content info
+ * @brief CryptoForm::getGpgKeys - a big disorganized dump of the keyring
  * @return false if something fails
  */
-bool CryptoForm::getKeyInfo()
+bool CryptoForm::getGpgKeys()
 { gpgme_ctx_t   ctx;
   gpgme_error_t err;
   gpgme_data_t  keydata,tempkeydata;

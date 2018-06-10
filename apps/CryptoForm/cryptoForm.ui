@@ -98,6 +98,19 @@
          <number>0</number>
         </property>
         <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QLabel" name="label_7">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -107,8 +120,8 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>256</width>
-            <height>256</height>
+            <width>64</width>
+            <height>64</height>
            </size>
           </property>
           <property name="text">
@@ -323,7 +336,7 @@
           <string>Keys</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="1">
+          <item row="4" column="1">
            <spacer name="verticalSpacer_3">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -336,22 +349,103 @@
             </property>
            </spacer>
           </item>
+          <item row="0" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Selected Key</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="selectedKeyNumber">
+              <property name="suffix">
+               <string> of N</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="selectedKeyInfo">
+            <property name="font">
+             <font>
+              <family>Ubuntu Mono</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Selected Key Info</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLabel" name="selectedSubkeyInfo">
+            <property name="font">
+             <font>
+              <family>Ubuntu Mono</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>Selected Subkey Info</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>subkey</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="selectedSubkeyNumber">
+              <property name="suffix">
+               <string> of N</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
          </layout>
-        </widget>
-        <widget class="QWidget" name="tao3Tab">
-         <attribute name="title">
-          <string>TⒶ3</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="tao4Tab">
-         <attribute name="title">
-          <string>TⒶ4</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="aoLiveTab">
-         <attribute name="title">
-          <string>ⒶLive</string>
-         </attribute>
         </widget>
        </widget>
       </item>

@@ -52,6 +52,8 @@ public:
              bool  getKeyInfo();
 
 public slots:
+             void  on_selectedKeyNumber_valueChanged( int v );
+             void  on_selectedSubkeyNumber_valueChanged( int v );
              void  restoreConfig();
              void  saveConfig();
 
