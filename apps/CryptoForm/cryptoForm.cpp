@@ -23,6 +23,7 @@
 #include "cryptoForm.h"
 #include <QFileDialog>
 #include "Key.h"
+#include "random.h"
 
 CryptoForm::CryptoForm( QWidget *cw, MainWinCommon *mw ) :
     QScrollArea(cw),
@@ -117,6 +118,7 @@ bool CryptoForm::makeNewPair( typeCode_t tc )
     info = info->next;
   FAIL_IF_GPGERR( gpgme_ctx_set_engine_info(mContext, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
 
+  QStringList ne = rng.rnd_nameAndEmail();
   QString def = QString( "<GnupgKeyParms format=\"internal\"> \n"
                     "key-type:      ECDSA\n"
                     "key-curve:     brainpoolP256r1\n"
@@ -124,12 +126,12 @@ bool CryptoForm::makeNewPair( typeCode_t tc )
                     "subkey-type:   ECDH\n"
                     "subkey-curve:  brainpoolP256r1\n"
                     "subkey-usage:  encrypt\n"
-                    "name-real:     Ⓐ\n"
-//                    "name-email:    test@mail.com\n"
-//                    "name-comment:  Ⓐ\n"
+                    "name-real:     %1\n"
+                    "name-email:    %2\n"
+                    "name-comment:  Ⓐ\n"
                     " Expire-Date: 2000 \n"
                     " Passphrase: abc \n"
-                    " </GnupgKeyParms> \n" );
+                    " </GnupgKeyParms> \n" ).arg(ne.at(0)).arg(ne.at(1));
 
   FAIL_IF_GPGERR( gpgme_op_genkey(mContext, def.toStdString().c_str(), NULL, NULL ) );
   if (err == gpgme_err_code(GPG_ERR_NO_ERROR) )
