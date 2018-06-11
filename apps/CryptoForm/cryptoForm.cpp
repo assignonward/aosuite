@@ -36,7 +36,8 @@ CryptoForm::CryptoForm( QWidget *cw, MainWinCommon *mw ) :
       connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
     }
   getGpgInfo();
-  getKeyInfo();
+  gpgKeys[0] = NULL;
+  on_reread_clicked();
 }
 
 CryptoForm::~CryptoForm()
@@ -50,6 +51,12 @@ void  CryptoForm::restoreConfig()
 void  CryptoForm::saveConfig()
 { QSettings s;
   s.setValue( "homeFolder", ui->homeFolder->text()  );
+}
+
+void CryptoForm::on_reread_clicked()
+{ ui->selectedKeyNumber->setValue(1);
+  ui->selectedSubkeyNumber->setValue(1);
+  getKeyInfo();
 }
 
 
@@ -178,6 +185,7 @@ bool CryptoForm::getKeyInfo()
 
   FAIL_IF_GPGERR( gpgme_op_keylist_end( ctx ) )
   gpgme_release( ctx );
+  on_selectedKeyNumber_valueChanged( ui->selectedKeyNumber->value() );
   return true;
 }
 
@@ -193,6 +201,8 @@ void CryptoForm::on_selectedKeyNumber_valueChanged( int v )
   SHOW_IF_GPGERR( gpgme_new( &ctx ) )
   gpgme_data_t keydata;
   gpgme_key_t  key = gpgKeys[n];
+  if ( !key )
+    return;
   info.append( QString( "id:%1\nname:%2\nemail:%3\ncomment:%4" )
                .arg( key->subkeys->keyid )
                .arg( (key->uids && key->uids->name   ) ? key->uids->name    : "undefined" )
@@ -259,6 +269,8 @@ void CryptoForm::on_selectedSubkeyNumber_valueChanged( int v )
     { ui->selectedSubkeyInfo->setText( "no keys" );
       return;
     }
+  if ( !gpgKeys[n] )
+    return;
   gpgme_subkey_t subkey = gpgKeys[n]->subkeys;
   if ( !subkey )
     { ui->selectedSubkeyInfo->setText( "subkeys empty" );

@@ -54,6 +54,7 @@ public:
 public slots:
              void  on_selectedKeyNumber_valueChanged( int v );
              void  on_selectedSubkeyNumber_valueChanged( int v );
+             void  on_reread_clicked();
              void  restoreConfig();
              void  saveConfig();
 
