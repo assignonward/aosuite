@@ -93,7 +93,7 @@
 #define GB_MIN_BLOCK_INT           0x1087 // (8721+16) AOTime: Minimuim block interval time
 #define GB_N_COINS_TOTAL           0x1107 // (8722+16) AOCoins: Number of coins that the sum of all shares outstanding represents
 #define GB_RECORDING_TAX           0x1187 // (8723+16) AOCoins: Recording Tax in coins per byte (usually a very small number)
-#define AO_UNDEFINED_DATAITEM      0x7f // (7f+0) DataItem: An undefined data item, usually an error
+#define AO_UNDEFINED_DATAITEM      0x3fff // (ff7f+0) DataItem: An undefined data item, usually an error
 
 class DataItem : public QObject, public VarSizeCode
 {

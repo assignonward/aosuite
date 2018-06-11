@@ -446,7 +446,7 @@
         "type": "AOCoins"
     },
     {
-        "code": 127,
+        "code": 16383,
         "desc": "An undefined data item, usually an error",
         "pdef": "AO_UNDEFINED_DATAITEM",
         "size": 0,
