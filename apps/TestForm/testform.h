@@ -44,7 +44,7 @@ public:
 public slots:
         void  on_test_clicked();
         void  on_generateKey_clicked();
-        void  on_examineKeys_clicked();
+        void  on_randomName_clicked();
 
 public:
 QPointer<CryptoForm> cf;

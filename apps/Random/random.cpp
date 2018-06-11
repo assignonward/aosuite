@@ -21,6 +21,8 @@
  * SOFTWARE.
  */
 #include "random.h"
+#include <QFile>
+
 // Intended to be a replacable, improvable module.
 // Good enough for the moment, and I prefer a specified
 // PRNG instead of relying on system libraries.
@@ -28,7 +30,9 @@
 Random rng; // Global object
 
 Random::Random( __int128 sd )
-{ seed( sd ); }
+{ seed( sd );
+  namesInitialized = false;
+}
 
 void Random::seed( __int128 sd )
 { s[0] = sd & 0xFFFFFFFFFFFFFFFF;
@@ -78,5 +82,78 @@ float Random::rnd_float( float min, float max )
   s[1] = x ^ y ^ (x >> 17) ^ (y >> 26); // b, c
   uint64_t r = (s[1] + y) & 0xFFFFFFFF; // restricted to 32 bits
   return min + ((max - min) * (float)r / (float)0xFFFFFFFF);
+}
+
+/**
+ * @brief Random::rnd_nameAndEmail
+ * @return A random name and matching random email address
+ */
+QStringList Random::rnd_nameAndEmail()
+{ if ( !namesInitialized )
+    initializeNames();
+  bool male = ( rnd_int64() & 1 );
+  QString firstName  = male ?   maleNames.at( rnd_uint64() %   maleNames.size() ) :
+                              femaleNames.at( rnd_uint64() % femaleNames.size() ) ;
+  QString middleName = male ?   maleNames.at( rnd_uint64() %   maleNames.size() ) :
+                              femaleNames.at( rnd_uint64() % femaleNames.size() ) ;
+  QString lastName    =    lastNames.at( rnd_uint64() %    lastNames.size() );
+  QString emailDomain = emailDomains.at( rnd_uint64() % emailDomains.size() );
+
+  QString fullName;
+  int nameForm = rnd_uint64() % 100;
+  if ( nameForm < 20 )
+    fullName = firstName+" "+middleName+" "+lastName;
+   else if ( nameForm < 35 )
+    fullName = firstName+" "+middleName.left(1)+". "+lastName;
+   else if ( nameForm < 45 )
+    fullName = firstName.left(1)+". "+middleName+" "+lastName;
+   else
+    fullName = firstName+" "+lastName;
+
+  QString emailAddress;
+  nameForm = rnd_uint64() % 100;
+  if ( nameForm < 20 )
+    emailAddress = firstName.left(1)+lastName+"@"+emailDomain;
+   else if ( nameForm < 40 )
+    emailAddress = firstName.left(1)+middleName.left(1)+lastName+"@"+emailDomain;
+   else if ( nameForm < 60 )
+    emailAddress = firstName+middleName.left(1)+lastName+"@"+emailDomain;
+   else if ( nameForm < 80 )
+    emailAddress = firstName+lastName.left(1)+"@"+emailDomain;
+   else
+    emailAddress = firstName.left(1)+middleName.left(1)+lastName.left(1)+QString::number( rnd_uint64() % 50 + 50 )+"@"+emailDomain;
+
+  QStringList ret;
+  ret.append( fullName );
+  ret.append( emailAddress.toLower() );
+  return ret;
+}
+
+void Random::initializeNames()
+{ QFile file( ":/files/malenames.txt" );
+  file.open( QIODevice::ReadOnly );
+  QString data = QString::fromUtf8( file.readAll() );
+  file.close();
+  maleNames = data.split( QRegExp("\\s"), QString::SkipEmptyParts );
+
+  file.setFileName( ":/files/femalenames.txt" );
+  file.open( QIODevice::ReadOnly );
+  data = QString::fromUtf8( file.readAll() );
+  file.close();
+  femaleNames = data.split( QRegExp("\\s"), QString::SkipEmptyParts );
+
+  file.setFileName( ":/files/lastnames.txt" );
+  file.open( QIODevice::ReadOnly );
+  data = QString::fromUtf8( file.readAll() );
+  file.close();
+  lastNames = data.split( QRegExp("\\s"), QString::SkipEmptyParts );
+
+  file.setFileName( ":/files/emaildomains.txt" );
+  file.open( QIODevice::ReadOnly );
+  data = QString::fromUtf8( file.readAll() );
+  file.close();
+  emailDomains = data.split( QRegExp("\\s"), QString::SkipEmptyParts );
+
+  namesInitialized = true;
 }
 

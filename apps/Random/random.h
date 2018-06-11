@@ -24,6 +24,7 @@
 #define RANDOM_H
 #include <stdint.h>
 #include <QByteArray>
+#include <QStringList>
 
 class Random
 {
@@ -34,10 +35,17 @@ public:
       int64_t  rnd_int64();
    QByteArray  rnd_bytes( qint32 n = 4 );
         float  rnd_float( float min, float max );
+  QStringList  rnd_nameAndEmail();
+         void  initializeNames();
 
 private:
     /* The state must be seeded so that it is not all zero */
      uint64_t  s[2];
+  QStringList  maleNames;
+  QStringList  femaleNames;
+  QStringList  lastNames;
+  QStringList  emailDomains;
+         bool  namesInitialized;
 };
 
 extern Random  rng; // Global object

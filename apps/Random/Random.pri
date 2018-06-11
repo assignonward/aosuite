@@ -26,3 +26,10 @@ INCLUDEPATH += $${PWD}
 SOURCES     += $${PWD}/random.cpp
 
 HEADERS     += $${PWD}/random.h
+
+RESOURCES   += $${PWD}/randomresources.qrc
+
+DISTFILES   += $${PWD}/malenames.txt  \
+               $${PWD}/femalenames.txt \
+               $${PWD}/lastnames.txt    \
+               $${PWD}/emaildomains.txt

@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 #include "testform.h"
+#include "random.h"
 
 TestForm::TestForm( CryptoForm *cp, QWidget *cw, MainWinCommon *mw ) :
     QScrollArea(cw),
@@ -52,9 +53,12 @@ void TestForm::on_generateKey_clicked()
     cf->makeNewPair( AO_ECDSA_PRI_KEY );
 }
 
-void TestForm::on_examineKeys_clicked()
-{ if ( cf )
-    cf->getGpgKeys();
+void TestForm::on_randomName_clicked()
+{ QStringList nameEmail = rng.rnd_nameAndEmail();
+  if ( nameEmail.size() < 2 )
+    qDebug( "FAIL: rnd_nameAndEmail() did not return two strings" );
+   else
+    qDebug( "%s %s",qPrintable( nameEmail.at(0) ),qPrintable( nameEmail.at(1) ) );
 }
 
 #include "aotime.h"

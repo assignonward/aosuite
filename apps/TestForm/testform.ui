@@ -52,9 +52,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="examineKeys">
+       <widget class="QPushButton" name="randomName">
         <property name="text">
-         <string>Examine Keys</string>
+         <string>Random Name</string>
         </property>
        </widget>
       </item>
