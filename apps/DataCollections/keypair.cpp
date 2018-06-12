@@ -48,6 +48,7 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
                 { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
                     { case AO_ECDSA_PUB_KEY2:
                       case AO_ECDSA_PUB_KEY3:
+                      case AO_ECDSA_PUB_KEY4:
                       case AO_RSA3072_PUB_KEY:
                       // case AO_ID_SEQ_NUM: // TODO: this one needs a database lookup
                         pubKey = items;
@@ -56,6 +57,10 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
                       case AO_ECDSA_PRI_KEY:
                       case AO_RSA3072_PRI_KEY:
                         priKey = items;
+                        break;
+
+                      case AO_SHARE_STATE:
+                        shareState = items;
                         break;
 
                       default:
@@ -75,9 +80,10 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
  */
 void KeyPair::operator = ( const DataItemBA &di )
 { KeyPair temp( di );
-  pubKey   = temp.pubKey;
-  priKey   = temp.priKey;
-  typeCode = temp.typeCode;
+  shareState = temp.shareState;
+  pubKey     = temp.pubKey;
+  priKey     = temp.priKey;
+  typeCode   = temp.typeCode;
   return;
 }
 
@@ -88,6 +94,7 @@ void KeyPair::operator = ( const DataItemBA &di )
  */
 DataItemBA  KeyPair::toDataItem( bool cf )
 { QByteArrayList dil;
+  dil.append( shareState.toDataItem(cf) );
   if ( pubKey.isValid() )
     dil.append( pubKey.toDataItem(cf) );
   if ( priKey.isValid() )

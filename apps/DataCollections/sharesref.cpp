@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 #include "sharesref.h"
+#include "keypair.h"
 
 SharesRef::SharesRef( const DataItemBA &di, QObject *p )
   : DataVarLength( AO_SHARES_REF, p ), seqNum( -1 )
@@ -121,14 +122,14 @@ DataItemBA  SharesRef::toDataItem( bool cf )
         dil.append( keyHash.toDataItem(false) );
       if ( amount > 0 )
         dil.append( amount.toDataItem(false) );
-      if (( shareState == AOSS_REC_LOCKED ) ||
-          ( shareState == AOSS_UND_LOCKED ))
+      if (( shareState == KEYS_ASSIGNMENT_PENDING ) ||
+          ( shareState == KEYS_SHARES_ESCROWED ))
         { if ( lockExp.past() )
-            { shareState == AOSS_AVAILABLE; }
+            { shareState == KEYS_CONTROL_SHARES; }
            else
             { dil.append( lockExp.toDataItem(false) ); }
         }
-      if ( shareState != AOSS_UNKNOWN )
+      if ( shareState != KEYS_UNUSED )
         dil.append( shareState.toDataItem(false) );
       if ( assignRef.isValid() )
         dil.append( assignRef.toDataItem(false) );

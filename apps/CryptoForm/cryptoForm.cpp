@@ -126,19 +126,25 @@ bool CryptoForm::makeNewPair( typeCode_t tc )
   FAIL_IF_GPGERR( gpgme_ctx_set_engine_info(mContext, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
 
   QStringList ne = rng.rnd_nameAndEmail();
-  QString def = QString( "<GnupgKeyParms format=\"internal\"> \n"
-                    "key-type:      ECDSA\n"
-                    "key-curve:     brainpoolP256r1\n"
-                    "key-usage:     sign\n"
-                    "subkey-type:   ECDH\n"
-                    "subkey-curve:  brainpoolP256r1\n"
-                    "subkey-usage:  encrypt\n"
-                    "name-real:     %1\n"
-                    "name-email:    %2\n"
-                    "name-comment:  Ⓐ\n"
-                    " Expire-Date: 2000 \n"
-                    " Passphrase: abc \n"
-                    " </GnupgKeyParms> \n" ).arg(ne.at(0)).arg(ne.at(1));
+  QString keyType = ( tc == AO_ECDSA_PRI_KEY ) ?
+              "key-type:      ECDSA\n"
+              "key-curve:     brainpoolP256r1\n"
+              "subkey-type:   ECDH\n"
+              "subkey-curve:  brainpoolP256r1\n" :
+              "key-type:      RSA\n"
+              "key-length:    3072\n"
+              "subkey-type:   RSA\n"
+              "subkey-length: 3072\n" ;
+
+  QString def = QString( "<GnupgKeyParms format=\"internal\">\n%3"
+                         "key-usage:     sign\n"
+                         "subkey-usage:  encrypt\n"
+                         "name-real:     %1\n"
+                         "name-email:    %2\n"
+                         "name-comment:  Ⓐ\n"
+                         "expire-date:   0\n"
+                         "passphrase:    abc\n"
+                         "</GnupgKeyParms>\n" ).arg(ne.at(0)).arg(ne.at(1)).arg( keyType );
 
   FAIL_IF_GPGERR( gpgme_op_genkey(mContext, def.toStdString().c_str(), NULL, NULL ) );
   if (err == gpgme_err_code(GPG_ERR_NO_ERROR) )

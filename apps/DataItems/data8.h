@@ -34,7 +34,6 @@ public:
               Data8( const Data8 &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data8( const DataItemBA &di, QObject *p = NULL );
-    explicit  Data8(QObject *parent = NULL);
   DataItemBA  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const DataItemBA &di );
         void  operator = ( const Data8 &d ) { v = d.v; DataItem::operator =( d ); }

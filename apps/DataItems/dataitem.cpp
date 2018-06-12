@@ -127,7 +127,6 @@ qint32 DataItem::typeSize( const DataItemBA &di ) const
 #include "publickeyrsa3072.h"
 #include "salt256.h"
 #include "shares.h"
-#include "sharestate.h"
 #include "sigecdsa.h"
 #include "sigrsa3072.h"
 #include "assignment.h"
@@ -167,7 +166,7 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
     case AO_RECORDING_BID:           return new Shares( di, p );
     case AO_SHARES_OUT:              return new Shares( di, p );
     case AO_N_COINS:                 return new AOCoins( di, p );
-    case AO_SHARE_STATE:             return new ShareState( di, p );
+    case AO_SHARE_STATE:             return new Data8( di, p );
     case AO_LISTSIZE:                return new Data16( di, p );
     case AO_INDEX:                   return new Data16( di, p );
     case CB_FIRST_ID_SEQ_NUM:        return new Data64( di, p );
@@ -234,7 +233,7 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_RECORDING_BID:           return new Shares( *((Shares *)ditm), p );
     case AO_SHARES_OUT:              return new Shares( *((Shares *)ditm), p );
     case AO_N_COINS:                 return new AOCoins( *((AOCoins *)ditm), p );
-    case AO_SHARE_STATE:             return new ShareState( *((ShareState *)ditm), p );
+    case AO_SHARE_STATE:             return new Data8( *((Data8 *)ditm), p );
     case AO_LISTSIZE:                return new Data16( *((Data16 *)ditm), p );
     case AO_INDEX:                   return new Data16( *((Data16 *)ditm), p );
     case CB_FIRST_ID_SEQ_NUM:        return new Data64( *((Data64 *)ditm), p );

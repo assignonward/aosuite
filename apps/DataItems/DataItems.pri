@@ -49,7 +49,6 @@ SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/publickeyrsa3072.cpp  \
                $${PWD}/salt256.cpp           \
                $${PWD}/shares.cpp            \
-               $${PWD}/sharestate.cpp        \
                $${PWD}/sigecdsa.cpp          \
                $${PWD}/sigrsa3072.cpp        \
                $${PWD}/varsizecode.cpp       \
@@ -80,7 +79,6 @@ HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/publickeyrsa3072.h  \
                $${PWD}/salt256.h           \
                $${PWD}/shares.h            \
-               $${PWD}/sharestate.h        \
                $${PWD}/sigecdsa.h          \
                $${PWD}/sigrsa3072.h        \
                $${PWD}/varsizecode.h       \

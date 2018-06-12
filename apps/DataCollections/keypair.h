@@ -24,8 +24,16 @@
 #define KEYPAIR_H
 
 #include "datavarlength.h"
+#include "data8.h"
 #include "prikey.h"
 #include "pubkey.h"
+
+// AO_SHARE_STATE values, stored in the shareState member
+#define KEYS_UNUSED             0x00
+#define KEYS_CONTROL_SHARES     0x02
+#define KEYS_SHARES_ASSIGNED    0x05
+#define KEYS_ASSIGNMENT_PENDING 0x06
+#define KEYS_SHARES_ESCROWED    0x0A  // For underwriting, similar to assignment pending but not expected to result in assignment
 
 /**
  * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
@@ -37,12 +45,13 @@ public:
       explicit  KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
                 KeyPair( const KeyPair &k, QObject *p = NULL )
                   : DataVarLength( AO_KEYPAIR, p ? p : k.parent() ),
-                    pubKey( k.pubKey ), priKey( k.priKey ) {}
+                    shareState( k.shareState ), pubKey( k.pubKey ), priKey( k.priKey ) {}
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false );
           bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
 
 private:
+         Data8  shareState;
         PubKey  pubKey;
         PriKey  priKey;
 };

@@ -130,7 +130,7 @@
         "desc": "8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)",
         "pdef": "AO_SHARE_STATE",
         "size": 1,
-        "type": "ShareState"
+        "type": "Data8"
     },
     {
         "code": 48,

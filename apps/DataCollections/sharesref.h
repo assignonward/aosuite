@@ -24,12 +24,12 @@
 #define SHARESREF_H
 
 #include "assignref.h"
+#include "data8.h"
 #include "data16.h"
 #include "datavarlength.h"
 #include "pageref.h"
 #include "pubkey.h"
 #include "shares.h"
-#include "sharestate.h"
 
 /**
  * @brief The SharesRef class - refers to a record of shares received,
@@ -55,7 +55,7 @@ private:
      PageRef  page;       // page these shares are recorded on
       Data16  seqNum;     // shares sequence number in the page
         Hash  keyHash;    // Id (hashed public key) of shares
-  ShareState  shareState; // available, or other?
+       Data8  shareState; // available, or other?
       AOTime  lockExp;    // if the state is locked, when does the lock expire?
    AssignRef  assignRef;  // if these shares have been assigned away, this is the optional record of when/where
 };

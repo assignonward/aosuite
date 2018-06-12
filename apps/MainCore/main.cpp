@@ -64,6 +64,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         abort();
     }
   fflush(stdout);
+  QApplication::processEvents( QEventLoop::ExcludeUserInputEvents );
 }
 
 int main(int argc, char *argv[])
