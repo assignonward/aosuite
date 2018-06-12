@@ -66,6 +66,7 @@
 #define AO_ASSIGN_REF              0x1e // (1e+var) AssignRef: Describes a record of shares when they were signed away in a binding contract
 #define AO_DATABYTEARRAY           0x800 // (8010+var) DataByteArray:separable Arbitrary data of any form, may contain NULL bytes, any length (within reason)
 #define AO_NOTE                    0x801 // (8110+var) Note:separable UTF-8 free text, no specific function, but recorded in the blockchain
+#define AO_KEY_ASSET               0x802 // (8110+var) Note:separable UTF-8 free text, no specific function, but recorded in the blockchain
 #define AO_BLOCK_REF               0x1d // (1d+var) BlockRef: Describes a whole block in the chain
 #define AO_PAGE_REF                0x1c // (1c+var) PageRef: UTF-8 free text, no specific function, but recorded in the blockchain
 #define AO_GENESIS_REF             0x1b // (1b+var) GenesisRef: Uniquely describes a genesis block, includes list of properties used to calculate new blocks

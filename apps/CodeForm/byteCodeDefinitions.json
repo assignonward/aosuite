@@ -239,6 +239,14 @@
         "size": -1,
         "type": "Note"
     },
+{
+    "code": 2050,
+    "desc": "Key pair reference coupled with the sharesRef they are associated with, if any",
+    "pdef": "AO_KEY_ASSET",
+    "sepr": true,
+    "size": -1,
+    "type": "KeyAsset"
+},
     {
         "code": 29,
         "desc": "Describes a whole block in the chain",

@@ -20,31 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYPAIR_H
-#define KEYPAIR_H
+#ifndef KEYASSET_H
+#define KEYASSET_H
 
 #include "datavarlength.h"
-#include "prikey.h"
-#include "pubkey.h"
+#include "keypair.h"
+#include "sharesref.h"
 
 /**
- * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
+ * @brief The KeyAsset class - contains a key pair and if
+ *   the keys are associated with shares, then populates the
+ *   sharesRef as fully as needed too.
  */
-class KeyPair : public DataVarLength
+class KeyAsset : public DataVarLength
 {
     Q_OBJECT
 public:
-      explicit  KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
-                KeyPair( const KeyPair &k, QObject *p = NULL )
-                  : DataVarLength( AO_KEYPAIR, p ? p : k.parent() ),
-                    pubKey( k.pubKey ), priKey( k.priKey ) {}
+      explicit  KeyAsset( DataItemBA di = DataItemBA(), QObject *p = NULL );
+                KeyAsset( const KeyAsset &k, QObject *p = NULL )
+                  : DataVarLength( AO_KEY_ASSET, p ? p : k.parent() ),
+                    keyPair( k.keyPair ), sharesRef( k.sharesRef ) {}
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false );
-          bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
+          bool  isValid() { return keyPair.isValid(); }
 
 private:
-        PubKey  pubKey;
-        PriKey  priKey;
+       KeyPair  keyPair;
+     SharesRef  sharesRef;
 };
 
-#endif // KEYPAIR_H
+#endif // KEYASSET_H

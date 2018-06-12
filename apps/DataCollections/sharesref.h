@@ -31,6 +31,13 @@
 #include "pubkey.h"
 #include "shares.h"
 
+// AO_SHARE_STATE values, stored in the shareState member
+#define KEYS_UNUSED             0x00
+#define KEYS_CONTROL_SHARES     0x02
+#define KEYS_SHARES_ASSIGNED    0x05
+#define KEYS_ASSIGNMENT_PENDING 0x06
+#define KEYS_SHARES_ESCROWED    0x0A  // For underwriting, similar to assignment pending but not expected to result in assignment
+
 /**
  * @brief The SharesRef class - refers to a record of shares received,
  *   on a page, in a block, in a chain.

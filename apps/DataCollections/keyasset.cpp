@@ -20,18 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "keypair.h"
+#include "keyasset.h"
 
 /**
- * @brief KeyPair::KeyPair - constructor
+ * @brief KeyAsset::KeyAsset - constructor
  * @param di - optional data item
  * @param p - optional parent object
  */
-KeyPair::KeyPair( DataItemBA di, QObject *p )
-  : DataVarLength( AO_KEYPAIR, p )
+KeyAsset::KeyAsset( DataItemBA di, QObject *p )
+  : DataVarLength( AO_KEY_ASSET, p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_KEYPAIR )
+    { if ( typeCodeOf( di ) != AO_KEY_ASSET )
         { // TODO: log an error
           return;
         }
@@ -46,17 +46,12 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
                 }
                else
                 { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                    { case AO_ECDSA_PUB_KEY2:
-                      case AO_ECDSA_PUB_KEY3:
-                      case AO_ECDSA_PUB_KEY4:
-                      case AO_RSA3072_PUB_KEY:
-                      // case AO_ID_SEQ_NUM: // TODO: this one needs a database lookup
-                        pubKey = items;
+                    { case AO_KEYPAIR:
+                        keyPair = items;
                         break;
 
-                      case AO_ECDSA_PRI_KEY:
-                      case AO_RSA3072_PRI_KEY:
-                        priKey = items;
+                      case AO_SHARES_REF:
+                        sharesRef = items;
                         break;
 
                       default:
@@ -71,28 +66,28 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
 }
 
 /**
- * @brief KeyPair::operator =
+ * @brief KeyAsset::operator =
  * @param di - data item to assign
  */
-void KeyPair::operator = ( const DataItemBA &di )
-{ KeyPair temp( di );
-  pubKey     = temp.pubKey;
-  priKey     = temp.priKey;
-  typeCode   = temp.typeCode;
+void KeyAsset::operator = ( const DataItemBA &di )
+{ KeyAsset temp( di );
+  keyPair   = temp.keyPair;
+  sharesRef = temp.sharesRef;
+  typeCode  = temp.typeCode;
   return;
 }
 
 /**
- * @brief KeyPair::toDataItem
+ * @brief KeyAsset::toDataItem
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-DataItemBA  KeyPair::toDataItem( bool cf )
+DataItemBA  KeyAsset::toDataItem( bool cf )
 { QByteArrayList dil;
-  if ( pubKey.isValid() )
-    dil.append( pubKey.toDataItem(cf) );
-  if ( priKey.isValid() )
-    dil.append( priKey.toDataItem(cf) );
+  if ( keyPair.isValid() )
+    dil.append( keyPair.toDataItem(cf) );
+  if ( sharesRef.isValid() )
+    dil.append( sharesRef.toDataItem(cf) );
   std::sort( dil.begin(), dil.end() );
   ba = dil.join();
   return DataVarLength::toDataItem(cf);

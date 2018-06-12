@@ -29,6 +29,7 @@ SOURCES     += $${PWD}/assignment.cpp        \
                $${PWD}/blockref.cpp          \
                $${PWD}/genericcollection.cpp \
                $${PWD}/genesisref.cpp        \
+               $${PWD}/keyasset.cpp          \
                $${PWD}/keypair.cpp           \
                $${PWD}/pageref.cpp           \
                $${PWD}/participant.cpp       \
@@ -41,6 +42,7 @@ HEADERS     += $${PWD}/assignment.h        \
                $${PWD}/blockref.h          \
                $${PWD}/genericcollection.h \
                $${PWD}/genesisref.h        \
+               $${PWD}/keyasset.h          \
                $${PWD}/keypair.h           \
                $${PWD}/pageref.h           \
                $${PWD}/participant.h       \
