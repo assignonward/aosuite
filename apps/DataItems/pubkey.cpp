@@ -32,6 +32,7 @@ PubKey::PubKey( typeCode_t tc, QObject *p ) : DataItem( tc, p )
 { switch ( tc )
     { case AO_ECDSA_PUB_KEY2: // valid type codes for PubKey
       case AO_ECDSA_PUB_KEY3:
+      case AO_ECDSA_PUB_KEY4:
       case AO_RSA3072_PUB_KEY:
       case AO_ID_SEQ_NUM:
         typeCode = tc;
@@ -67,6 +68,7 @@ PubKey::PubKey( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATA
   switch ( typeCodeOf( di ) )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
+      case AO_ECDSA_PUB_KEY4:
         typeCode = di.at(0);
         publicKeyEcdsa = PublicKeyEcdsa( di, this );
         break;
@@ -94,6 +96,7 @@ QByteArray  PubKey::get() const
 { switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
+      case AO_ECDSA_PUB_KEY4:
         return publicKeyEcdsa.get();
 
       case AO_RSA3072_PUB_KEY:
@@ -110,6 +113,7 @@ bool  PubKey::isValid() const
 { switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
+      case AO_ECDSA_PUB_KEY4:
         return publicKeyEcdsa.isValid();
 
       case AO_RSA3072_PUB_KEY:
@@ -131,6 +135,7 @@ DataItemBA  PubKey::toDataItem( bool cf ) const
 { switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
+      case AO_ECDSA_PUB_KEY4:
         return publicKeyEcdsa.toDataItem(cf);
 
       case AO_RSA3072_PUB_KEY:
@@ -162,7 +167,8 @@ void PubKey::operator = ( const DataItemBA &di )
  */
 QByteArray  PubKey::getId( bool cf ) const
 { if (( typeCode == AO_ECDSA_PUB_KEY2 ) ||
-      ( typeCode == AO_ECDSA_PUB_KEY3 ))
+      ( typeCode == AO_ECDSA_PUB_KEY3 ) ||
+      ( typeCode == AO_ECDSA_PUB_KEY4 ))
     return publicKeyEcdsa.toDataItem(cf);
 
   if ( typeCode == AO_RSA3072_PUB_KEY )
@@ -186,6 +192,7 @@ void  PubKey::set( const QByteArray k )
 { DataItemBA diba = codeToBytes( AO_ID_SEQ_NUM );
   switch ( k.size() )
     { case 33:
+      case 65:
         publicKeyEcdsa.set( k );
         publicKeyRsa3072.clear();
         publicKeyIndex = -1;

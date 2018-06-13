@@ -81,6 +81,7 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
     case AO_ID_SEQ_NUM:              return 8;
     case AO_RSA3072_PUB_KEY:         return 384;
     case AO_RSA3072_SIG:             return 384;
+    case AO_KEY_INDEX:               return 8;
     case GB_PROTOCOL:                return 2;
     case GB_PROTOCOL_REV:            return 2;
     case GB_STARTING_SHARES:         return 16;
@@ -182,9 +183,11 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
     case AO_ASSIGN_REF:              return new AssignRef( di, p );
     case AO_DATABYTEARRAY:           return new DataByteArray( di, p );
     case AO_NOTE:                    return new Note( di, p );
+    case AO_KEY_ASSET:               return new GenericCollection( di, p );
     case AO_BLOCK_REF:               return new BlockRef( di, p );
     case AO_PAGE_REF:                return new PageRef( di, p );
     case AO_GENESIS_REF:             return new GenesisRef( di, p );
+    case AO_KEY_INDEX:               return new Data64( di, p );
     case AO_SHARES_REF:              return new SharesRef( di, p );
     case AO_ASSETS:                  return new Assets( di, p );
     case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( di, p );
@@ -249,9 +252,11 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_ASSIGN_REF:              return new AssignRef( *((AssignRef *)ditm), p );
     case AO_DATABYTEARRAY:           return new DataByteArray( *((DataByteArray *)ditm), p );
     case AO_NOTE:                    return new Note( *((Note *)ditm), p );
+    case AO_KEY_ASSET:               return new GenericCollection( *((GenericCollection *)ditm), p );
     case AO_BLOCK_REF:               return new BlockRef( *((BlockRef *)ditm), p );
     case AO_PAGE_REF:                return new PageRef( *((PageRef *)ditm), p );
     case AO_GENESIS_REF:             return new GenesisRef( *((GenesisRef *)ditm), p );
+    case AO_KEY_INDEX:               return new Data64( *((Data64 *)ditm), p );
     case AO_SHARES_REF:              return new SharesRef( *((SharesRef *)ditm), p );
     case AO_ASSETS:                  return new Assets( *((Assets *)ditm), p );
     case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( *((PrivateKeyEcdsa *)ditm), p );

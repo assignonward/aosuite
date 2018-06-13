@@ -23,6 +23,7 @@
 
 include(../MainCore/MainCore.pri)
 include(../GenesisForm/GenesisForm.pri)
+include(../AssetForm/AssetForm.pri)
 
 QT        += core gui widgets
 TARGET     = genesisMaker

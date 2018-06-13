@@ -56,10 +56,6 @@ SharesRef::SharesRef( const DataItemBA &di, QObject *p )
                         key = items;
                         break;
 
-                      case AO_PUB_RSA3072_ID:
-                        keyHash = items;
-                        break;
-
                       case AO_ASSIGNMENT_AMT:
                         amount = items;
                         break;
@@ -98,7 +94,6 @@ void SharesRef::operator = ( const DataItemBA &di )
   page       = temp.page;
   seqNum     = temp.seqNum;
   key        = temp.key;
-  keyHash    = temp.keyHash;
   amount     = temp.amount;
   shareState = temp.shareState;
   lockExp    = temp.lockExp;
@@ -118,8 +113,6 @@ DataItemBA  SharesRef::toDataItem( bool cf )
         }
       if ( key.isValid() )
         dil.append( key.toDataItem(false) );
-      if ( keyHash.isValid() )
-        dil.append( keyHash.toDataItem(false) );
       if ( amount > 0 )
         dil.append( amount.toDataItem(false) );
       if (( shareState == KEYS_ASSIGNMENT_PENDING ) ||
@@ -135,9 +128,7 @@ DataItemBA  SharesRef::toDataItem( bool cf )
         dil.append( assignRef.toDataItem(false) );
     }
    else // Compact/chain form only needs the keyId and amount
-    { if ( keyHash.isValid() )
-        dil.append( keyHash.toDataItem(true) );
-       else if ( key.isValid() )
+    { if ( key.isValid() )
         dil.append( key.getId(true) );
       if ( amount > 0 )
         dil.append( amount.toDataItem(true) );

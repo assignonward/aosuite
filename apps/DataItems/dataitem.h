@@ -50,7 +50,7 @@
 #define AO_RECORDING_BID           0x27 // (27+16) Shares: 128 bit signed integer number of shares bid for recording
 #define AO_SHARES_OUT              0x28 // (28+16) Shares: 128 bit signed integer number of shares outstanding (recorded on blocks)
 #define AO_N_COINS                 0x2c // (2c+16) AOCoins: Number of coins, as a fixed point 64.64 bit number
-#define AO_SHARE_STATE             0x2f // (2f+1) ShareState: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
+#define AO_SHARE_STATE             0x2f // (2f+1) Data8: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
 #define AO_LISTSIZE                0x30 // (30+2) Data16: 16 bit signed integer declares the size of a list, as a check that all intended data is present.
 #define AO_INDEX                   0x31 // (31+2) Data16: 16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.
 #define CB_FIRST_ID_SEQ_NUM        0xb3 // (b301+8) Data64: First sequential ID number (of public keys) recorded in this block.
@@ -66,10 +66,11 @@
 #define AO_ASSIGN_REF              0x1e // (1e+var) AssignRef: Describes a record of shares when they were signed away in a binding contract
 #define AO_DATABYTEARRAY           0x800 // (8010+var) DataByteArray:separable Arbitrary data of any form, may contain NULL bytes, any length (within reason)
 #define AO_NOTE                    0x801 // (8110+var) Note:separable UTF-8 free text, no specific function, but recorded in the blockchain
-#define AO_KEY_ASSET               0x802 // (8110+var) Note:separable UTF-8 free text, no specific function, but recorded in the blockchain
+#define AO_KEY_ASSET               0x802 // (8210+var) GenericCollection:separable Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.
 #define AO_BLOCK_REF               0x1d // (1d+var) BlockRef: Describes a whole block in the chain
 #define AO_PAGE_REF                0x1c // (1c+var) PageRef: UTF-8 free text, no specific function, but recorded in the blockchain
 #define AO_GENESIS_REF             0x1b // (1b+var) GenesisRef: Uniquely describes a genesis block, includes list of properties used to calculate new blocks
+#define AO_KEY_INDEX               0x1a // (1a+8) Data64: Key/shares index in the blockchain, simple index number of a public key/shares receipt object in the blockchain
 #define AO_SHARES_REF              0x19 // (19+var) SharesRef: Reference to shares received potentially including info on their current state in the chain
 #define AO_ASSETS                  0x18 // (18+var) Assets: A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
 #define AO_ECDSA_PRI_KEY           0x3800 // (8070+var) PrivateKeyEcdsa:separable An ECDSA private key
@@ -94,7 +95,7 @@
 #define GB_MIN_BLOCK_INT           0x1087 // (8721+16) AOTime: Minimuim block interval time
 #define GB_N_COINS_TOTAL           0x1107 // (8722+16) AOCoins: Number of coins that the sum of all shares outstanding represents
 #define GB_RECORDING_TAX           0x1187 // (8723+16) AOCoins: Recording Tax in coins per byte (usually a very small number)
-#define AO_UNDEFINED_DATAITEM      0x3fff // (ff7f+0) DataItem: An undefined data item, usually an error
+#define AO_UNDEFINED_DATAITEM      0x37ff // (ff6f+0) DataItem: An undefined data item, usually an error
 
 class DataItem : public QObject, public VarSizeCode
 {

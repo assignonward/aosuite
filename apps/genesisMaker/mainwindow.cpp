@@ -22,7 +22,6 @@
  */
 #include "mainwindow.h"
 #include "aboutform.h"
-#include "cryptoForm.h"
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -30,8 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
   new AboutForm( ui->aboutTab );
-  new GenesisForm( ui->genesisTab, this );
-  new CryptoForm ( ui->cryptoTab , this );
+  af = new AssetForm  ( ui->assetsTab , this );
+  cf = new CryptoForm ( ui->cryptoTab , this );
+  gf = new GenesisForm( ui->genesisTab, this );
   restoreConfig();
 }
 
@@ -52,7 +52,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::restoreConfig()
 { MainWinCommon::restoreConfig();
   QSettings settings;
-  assets = settings.value( "assets" ).toByteArray();
+  // assets = settings.value( "assets" ).toByteArray();
 }
 
 /**
@@ -62,5 +62,5 @@ void MainWindow::restoreConfig()
 void MainWindow::saveConfig()
 { MainWinCommon::saveConfig();
   QSettings settings;
-  settings.setValue( "assets", assets.toDataItem() );
+  // settings.setValue( "assets", assets.toDataItem() );
 }

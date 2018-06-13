@@ -48,7 +48,6 @@ public:
       DataItem *getProp( typeCode_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : NULL; }
           void  add( const typeCode_t& key, DataItem *value ) { properties.insert( key, value ); }
 
-private:
    DataItemMap  properties;  // Collection of properties that describe the chain
 };
 

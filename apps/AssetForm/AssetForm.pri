@@ -1,5 +1,3 @@
-# MIT License
-#
 # Copyright (c) 2018 Assign Onward
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,28 +19,19 @@
 # SOFTWARE.
 #
 
+QT          += core gui widgets
+
+CONFIG      += c++11
+
+DEFINES     += QAMQP_DEBUG=Y
+
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/assignment.cpp        \
-               $${PWD}/assignref.cpp         \
-               $${PWD}/authorization.cpp     \
-               $${PWD}/blockref.cpp          \
-               $${PWD}/genericcollection.cpp \
-               $${PWD}/genesisref.cpp        \
-               $${PWD}/keypair.cpp           \
-               $${PWD}/pageref.cpp           \
-               $${PWD}/participant.cpp       \
-               $${PWD}/sharesref.cpp         \
-               $${PWD}/signature.cpp
+SOURCES     += $${PWD}/assetform.cpp
 
-HEADERS     += $${PWD}/assignment.h        \
-               $${PWD}/assignref.h         \
-               $${PWD}/authorization.h     \
-               $${PWD}/blockref.h          \
-               $${PWD}/genericcollection.h \
-               $${PWD}/genesisref.h        \
-               $${PWD}/keypair.h           \
-               $${PWD}/pageref.h           \
-               $${PWD}/participant.h       \
-               $${PWD}/sharesref.h         \
-               $${PWD}/signature.h
+HEADERS     += $${PWD}/assetform.h
+
+FORMS       += $${PWD}/assetform.ui
+
+RESOURCES   += $${PWD}/assetform.qrc
+

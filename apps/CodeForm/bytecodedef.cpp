@@ -31,6 +31,7 @@ void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
 { gbcr = "";
   sepr = false;
   if ( jo.contains( "code" ) ) code = jo.value( "code" ).toInt();
+  if ( jo.contains( "cont" ) ) cont = jo.value( "cont" ).toString();
   if ( jo.contains( "desc" ) ) desc = jo.value( "desc" ).toString();
   if ( jo.contains( "gbcr" ) ) gbcr = jo.value( "gbcr" ).toString();
   if ( jo.contains( "sepr" ) ) sepr = jo.value( "sepr" ).toBool();
@@ -42,6 +43,8 @@ void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
 QJsonObject  ByteCodeDef::toJsonObject() const
 { QJsonObject jo;
   jo.insert( "code", QJsonValue( (qint64)code ) );
+  if ( cont.size() )
+  jo.insert( "cont", QJsonValue(         cont ) );
   jo.insert( "desc", QJsonValue(         desc ) );
   if ( gbcr.size() )
   jo.insert( "gbcr", QJsonValue(         gbcr ) );

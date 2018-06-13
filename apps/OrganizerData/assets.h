@@ -23,7 +23,7 @@
 #ifndef ASSETS_H
 #define ASSETS_H
 
-#include "keypair.h"
+#include "genericcollection.h"
 #include "organizer.h"
 #include "recorder.h"
 #include "sharesref.h"
@@ -39,15 +39,14 @@ public:
     explicit  Assets( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
               Assets( const Assets &a, QObject *p = NULL )
                 : DataVarLength( AO_ASSETS, p ? p : a.parent() ), organizers( a.organizers ),
-                  recorders( a.recorders ), sharesRefs( a.sharesRefs ), keyPairs( a.keyPairs ) {}
+                  recorders( a.recorders ), sharesRefs( a.sharesRefs ), keyAssets( a.keyAssets ) {}
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false );
 
-private:
-    QList<Organizer> organizers;
-    QList< Recorder> recorders;
-    QList<SharesRef> sharesRefs;
-    QList<  KeyPair> keyPairs;     // Previously unused key pairs, for quick access
+  QList<        Organizer> organizers;
+  QList<         Recorder> recorders;
+  QList<        SharesRef> sharesRefs;
+  QList<GenericCollection> keyAssets;  // AO_KEY_ASSET key pairs, unused, holding shares and assigned
 };
 
 #endif // ASSETS_H

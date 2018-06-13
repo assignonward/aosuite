@@ -51,6 +51,7 @@ AssignRef::AssignRef( const DataItemBA &di, QObject *p )
 
                       case AO_ECDSA_PUB_KEY2:
                       case AO_ECDSA_PUB_KEY3:
+                      case AO_ECDSA_PUB_KEY4:
                       case AO_RSA3072_PUB_KEY:
                         key = items;
                         break;

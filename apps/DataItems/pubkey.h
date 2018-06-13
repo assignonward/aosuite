@@ -46,7 +46,7 @@ public:
         bool  isValid() const;
 
 private:
-            Data64  publicKeyIndex;  // index number of a public key on the blockchain
+            Data64  publicKeyIndex;  // AO_ID_SEQ_NUM index number of a public key on the blockchain
     PublicKeyEcdsa  publicKeyEcdsa;
   PublicKeyRsa3072  publicKeyRsa3072;
 };

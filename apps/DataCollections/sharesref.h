@@ -33,10 +33,10 @@
 
 // AO_SHARE_STATE values, stored in the shareState member
 #define KEYS_UNUSED             0x00
-#define KEYS_CONTROL_SHARES     0x02
-#define KEYS_SHARES_ASSIGNED    0x05
-#define KEYS_ASSIGNMENT_PENDING 0x06
-#define KEYS_SHARES_ESCROWED    0x0A  // For underwriting, similar to assignment pending but not expected to result in assignment
+#define KEYS_CONTROL_SHARES     0x01
+#define KEYS_SHARES_ASSIGNED    0x02
+#define KEYS_ASSIGNMENT_PENDING 0x03
+#define KEYS_SHARES_ESCROWED    0x05  // For underwriting, similar to assignment pending but not expected to result in assignment
 
 /**
  * @brief The SharesRef class - refers to a record of shares received,
@@ -49,19 +49,17 @@ public:
     explicit  SharesRef( const DataItemBA &di = QByteArray(), QObject *p = NULL );
               SharesRef( const SharesRef &r, QObject *p = NULL )
                 : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ),
-                  amount( r.amount ), key( r.key ), page( r.page ), seqNum( r.seqNum ), keyHash( r.keyHash ),
+                  amount( r.amount ), key( r.key ), page( r.page ), seqNum( r.seqNum ),
                   shareState( r.shareState ), lockExp( r.lockExp ), assignRef( r.assignRef ) {}
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false );
         bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
 
-private:
       Shares  amount;     // amount of shares recorded
       PubKey  key;        // Id (public key) of shares
 
      PageRef  page;       // page these shares are recorded on
       Data16  seqNum;     // shares sequence number in the page
-        Hash  keyHash;    // Id (hashed public key) of shares
        Data8  shareState; // available, or other?
       AOTime  lockExp;    // if the state is locked, when does the lock expire?
    AssignRef  assignRef;  // if these shares have been assigned away, this is the optional record of when/where

@@ -23,9 +23,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "assets.h"
-#include "genesisForm.h"
 #include "MainWinCommon.h"
+#include "assetform.h"
+#include "cryptoForm.h"
+#include "genesisForm.h"
 #include "ui_mainwindow.h"
 
 namespace Ui {
@@ -45,7 +46,9 @@ public:
 
 private:
       Ui::MainWindow *ui;
-              Assets  assets;
+  QPointer<AssetForm> af;
+ QPointer<CryptoForm> cf;
+QPointer<GenesisForm> gf;
 };
 
 #endif // MAINWINDOW_H

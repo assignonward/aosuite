@@ -38,6 +38,7 @@ public:
               ByteCodeDef( const ByteCodeDef &k, QObject *p = NULL )
                 : QObject( p ? p : k.parent() ),
                   code( k.code ),
+                  cont( k.cont ),
                   sepr( k.sepr ),
                     sz( k.sz   ),
                   gbcr( k.gbcr ),
@@ -46,6 +47,7 @@ public:
                   pdef( k.pdef ) {}
         void  operator = ( const ByteCodeDef &k )
                 { code = k.code;
+                  cont = k.cont;
                   sepr = k.sepr;
                     sz = k.sz  ;
                   gbcr = k.gbcr;
@@ -60,6 +62,7 @@ public:
      QString  toSizeCase( qint32 maxLenPdef = 26 );
 
   typeCode_t  code; // numerical value of the bytecode
+     QString  cont; // Potential content of a GenericCollection, listed as comma separated pdef names
         bool  sepr; // separable?  defaults to false, true means that the hash of the data is hashed in the collection, instead of the data itself
       qint32  sz;   // size of the following data in bytes, or -1 if variable size
      QString  gbcr; // Genesis block creator ui type

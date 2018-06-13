@@ -20,33 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef KEYASSET_H
-#define KEYASSET_H
+#ifndef ASSETFORM_H
+#define ASSETFORM_H
 
-#include "datavarlength.h"
-#include "keypair.h"
-#include "sharesref.h"
+#include <QScrollArea>
+#include "assets.h"
+#include "MainWinCommon.h"
+#include "ui_assetform.h"
 
-/**
- * @brief The KeyAsset class - contains a key pair and if
- *   the keys are associated with shares, then populates the
- *   sharesRef as fully as needed too.
- */
-class KeyAsset : public DataVarLength
+namespace Ui {
+class AssetForm;
+}
+
+class AssetForm : public QScrollArea
 {
     Q_OBJECT
-public:
-      explicit  KeyAsset( DataItemBA di = DataItemBA(), QObject *p = NULL );
-                KeyAsset( const KeyAsset &k, QObject *p = NULL )
-                  : DataVarLength( AO_KEY_ASSET, p ? p : k.parent() ),
-                    keyPair( k.keyPair ), sharesRef( k.sharesRef ) {}
-          void  operator = ( const DataItemBA &di );
-    DataItemBA  toDataItem( bool cf = false );
-          bool  isValid() { return keyPair.isValid(); }
 
-private:
-       KeyPair  keyPair;
-     SharesRef  sharesRef;
+public:
+      explicit  AssetForm( QWidget *cw, MainWinCommon *mw = NULL);
+               ~AssetForm();
+          void  updateLabels();
+
+public slots:
+          void  restoreConfig();
+          void  saveConfig();
+
+public:
+        Assets  assets;
+ Ui::AssetForm *ui;
 };
 
-#endif // KEYASSET_H
+#endif // ASSETFORM_H

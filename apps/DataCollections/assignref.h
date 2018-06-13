@@ -30,7 +30,7 @@
 #include "shares.h"
 
 /**
- * @brief The AssignRef class - refers to a record of shares assigned,
+ * @brief The AssignRef class - refers to a record of shares assignment onward (given),
  *   on a page, in a block, in a chain.
  */
 class AssignRef : public DataVarLength
