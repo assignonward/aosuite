@@ -120,23 +120,23 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
 GenericCollection GenesisForm::calculateGenesisBlock()
 { GenericCollection gb( GB_GENESIS_BLOCK );
   __int128_t tv;
-  gb.add( GB_PROTOCOL    , new Data16       ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
-  gb.add( GB_PROTOCOL_REV, new Data16       ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
-  gb.add( GB_TEXT_SYMBOL , new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  &gb ) );
+  gb.insert( GB_PROTOCOL    , new Data16       ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
+  gb.insert( GB_PROTOCOL_REV, new Data16       ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
+  gb.insert( GB_TEXT_SYMBOL , new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  &gb ) );
   if ( ui->description->toPlainText().size() > 0 )
-  gb.add( GB_DESCRIPTION , new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  &gb ) );
+  gb.insert( GB_DESCRIPTION , new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  &gb ) );
   //  gb.add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
   //  gb.add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.add( GB_STARTING_SHARES , new Shares( tv, GB_STARTING_SHARES, &gb ) );
+  gb.insert( GB_STARTING_SHARES , new Shares( tv, GB_STARTING_SHARES, &gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
-  gb.add( GB_MIN_BLOCK_INT   , new AOTime( tv, GB_MIN_BLOCK_INT  , &gb ) );
+  gb.insert( GB_MIN_BLOCK_INT   , new AOTime( tv, GB_MIN_BLOCK_INT  , &gb ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb.add( GB_N_COINS_TOTAL   , new AOCoins( tv, GB_N_COINS_TOTAL , &gb ) );
+  gb.insert( GB_N_COINS_TOTAL   , new AOCoins( tv, GB_N_COINS_TOTAL , &gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb.add( GB_RECORDING_TAX   , new AOCoins( tv, GB_RECORDING_TAX , &gb ) );
-  gb.add( CB_FIRST_ID_SEQ_NUM, new Data64( 0, CB_FIRST_ID_SEQ_NUM, &gb ) );
-  gb.add( CB_N_ID_SEQ_NUM    , new Data16( 1, CB_N_ID_SEQ_NUM    , &gb ) );
+  gb.insert( GB_RECORDING_TAX   , new AOCoins( tv, GB_RECORDING_TAX , &gb ) );
+  gb.insert( CB_FIRST_ID_SEQ_NUM, new Data64( 0, CB_FIRST_ID_SEQ_NUM, &gb ) );
+  gb.insert( CB_N_ID_SEQ_NUM    , new Data16( 1, CB_N_ID_SEQ_NUM    , &gb ) );
   return gb;
 }
 

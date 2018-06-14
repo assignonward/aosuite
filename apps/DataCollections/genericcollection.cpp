@@ -25,22 +25,28 @@
 /**
  * @brief GenericCollection::GenericCollection - constructor
  * @param di - optional data item
- * @param tc - type code
  * @param p - optional parent object
  */
 GenericCollection::GenericCollection( DataItemBA di, QObject *p )
-                     : DataVarLength( typeCodeOf(di), p )
+                     : DataItem( typeCodeOf(di), p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
     { if (( typeCodeOf( di ) != GB_GENESIS_BLOCK ) &&
-          ( typeCodeOf( di ) != CB_CHAIN_BLOCK   )) // add more as they are defined
+          ( typeCodeOf( di ) != AO_ASSETS        ) &&
+          ( typeCodeOf( di ) != AO_ASSIGN_REF    ) &&
+          ( typeCodeOf( di ) != AO_KEY_ASSET     ) &&
+          ( typeCodeOf( di ) != CB_CHAIN_BLOCK   )) // TODO: add more as they are defined
         { typeCode = AO_UNDEFINED_DATAITEM;
           // TODO: log an error
           return;
         }
        else
-        { DataVarLength temp( di );          // It's our type
-          DataItemBA items = temp.get();  // typeCode and checksum have been stripped off
+        { qint32 tcs, scs;
+          typeCode_t itc = bytesToCode( di, tcs );          // It's our type
+          qint32     sz  = bytesToCode( di.mid(tcs), scs );
+          DataItemBA items = di.mid( tcs+scs );              // strip off typeCode and size code
+          if ( items.size() != sz )
+            qDebug( "size disagreement between items %d and container %d for type 0x%x", items.size(), sz, itc );
           while ( items.size() > 0 )
             { int sz = typeSize( items );
               if ( sz <= 0 )
@@ -48,7 +54,7 @@ GenericCollection::GenericCollection( DataItemBA di, QObject *p )
                   return;
                 }
                else
-                { properties.insert( typeCodeOf( items ), DataItem::fromDataItem( items, this ) );
+                { itemMM.insert( typeCodeOf( items ), DataItem::fromDataItem( items, this ) );
                   items = items.mid( sz ); // move on to the next
                 }
             }
@@ -63,8 +69,8 @@ GenericCollection::GenericCollection( DataItemBA di, QObject *p )
  */
 void GenericCollection::operator = ( const DataItemBA &di )
 { GenericCollection temp( di );
-  properties = temp.properties;
-  typeCode   = temp.typeCode;
+  itemMM = temp.itemMM;
+  typeCode = temp.typeCode;
   return;
 }
 
@@ -76,9 +82,10 @@ void GenericCollection::operator = ( const DataItemBA &di )
 DataItemBA  GenericCollection::toDataItem( bool cf ) const
 { // qDebug( "GenericCollection::toDataItem" );
   QByteArrayList dil;
-  QList<typeCode_t>keys = properties.keys();
-  foreach ( typeCode_t key, keys )
-    { dil.append( properties.value(key)->toDataItem(cf) );
+  QMapIterator DataItemMap_t it( itemMM );
+  while ( it.hasNext() )
+    { it.next();
+      dil.append( it.value()->toDataItem(cf) );
       // qDebug( "appending key %x", key );
     }
   std::sort( dil.begin(), dil.end() );
@@ -92,23 +99,38 @@ DataItemBA  GenericCollection::toDataItem( bool cf ) const
 
 DataItemBA  GenericCollection::toHashData( bool cf ) const
 { // qDebug( "GenericCollection::toHashData" );
-  QList<DataItemBA> dil;
-  QList<typeCode_t>keys = properties.keys();
-  foreach ( typeCode_t key, keys )
-    dil.append( properties.value(key)->toDataItem(cf) );
+  // Build a list of data items, and include paired hashes if the item is separable
+  QList<QPair<DataItemBA,QByteArray>> dil;
+  QMapIterator DataItemMap_t it( itemMM );
+  while ( it.hasNext() )
+    { it.next();
+      DataItemBA di = it.value()->toDataItem(cf);
+      QByteArray ba;
+      if ( typeCodeOf( di ) & AO_SEPARABLE_TYPE )
+        ba = it.value()->toHashData(cf);
+      dil.append( QPair<DataItemBA,QByteArray>( di, ba ) );
+    }
   std::sort( dil.begin(), dil.end() );
+  // Now, make the final list, substituting hashes for data items when the item is separable
   QByteArrayList hdl;
-  foreach ( QByteArray di, dil )
-    { if ( typeCodeOf( di ) & AO_SEPARABLE_TYPE )
-        hdl.append( properties.value(typeCodeOf( di ))->toHashData(cf) );
+  QPair<DataItemBA,QByteArray> pr;
+  foreach ( pr, dil )
+    { if ( typeCodeOf( pr.first ) & AO_SEPARABLE_TYPE )
+        hdl.append( pr.second );
        else
-        hdl.append( di );
+        hdl.append( pr.first );
     }
   QByteArray dba = hdl.join();
   QByteArray hd;
   hd.append( codeToBytes( typeCode   ) );
   hd.append( codeToBytes( dba.size() ) ); // variable length form...
   hd.append( dba );
+
+  // If this item itself is separable, then return its hash
+  if ( typeCode & AO_SEPARABLE_TYPE )
+    { Hash256 h;
+      return h.calculate( hd ).toDataItem(cf);
+    }
   // qDebug( "  hdat:%s",qPrintable( QString::fromUtf8( hd.toHex() ) ) );
   return hd;
 }

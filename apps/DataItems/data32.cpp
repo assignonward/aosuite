@@ -20,51 +20,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "datavarlength.h"
+#include "data32.h"
 
 /**
- * @brief DataVarLength::DataVarLength - constructor from serialized form
- * @param di - typecode, extensible size, data
- * @param p - parent object
+ * @brief Data32::Data32
+ * @param di - data item for initialization
+ * @param p - object parent, if any.
  */
-DataVarLength::DataVarLength( const DataItemBA &di, QObject *p )
-  : DataItem( DataItem::typeCodeOf(di), p )
-{ if ( di.size() < 2 ) // Shortest valid varlenlong serialized data (1 type + 1 length + 0 data)
+Data32::Data32( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+{ v = 0;
+  union _32_as_8
+    { qint32 i;
+      unsigned char d[4];
+    } u;
+  qint32 tcSz = 0;
+  typeCode = bytesToCode( di, tcSz );
+  if ( di.size() < tcSz+4 )
     { // TODO: log an exception
       return;
     }
-  qint32 i,j;
-  typeCode = bytesToCode( di, i );
-  quint32 size = bytesToCode( di.mid(i), j );
-  if ( (unsigned int)di.size() < (size+i+j) )
-    { qDebug( "problem with size of DataItemBA: %d vs encoded size: %d for type: 0x%x", di.size(),size,typeCode );
-      // TODO: log an exception
-      return;
-    }
-  ba = di.mid(i+j);
+  u.d[ 0] = di.at( tcSz    ); // Surely there is a clever memory mapping to do this more efficiently, later.
+  u.d[ 1] = di.at( tcSz+ 1 );
+  u.d[ 2] = di.at( tcSz+ 2 );
+  u.d[ 3] = di.at( tcSz+ 3 );
+  v = u.i;
 }
 
 /**
- * @brief DataVarLength::operator =  Assign values from a serialized bytearray
- * @param di - serialized bytearray with typeCode, size, data and checksum
+ * @brief Data32::operator =
+ * @param di - data item to assign
  */
-void DataVarLength::operator = ( const DataItemBA &di )
-{ DataVarLength temp( di );
-  ba       = temp.ba;
+void Data32::operator = ( const DataItemBA &di )
+{ Data32 temp( di );
+  v        = temp.v;
   typeCode = temp.typeCode;
   return;
 }
 
 /**
- * @brief DataVarLength::toDataItem
+ * @brief Data32::toDataItem
  * @param cf - compact (or chain) form, no difference at this level - unused
- * @return serialized bytearray with typeCode, size, data and checksum
+ * @return byte array starting with type code, followed by 32 bit data
  */
-DataItemBA DataVarLength::toDataItem( bool cf ) const
-{ // qDebug( "DataVarLength::toDataItem" );
-  DataItemBA di; (void)cf;
+DataItemBA Data32::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
+  union _32_in_8s
+    {        qint32 i;
+      unsigned char d[4];
+    } u;
+  u.i = v;
   di.append( codeToBytes( typeCode ) );
-  di.append( codeToBytes( ba.size() ) );
-  di.append( ba );
+  di.append( u.d[ 0] );
+  di.append( u.d[ 1] );
+  di.append( u.d[ 2] );
+  di.append( u.d[ 3] );
   return di;
 }

@@ -24,6 +24,7 @@
 #define GENESISREF_H
 
 #include "genericcollection.h"
+#include "datavarlength.h"
 
 /**
  * @brief The GenesisRef class - identifies a chain

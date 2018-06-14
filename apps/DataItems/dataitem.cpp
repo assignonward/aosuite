@@ -81,6 +81,7 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
     case AO_ID_SEQ_NUM:              return 8;
     case AO_RSA3072_PUB_KEY:         return 384;
     case AO_RSA3072_SIG:             return 384;
+    case AO_INDEX32:                 return 4;
     case AO_KEY_INDEX:               return 8;
     case GB_PROTOCOL:                return 2;
     case GB_PROTOCOL_REV:            return 2;
@@ -118,6 +119,7 @@ qint32 DataItem::typeSize( const DataItemBA &di ) const
 #include "aotime.h"
 #include "assets.h"
 #include "databytearray.h"
+#include "data32.h"
 #include "data64.h"
 #include "hash224salt32.h"
 #include "hash256.h"
@@ -180,10 +182,11 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
     case AO_PARTICIPANT:             return new Participant( di, p );
     case AO_PARTICIPANT_CF:          return new Participant( di, p );
     case AO_AUTHORIZATION:           return new Authorization( di, p );
-    case AO_ASSIGN_REF:              return new AssignRef( di, p );
+    case AO_ASSIGN_REF:              return new GenericCollection( di, p );
     case AO_DATABYTEARRAY:           return new DataByteArray( di, p );
     case AO_NOTE:                    return new Note( di, p );
     case AO_KEY_ASSET:               return new GenericCollection( di, p );
+    case AO_INDEX32:                 return new Data32( di, p );
     case AO_BLOCK_REF:               return new BlockRef( di, p );
     case AO_PAGE_REF:                return new PageRef( di, p );
     case AO_GENESIS_REF:             return new GenesisRef( di, p );
@@ -249,10 +252,11 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_PARTICIPANT:             return new Participant( *((Participant *)ditm), p );
     case AO_PARTICIPANT_CF:          return new Participant( *((Participant *)ditm), p );
     case AO_AUTHORIZATION:           return new Authorization( *((Authorization *)ditm), p );
-    case AO_ASSIGN_REF:              return new AssignRef( *((AssignRef *)ditm), p );
+    case AO_ASSIGN_REF:              return new GenericCollection( *((GenericCollection *)ditm), p );
     case AO_DATABYTEARRAY:           return new DataByteArray( *((DataByteArray *)ditm), p );
     case AO_NOTE:                    return new Note( *((Note *)ditm), p );
     case AO_KEY_ASSET:               return new GenericCollection( *((GenericCollection *)ditm), p );
+    case AO_INDEX32:                 return new Data32( *((Data32 *)ditm), p );
     case AO_BLOCK_REF:               return new BlockRef( *((BlockRef *)ditm), p );
     case AO_PAGE_REF:                return new PageRef( *((PageRef *)ditm), p );
     case AO_GENESIS_REF:             return new GenesisRef( *((GenesisRef *)ditm), p );

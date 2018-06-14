@@ -32,11 +32,13 @@
 #include "shares.h"
 
 // AO_SHARE_STATE values, stored in the shareState member
-#define KEYS_UNUSED             0x00
-#define KEYS_CONTROL_SHARES     0x01
-#define KEYS_SHARES_ASSIGNED    0x02
-#define KEYS_ASSIGNMENT_PENDING 0x03
-#define KEYS_SHARES_ESCROWED    0x05  // For underwriting, similar to assignment pending but not expected to result in assignment
+#define KEYS_UNUSED              0x00
+#define KEYS_RECEIPT_NEGOTIATING 0x01  // These keys are being used to try to receive shares in an assignment that has not been fully authorized yet
+#define KEYS_RECEIPT_RECORDING   0x03  // These keys are being used to try to receive shares in an assignment that has not been verified recorded on-chain yet
+#define KEYS_CONTROL_SHARES      0x02  // These keys are for shares that are recorded on chain and controlled by the private key of the pair, may be assigned when desired
+#define KEYS_ASSIGNMENT_PENDING  0x06  // These keys are for shares that are in the process of being assigned away
+#define KEYS_SHARES_ASSIGNED     0x04  // These keys are for shares that have been assigned onward, are no longer controlled
+#define KEYS_SHARES_ESCROWED     0x0A  // For underwriting, similar to assignment pending but not expected to result in assignment
 
 /**
  * @brief The SharesRef class - refers to a record of shares received,

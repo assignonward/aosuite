@@ -23,32 +23,35 @@
 #ifndef GENERICCOLLECTION_H
 #define GENERICCOLLECTION_H
 
-#include "datavarlength.h"
+#include "dataitem.h"
 #include "hash.h"
-#include <QMap>
+#include <QMultiMap>
 
-#define DataItemMap QMap<typeCode_t,DataItem *>
+#define DataItemMap_t <typeCode_t,DataItem *>
+#define DataItemMap QMultiMap DataItemMap_t
 
 /**
  * @brief The GenericCollection class - the anchorpoint of a blockchain
  */
-class GenericCollection : public DataVarLength
+class GenericCollection : public DataItem
 {
     Q_OBJECT
 public:
       explicit  GenericCollection( DataItemBA di = DataItemBA(), QObject *p = NULL );
                 GenericCollection( typeCode_t tc, QObject *p = NULL )
-                  : DataVarLength( QByteArray(), tc, p ) {}
+                  : DataItem( tc, p ) {} // Empty collection, of a specified type
                 GenericCollection( const GenericCollection &r, QObject *p = NULL )
-                  : DataVarLength( QByteArray(), r.typeCode, p ? p : r.parent() ),
-                    properties( r.properties ) {}
+                  : DataItem( r.typeCode, p ? p : r.parent() ),
+                    itemMM( r.itemMM ) {} // Copy constructor, with optional parent change
+   DataItemMap  mmap() { return itemMM; }
+          bool  contains( const typeCode_t &tc ) { return itemMM.contains( tc ); }
+      DataItem *value(    const typeCode_t &tc ) { return itemMM.   value( tc ); }
+          void  insert(   const typeCode_t &tc, DataItem *value ) { itemMM.insert( tc, value ); }
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;
     DataItemBA  toHashData( bool cf = false ) const;
-      DataItem *getProp( typeCode_t key ) { return ( properties.contains( key ) ) ? properties.value( key ) : NULL; }
-          void  add( const typeCode_t& key, DataItem *value ) { properties.insert( key, value ); }
 
-   DataItemMap  properties;  // Collection of properties that describe the chain
+   DataItemMap  itemMM;  // Collection of properties that describe the chain
 };
 
 #endif // GENERICCOLLECTION_H

@@ -1,5 +1,3 @@
-# MIT License
-#
 # Copyright (c) 2018 Assign Onward
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,36 +19,13 @@
 # SOFTWARE.
 #
 
-QT          += core gui widgets
-TEMPLATE     = app
+QT          += core
 
-DEPTH = ../..
-
-# sudo apt-get install libgpgme11-dev libgcrypt11-dev libbz2-dev lib64z1-dev
-INCLUDEPATH += $${DEPTH}/OpenPGP
-INCLUDEPATH += /usr/local/include
-LIBS        += -lOpenPGP -lgmp -lgmpxx -lbz2 -lz -ldl -lgcrypt -lgpgme -lgpg-error -L$$PWD/$${DEPTH}/OpenPGP -L/usr/local/lib
-DEFINES     += _FILE_OFFSET_BITS=64
-
-include($${DEPTH}/qamqp.pri)
-INCLUDEPATH += $${QAMQP_INCLUDEPATH}
-LIBS        += -L$${DEPTH}/src $${QAMQP_LIBS}
-macx:CONFIG -= app_bundle
-
-include(../AboutForm/AboutForm.pri)
-include(../CryptoEngine/CryptoEngine.pri)
-include(../CryptoForm/CryptoForm.pri)
-include(../DataCollections/DataCollections.pri)
-include(../DataItems/DataItems.pri)
-include(../OrganizerData/OrganizerData.pri)
-include(../Random/Random.pri)
-include(../SingleApplication/singleapplication.pri)
-DEFINES     += QAPPLICATION_CLASS=QApplication
+CONFIG      += c++11
 
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/main.cpp          \
-               $${PWD}/MainWinCommon.cpp
+SOURCES     += $${PWD}/cryptoEngine.cpp
 
-HEADERS     += $${PWD}/MainWinCommon.h
+HEADERS     += $${PWD}/cryptoEngine.h
 

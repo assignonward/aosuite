@@ -20,34 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef ASSETFORM_H
-#define ASSETFORM_H
+#ifndef CRYPTOENGINE_H
+#define CRYPTOENGINE_H
 
-#include <QScrollArea>
-#include "genericcollection.h"
-#include "MainWinCommon.h"
-#include "ui_assetform.h"
+#include <QtGui>
+#include "dataitem.h"
 
-namespace Ui {
-class AssetForm;
-}
+#include "gpgme.h"
+#include "gpg-error.h"
 
-class AssetForm : public QScrollArea
+#define MAX_KEYS 1000
+
+class CryptoEngine : public QObject
 {
     Q_OBJECT
 
 public:
-      explicit  AssetForm( QWidget *cw, MainWinCommon *mw = NULL);
-               ~AssetForm();
-          void  updateLabels();
+         explicit  CryptoEngine( QObject *p = NULL );
+                  ~CryptoEngine();
 
-public slots:
-          void  restoreConfig();
-          void  saveConfig();
+             bool  makeNewPair( typeCode_t tc );
+    gpgme_error_t  initGpgme();
 
 public:
-  GenericCollection  assets;
-      Ui::AssetForm *ui;
+      gpgme_key_t  gpgKeys[MAX_KEYS+1];
 };
 
-#endif // ASSETFORM_H
+#endif // CRYPTOENGINE_H

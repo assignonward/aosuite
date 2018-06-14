@@ -147,42 +147,49 @@
         "type": "Data16"
     },
     {
-        "code": 179,
+        "code": 50,
         "desc": "First sequential ID number (of public keys) recorded in this block.",
         "pdef": "CB_FIRST_ID_SEQ_NUM",
         "size": 8,
         "type": "Data64"
     },
     {
-        "code": 180,
+        "code": 51,
         "desc": "Number of sequential ID numbers (of public keys) recorded in this block, redundant check.",
         "pdef": "CB_N_ID_SEQ_NUM",
         "size": 2,
         "type": "Data16"
     },
     {
-        "code": 51,
+        "code": 52,
         "desc": "64 bit integer that identifies a particular public key in the chain.",
         "pdef": "AO_ID_SEQ_NUM",
         "size": 8,
         "type": "Data64"
     },
     {
-        "code": 52,
+        "code": 53,
+        "desc": "32 bit signed integer declares position of an element in a list, used for index numbers in potentially bigger lists.",
+        "pdef": "AO_INDEX32",
+        "size": 4,
+        "type": "Data32"
+    },
+    {
+        "code": 61,
         "desc": "an RSA3072 public key",
         "pdef": "AO_RSA3072_PUB_KEY",
         "size": 384,
         "type": "PublicKeyRsa3072"
     },
     {
-        "code": 53,
+        "code": 62,
         "desc": "an RSA3072 signature",
         "pdef": "AO_RSA3072_SIG",
         "size": 384,
         "type": "SigRsa3072"
     },
     {
-        "code": 54,
+        "code": 63,
         "desc": "An ECDSA signature",
         "pdef": "AO_ECDSA_SIG",
         "size": -1,
@@ -242,7 +249,7 @@
     },
     {
         "code": 2050,
-        "cont": "AO_KEYPAIR,AO_SHARES_REF",
+        "cont": "AO_KEYPAIR,AO_SHARES_REF,AO_INDEX32",
         "desc": "Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.",
         "pdef": "AO_KEY_ASSET",
         "sepr": true,

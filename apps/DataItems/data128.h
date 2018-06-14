@@ -38,6 +38,7 @@ public:
               Data128( const Data128 &d, QObject *p = NULL )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data128( const DataItemBA &di, QObject *p = NULL );
+    __int128  value() { return v; }
   DataItemBA  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const DataItemBA &di );
         void  operator = ( const  Data128 &d ) { v = d.v; typeCode = d.typeCode; }

@@ -21,28 +21,30 @@
  * SOFTWARE.
  */
 #include "assetform.h"
+#include "sharesref.h"
 #include <QSettings>
 
 AssetForm::AssetForm( QWidget *cw, MainWinCommon *mw ) :
     QScrollArea(cw),
     ui(new Ui::AssetForm)
-{
-    ui->setupUi(this);
-    new QVBoxLayout( cw );
-    cw->layout()->addWidget( this );
+{ assets.setTypeCode( AO_ASSETS );
+  ui->setupUi(this);
+  new QVBoxLayout( cw );
+  cw->layout()->addWidget( this );
 
-    if ( mw )
-      { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));
-        connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
-      }
-
+  if ( mw )
+    { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));
+      connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
+    }
 }
 
 AssetForm::~AssetForm()
-{
-    delete ui;
-}
+{ delete ui; }
 
+/**
+ * @brief AssetForm::restoreConfig - presently a very quick and dirty recording
+ *   of the assets.  Might at least want to put some security on them.
+ */
 void  AssetForm::restoreConfig()
 { QSettings s;
   if ( s.contains( "assets" ) )
@@ -56,23 +58,31 @@ void  AssetForm::saveConfig()
 }
 
 void  AssetForm::updateLabels()
-{ int unused            = 0;
-  int controlShares     = 0;
-  int sharesAssigned    = 0;
-  int assignmentPending = 0;
-  int sharesEscrowed    = 0;
-  foreach ( GenericCollection gc, assets.keyAssets )
-    { if ( gc.getTypeCode() == AO_KEY_ASSET )
-        { if ( gc.properties.contains( AO_KEYPAIR ) )
-            { if ( gc.properties.contains( AO_SHARES_REF ) )
-                { SharesRef *sr = qobject_cast<SharesRef *>(DataItem::fromDataItem( gc.properties[AO_SHARES_REF] ));
-                  switch ( sr->shareState.get() )
-                    { case KEYS_UNUSED:             unused++;            break;
-                      case KEYS_CONTROL_SHARES:     controlShares++;     break;
-                      case KEYS_SHARES_ASSIGNED:    sharesAssigned++;    break;
-                      case KEYS_ASSIGNMENT_PENDING: assignmentPending++; break;
-                      case KEYS_SHARES_ESCROWED:    sharesEscrowed++;    break;
-                      default: qDebug( "unexpected shareState value: %d", sr->shareState.get() );
+{ int unused             = 0;
+  int receiptNegotiating = 0;
+  int receiptRecording   = 0;
+  int controlShares      = 0;
+  int sharesAssigned     = 0;
+  int assignmentPending  = 0;
+  int sharesEscrowed     = 0;
+  QMapIterator DataItemMap_t it( assets.mmap() );
+  while ( it.hasNext() )
+    { it.next();
+      DataItem *di = it.value();
+      if ( di->getTypeCode() == AO_KEY_ASSET )
+        { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+          if ( ka->contains( AO_KEYPAIR ) )
+            { if ( ka->contains( AO_SHARES_REF ) )
+                { SharesRef *sr = qobject_cast<SharesRef *>(DataItem::fromDataItem( ka->value(AO_SHARES_REF) ));
+                  switch ( sr->shareState.value() )
+                    { case KEYS_UNUSED:              unused++;             break;
+                      case KEYS_RECEIPT_NEGOTIATING: receiptNegotiating++; break;
+                      case KEYS_RECEIPT_RECORDING:   receiptRecording++;   break;
+                      case KEYS_CONTROL_SHARES:      controlShares++;      break;
+                      case KEYS_SHARES_ASSIGNED:     sharesAssigned++;     break;
+                      case KEYS_ASSIGNMENT_PENDING:  assignmentPending++;  break;
+                      case KEYS_SHARES_ESCROWED:     sharesEscrowed++;     break;
+                      default: qDebug( "unexpected shareState value: %d", sr->shareState.value() );
                     }
                 }
                else
@@ -82,11 +92,13 @@ void  AssetForm::updateLabels()
             { qDebug( "unexpected: AO_KEY_ASSET with no AO_KEYPAIR" ); }
         }
        else
-        { qDebug( "unexpected: keyAssets with typecode %d", gc.getTypeCode() ); }
+        { qDebug( "TODO: handle additional typecode 0x%x", di->getTypeCode() ); }
     }
-  ui->keysUnused           ->setText( QString::number( unused            ) );
-  ui->keysControlShares    ->setText( QString::number( controlShares     ) );
-  ui->keysSharesAssigned   ->setText( QString::number( sharesAssigned    ) );
-  ui->keysAssignmentPending->setText( QString::number( assignmentPending ) );
-  ui->keysSharesEscrowed   ->setText( QString::number( sharesEscrowed    ) );
+  ui->keysUnused            ->setText( QString::number( unused             ) );
+  ui->keysReceiptNegotiating->setText( QString::number( receiptNegotiating ) );
+  ui->keysReceiptRecording  ->setText( QString::number( receiptRecording   ) );
+  ui->keysControlShares     ->setText( QString::number( controlShares      ) );
+  ui->keysSharesAssigned    ->setText( QString::number( sharesAssigned     ) );
+  ui->keysAssignmentPending ->setText( QString::number( assignmentPending  ) );
+  ui->keysSharesEscrowed    ->setText( QString::number( sharesEscrowed     ) );
 }
