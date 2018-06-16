@@ -36,7 +36,6 @@ CryptoForm::CryptoForm( QWidget *cw, MainWinCommon *mw ) :
       connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
     }
   getGpgInfo();
-  gpgKeys[0] = NULL;
   on_reread_clicked();
 }
 
@@ -45,152 +44,52 @@ CryptoForm::~CryptoForm()
 
 void  CryptoForm::restoreConfig()
 { QSettings s;
-  if ( s.contains( "homeFolder" ) ) ui->homeFolder->setText( s.value( "homeFolder" ).toString() );
+  if ( s.contains( "homeFolder" ) )
+    { ce.configFolder = s.value( "homeFolder" ).toString();
+      ui->homeFolder->setText( ce.configFolder );
+    }
+  if ( s.contains( "passphrase" ) )
+    { ce.setPassphrase( s.value( "passphrase" ).toString() );
+      ui->passphrase->setText( ce.passphrase );
+    }
 }
 
 void  CryptoForm::saveConfig()
 { QSettings s;
-  s.setValue( "homeFolder", ui->homeFolder->text()  );
+  s.setValue( "homeFolder", ce.configFolder );
+  s.setValue( "passphrase", ce.passphrase   );
 }
 
 void CryptoForm::on_reread_clicked()
-{ ui->selectedKeyNumber->setValue(1);
+{ ui->selectedKeyNumber   ->setValue(1);
   ui->selectedSubkeyNumber->setValue(1);
   getKeyInfo();
 }
 
+void  CryptoForm::on_homeFolder_textEdited( QString hf )
+{ ce.configFolder = hf; }
 
-#define SHOW_IF_GPGERR( op ) \
-err = op;                     \
-if ( err )                     \
-  { qDebug( "Show %s: %s (%d)", \
-     gpgme_strsource(err),       \
-     gpgme_strerror (err),        \
-                     err );        \
-  }
-
-#define FAIL_IF_GPGERR( op ) \
-err = op;                     \
-if ( err )                     \
-  { qDebug( "Fail %s: %s (%d)", \
-     gpgme_strsource(err),       \
-     gpgme_strerror (err),        \
-                     err );        \
-    return false;                   \
-  }
-
-
-gpgme_error_t CryptoForm::initGpgme()
-{ if ( !gpgme_check_version( "1.8.1" ) )
-    { qDebug( "libpgme version fails to meet 1.8.1 expectation" ); }
-  setlocale( LC_ALL, "" );
-  gpgme_set_locale( NULL, LC_CTYPE   , setlocale( LC_CTYPE   , NULL ) );
-  gpgme_set_locale( NULL, LC_MESSAGES, setlocale( LC_MESSAGES, NULL ) );
-  gpgme_error_t err;
-  FAIL_IF_GPGERR( gpgme_set_engine_info( GPGME_PROTOCOL_OpenPGP, "/usr/local/gpgbin/gpg", NULL ) )
-  return gpgme_engine_check_version( GPGME_PROTOCOL_OpenPGP );
+void  CryptoForm::on_passphrase_textEdited( QString pp )
+{ QByteArray ppa = pp.toUtf8();
+  QCryptographicHash h( QCryptographicHash::Keccak_256 );
+  h.addData( ppa );
+  QByteArray ha = h.result();
+  QString hs = ha.toBase64();
+  ui->hashed->setText( hs.left( 16 ) );
+  ce.setPassphrase( pp );
 }
 
-/**
- * @brief CryptoForm::makeNewPair
- * @param tc - type of keyPair to make (using the private key type).
- * @return true if successful;
- */
-bool CryptoForm::makeNewPair( typeCode_t tc )
-{ qDebug( "KeyPair::makeNewPair( 0x%x )", tc );
-  if (( tc != AO_ECDSA_PRI_KEY ) &&
-      ( tc != AO_RSA3072_PRI_KEY ))
-    { qDebug( "KeyPair::makeNewPair unrecognized type (0x%x)", tc );
-      return false;
-    }
-  gpgme_ctx_t mContext;
-  gpgme_engine_info_t info;
-  gpgme_error_t  err = GPG_ERR_NO_ERROR;
-  const char * CONFIG_DIR = "~/.gnupg/";
-
-  // Initializes gpgme
-  gpgme_check_version(NULL);
-
-  // Initialize the locale environment.
-  setlocale(LC_ALL, "");
-  gpgme_set_locale(NULL, LC_CTYPE, setlocale(LC_CTYPE, NULL));
-  #ifdef LC_MESSAGES
-    gpgme_set_locale(NULL, LC_MESSAGES, setlocale(LC_MESSAGES, NULL));
-  #endif
-  FAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );
-  FAIL_IF_GPGERR( gpgme_new(&mContext) );
-  FAIL_IF_GPGERR( gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP) ); // Check OpenPGP
-  FAIL_IF_GPGERR( gpgme_get_engine_info(&info) );                      // load engine info
-  while ( info && info->protocol != gpgme_get_protocol(mContext) )
-    info = info->next;
-  FAIL_IF_GPGERR( gpgme_ctx_set_engine_info(mContext, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
-
-  QStringList ne = rng.rnd_nameAndEmail();
-  QString keyType = ( tc == AO_ECDSA_PRI_KEY ) ?
-              "key-type:      ECDSA\n"
-              "key-curve:     brainpoolP256r1\n"
-              "subkey-type:   ECDH\n"
-              "subkey-curve:  brainpoolP256r1\n" :
-              "key-type:      RSA\n"
-              "key-length:    3072\n"
-              "subkey-type:   RSA\n"
-              "subkey-length: 3072\n" ;
-
-  QString def = QString( "<GnupgKeyParms format=\"internal\">\n%3"
-                         "key-usage:     sign\n"
-                         "subkey-usage:  encrypt\n"
-                         "name-real:     %1\n"
-                         "name-email:    %2\n"
-                         "name-comment:  Ⓐ\n"
-                         "expire-date:   0\n"
-                         "passphrase:    abc\n"
-                         "</GnupgKeyParms>\n" ).arg(ne.at(0)).arg(ne.at(1)).arg( keyType );
-
-  FAIL_IF_GPGERR( gpgme_op_genkey(mContext, def.toStdString().c_str(), NULL, NULL ) );
-  if (err == gpgme_err_code(GPG_ERR_NO_ERROR) )
-    { gpgme_genkey_result_t res = gpgme_op_genkey_result(mContext);
-      qDebug( "KeyPair::makeNewPair(0x%x) primary:%d sub:%d uid:%d fpr:%s"
-              , tc, res->primary, res->sub, res->uid, res->fpr );
-
-      if (res->primary && res->sub)
-        return true;
-    }
-  qDebug( "fallthrough" );
-  return false;
-}
 
 /**
  * @brief CryptoForm::getKeyInfo - count the keys and store them for individual display
  * @return false if failed somewhere
  */
 bool CryptoForm::getKeyInfo()
-{ gpgme_ctx_t   ctx;
-  gpgme_error_t err;
-  FAIL_IF_GPGERR( initGpgme() )
-  FAIL_IF_GPGERR( gpgme_new( &ctx ) )
-
-  // Count the keys:
-  FAIL_IF_GPGERR( gpgme_op_keylist_start( ctx, NULL, 0 ) )
-  int n = 0;
-  bool done = false;
-  while ( !done )
-    { err = gpgme_op_keylist_next( ctx, &(gpgKeys[n]) );
-      if ( gpg_err_code(err) == GPG_ERR_EOF )
-        done = true;
-       else
-        { FAIL_IF_GPGERR(err)
-          if ( ++n >= MAX_KEYS )
-            { qDebug( "ran out of GPG keys storage, coded max of %d, looping.", MAX_KEYS );
-              done = true;
-            }
-        }
-    }
+{ qint32 n = ce.getKeyInfo();
   ui->selectedKeyNumber->setSuffix( QString( " of %1" ).arg(n) );
   ui->selectedKeyNumber->setMinimum( 1 );
   ui->selectedKeyNumber->setMaximum( n );
 
-  FAIL_IF_GPGERR( gpgme_op_keylist_end( ctx ) )
-  gpgme_release( ctx );
   on_selectedKeyNumber_valueChanged( ui->selectedKeyNumber->value() );
   return true;
 }
@@ -206,7 +105,7 @@ void CryptoForm::on_selectedKeyNumber_valueChanged( int v )
   gpgme_error_t err;
   SHOW_IF_GPGERR( gpgme_new( &ctx ) )
   gpgme_data_t keydata;
-  gpgme_key_t  key = gpgKeys[n];
+  gpgme_key_t  key = ce.gpgKeys[n];
   if ( !key )
     return;
   info.append( QString( "id:%1\nname:%2\nemail:%3\ncomment:%4" )
@@ -275,9 +174,9 @@ void CryptoForm::on_selectedSubkeyNumber_valueChanged( int v )
     { ui->selectedSubkeyInfo->setText( "no keys" );
       return;
     }
-  if ( !gpgKeys[n] )
+  if ( !ce.gpgKeys[n] )
     return;
-  gpgme_subkey_t subkey = gpgKeys[n]->subkeys;
+  gpgme_subkey_t subkey = ce.gpgKeys[n]->subkeys;
   if ( !subkey )
     { ui->selectedSubkeyInfo->setText( "subkeys empty" );
       return;
@@ -323,7 +222,7 @@ bool CryptoForm::getGpgInfo()
 { gpgme_ctx_t   ctx;
   gpgme_error_t err;
 
-  FAIL_IF_GPGERR( initGpgme() )
+  FAIL_IF_GPGERR( ce.initGpgme() )
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
   FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
   gpgme_engine_info_t ei = gpgme_ctx_get_engine_info( ctx );
@@ -351,7 +250,7 @@ bool CryptoForm::getGpgKeys()
   gpgme_error_t err;
   gpgme_data_t  keydata,tempkeydata;
 
-  FAIL_IF_GPGERR( initGpgme() )
+  FAIL_IF_GPGERR( ce.initGpgme() )
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
   FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
   // gpgme_set_armor( ctx, 1 );
@@ -364,12 +263,12 @@ bool CryptoForm::getGpgKeys()
   bool done = false;
   while ( !done )
     { qDebug( "Getting key %d", n );
-      err = gpgme_op_keylist_next( ctx, &(gpgKeys[n]) );
+      err = gpgme_op_keylist_next( ctx, &(ce.gpgKeys[n]) );
       if ( gpg_err_code(err) == GPG_ERR_EOF )
         done = true;
        else
         { FAIL_IF_GPGERR(err)
-          gpgme_key_t key = gpgKeys[n];
+          gpgme_key_t key = ce.gpgKeys[n];
           qDebug( "%s", qPrintable( QString( " got key %1 id:%2 name:%3 email:%4" )
                        .arg( n, 4 ).arg( key->subkeys->keyid )
                        .arg( (key->uids && key->uids->name ) ? key->uids->name  : "undefined" )
@@ -416,7 +315,7 @@ bool CryptoForm::getGpgKeys()
   qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 
   gpgme_data_seek( keydata, 0, SEEK_SET );
-  SHOW_IF_GPGERR( gpgme_op_export_keys( ctx, gpgKeys, GPGME_EXPORT_MODE_MINIMAL, keydata ) )
+  SHOW_IF_GPGERR( gpgme_op_export_keys( ctx, ce.gpgKeys, GPGME_EXPORT_MODE_MINIMAL | GPGME_EXPORT_MODE_SECRET, keydata ) )
   gpgme_data_seek( keydata, 0, SEEK_SET );
   dt = gpgme_data_identify(keydata,0);
   qDebug( "keydata type %d %s", dt, dt == GPGME_DATA_TYPE_PGP_KEY ? "That's a PGP KEY" : "unexpected type" );
@@ -428,7 +327,7 @@ bool CryptoForm::getGpgKeys()
   n = 0;
   done = false;
   while ( !done )
-    { gpgme_key_t key = gpgKeys[n];
+    { gpgme_key_t key = ce.gpgKeys[n];
       if ( !key )
         done = true;
        else

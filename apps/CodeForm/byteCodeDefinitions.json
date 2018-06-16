@@ -249,7 +249,7 @@
     },
     {
         "code": 2050,
-        "cont": "AO_KEYPAIR,AO_SHARES_REF,AO_INDEX32",
+        "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_SHARES_REF,AO_INDEX32",
         "desc": "Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.",
         "pdef": "AO_KEY_ASSET",
         "sepr": true,

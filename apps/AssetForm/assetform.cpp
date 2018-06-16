@@ -21,11 +21,13 @@
  * SOFTWARE.
  */
 #include "assetform.h"
+#include "prikey.h"
 #include "sharesref.h"
 #include <QSettings>
 
-AssetForm::AssetForm( QWidget *cw, MainWinCommon *mw ) :
+AssetForm::AssetForm( QWidget *cw, CryptoForm *cfp, MainWinCommon *mw ) :
     QScrollArea(cw),
+    cf(cfp),
     ui(new Ui::AssetForm)
 { assets.setTypeCode( AO_ASSETS );
   ui->setupUi(this);
@@ -71,25 +73,30 @@ void  AssetForm::updateLabels()
       DataItem *di = it.value();
       if ( di->getTypeCode() == AO_KEY_ASSET )
         { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
-          if ( ka->contains( AO_KEYPAIR ) )
-            { if ( ka->contains( AO_SHARES_REF ) )
-                { SharesRef *sr = qobject_cast<SharesRef *>(DataItem::fromDataItem( ka->value(AO_SHARES_REF) ));
-                  switch ( sr->shareState.value() )
-                    { case KEYS_UNUSED:              unused++;             break;
-                      case KEYS_RECEIPT_NEGOTIATING: receiptNegotiating++; break;
-                      case KEYS_RECEIPT_RECORDING:   receiptRecording++;   break;
-                      case KEYS_CONTROL_SHARES:      controlShares++;      break;
-                      case KEYS_SHARES_ASSIGNED:     sharesAssigned++;     break;
-                      case KEYS_ASSIGNMENT_PENDING:  assignmentPending++;  break;
-                      case KEYS_SHARES_ESCROWED:     sharesEscrowed++;     break;
-                      default: qDebug( "unexpected shareState value: %d", sr->shareState.value() );
+          if ( !ka )
+            { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); }
+           else
+            { if ( ka->contains( AO_ECDSA_PRI_KEY ) ||
+                   ka->contains( AO_RSA3072_PRI_KEY ) )
+                { if ( ka->contains( AO_SHARES_REF ) )
+                    { SharesRef *sr = qobject_cast<SharesRef *>(DataItem::fromDataItem( ka->value(AO_SHARES_REF) ));
+                      switch ( sr->shareState.value() )
+                        { case KEYS_UNUSED:              unused++;             break;
+                          case KEYS_RECEIPT_NEGOTIATING: receiptNegotiating++; break;
+                          case KEYS_RECEIPT_RECORDING:   receiptRecording++;   break;
+                          case KEYS_CONTROL_SHARES:      controlShares++;      break;
+                          case KEYS_SHARES_ASSIGNED:     sharesAssigned++;     break;
+                          case KEYS_ASSIGNMENT_PENDING:  assignmentPending++;  break;
+                          case KEYS_SHARES_ESCROWED:     sharesEscrowed++;     break;
+                          default: qDebug( "unexpected shareState value: %d", sr->shareState.value() );
+                        }
                     }
+                   else
+                    unused++;  // No AO_SHARES_REF implies that the keypair is unused
                 }
                else
-                unused++;  // No AO_SHARES_REF implies that the keypair is unused
-            }
-           else
-            { qDebug( "unexpected: AO_KEY_ASSET with no AO_KEYPAIR" ); }
+                { qDebug( "unexpected: AO_KEY_ASSET with no AO_X_PRI_KEY" ); }
+            } // else - was a successful qobject_cast
         }
        else
         { qDebug( "TODO: handle additional typecode 0x%x", di->getTypeCode() ); }
@@ -101,4 +108,25 @@ void  AssetForm::updateLabels()
   ui->keysSharesAssigned    ->setText( QString::number( sharesAssigned     ) );
   ui->keysAssignmentPending ->setText( QString::number( assignmentPending  ) );
   ui->keysSharesEscrowed    ->setText( QString::number( sharesEscrowed     ) );
+}
+
+void  AssetForm::on_makeNewKey_clicked()
+{ ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
+  typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
+  QByteArray fingerprint = cf->ce.makeNewPair( keyType );
+  if ( fingerprint.size() < 1 )
+    { ui->keyAssetOperationLog->appendPlainText( QString( "makeNewPair( %1 ) failed" ).arg( keyType ) );
+      return;
+    }
+  ui->keyAssetOperationLog->appendPlainText( QString( "fingerprint %1" ).arg( QString::fromUtf8( fingerprint ) ) );
+  QByteArray keyData = cf->ce.exportKey( fingerprint );
+  if ( keyData.size() < 1 )
+    { ui->keyAssetOperationLog->appendPlainText( QString( "exportKey( %1 ) failed" ).arg( QString::fromUtf8( fingerprint ) ) );
+      return;
+    }
+  GenericCollection *gc = new GenericCollection( AO_KEY_ASSET, &assets );
+  gc->insert( keyType, new PriKey( keyType, keyData, gc ) );
+  assets.insert( AO_KEY_ASSET, gc );
+
+  updateLabels();
 }

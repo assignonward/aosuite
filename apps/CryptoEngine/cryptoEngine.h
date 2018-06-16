@@ -31,6 +31,45 @@
 
 #define MAX_KEYS 1000
 
+#define SHOW_IF_GPGERR( op ) \
+err = op;                     \
+if ( err )                     \
+  { qDebug( "Show %s: %s (%d)", \
+     gpgme_strsource(err),       \
+     gpgme_strerror (err),        \
+                     err );        \
+  }
+
+#define BAFAIL_IF_GPGERR( op ) \
+err = op;                     \
+if ( err )                     \
+  { qDebug( "Fail %s: %s (%d)", \
+     gpgme_strsource(err),       \
+     gpgme_strerror (err),        \
+                     err );        \
+    return QByteArray();            \
+  }
+
+#define IFAIL_IF_GPGERR( op ) \
+err = op;                     \
+if ( err )                     \
+  { qDebug( "Fail %s: %s (%d)", \
+     gpgme_strsource(err),       \
+     gpgme_strerror (err),        \
+                     err );        \
+    return -1;                      \
+  }
+
+#define FAIL_IF_GPGERR( op ) \
+err = op;                     \
+if ( err )                     \
+  { qDebug( "Fail %s: %s (%d)", \
+     gpgme_strsource(err),       \
+     gpgme_strerror (err),        \
+                     err );        \
+    return false;                   \
+  }
+
 class CryptoEngine : public QObject
 {
     Q_OBJECT
@@ -39,11 +78,16 @@ public:
          explicit  CryptoEngine( QObject *p = NULL );
                   ~CryptoEngine();
 
-             bool  makeNewPair( typeCode_t tc );
+       QByteArray  makeNewPair( typeCode_t tc );
+       QByteArray  exportKey( QByteArray fingerprint );
     gpgme_error_t  initGpgme();
+           qint32  getKeyInfo();
+             void  setPassphrase( QString pp ) { passphrase = pp; }
 
 public:
       gpgme_key_t  gpgKeys[MAX_KEYS+1];
+          QString  configFolder;
+          QString  passphrase;
 };
 
 #endif // CRYPTOENGINE_H

@@ -51,7 +51,7 @@ void TestForm::on_test_clicked()
 
 void TestForm::on_generateKey_clicked()
 { if ( cf )
-    cf->makeNewPair( (ui->keyType->currentText() == "ECDSA256") ? AO_ECDSA_PRI_KEY : AO_RSA3072_PRI_KEY );
+    cf->ce.makeNewPair( (ui->keyType->currentText() == "ECDSA256") ? AO_ECDSA_PRI_KEY : AO_RSA3072_PRI_KEY );
 }
 
 void TestForm::on_randomName_clicked()

@@ -26,6 +26,7 @@
 #include <QScrollArea>
 #include "genericcollection.h"
 #include "MainWinCommon.h"
+#include "cryptoForm.h"
 #include "ui_assetform.h"
 
 namespace Ui {
@@ -37,15 +38,17 @@ class AssetForm : public QScrollArea
     Q_OBJECT
 
 public:
-      explicit  AssetForm( QWidget *cw, MainWinCommon *mw = NULL);
+      explicit  AssetForm( QWidget *cw, CryptoForm *cfp, MainWinCommon *mw = NULL);
                ~AssetForm();
           void  updateLabels();
 
 public slots:
           void  restoreConfig();
           void  saveConfig();
+          void  on_makeNewKey_clicked();
 
 public:
+QPointer<CryptoForm> cf;
   GenericCollection  assets;
       Ui::AssetForm *ui;
 };

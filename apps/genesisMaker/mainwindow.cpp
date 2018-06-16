@@ -29,9 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 { ui->setupUi(this);
   new AboutForm( ui->aboutTab );
-  af = new AssetForm  ( ui->assetsTab , this );
   cf = new CryptoForm ( ui->cryptoTab , this );
+  af = new AssetForm  ( ui->assetsTab , cf, this );
   gf = new GenesisForm( ui->genesisTab, this );
+  connect( this, SIGNAL(message(QString)),gf->ui->logMessages,SLOT(appendPlainText(QString)) );
+  messageConnected = true;
   restoreConfig();
 }
 

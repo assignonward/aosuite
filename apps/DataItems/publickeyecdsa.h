@@ -36,7 +36,7 @@ public:
               PublicKeyEcdsa( const DataItemBA &di, QObject *p = NULL )
                 : DataFixedLength( di, p ) {}
   QByteArray  get() const;
-        void  set( QByteArray k );
+        void  set( const QByteArray &k );
         void  clear() { ba.clear(); }
     //  bool  isValid() { return (ba.size() == 32); } could do more, this is handled in the parent class
 };

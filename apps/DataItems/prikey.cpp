@@ -134,7 +134,7 @@ void PriKey::operator = ( const DataItemBA &di )
  * @brief PriKey::set - set the key
  * @param k - ready to use key
  */
-void  PriKey::set( const QByteArray k )
+void  PriKey::set( const QByteArray &k )
 { switch ( typeCode )
     { case AO_ECDSA_PRI_KEY:
         privateKeyEcdsa.set( k );

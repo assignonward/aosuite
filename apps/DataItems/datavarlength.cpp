@@ -28,13 +28,13 @@
  * @param p - parent object
  */
 DataVarLength::DataVarLength( const DataItemBA &di, QObject *p )
-  : DataItem( DataItem::typeCodeOf(di), p )
+  : DataItem( typeCodeOf(di), p )
 { if ( di.size() < 2 ) // Shortest valid varlenlong serialized data (1 type + 1 length + 0 data)
     { // TODO: log an exception
       return;
     }
   qint32 i,j;
-  typeCode = bytesToCode( di, i );
+  typeCode     = bytesToCode( di       , i );
   quint32 size = bytesToCode( di.mid(i), j );
   if ( (unsigned int)di.size() < (size+i+j) )
     { qDebug( "problem with size of DataItemBA: %d vs encoded size: %d for type: 0x%x", di.size(),size,typeCode );
@@ -63,7 +63,7 @@ void DataVarLength::operator = ( const DataItemBA &di )
 DataItemBA DataVarLength::toDataItem( bool cf ) const
 { // qDebug( "DataVarLength::toDataItem" );
   DataItemBA di; (void)cf;
-  di.append( codeToBytes( typeCode ) );
+  di.append( codeToBytes( typeCode  ) );
   di.append( codeToBytes( ba.size() ) );
   di.append( ba );
   return di;

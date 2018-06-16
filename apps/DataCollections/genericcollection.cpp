@@ -42,7 +42,7 @@ GenericCollection::GenericCollection( DataItemBA di, QObject *p )
         }
        else
         { qint32 tcs, scs;
-          typeCode_t itc = bytesToCode( di, tcs );          // It's our type
+          typeCode_t itc = bytesToCode( di         , tcs );          // It's our type
           qint32     sz  = bytesToCode( di.mid(tcs), scs );
           DataItemBA items = di.mid( tcs+scs );              // strip off typeCode and size code
           if ( items.size() != sz )
@@ -69,7 +69,7 @@ GenericCollection::GenericCollection( DataItemBA di, QObject *p )
  */
 void GenericCollection::operator = ( const DataItemBA &di )
 { GenericCollection temp( di );
-  itemMM = temp.itemMM;
+  itemMM   = temp.itemMM;
   typeCode = temp.typeCode;
   return;
 }
@@ -79,14 +79,15 @@ void GenericCollection::operator = ( const DataItemBA &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
+#include "stdio.h"
 DataItemBA  GenericCollection::toDataItem( bool cf ) const
-{ // qDebug( "GenericCollection::toDataItem" );
+{ qDebug( "GenericCollection::toDataItem" );
   QByteArrayList dil;
   QMapIterator DataItemMap_t it( itemMM );
   while ( it.hasNext() )
     { it.next();
       dil.append( it.value()->toDataItem(cf) );
-      // qDebug( "appending key %x", key );
+      printf( "appending key 0x%x:%s", typeCodeOf( dil.last() ), qPrintable( QString::fromUtf8( dil.last().toHex() ) ) );
     }
   std::sort( dil.begin(), dil.end() );
   QByteArray dba = dil.join();

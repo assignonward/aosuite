@@ -32,7 +32,7 @@ QByteArray  PublicKeyEcdsa::get() const
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
-        k.append( typeCode );
+        k.append( codeToBytes( typeCode ) );
         k.append( ba );
     }
   return k;
@@ -42,16 +42,17 @@ QByteArray  PublicKeyEcdsa::get() const
  * @brief PublicKeyECDSA::set
  * @param k - 33 byte compressed or 65 byte uncompressed key
  */
-void  PublicKeyEcdsa::set( QByteArray k )
-{ switch ( k.at(0) )
+void  PublicKeyEcdsa::set( const QByteArray &k )
+{ qint32 i;
+  switch ( k.at(0) )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
         if ( k.size() != 33 )
             { // TODO: log error
               return;
             }
-        typeCode = k.at(0);
-        ba = k.mid(1);
+        typeCode = bytesToCode( k, i );
+        ba = k.mid(i);
         return;
 
       case AO_ECDSA_PUB_KEY4:
@@ -59,8 +60,8 @@ void  PublicKeyEcdsa::set( QByteArray k )
             { // TODO: log error
               return;
             }
-        typeCode = k.at(0);
-        ba = k.mid(1);
+        typeCode = bytesToCode( k, i );
+        ba = k.mid(i);
         return;
     }
   // TODO: log error

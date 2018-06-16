@@ -42,7 +42,7 @@ public:
               bool  operator == ( const DataVarLength &d ) { return ba == d.ba; }
               bool  operator != ( const DataVarLength &d ) { return ba != d.ba; }
         QByteArray  get() const { return ba; } // Just the meat, without typecode
-              void  set( QByteArray sba ) { ba = sba; }
+              void  set( const QByteArray &sba ) { ba = sba; }
             qint32  size() const { return ba.size(); }
 
 protected:

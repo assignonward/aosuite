@@ -26,12 +26,8 @@
 #include <QtGui>
 #include "ui_cryptoForm.h"
 #include "MainWinCommon.h"
+#include "cryptoEngine.h"
 #include "dataitem.h"
-
-#include "gpgme.h"
-#include "gpg-error.h"
-
-#define MAX_KEYS 1000
 
 namespace Ui {
 class CryptoForm;
@@ -45,8 +41,6 @@ public:
          explicit  CryptoForm( QWidget *cw, MainWinCommon *mw = NULL );
                   ~CryptoForm();
 
-             bool  makeNewPair( typeCode_t tc );
-    gpgme_error_t  initGpgme();
              bool  getGpgKeys();
              bool  getGpgInfo();
              bool  getKeyInfo();
@@ -54,12 +48,14 @@ public:
 public slots:
              void  on_selectedKeyNumber_valueChanged( int v );
              void  on_selectedSubkeyNumber_valueChanged( int v );
+             void  on_homeFolder_textEdited( QString );
+             void  on_passphrase_textEdited( QString );
              void  on_reread_clicked();
              void  restoreConfig();
              void  saveConfig();
 
 public:
-      gpgme_key_t  gpgKeys[MAX_KEYS+1];
+      CryptoEngine  ce;
     Ui::CryptoForm *ui;
 
 };
