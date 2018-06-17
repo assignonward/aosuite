@@ -73,7 +73,7 @@
 #define AO_GENESIS_REF             0x1b // (1b+var) GenesisRef: Uniquely describes a genesis block, includes list of properties used to calculate new blocks
 #define AO_KEY_INDEX               0x1a // (1a+8) Data64: Key/shares index in the blockchain, simple index number of a public key/shares receipt object in the blockchain
 #define AO_SHARES_REF              0x19 // (19+var) SharesRef: Reference to shares received
-#define AO_ASSETS                  0x18 // (18+var) Assets: A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
+#define AO_ASSETS                  0x820 // (a010+var) Assets: A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
 #define AO_ECDSA_PRI_KEY           0x3800 // (8070+var) PrivateKeyEcdsa:separable An ECDSA private key
 #define AO_RSA3072_PRI_KEY         0x3801 // (8170+var) PrivateKeyRsa3072:separable An RSA3072 private key
 #define AO_KEYPAIR                 0x3802 // (8270+var) KeyPair:separable A (hopefully matching) public-private key pair

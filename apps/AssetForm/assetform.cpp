@@ -55,7 +55,8 @@ void  AssetForm::restoreConfig()
 }
 
 void  AssetForm::saveConfig()
-{ QSettings s;
+{ printf( "AssetForm::saveConfig()\n" );
+  QSettings s;
   s.setValue( "assets", assets.toDataItem() );
 }
 
@@ -67,12 +68,19 @@ void  AssetForm::updateLabels()
   int sharesAssigned     = 0;
   int assignmentPending  = 0;
   int sharesEscrowed     = 0;
-  QMapIterator DataItemMap_t it( assets.mmap() );
+  QMapIterator DataItemMap_t it( assets.itemMM );
+  printf( "reading assets.mmap() size %d\n", assets.mmap().size() );
+
+    DataItem *ip = new GenericCollection( AO_KEY_ASSET );
+    GenericCollection *gp = qobject_cast<GenericCollection *>(ip);
+    printf( "type test 0x%x\n", gp->getTypeCode() );
+
   while ( it.hasNext() )
     { it.next();
       DataItem *di = it.value();
+      printf( "item type 0x%x\n", di->getTypeCode() );
       if ( di->getTypeCode() == AO_KEY_ASSET )
-        { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+        { GenericCollection *ka = (GenericCollection *)di;
           if ( !ka )
             { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); }
            else

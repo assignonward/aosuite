@@ -292,9 +292,10 @@
         "type": "SharesRef"
     },
     {
-        "code": 24,
+        "code": 2080,
         "desc": "A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs",
         "pdef": "AO_ASSETS",
+        "sepr": true,
         "size": -1,
         "type": "Assets"
     },

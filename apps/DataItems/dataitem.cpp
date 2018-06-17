@@ -150,7 +150,8 @@ qint32 DataItem::typeSize( const DataItemBA &di ) const
  * @return a de-serialized "live" DataItem of the type found in the byte array
  */
 DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
-{ switch ( typeCodeOf( di ) )
+{ printf( "making data item type 0x%x size %d\n", typeCodeOf(di), di.size() );
+  switch ( typeCodeOf( di ) )
   { case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( di, p );
     case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( di, p );
     case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( di, p );
