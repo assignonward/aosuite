@@ -23,6 +23,11 @@
 #include "genericcollection.h"
 #include "stdio.h"
 
+
+GenericCollection::GenericCollection( const GenericCollection &r, QObject *p )
+  : DataItem( r.typeCode, p ? p : r.parent() ),
+    itemMM( r.itemMM ) {} // Copy constructor, with optional parent change
+
 /**
  * @brief GenericCollection::GenericCollection - constructor
  * @param di - optional data item
@@ -38,6 +43,7 @@ GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
           ( typeCodeOf( di ) != AO_KEY_ASSET     ) &&
           ( typeCodeOf( di ) != CB_CHAIN_BLOCK   )) // TODO: add more as they are defined
         { typeCode = AO_UNDEFINED_DATAITEM;
+          qDebug( "0x%x is not a GenericCollection", typeCodeOf( di ) );
           // TODO: log an error
           return;
         }
@@ -61,7 +67,7 @@ GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
                     }
                    else
                     { printf( "%d inserting type 0x%x:%s\n", sz, typeCodeOf( items ), qPrintable( QString::fromUtf8( items.left(isz).toHex() ) ) );
-                      itemMM.insert( typeCodeOf( items ), fromDataItem( items.left(isz), this ) );
+                      itemMM.insert( typeCodeOf( items ), fromDataItem( items.left(isz), p ) );
                       items = items.mid(isz); // move on to the next
                       printf( "%d bytes remaining in type 0x%x, size %d\n", items.size(), itc, sz );
                     }
@@ -70,19 +76,19 @@ GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
         }
     }
   printf( "at end of creation, %d items in MM\n", itemMM.size() );
+  debugShow();
 }
 
 /**
  * @brief GenericCollection::operator =
  * @param di - data item to assign
- *
+ */
 void GenericCollection::operator = ( const DataItemBA &di )
 { GenericCollection temp( di );
   itemMM   = temp.itemMM;
-  itemMM.detach();
   typeCode = temp.typeCode;
   return;
-}*/
+}
 
 /**
  * @brief GenericCollection::toDataItem
@@ -152,4 +158,21 @@ DataItemBA  GenericCollection::toHashData( bool cf ) const
   // qDebug( "  hdat:%s",qPrintable( QString::fromUtf8( hd.toHex() ) ) );
   return hd;
 }
+
+void  GenericCollection::debugShow( qint32 level ) const
+{ DataItem::debugShow( level );
+  printf( "%sGenericCollection itemMM.size() %d\n", qPrintable(QString( level, QChar('.') )), itemMM.size() );
+  fflush( stdout );
+  int i = 0;
+  QMapIterator DataItemMap_t it( itemMM );
+  while ( it.hasNext() )
+    { it.next();
+      printf( "%sGenericCollection %d itemMM.key: 0x%x\n", qPrintable(QString( level, QChar('.') )), i, it.key() );
+      printf( "%sGenericCollection %d itemMM.contents:\n", qPrintable(QString( level, QChar('.') )), i );
+      fflush( stdout );
+      i++;
+      it.value()->debugShow( level+1 );
+    }
+}
+
 

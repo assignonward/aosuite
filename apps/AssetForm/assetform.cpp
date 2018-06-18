@@ -50,13 +50,8 @@ AssetForm::~AssetForm()
 void  AssetForm::restoreConfig()
 { QSettings s;
   if ( s.contains( "assets" ) )
-    assets = (DataItemBA)s.value( "assets" ).toByteArray();
-  printf( "assets holds %d items\n", assets.mmap().size() );
-  if ( assets.mmap().contains( AO_KEY_ASSET ) )
-    { printf( "first key asset type 0x%x items %d\n",
-              assets.mmap().value( AO_KEY_ASSET )->getTypeCode(),
-            ((GenericCollection *)assets.mmap().value( AO_KEY_ASSET ))->mmap().size() );
-    }
+    assets = s.value( "assets" ).toByteArray();
+  assets.debugShow();
   updateLabels();
 }
 
@@ -87,9 +82,9 @@ void  AssetForm::updateLabels()
       printf( "item (of %d) type 0x%x\n", assets.itemMM.size(), di->getTypeCode() );
       if ( di->getTypeCode() == AO_KEY_ASSET )
         { fflush(stdout);
-          // GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+          GenericCollection *ka = qobject_cast<GenericCollection *>(di);
           // GenericCollection *ka = dynamic_cast<GenericCollection *>(di);
-          GenericCollection *ka = (GenericCollection *)di;
+          // GenericCollection *ka = (GenericCollection *)di;
           if ( !ka )
             { qDebug( "AO_KEY_ASSET did not dynamic_cast to a GenericCollection" ); }
            else
@@ -146,6 +141,6 @@ void  AssetForm::on_makeNewKey_clicked()
   GenericCollection *gc = new GenericCollection( AO_KEY_ASSET, &assets );
   gc->insert( keyType, new PriKey( keyType, keyData, gc ) );
   assets.insert( AO_KEY_ASSET, gc );
-
+  assets.debugShow();
   updateLabels();
 }

@@ -117,6 +117,7 @@ public:
   static typeCode_t  typeCodeOf( const DataItemBA &di );
  virtual DataItemBA  toDataItem( bool cf = false ) const;
  virtual DataItemBA  toHashData( bool cf = false ) const;
+ virtual       void  debugShow( qint32 level = 0 ) const;
          DataItemBA  getHash( typeCode_t ht = AO_HASH256 ) const;
                bool  verifyHash( const DataItemBA &hdi ) const;
          typeCode_t  getTypeCode() const { return typeCode; }

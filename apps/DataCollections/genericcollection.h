@@ -40,16 +40,15 @@ public:
                 GenericCollection( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
                 GenericCollection( typeCode_t tc, QObject *p = NULL )
                   : DataItem( tc, p ) {} // Empty collection, of a specified type
-                GenericCollection( const GenericCollection &r, QObject *p = NULL )
-                  : DataItem( r.typeCode, p ? p : r.parent() ),
-                    itemMM( r.itemMM ) {} // Copy constructor, with optional parent change
+                GenericCollection( const GenericCollection &r, QObject *p = NULL );
    DataItemMap  mmap() { return itemMM; }
           bool  contains( const typeCode_t &tc ) { return itemMM.contains( tc ); }
       DataItem *value(    const typeCode_t &tc ) { return itemMM.   value( tc ); }
           void  insert(   const typeCode_t &tc, DataItem *dip ) { itemMM.insert( tc, dip ); }
-//          void  operator = ( const DataItemBA &di );
+          void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;
     DataItemBA  toHashData( bool cf = false ) const;
+          void  debugShow( qint32 level = 0 ) const;
 
    DataItemMap  itemMM;  // Collection of pointers to data items of various types
 };

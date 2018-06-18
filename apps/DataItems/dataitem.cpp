@@ -311,6 +311,10 @@ DataItemBA DataItem::toHashData( bool cf ) const
   return toDataItem(cf);
 }
 
+void  DataItem::debugShow( qint32 level ) const
+{ printf( "%sDataItem typeCode 0x%x\n", qPrintable(QString( level, QChar('.') )), typeCode );
+}
+
 /**
  * @brief DataItem::getHash - return the hash of this item
  * @param ht - type of hash to calculate

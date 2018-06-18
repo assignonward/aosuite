@@ -71,7 +71,7 @@ void  CryptoForm::on_homeFolder_textEdited( QString hf )
 
 void  CryptoForm::on_passphrase_textEdited( QString pp )
 { QByteArray ppa = pp.toUtf8();
-  QCryptographicHash h( QCryptographicHash::Keccak_256 );
+  QCryptographicHash h( QCryptographicHash::Sha256 );
   h.addData( ppa );
   QByteArray ha = h.result();
   QString hs = ha.toBase64();

@@ -21,4 +21,9 @@
 # SOFTWARE.
 #
 TEMPLATE = subdirs
-SUBDIRS += ao codeGenerator genesisMaker recorder tests
+SUBDIRS +=  \
+# ao           \
+codeGenerator \
+genesisMaker   \
+# recorder        \
+# tests
