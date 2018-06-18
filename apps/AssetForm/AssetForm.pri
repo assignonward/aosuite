@@ -21,7 +21,7 @@
 
 QT          += core gui widgets
 
-CONFIG      += c++11
+CONFIG      += c++11 rtti
 
 DEFINES     += QAMQP_DEBUG=Y
 

@@ -50,7 +50,13 @@ AssetForm::~AssetForm()
 void  AssetForm::restoreConfig()
 { QSettings s;
   if ( s.contains( "assets" ) )
-    assets = s.value( "assets" ).toByteArray();
+    assets = (DataItemBA)s.value( "assets" ).toByteArray();
+  printf( "assets holds %d items\n", assets.mmap().size() );
+  if ( assets.mmap().contains( AO_KEY_ASSET ) )
+    { printf( "first key asset type 0x%x items %d\n",
+              assets.mmap().value( AO_KEY_ASSET )->getTypeCode(),
+            ((GenericCollection *)assets.mmap().value( AO_KEY_ASSET ))->mmap().size() );
+    }
   updateLabels();
 }
 
@@ -78,13 +84,18 @@ void  AssetForm::updateLabels()
   while ( it.hasNext() )
     { it.next();
       DataItem *di = it.value();
-      printf( "item type 0x%x\n", di->getTypeCode() );
+      printf( "item (of %d) type 0x%x\n", assets.itemMM.size(), di->getTypeCode() );
       if ( di->getTypeCode() == AO_KEY_ASSET )
-        { GenericCollection *ka = (GenericCollection *)di;
+        { fflush(stdout);
+          // GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+          // GenericCollection *ka = dynamic_cast<GenericCollection *>(di);
+          GenericCollection *ka = (GenericCollection *)di;
           if ( !ka )
-            { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); }
+            { qDebug( "AO_KEY_ASSET did not dynamic_cast to a GenericCollection" ); }
            else
-            { if ( ka->contains( AO_ECDSA_PRI_KEY ) ||
+            { printf( "ka typeCode 0x%x %d items", ka->getTypeCode(), ka->itemMM.size() );
+              fflush(stdout);
+              if ( ka->contains( AO_ECDSA_PRI_KEY ) ||
                    ka->contains( AO_RSA3072_PRI_KEY ) )
                 { if ( ka->contains( AO_SHARES_REF ) )
                     { SharesRef *sr = qobject_cast<SharesRef *>(DataItem::fromDataItem( ka->value(AO_SHARES_REF) ));

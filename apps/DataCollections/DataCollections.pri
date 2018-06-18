@@ -21,6 +21,8 @@
 # SOFTWARE.
 #
 
+CONFIG      += rtti
+
 INCLUDEPATH += $${PWD}
 
 SOURCES     += $${PWD}/assignment.cpp        \

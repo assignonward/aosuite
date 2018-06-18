@@ -26,6 +26,7 @@ include(../GenesisForm/GenesisForm.pri)
 include(../AssetForm/AssetForm.pri)
 
 QT        += core gui widgets
+CONFIG    += rtti
 TARGET     = genesisMaker
 TEMPLATE   = app
 DEFINES   += QT_DEPRECATED_WARNINGS

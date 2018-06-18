@@ -112,7 +112,7 @@ public:
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
              qint32  typeSize( const DataItemBA &di ) const;
   static   DataItem *fromDataItem( const DataItemBA &di, QObject *p = NULL );
-  static   DataItem *fromDataItem( const DataItem *di, QObject *p = NULL );
+  static   DataItem *fromDataItem( const DataItem   *di, QObject *p = NULL );
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const DataItemBA &di );
  virtual DataItemBA  toDataItem( bool cf = false ) const;

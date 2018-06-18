@@ -28,7 +28,7 @@
  * @param di - optional data item
  * @param p - optional parent object
  */
-GenericCollection::GenericCollection( DataItemBA di, QObject *p )
+GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
                      : DataItem( typeCodeOf(di), p )
 { // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -45,37 +45,44 @@ GenericCollection::GenericCollection( DataItemBA di, QObject *p )
         { qint32 tcs, scs;
           typeCode_t itc = bytesToCode( di         , tcs );          // It's our type
           qint32     sz  = bytesToCode( di.mid(tcs), scs );
-          printf( "GenericCollection() type 0x%x, size %d\n", itc, sz );
+          printf( "GenericCollection() type 0x%x (0x%x), size %d\n", itc, getTypeCode(), sz );
           DataItemBA items = di.mid( tcs+scs );              // strip off typeCode and size code
           if ( items.size() != sz )
-            qDebug( "size disagreement between items %d and container %d for type 0x%x", items.size(), sz, itc );
-          while ( items.size() > 0 )
-            { int isz = typeSize( items );
-              if ( isz <= 0 )
-                { // TODO: log error
-                  return;
-                }
-               else
-                { printf( "inserting type 0x%x:%s\n", typeCodeOf( items ), qPrintable( QString::fromUtf8( items.left(isz).toHex() ) ) );
-                  itemMM.insert( typeCodeOf( items ), fromDataItem( items.left(isz), this ) );
-                  items = items.mid( isz ); // move on to the next
-                  printf( "%d bytes remaining in type 0x%x, size %d\n", items.size(), itc, sz );
+            { printf( "size disagreement between items %d and container %d for type 0x%x", items.size(), sz, itc );
+              setTypeCode( AO_UNDEFINED_DATAITEM );
+            }
+           else
+            { while ( items.size() > 0 )
+                { int isz = typeSize( items );
+                  if ( isz <= 0 )
+                    { printf( "typeSize() %d makes no sense.", isz );
+                      // TODO: log error
+                      return;
+                    }
+                   else
+                    { printf( "%d inserting type 0x%x:%s\n", sz, typeCodeOf( items ), qPrintable( QString::fromUtf8( items.left(isz).toHex() ) ) );
+                      itemMM.insert( typeCodeOf( items ), fromDataItem( items.left(isz), this ) );
+                      items = items.mid(isz); // move on to the next
+                      printf( "%d bytes remaining in type 0x%x, size %d\n", items.size(), itc, sz );
+                    }
                 }
             }
         }
     }
+  printf( "at end of creation, %d items in MM\n", itemMM.size() );
 }
 
 /**
  * @brief GenericCollection::operator =
  * @param di - data item to assign
- */
+ *
 void GenericCollection::operator = ( const DataItemBA &di )
 { GenericCollection temp( di );
   itemMM   = temp.itemMM;
+  itemMM.detach();
   typeCode = temp.typeCode;
   return;
-}
+}*/
 
 /**
  * @brief GenericCollection::toDataItem
@@ -90,10 +97,14 @@ DataItemBA  GenericCollection::toDataItem( bool cf ) const
   printf( "%d items\n", itemMM.size() );
   while ( it.hasNext() )
     { it.next();
-      printf( "appending key 0x%x\n", it.value()->getTypeCode() );
-      fflush(stdout);
-      dil.append( it.value()->toDataItem(cf) );
-      printf( "appended key 0x%x:%s\n", typeCodeOf( dil.last() ), qPrintable( QString::fromUtf8( dil.last().toHex() ) ) );
+      if ( it.key() != it.value()->getTypeCode() )
+        { printf( "ERROR: key 0x%x does not match typeCode 0x%x, skipping.\n", it.key(), it.value()->getTypeCode() ); }
+       else
+        { printf( "appending key 0x%x typeCode 0x%x\n", it.key(), it.value()->getTypeCode() );
+          fflush(stdout);
+          dil.append( it.value()->toDataItem(cf) );
+          printf( "appended key 0x%x:%s\n", typeCodeOf( dil.last() ), qPrintable( QString::fromUtf8( dil.last().toHex() ) ) );
+        }
     }
   std::sort( dil.begin(), dil.end() );
   QByteArray dba = dil.join();

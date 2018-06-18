@@ -21,6 +21,8 @@
 # SOFTWARE.
 #
 
+CONFIG      += rtti
+
 INCLUDEPATH += $${PWD}
 INCLUDEPATH += /usr/include
 
