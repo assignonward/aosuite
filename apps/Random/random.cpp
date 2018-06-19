@@ -96,6 +96,10 @@ QStringList Random::rnd_nameAndEmail()
                               femaleNames.at( rnd_uint64() % femaleNames.size() ) ;
   QString middleName = male ?   maleNames.at( rnd_uint64() %   maleNames.size() ) :
                               femaleNames.at( rnd_uint64() % femaleNames.size() ) ;
+  while ( middleName == firstName )
+    { middleName = male ?   maleNames.at( rnd_uint64() %   maleNames.size() ) :
+                          femaleNames.at( rnd_uint64() % femaleNames.size() ) ;
+    }
   QString lastName    =    lastNames.at( rnd_uint64() %    lastNames.size() );
   QString emailDomain = emailDomains.at( rnd_uint64() % emailDomains.size() );
 

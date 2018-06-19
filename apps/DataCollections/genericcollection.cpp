@@ -24,9 +24,13 @@
 #include "stdio.h"
 
 
-GenericCollection::GenericCollection( const GenericCollection &r, QObject *p )
-  : DataItem( r.typeCode, p ? p : r.parent() ),
-    itemMM( r.itemMM ) {} // Copy constructor, with optional parent change
+void GenericCollection::deleteItemsLater()
+{ QMapIterator DataItemMap_t it( itemMM );
+  while ( it.hasNext() )
+    { it.next();
+      it.value()->deleteLater();
+    }
+}
 
 /**
  * @brief GenericCollection::GenericCollection - constructor
@@ -49,34 +53,29 @@ GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
         }
        else
         { qint32 tcs, scs;
-          typeCode_t itc = bytesToCode( di         , tcs );          // It's our type
+          typeCode_t itc = bytesToCode( di         , tcs ); // It's our type
           qint32     sz  = bytesToCode( di.mid(tcs), scs );
-          printf( "GenericCollection() type 0x%x (0x%x), size %d\n", itc, getTypeCode(), sz );
-          DataItemBA items = di.mid( tcs+scs );              // strip off typeCode and size code
-          if ( items.size() != sz )
-            { printf( "size disagreement between items %d and container %d for type 0x%x", items.size(), sz, itc );
+          DataItemBA dib = di.mid( tcs+scs );               // strip off typeCode and size code
+          if ( dib.size() != sz )
+            { qDebug( "size disagreement between items %d and container %d for type 0x%x", dib.size(), sz, itc );
               setTypeCode( AO_UNDEFINED_DATAITEM );
             }
            else
-            { while ( items.size() > 0 )
-                { int isz = typeSize( items );
+            { while ( dib.size() > 0 )
+                { int isz = typeSize( dib );
                   if ( isz <= 0 )
-                    { printf( "typeSize() %d makes no sense.", isz );
+                    { qDebug( "typeSize() %d makes no sense.", isz );
                       // TODO: log error
                       return;
                     }
                    else
-                    { printf( "%d inserting type 0x%x:%s\n", sz, typeCodeOf( items ), qPrintable( QString::fromUtf8( items.left(isz).toHex() ) ) );
-                      itemMM.insert( typeCodeOf( items ), fromDataItem( items.left(isz), p ) );
-                      items = items.mid(isz); // move on to the next
-                      printf( "%d bytes remaining in type 0x%x, size %d\n", items.size(), itc, sz );
+                    { itemMM.insert( typeCodeOf( dib ), fromDataItem( dib.left(isz), p ) );
+                      dib = dib.mid(isz); // move on to the next
                     }
                 }
             }
         }
     }
-  printf( "at end of creation, %d items in MM\n", itemMM.size() );
-  debugShow();
 }
 
 /**
@@ -85,6 +84,7 @@ GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
  */
 void GenericCollection::operator = ( const DataItemBA &di )
 { GenericCollection temp( di );
+  deleteItemsLater(); // Clean out old items before assigning new ones.
   itemMM   = temp.itemMM;
   typeCode = temp.typeCode;
   return;
@@ -95,21 +95,16 @@ void GenericCollection::operator = ( const DataItemBA &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-#include "stdio.h"
 DataItemBA  GenericCollection::toDataItem( bool cf ) const
-{ printf( "GenericCollection::toDataItem\n" );
+{ // qDebug( "GenericCollection::toDataItem" );
   QByteArrayList dil;
   QMapIterator DataItemMap_t it( itemMM );
-  printf( "%d items\n", itemMM.size() );
   while ( it.hasNext() )
     { it.next();
       if ( it.key() != it.value()->getTypeCode() )
-        { printf( "ERROR: key 0x%x does not match typeCode 0x%x, skipping.\n", it.key(), it.value()->getTypeCode() ); }
+        { qDebug( "ERROR: key 0x%x does not match typeCode 0x%x, skipping.", it.key(), it.value()->getTypeCode() ); }
        else
-        { printf( "appending key 0x%x typeCode 0x%x\n", it.key(), it.value()->getTypeCode() );
-          fflush(stdout);
-          dil.append( it.value()->toDataItem(cf) );
-          printf( "appended key 0x%x:%s\n", typeCodeOf( dil.last() ), qPrintable( QString::fromUtf8( dil.last().toHex() ) ) );
+        { dil.append( it.value()->toDataItem(cf) );
         }
     }
   std::sort( dil.begin(), dil.end() );
@@ -161,15 +156,13 @@ DataItemBA  GenericCollection::toHashData( bool cf ) const
 
 void  GenericCollection::debugShow( qint32 level ) const
 { DataItem::debugShow( level );
-  printf( "%sGenericCollection itemMM.size() %d\n", qPrintable(QString( level, QChar('.') )), itemMM.size() );
-  fflush( stdout );
+  qDebug( "%sGenericCollection itemMM.size() %d", qPrintable(QString( level, QChar('.') )), itemMM.size() );
   int i = 0;
   QMapIterator DataItemMap_t it( itemMM );
   while ( it.hasNext() )
     { it.next();
-      printf( "%sGenericCollection %d itemMM.key: 0x%x\n", qPrintable(QString( level, QChar('.') )), i, it.key() );
-      printf( "%sGenericCollection %d itemMM.contents:\n", qPrintable(QString( level, QChar('.') )), i );
-      fflush( stdout );
+      qDebug( "%sGenericCollection %d itemMM.key: 0x%x", qPrintable(QString( level, QChar('.') )), i, it.key() );
+      qDebug( "%sGenericCollection %d itemMM.contents:", qPrintable(QString( level, QChar('.') )), i );
       i++;
       it.value()->debugShow( level+1 );
     }

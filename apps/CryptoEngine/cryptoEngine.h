@@ -80,6 +80,7 @@ public:
 
        QByteArray  makeNewPair( typeCode_t tc );
        QByteArray  exportKey( QByteArray fingerprint );
+             bool  importKey( QByteArray priKeyData );
     gpgme_error_t  initGpgme();
            qint32  getKeyInfo();
              void  setPassphrase( QString pp ) { passphrase = pp; }

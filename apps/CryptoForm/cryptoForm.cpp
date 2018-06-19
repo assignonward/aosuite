@@ -24,6 +24,7 @@
 #include <QFileDialog>
 #include "Key.h"
 #include "random.h"
+#include "gcrypt.h"
 
 CryptoForm::CryptoForm( QWidget *cw, MainWinCommon *mw ) :
     QScrollArea(cw),
@@ -226,7 +227,7 @@ bool CryptoForm::getGpgInfo()
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
   FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
   gpgme_engine_info_t ei = gpgme_ctx_get_engine_info( ctx );
-
+  ui->gpgme_version             ->setText( gpgme_check_version( NULL ) );
   ui->engine_protocol           ->setText( gpgme_get_protocol_name( ei->protocol ) );
   ui->engine_filename           ->setText( ei->file_name );
   ui->engine_home_dir           ->setText( ei->home_dir  );
@@ -236,7 +237,7 @@ bool CryptoForm::getGpgInfo()
   ui->engine_canonical_text_mode->setText( gpgme_get_textmode(ctx) ? "Canonical text mode" : "not text mode" );
   ui->engine_offline_mode       ->setText( gpgme_get_offline (ctx) ? "enabled" : "not enabled" );
   ui->engine_keylist_mode       ->setText( QString( "0x%1" ).arg( gpgme_get_keylist_mode(ctx), 2, 16, QChar('0') ) );
-
+  ui->gcry_config               ->setText( gcry_get_config(0,NULL) );
   gpgme_release( ctx );
   return true;
 }

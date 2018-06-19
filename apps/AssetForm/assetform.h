@@ -46,6 +46,7 @@ public slots:
           void  restoreConfig();
           void  saveConfig();
           void  on_makeNewKey_clicked();
+          void  on_importToGpg_clicked();
 
 public:
 QPointer<CryptoForm> cf;

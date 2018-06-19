@@ -55,7 +55,7 @@ QByteArray CryptoEngine::makeNewPair( typeCode_t tc )
     { qDebug( "KeyPair::makeNewPair unrecognized type (0x%x)", tc );
       return QByteArray();
     }
-  gpgme_ctx_t mContext;
+  gpgme_ctx_t ctx;
   gpgme_engine_info_t info;
   gpgme_error_t  err = GPG_ERR_NO_ERROR;
   QByteArray cfs = configFolder.toUtf8();
@@ -71,12 +71,12 @@ QByteArray CryptoEngine::makeNewPair( typeCode_t tc )
     gpgme_set_locale(NULL, LC_MESSAGES, setlocale(LC_MESSAGES, NULL));
   #endif
   BAFAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );
-  BAFAIL_IF_GPGERR( gpgme_new(&mContext) );
+  BAFAIL_IF_GPGERR( gpgme_new(&ctx) );
   BAFAIL_IF_GPGERR( gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP) ); // Check OpenPGP
   BAFAIL_IF_GPGERR( gpgme_get_engine_info(&info) );                      // load engine info
-  while ( info && info->protocol != gpgme_get_protocol(mContext) )
+  while ( info && info->protocol != gpgme_get_protocol(ctx) )
     info = info->next;
-  BAFAIL_IF_GPGERR( gpgme_ctx_set_engine_info(mContext, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
+  BAFAIL_IF_GPGERR( gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
 
   QStringList ne = rng.rnd_nameAndEmail();
   QString keyType = ( tc == AO_ECDSA_PRI_KEY ) ?
@@ -103,18 +103,24 @@ QByteArray CryptoEngine::makeNewPair( typeCode_t tc )
                                                .arg( keyType )
                                                .arg( passphrase );
 
-  BAFAIL_IF_GPGERR( gpgme_op_genkey(mContext, def.toStdString().c_str(), NULL, NULL ) );
+  BAFAIL_IF_GPGERR( gpgme_op_genkey(ctx, def.toStdString().c_str(), NULL, NULL ) );
   if (err == gpgme_err_code(GPG_ERR_NO_ERROR) )
-    { gpgme_genkey_result_t res = gpgme_op_genkey_result(mContext);
+    { gpgme_genkey_result_t res = gpgme_op_genkey_result(ctx);
       qDebug( "KeyPair::makeNewPair(0x%x) primary:%d sub:%d uid:%d fpr:%s"
               , tc, res->primary, res->sub, res->uid, res->fpr );
 
       if (res->primary && res->sub)
-        return QByteArray( res->fpr );
+        { QByteArray fp = QByteArray( res->fpr );
+          gpgme_release(ctx);
+          return fp;
+        }
     }
   qDebug( "fallthrough" );
+  gpgme_release(ctx);
+
   return QByteArray();
 }
+
 
 /**
  * @brief CryptoEngine::getKeyInfo - count the keys and store them for individual display
@@ -142,6 +148,8 @@ qint32 CryptoEngine::getKeyInfo()
             }
         }
     }
+  gpgme_release(ctx);
+
   return n;
 }
 
@@ -152,7 +160,6 @@ qint32 CryptoEngine::getKeyInfo()
  */
 QByteArray  CryptoEngine::exportKey( QByteArray fingerprint )
 { qDebug( "CryptoEngine::exportKey" );
-
   gpgme_ctx_t ctx;
   gpgme_engine_info_t info;
   gpgme_error_t  err = GPG_ERR_NO_ERROR;
@@ -185,5 +192,60 @@ QByteArray  CryptoEngine::exportKey( QByteArray fingerprint )
   char buf[131072];
   ssize_t sz = gpgme_data_read( keydata, buf, 131072 );
   qDebug( "Read %ld bytes\n", sz );
+
+  // Find the key, then delete it from the keyring
+  gpgme_key_t key;
+  SHOW_IF_GPGERR( gpgme_op_keylist_start( ctx, pattern, 1 ) )
+  SHOW_IF_GPGERR( gpgme_op_keylist_next ( ctx, &key ) )
+  if ( !key )
+    { qDebug( "key not found by fingerprint %s", pattern ); }
+   else
+    { if ( key->invalid )
+        { qDebug( "key invalid" ); }
+       else
+        { SHOW_IF_GPGERR( gpgme_op_delete_ext( ctx, key, GPGME_DELETE_ALLOW_SECRET | GPGME_DELETE_FORCE ) ) }
+    }
+  gpgme_release(ctx);
+
   return QByteArray( buf, sz );
+}
+
+/**
+ * @brief CryptoEngine::importKey - attempt to import a key to the gpg keyring from a binary blob
+ * @param priKeyData - the same bytes that were returned from exportKey
+ * @return true if successful
+ */
+bool CryptoEngine::importKey( QByteArray priKeyData )
+{ qDebug( "CryptoEngine::importKey" );
+
+  gpgme_ctx_t ctx;
+  gpgme_engine_info_t info;
+  gpgme_error_t  err = GPG_ERR_NO_ERROR;
+  QByteArray cfs = configFolder.toUtf8();
+  const char * CONFIG_DIR = cfs.data();
+
+  // Initializes gpgme
+  gpgme_check_version(NULL);
+
+  // Initialize the locale environment.
+  setlocale(LC_ALL, "");
+  gpgme_set_locale(NULL, LC_CTYPE, setlocale(LC_CTYPE, NULL));
+  #ifdef LC_MESSAGES
+    gpgme_set_locale(NULL, LC_MESSAGES, setlocale(LC_MESSAGES, NULL));
+  #endif
+  FAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );
+  FAIL_IF_GPGERR( gpgme_new(&ctx) );
+  FAIL_IF_GPGERR( gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP) ); // Check OpenPGP
+  FAIL_IF_GPGERR( gpgme_get_engine_info(&info) );                      // load engine info
+  while ( info && info->protocol != gpgme_get_protocol(ctx) )
+    info = info->next;
+  FAIL_IF_GPGERR( gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
+
+  gpgme_data_t keydata;
+  FAIL_IF_GPGERR( gpgme_data_new_from_mem(&keydata,priKeyData.data(),priKeyData.size(),0) )
+  qDebug( "about to import" );
+  FAIL_IF_GPGERR( gpgme_op_import(ctx, keydata) )
+  gpgme_release(ctx);
+
+  return true;
 }

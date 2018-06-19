@@ -51,12 +51,12 @@ void  AssetForm::restoreConfig()
 { QSettings s;
   if ( s.contains( "assets" ) )
     assets = s.value( "assets" ).toByteArray();
-  assets.debugShow();
+  // assets.debugShow();
   updateLabels();
 }
 
 void  AssetForm::saveConfig()
-{ printf( "AssetForm::saveConfig()\n" );
+{ qDebug( "AssetForm::saveConfig()" );
   QSettings s;
   s.setValue( "assets", assets.toDataItem() );
 }
@@ -70,26 +70,18 @@ void  AssetForm::updateLabels()
   int assignmentPending  = 0;
   int sharesEscrowed     = 0;
   QMapIterator DataItemMap_t it( assets.itemMM );
-  printf( "reading assets.mmap() size %d\n", assets.mmap().size() );
-
-    DataItem *ip = new GenericCollection( AO_KEY_ASSET );
-    GenericCollection *gp = qobject_cast<GenericCollection *>(ip);
-    printf( "type test 0x%x\n", gp->getTypeCode() );
+  // qDebug( "reading assets.mmap() size %d", assets.mmap().size() );
 
   while ( it.hasNext() )
     { it.next();
       DataItem *di = it.value();
-      printf( "item (of %d) type 0x%x\n", assets.itemMM.size(), di->getTypeCode() );
+      // qDebug( "item (of %d) type 0x%x", assets.itemMM.size(), di->getTypeCode() );
       if ( di->getTypeCode() == AO_KEY_ASSET )
-        { fflush(stdout);
-          GenericCollection *ka = qobject_cast<GenericCollection *>(di);
-          // GenericCollection *ka = dynamic_cast<GenericCollection *>(di);
-          // GenericCollection *ka = (GenericCollection *)di;
+        { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
           if ( !ka )
-            { qDebug( "AO_KEY_ASSET did not dynamic_cast to a GenericCollection" ); }
+            { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); }
            else
-            { printf( "ka typeCode 0x%x %d items", ka->getTypeCode(), ka->itemMM.size() );
-              fflush(stdout);
+            { // qDebug( "ka typeCode 0x%x %d items", ka->getTypeCode(), ka->itemMM.size() );
               if ( ka->contains( AO_ECDSA_PRI_KEY ) ||
                    ka->contains( AO_RSA3072_PRI_KEY ) )
                 { if ( ka->contains( AO_SHARES_REF ) )
@@ -141,6 +133,57 @@ void  AssetForm::on_makeNewKey_clicked()
   GenericCollection *gc = new GenericCollection( AO_KEY_ASSET, &assets );
   gc->insert( keyType, new PriKey( keyType, keyData, gc ) );
   assets.insert( AO_KEY_ASSET, gc );
-  assets.debugShow();
   updateLabels();
 }
+
+void  AssetForm::on_importToGpg_clicked()
+{ QMapIterator DataItemMap_t it( assets.itemMM );
+  qDebug( "reading assets.mmap() size %d", assets.mmap().size() );
+  while ( it.hasNext() )
+    { it.next();
+      DataItem *di = it.value();
+      // qDebug( "item (of %d) type 0x%x", assets.itemMM.size(), di->getTypeCode() );
+      if ( di->getTypeCode() == AO_KEY_ASSET )
+        { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+          if ( !ka )
+            { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); }
+           else
+            { // qDebug( "ka typeCode 0x%x %d items", ka->getTypeCode(), ka->itemMM.size() );
+              if ( ka->contains( AO_ECDSA_PRI_KEY ) ||
+                   ka->contains( AO_RSA3072_PRI_KEY ) )
+                { bool proceed = true;
+                  if ( ka->contains( AO_SHARES_REF ) )
+                    { SharesRef *sr = qobject_cast<SharesRef *>(DataItem::fromDataItem( ka->value(AO_SHARES_REF) ));
+                      if ( sr->shareState.value() != KEYS_UNUSED )
+                        proceed = false;
+                    }
+                  if ( proceed )
+                    { DataItem *di;
+                      QByteArray ba;
+                      if ( ka->contains( AO_ECDSA_PRI_KEY ) )
+                        { di = ka->value( AO_ECDSA_PRI_KEY );
+                          PrivateKeyEcdsa *pk = qobject_cast<PrivateKeyEcdsa *>(di);
+                          if ( pk )
+                            ba = pk->get();
+                           else
+                            qDebug( "qobject_cast<PrivateKeyEcdsa *> returned NULL" );
+                        }
+                       else
+                        { di = ka->value( AO_RSA3072_PRI_KEY );
+                          PrivateKeyRsa3072 *pk = qobject_cast<PrivateKeyRsa3072 *>(di);
+                          if ( pk )
+                            ba = pk->get();
+                           else
+                            qDebug( "qobject_cast<PrivateKeyRsa3072 *> returned NULL" );
+                        }
+                      if ( ba.size() > 0 )
+                        { if ( !cf->ce.importKey( ba ) )
+                            qDebug( "importKey failed" );
+                        }
+                    } // if proceed
+                }    // ka contains a key
+            }       // ka successfully cast to a Generic Collection
+        }          // if di is a key asset
+    }             // while it hasNext
+}                // on_importToGpg_clicked()
+

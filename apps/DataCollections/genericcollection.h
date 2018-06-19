@@ -40,7 +40,10 @@ public:
                 GenericCollection( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
                 GenericCollection( typeCode_t tc, QObject *p = NULL )
                   : DataItem( tc, p ) {} // Empty collection, of a specified type
-                GenericCollection( const GenericCollection &r, QObject *p = NULL );
+                GenericCollection( const GenericCollection &r, QObject *p )
+                  : DataItem( r.typeCode, p ? p : r.parent() ),
+                    itemMM( r.itemMM ) {} // Copy constructor, with optional parent change
+          void  deleteItemsLater();
    DataItemMap  mmap() { return itemMM; }
           bool  contains( const typeCode_t &tc ) { return itemMM.contains( tc ); }
       DataItem *value(    const typeCode_t &tc ) { return itemMM.   value( tc ); }
