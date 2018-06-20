@@ -28,6 +28,7 @@
 
 #include "gpgme.h"
 #include "gpg-error.h"
+#include "gcrypt.h"
 
 #define MAX_KEYS 1000
 
@@ -78,7 +79,9 @@ public:
          explicit  CryptoEngine( QObject *p = NULL );
                   ~CryptoEngine();
 
-       QByteArray  makeNewPair( typeCode_t tc );
+      gcry_sexp_t  makeNewGCryPair( typeCode_t tc );
+
+       QByteArray  makeNewGpgPair( typeCode_t tc );
        QByteArray  exportKey( QByteArray fingerprint );
              bool  importKey( QByteArray priKeyData );
     gpgme_error_t  initGpgme();

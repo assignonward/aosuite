@@ -119,7 +119,15 @@ void  AssetForm::updateLabels()
 void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
-  QByteArray fingerprint = cf->ce.makeNewPair( keyType );
+  gcry_sexp_t keypair = cf->ce.makeNewGCryPair( keyType );
+  void *buffer = malloc( 8192 );
+  size_t sz = gcry_sexp_sprint( keypair, GCRYSEXP_FMT_DEFAULT, buffer, 8192 );
+  QByteArray ba = QByteArray::fromRawData( (const char *)buffer, sz );
+  ui->keyAssetOperationLog->appendPlainText( QString( "made %1 bytes %2" ).arg( sz ).arg( ba.size() ));
+  ui->keyAssetOperationLog->appendPlainText( QString::fromUtf8( ba ) );
+
+/*
+  QByteArray fingerprint = cf->ce.makeNewGpgPair( keyType );
   if ( fingerprint.size() < 1 )
     { ui->keyAssetOperationLog->appendPlainText( QString( "makeNewPair( %1 ) failed" ).arg( keyType ) );
       return;
@@ -134,6 +142,7 @@ void  AssetForm::on_makeNewKey_clicked()
   gc->insert( keyType, new PriKey( keyType, keyData, gc ) );
   assets.insert( AO_KEY_ASSET, gc );
   updateLabels();
+*/
 }
 
 void  AssetForm::on_importToGpg_clicked()

@@ -31,6 +31,36 @@ CryptoEngine::CryptoEngine( QObject *p ) : QObject( p )
 CryptoEngine::~CryptoEngine()
 {}
 
+/**
+ * @brief CryptoEngine::makeNewGCryPair
+ * @param tc - type of keypair to make
+ * @return ByteArray with the key data?
+ *
+ * gcry_error_t gcry_pk_genkey(gcry_sexp_t *r_key, gcry_sexp_t parms)
+ *   This function create a new public key pair using information given in the
+ *   S-expression parms and stores the private and the public key in one new
+ *   S-expression at the address given by r_key. In case of an error, r_key is
+ *   set to NULL. The return code is 0 for success or an error code otherwise.
+ */
+gcry_sexp_t CryptoEngine::makeNewGCryPair( typeCode_t tc )
+{ gpgme_error_t err;
+  gcry_sexp_t parms;
+  gcry_sexp_t keypair;
+
+  if ( tc == AO_ECDSA_PRI_KEY )
+    { SHOW_IF_GPGERR( gcry_sexp_build(&parms, NULL, "(genkey (ecc (curve brainpoolP256r1)))") ) }
+   else if ( tc == AO_RSA3072_PRI_KEY )
+    { SHOW_IF_GPGERR( gcry_sexp_build(&parms, NULL, "(genkey (rsa (nbits 4:3072)))") ) }
+   else
+    { qDebug( "CryptoEngine::makeNewGCryPair(0x%x) invalid type", tc );
+      return keypair;
+    }
+  SHOW_IF_GPGERR( gcry_pk_genkey(&keypair, parms) )
+  return keypair;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
 
 gpgme_error_t CryptoEngine::initGpgme()
 { if ( !gpgme_check_version( "1.8.1" ) )
@@ -44,15 +74,15 @@ gpgme_error_t CryptoEngine::initGpgme()
 }
 
 /**
- * @brief CryptoEngine:makeNewPair
+ * @brief CryptoEngine:makeNewGpgPair
  * @param tc - type of keyPair to make (using the private key type).
  * @return fingerprint string of the new key pair if successful, empty byte array if fail.
  */
-QByteArray CryptoEngine::makeNewPair( typeCode_t tc )
-{ qDebug( "KeyPair::makeNewPair( 0x%x )", tc );
+QByteArray CryptoEngine::makeNewGpgPair( typeCode_t tc )
+{ qDebug( "CryptoEngine::makeNewGpgPair( 0x%x )", tc );
   if (( tc != AO_ECDSA_PRI_KEY ) &&
       ( tc != AO_RSA3072_PRI_KEY ))
-    { qDebug( "KeyPair::makeNewPair unrecognized type (0x%x)", tc );
+    { qDebug( "CryptoEngine::makeNewGpgPair unrecognized type (0x%x)", tc );
       return QByteArray();
     }
   gpgme_ctx_t ctx;
