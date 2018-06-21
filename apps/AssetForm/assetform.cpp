@@ -120,11 +120,26 @@ void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
   gcry_sexp_t keypair = cf->ce.makeNewGCryPair( keyType );
+
   void *buffer = malloc( 8192 );
-  size_t sz = gcry_sexp_sprint( keypair, GCRYSEXP_FMT_DEFAULT, buffer, 8192 );
-  QByteArray ba = QByteArray::fromRawData( (const char *)buffer, sz );
-  ui->keyAssetOperationLog->appendPlainText( QString( "made %1 bytes %2" ).arg( sz ).arg( ba.size() ));
-  ui->keyAssetOperationLog->appendPlainText( QString::fromUtf8( ba ) );
+  size_t sz;
+  QByteArray ba;
+  gcry_sexp_t pkSexp = gcry_sexp_find_token(keypair, "d", 1);
+  sz = gcry_sexp_sprint( pkSexp, GCRYSEXP_FMT_DEFAULT, buffer, 8192 );
+  const char *data = gcry_sexp_nth_data(pkSexp, 1, &sz);
+  ba = QByteArray::fromRawData( data, sz );
+  ui->keyAssetOperationLog->appendPlainText( QString( "d (%2): %1" ).arg( QString::fromUtf8( ba.toHex() ) ).arg( sz ) );
+
+  pkSexp = gcry_sexp_find_token(keypair, "q", 1);
+  sz = gcry_sexp_sprint( pkSexp, GCRYSEXP_FMT_DEFAULT, buffer, 8192 );
+  data = gcry_sexp_nth_data(pkSexp, 1, &sz);
+  ba = QByteArray::fromRawData( data, sz );
+  ui->keyAssetOperationLog->appendPlainText( QString( "q (%2): %1" ).arg( QString::fromUtf8( ba.toHex() ) ).arg( sz ) );
+
+  gcry_sexp_release(pkSexp);
+  gcry_sexp_release(keypair);
+
+  // https://www.gnupg.org/documentation/manuals/gcrypt/Working-with-S_002dexpressions.html
 
 /*
   QByteArray fingerprint = cf->ce.makeNewGpgPair( keyType );

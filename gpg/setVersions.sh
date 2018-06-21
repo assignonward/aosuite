@@ -11,7 +11,7 @@ git checkout libgpg-error-1.31
 popd
 
 pushd libgcrypt
-git checkout libgcrypt-1.8.2
+git checkout libgcrypt-1.8.3
 popd
 
 pushd libksba
