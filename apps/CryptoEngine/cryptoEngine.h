@@ -24,7 +24,7 @@
 #define CRYPTOENGINE_H
 
 #include <QtGui>
-#include "dataitem.h"
+#include "keypair.h"
 
 #include "gpgme.h"
 #include "gpg-error.h"
@@ -79,7 +79,7 @@ public:
          explicit  CryptoEngine( QObject *p = NULL );
                   ~CryptoEngine();
 
-      gcry_sexp_t  makeNewGCryPair( typeCode_t tc );
+          KeyPair *makeNewGCryPair( typeCode_t tc, QObject *p = NULL );
 
        QByteArray  makeNewGpgPair( typeCode_t tc );
        QByteArray  exportKey( QByteArray fingerprint );

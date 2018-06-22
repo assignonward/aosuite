@@ -68,7 +68,22 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
             }
         }
     }
+  toDataItem();
 }
+
+/**
+ * @brief KeyPair::KeyPair - construct from pointers to the keys
+ * @param priKp - private key pointer
+ * @param pubKp - public key pointer
+ * @param p - parent
+ */
+KeyPair::KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p )
+  : DataVarLength( AO_KEYPAIR, p ? p : (priKp->parent() ? priKp->parent() : pubKp->parent()) )
+{ pubKey = *pubKp;
+  priKey = *priKp;
+  toDataItem();
+}
+
 
 /**
  * @brief KeyPair::operator =
@@ -79,6 +94,7 @@ void KeyPair::operator = ( const DataItemBA &di )
   pubKey     = temp.pubKey;
   priKey     = temp.priKey;
   typeCode   = temp.typeCode;
+  toDataItem();
   return;
 }
 

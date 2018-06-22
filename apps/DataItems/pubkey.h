@@ -34,10 +34,23 @@ class PubKey : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  PubKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
+              PubKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
               PubKey( const DataItemBA &di, QObject *p = NULL );
               PubKey( const PubKey &pk, QObject *p = NULL );
-        void  operator = ( const PubKey &k ) { typeCode = k.typeCode; publicKeyEcdsa = k.publicKeyEcdsa; publicKeyRsa3072 = k.publicKeyRsa3072; }
+              PubKey( PublicKeyEcdsa *pkp, QObject *p = NULL )
+                : DataItem( AO_ECDSA_PUB_KEY4, p ? p : pkp->parent() )
+                { publicKeyEcdsa = *pkp; }
+              PubKey( PublicKeyRsa3072 *pkp, QObject *p = NULL )
+                : DataItem( AO_RSA3072_PUB_KEY, p ? p : pkp->parent() )
+                { publicKeyRsa3072 = *pkp; }
+              PubKey( Data64 *pkp, QObject *p = NULL )
+                : DataItem( AO_KEY_INDEX, p ? p : pkp->parent() )
+                { publicKeyIndex = *pkp; }
+        void  operator = ( const PubKey &k )
+                { typeCode         = k.typeCode;
+                  publicKeyEcdsa   = k.publicKeyEcdsa;
+                  publicKeyRsa3072 = k.publicKeyRsa3072;
+                }
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false ) const;
   QByteArray  get() const;

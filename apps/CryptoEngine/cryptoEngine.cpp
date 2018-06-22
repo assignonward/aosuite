@@ -37,15 +37,15 @@ CryptoEngine::~CryptoEngine()
  * @return ByteArray with the key data?
  *
  * gcry_error_t gcry_pk_genkey(gcry_sexp_t *r_key, gcry_sexp_t parms)
- *   This function create a new public key pair using information given in the
+ *   This function create a new key pair using information given in the
  *   S-expression parms and stores the private and the public key in one new
  *   S-expression at the address given by r_key. In case of an error, r_key is
  *   set to NULL. The return code is 0 for success or an error code otherwise.
  */
-gcry_sexp_t CryptoEngine::makeNewGCryPair( typeCode_t tc )
-{ gpgme_error_t err;
+KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
+{ KeyPair *kpp = NULL;
+  gpgme_error_t err;
   gcry_sexp_t parms;
-  gcry_sexp_t keypair;
 
   if ( tc == AO_ECDSA_PRI_KEY )
     { SHOW_IF_GPGERR( gcry_sexp_build(&parms, NULL, "(genkey (ecc (curve brainpoolP256r1)))") ) }
@@ -53,10 +53,74 @@ gcry_sexp_t CryptoEngine::makeNewGCryPair( typeCode_t tc )
     { SHOW_IF_GPGERR( gcry_sexp_build(&parms, NULL, "(genkey (rsa (nbits 4:3072)))") ) }
    else
     { qDebug( "CryptoEngine::makeNewGCryPair(0x%x) invalid type", tc );
-      return keypair;
+      gcry_sexp_release(parms);
+      return kpp;
     }
+  gcry_sexp_t keypair;
   SHOW_IF_GPGERR( gcry_pk_genkey(&keypair, parms) )
-  return keypair;
+
+#define MAX_KEY_SZ 16384
+   void *buffer = malloc( MAX_KEY_SZ );
+      size_t sz = gcry_sexp_sprint( keypair, GCRYSEXP_FMT_CANON, (char *)buffer, MAX_KEY_SZ );
+  QByteArray ba = QByteArray::fromRawData( (const char *)buffer, sz );
+
+  // https://www.gnupg.org/documentation/manuals/gcrypt/Working-with-S_002dexpressions.html
+
+  // size_t gcry_sexp_sprint (gcry_sexp_t sexp, int mode, char *buffer, size_t maxlength)
+  // Copies the S-expression object sexp into buffer using the format specified in mode.
+  // maxlength must be set to the allocated length of buffer. The function returns the
+  // actual length of valid bytes put into buffer or 0 if the provided buffer is too short.
+  // Passing NULL for buffer returns the required length for buffer. For convenience reasons
+  // an extra byte with value 0 is appended to the buffer.
+  // GCRYSEXP_FMT_CANON Return the S-expression in canonical format.
+
+  // gcry_error_t gcry_sexp_new(gcry_sexp_t *r_sexp, const void *buffer, size_t length, int autodetect)
+  // This is the generic function to create an new S-expression object from its external representation
+  // in buffer of length bytes. On success the result is stored at the address given by r_sexp. With
+  // autodetect set to 0, the data in buffer is expected to be in canonized format
+
+  PriKey *priKp = NULL;
+  PubKey *pubKp = NULL;
+  if ( tc == AO_ECDSA_PRI_KEY )
+    { PrivateKeyEcdsa *eccPriKp = new PrivateKeyEcdsa( ba, p ); // storing the whole S expression in canonical form
+      priKp = new PriKey( eccPriKp, p );
+      gcry_sexp_t itSexp = gcry_sexp_find_token(keypair, "q", 1);
+      sz = gcry_sexp_sprint( itSexp, GCRYSEXP_FMT_DEFAULT, buffer, MAX_KEY_SZ );
+      const char *data = gcry_sexp_nth_data(itSexp, 1, &sz);
+      ba = QByteArray::fromRawData( data, sz );
+      PublicKeyEcdsa *eccPubKp = new PublicKeyEcdsa( (DataItemBA)ba, p );
+      pubKp = new PubKey( eccPubKp, p );
+      kpp = new KeyPair( priKp, pubKp );
+      delete eccPriKp;
+      delete eccPubKp;
+      gcry_sexp_release(itSexp);
+    }
+   else if( tc == AO_RSA3072_PRI_KEY )
+    { PrivateKeyRsa3072 *rsaPriKp = new PrivateKeyRsa3072( ba, p ); // storing the whole S expression in canonical form
+      priKp = new PriKey( rsaPriKp, p );
+      gcry_sexp_t itSexp = gcry_sexp_find_token(keypair, "q", 1);
+      sz = gcry_sexp_sprint( itSexp, GCRYSEXP_FMT_DEFAULT, buffer, MAX_KEY_SZ );
+      const char *data = gcry_sexp_nth_data(itSexp, 1, &sz);
+      ba = QByteArray::fromRawData( data, sz );
+      PublicKeyRsa3072 *rsaPubKp = new PublicKeyRsa3072( (DataItemBA)ba, p );
+      pubKp = new PubKey( rsaPubKp, p );
+      delete rsaPriKp;
+      delete rsaPubKp;
+      gcry_sexp_release(itSexp);
+    }
+   else
+    { qDebug( "should never get here due to checks above." ); }
+
+  if ( priKp && pubKp )
+    kpp = new KeyPair( priKp, pubKp );
+  if ( priKp ) delete priKp;
+  if ( pubKp ) delete pubKp;
+
+  free( buffer );
+  gcry_sexp_release(keypair);
+  gcry_sexp_release(parms);
+
+  return kpp;
 }
 
 

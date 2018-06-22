@@ -100,8 +100,10 @@ void  AssetForm::updateLabels()
                    else
                     unused++;  // No AO_SHARES_REF implies that the keypair is unused
                 }
+               else if ( ka->contains( AO_KEYPAIR ) )
+                unused++;
                else
-                { qDebug( "unexpected: AO_KEY_ASSET with no AO_X_PRI_KEY" ); }
+                { qDebug( "unexpected: AO_KEY_ASSET with no AO_X_PRI_KEY or AO_KEYPAIR" ); }
             } // else - was a successful qobject_cast
         }
        else
@@ -119,45 +121,14 @@ void  AssetForm::updateLabels()
 void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
-  gcry_sexp_t keypair = cf->ce.makeNewGCryPair( keyType );
-
-  void *buffer = malloc( 8192 );
-  size_t sz;
-  QByteArray ba;
-  gcry_sexp_t pkSexp = gcry_sexp_find_token(keypair, "d", 1);
-  sz = gcry_sexp_sprint( pkSexp, GCRYSEXP_FMT_DEFAULT, buffer, 8192 );
-  const char *data = gcry_sexp_nth_data(pkSexp, 1, &sz);
-  ba = QByteArray::fromRawData( data, sz );
-  ui->keyAssetOperationLog->appendPlainText( QString( "d (%2): %1" ).arg( QString::fromUtf8( ba.toHex() ) ).arg( sz ) );
-
-  pkSexp = gcry_sexp_find_token(keypair, "q", 1);
-  sz = gcry_sexp_sprint( pkSexp, GCRYSEXP_FMT_DEFAULT, buffer, 8192 );
-  data = gcry_sexp_nth_data(pkSexp, 1, &sz);
-  ba = QByteArray::fromRawData( data, sz );
-  ui->keyAssetOperationLog->appendPlainText( QString( "q (%2): %1" ).arg( QString::fromUtf8( ba.toHex() ) ).arg( sz ) );
-
-  gcry_sexp_release(pkSexp);
-  gcry_sexp_release(keypair);
-
-  // https://www.gnupg.org/documentation/manuals/gcrypt/Working-with-S_002dexpressions.html
-
-/*
-  QByteArray fingerprint = cf->ce.makeNewGpgPair( keyType );
-  if ( fingerprint.size() < 1 )
-    { ui->keyAssetOperationLog->appendPlainText( QString( "makeNewPair( %1 ) failed" ).arg( keyType ) );
-      return;
+  KeyPair *kp = cf->ce.makeNewGCryPair( keyType, &assets );
+  if ( kp )
+    { GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, &assets );
+      ka->insert( kp );
+      assets.insert( ka );
     }
-  ui->keyAssetOperationLog->appendPlainText( QString( "fingerprint %1" ).arg( QString::fromUtf8( fingerprint ) ) );
-  QByteArray keyData = cf->ce.exportKey( fingerprint );
-  if ( keyData.size() < 1 )
-    { ui->keyAssetOperationLog->appendPlainText( QString( "exportKey( %1 ) failed" ).arg( QString::fromUtf8( fingerprint ) ) );
-      return;
-    }
-  GenericCollection *gc = new GenericCollection( AO_KEY_ASSET, &assets );
-  gc->insert( keyType, new PriKey( keyType, keyData, gc ) );
-  assets.insert( AO_KEY_ASSET, gc );
   updateLabels();
-*/
+  saveConfig();
 }
 
 void  AssetForm::on_importToGpg_clicked()

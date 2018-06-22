@@ -34,10 +34,11 @@ class KeyPair : public DataVarLength
 {
     Q_OBJECT
 public:
-      explicit  KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
+                KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
                 KeyPair( const KeyPair &k, QObject *p = NULL )
                   : DataVarLength( AO_KEYPAIR, p ? p : k.parent() ),
-                    pubKey( k.pubKey ), priKey( k.priKey ) {}
+                    pubKey( k.pubKey ), priKey( k.priKey ) { toDataItem(); }
+                KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p = NULL );
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false );
           bool  isValid() { return pubKey.isValid() && priKey.isValid(); }

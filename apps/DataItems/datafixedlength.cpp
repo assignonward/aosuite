@@ -31,8 +31,15 @@ DataFixedLength::DataFixedLength( const DataItemBA &di, QObject *p )
                    : DataItem( AO_UNDEFINED_DATAITEM, p )
 { qint32 tcSz = 0;
   typeCode = bytesToCode( di, tcSz );
+  if ( typeSize() < 0 )
+    { qDebug( "type 0x%x is not fixed length.", typeCode );
+      // TODO: log an exception
+      typeCode = AO_UNDEFINED_DATAITEM;
+      return;
+    }
   if ( di.size() < typeSize()+tcSz )
-    { // TODO: log an exception
+    { qDebug( "passed data too small (%d) for type 0x%x, expected %d", di.size()-tcSz, typeCode, typeSize() );
+      // TODO: log an exception
       return;
     }
   ba.append( di.mid( tcSz ) );

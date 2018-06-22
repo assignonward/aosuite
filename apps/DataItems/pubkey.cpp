@@ -25,10 +25,11 @@
 
 /**
  * @brief PubKey::PubKey
- * @param tc - type code defaults to ECDSA 2
+ * @param tc - type code defaults to undefined
  * @param p - object parent, if any
  */
-PubKey::PubKey( typeCode_t tc, QObject *p ) : DataItem( tc, p )
+PubKey::PubKey( typeCode_t tc, QObject *p )
+  : DataItem( tc, p ), publicKeyIndex( -1 )
 { switch ( tc )
     { case AO_ECDSA_PUB_KEY2: // valid type codes for PubKey
       case AO_ECDSA_PUB_KEY3:
@@ -60,7 +61,8 @@ PubKey::PubKey( const PubKey &pk, QObject *p )
  * @param di - data item
  * @param p - object parent, if any
  */
-PubKey::PubKey( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+PubKey::PubKey( const DataItemBA &di, QObject *p )
+  : DataItem( AO_UNDEFINED_DATAITEM, p ), publicKeyIndex( -1 )
 { if ( di.size() < 34 )
     { // TODO: log error
       return;
@@ -122,6 +124,7 @@ bool  PubKey::isValid() const
       case AO_ID_SEQ_NUM:
         return false;  // TODO: database lookup required
     }
+  qDebug( "PubKey::isValid() unrecognized type code 0x%x", typeCode );
   // TODO: log error
   return false;
 }

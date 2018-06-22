@@ -32,7 +32,7 @@ public:
     explicit  PublicKeyEcdsa( QObject *p = NULL )
                 : DataFixedLength( AO_ECDSA_PUB_KEY4, p ) {}
               PublicKeyEcdsa( const PublicKeyEcdsa &k, QObject *p = NULL )
-                : DataFixedLength( AO_ECDSA_PUB_KEY4, k.ba, p ? p : k.parent() ) {}
+                : DataFixedLength( k.getTypeCode(), k.ba, p ? p : k.parent() ) {}
               PublicKeyEcdsa( const DataItemBA &di, QObject *p = NULL )
                 : DataFixedLength( di, p ) {}
   QByteArray  get() const;

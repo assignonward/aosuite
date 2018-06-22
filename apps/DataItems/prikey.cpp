@@ -98,6 +98,7 @@ bool  PriKey::isValid() const
       case AO_RSA3072_PRI_KEY:
         return privateKeyRsa3072.isValid();
     }
+  qDebug( "PriKey::isValid() unrecognized type code %d", typeCode );
   // TODO: log error
   return false;
 }

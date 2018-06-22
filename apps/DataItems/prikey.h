@@ -39,7 +39,17 @@ public:
                 : DataItem( tc, p ) { set(kd); }
               PriKey( const DataItemBA &di, QObject *p = NULL );
               PriKey( const PriKey &pk, QObject *p = NULL );
-        void  operator = ( const PriKey &k ) { typeCode = k.typeCode; privateKeyEcdsa = k.privateKeyEcdsa; privateKeyRsa3072 = k.privateKeyRsa3072; }
+              PriKey( PrivateKeyEcdsa *pkp, QObject *p = NULL )
+                : DataItem( AO_ECDSA_PRI_KEY, p ? p : pkp->parent() )
+                { privateKeyEcdsa = *pkp; }
+              PriKey( PrivateKeyRsa3072 *pkp, QObject *p = NULL )
+                : DataItem( AO_RSA3072_PRI_KEY, p ? p : pkp->parent() )
+                { privateKeyRsa3072 = *pkp; }
+        void  operator = ( const PriKey &k )
+          { typeCode          = k.typeCode;
+            privateKeyEcdsa   = k.privateKeyEcdsa;
+            privateKeyRsa3072 = k.privateKeyRsa3072;
+          }
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false ) const;
   QByteArray  get() const;
