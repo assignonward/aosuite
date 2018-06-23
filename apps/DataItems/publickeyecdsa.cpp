@@ -48,7 +48,8 @@ void  PublicKeyEcdsa::set( const QByteArray &k )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
         if ( k.size() != 33 )
-            { // TODO: log error
+            { qDebug( "Expected 33 bytes, got %d", k.size() );
+              // TODO: log error
               return;
             }
         typeCode = bytesToCode( k, i );
@@ -57,12 +58,14 @@ void  PublicKeyEcdsa::set( const QByteArray &k )
 
       case AO_ECDSA_PUB_KEY4:
         if ( k.size() != 65 )
-            { // TODO: log error
+            { qDebug( "Expected 65 bytes, got %d", k.size() );
+              // TODO: log error
               return;
             }
         typeCode = bytesToCode( k, i );
         ba = k.mid(i);
         return;
     }
+  qDebug( "Unexpected typeCode 0x%x", k.at(0) );
   // TODO: log error
 }

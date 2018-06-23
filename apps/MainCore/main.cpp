@@ -37,35 +37,38 @@ QTextStream *logStream = NULL;
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 { QString m;
   switch (type)
-    { default:
-      case QtDebugMsg:
-        m = QString( "Debug %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
-        break;
-      case QtInfoMsg:
-        m = QString( "Info %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
-        break;
-      case QtWarningMsg:
-        m = QString( "Warning %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
-        break;
-      case QtCriticalMsg:
-        m = QString( "Critical %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
-        break;
-      case QtFatalMsg:
-        m = QString( "Fatal %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg );
-        if ( mw ) { if ( mw->messageConnected ) emit mw->message( m ); }
-         else printf( "%s\n", qPrintable(m) );
-        *logStream << m;
-        abort();
+    { default:            m = "Def"; break;
+      case QtDebugMsg:    m = "Dbg"; break;
+      case QtInfoMsg:     m = "Inf"; break;
+      case QtWarningMsg:  m = "Wrn"; break;
+      case QtCriticalMsg: m = "Crt"; break;
+      case QtFatalMsg:    m = "Ftl"; break;
     }
-  if ( mw ) { if ( mw->messageConnected ) emit mw->message( m ); }
-   else printf( "%s\n", qPrintable(m) );
+  if ( context.line > 0 )
+    m.append( QString(  " %1:%2 %3" ).arg(context.file).arg( context.line ).arg( msg ) );
+   else
+    m.append( QString(  " %1" ).arg( msg ) );
+
+  if ( mw )
+    { if ( mw->messageConnected )
+        emit mw->message( m );
+    }
+   else
+    { printf( "%s\n", qPrintable(m) );
+      fflush(stdout);
+    }
   *logStream << m << endl;
-  fflush(stdout);
   QApplication::processEvents( QEventLoop::ExcludeUserInputEvents );
+  if ( type == QtFatalMsg )
+    abort();
 }
 
 int main(int argc, char *argv[])
-{
+{   QFile logFile( "/home/mike/ao.log" );
+    logFile.open( QIODevice::WriteOnly );
+    logStream = new QTextStream( &logFile );
+    qInstallMessageHandler(myMessageOutput);
+
     SingleApplication app(argc, argv);
     // Set names for QSettings use
     QCoreApplication::setOrganizationName("AssignOnward");
@@ -79,10 +82,6 @@ int main(int argc, char *argv[])
     rng.rnd_uint64();
 
     mw = new MainWindow();
-    QFile logFile( "/home/mike/ao.log" );
-    logFile.open( QIODevice::WriteOnly );
-    logStream = new QTextStream( &logFile );
-    qInstallMessageHandler(myMessageOutput);
     QObject::connect( &app, &SingleApplication::instanceStarted, mw, &MainWindow::additionalInstanceStarted );
     mw->show();
     int r = app.exec();

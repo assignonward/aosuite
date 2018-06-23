@@ -89,9 +89,9 @@ KeyPair::KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p )
  */
 void KeyPair::operator = ( const DataItemBA &di )
 { KeyPair temp( di );
-  pubKey     = temp.pubKey;
-  priKey     = temp.priKey;
-  typeCode   = temp.typeCode;
+  pubKey   = temp.pubKey;
+  priKey   = temp.priKey;
+  typeCode = temp.typeCode;
   return;
 }
 
