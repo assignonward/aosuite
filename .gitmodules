@@ -22,3 +22,6 @@
 [submodule "OpenPGP"]
 	path = OpenPGP
 	url = https://github.com/calccrypto/OpenPGP.git
+[submodule "little-big-int"]
+	path = little-big-int
+	url = https://github.com/connormanning/little-big-int.git
