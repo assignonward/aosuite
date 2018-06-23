@@ -98,7 +98,7 @@ bool  PriKey::isValid() const
       case AO_RSA3072_PRI_KEY:
         return privateKeyRsa3072.isValid();
     }
-  qDebug( "PriKey::isValid() unrecognized type code %d", typeCode );
+  qDebug( "PriKey::isValid() unrecognized type code 0x%x", typeCode );
   // TODO: log error
   return false;
 }
@@ -109,13 +109,15 @@ bool  PriKey::isValid() const
  * @return the key encapsulated as a data item
  */
 DataItemBA  PriKey::toDataItem( bool cf ) const
-{ switch ( typeCode )
+{ qDebug( "PriKey::toDataItem() type code 0x%x", typeCode );
+  switch ( typeCode )
     { case AO_ECDSA_PRI_KEY:
         return privateKeyEcdsa.toDataItem(cf);
 
       case AO_RSA3072_PRI_KEY:
         return privateKeyRsa3072.toDataItem(cf);
     }
+  qDebug( "PriKey::toDataItem() unrecognized type code 0x%x", typeCode );
   // TODO: log error
   return QByteArray();
 }

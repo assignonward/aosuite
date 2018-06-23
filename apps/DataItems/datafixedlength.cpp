@@ -62,7 +62,8 @@ void DataFixedLength::operator = ( const DataItemBA &di )
  * @return serialized byte array with type, data and checksum
  */
 DataItemBA DataFixedLength::toDataItem( bool cf ) const
-{ QByteArray di; (void)cf;
+{ qDebug( "DataFixedLength::toDataItem() for tc 0x%x", typeCode );
+  QByteArray di; (void)cf;
   di.append( codeToBytes( typeCode ) );
   di.append( ba );
   // qDebug( "DataFixedLength::toDataItem(size=%d)%s", ba.size(), qPrintable( QString::fromUtf8( di.toHex() ) ) );

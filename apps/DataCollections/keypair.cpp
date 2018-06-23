@@ -68,7 +68,6 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
             }
         }
     }
-  toDataItem();
 }
 
 /**
@@ -81,7 +80,6 @@ KeyPair::KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p )
   : DataVarLength( AO_KEYPAIR, p ? p : (priKp->parent() ? priKp->parent() : pubKp->parent()) )
 { pubKey = *pubKp;
   priKey = *priKp;
-  toDataItem();
 }
 
 
@@ -94,7 +92,6 @@ void KeyPair::operator = ( const DataItemBA &di )
   pubKey     = temp.pubKey;
   priKey     = temp.priKey;
   typeCode   = temp.typeCode;
-  toDataItem();
   return;
 }
 
@@ -103,13 +100,18 @@ void KeyPair::operator = ( const DataItemBA &di )
  * @param cf - compact (or chain) form?  Pass along to children.
  * @return data item with the BlockRef contents
  */
-DataItemBA  KeyPair::toDataItem( bool cf )
-{ QByteArrayList dil;
+DataItemBA  KeyPair::toDataItem( bool cf ) const
+{ qDebug( "KeyPair::toDataItem() 0x%x", typeCode );
+  QByteArrayList dil;
   if ( pubKey.isValid() )
     dil.append( pubKey.toDataItem(cf) );
   if ( priKey.isValid() )
     dil.append( priKey.toDataItem(cf) );
   std::sort( dil.begin(), dil.end() );
-  ba = dil.join();
-  return DataVarLength::toDataItem(cf);
+  DataItemBA diba = dil.join();
+  DataItemBA di; (void)cf;
+  di.append( codeToBytes( typeCode  ) );
+  di.append( codeToBytes( diba.size() ) );
+  di.append( diba );
+  return di;
 }

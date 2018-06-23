@@ -135,7 +135,8 @@ bool  PubKey::isValid() const
  * @return the key encapsulated as a data item
  */
 DataItemBA  PubKey::toDataItem( bool cf ) const
-{ switch ( typeCode )
+{ qDebug( "PubKey::toDataItem() type code 0x%x", typeCode );
+  switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
@@ -147,6 +148,7 @@ DataItemBA  PubKey::toDataItem( bool cf ) const
       case AO_ID_SEQ_NUM:
         return publicKeyIndex.toDataItem(cf);
     }
+  qDebug( "PubKey::toDataItem() unrecognized type code 0x%x", typeCode );
   // TODO: log error
   return DataItemBA();
 }

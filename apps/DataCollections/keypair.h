@@ -40,7 +40,7 @@ public:
                     pubKey( k.pubKey ), priKey( k.priKey ) { toDataItem(); }
                 KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p = NULL );
           void  operator = ( const DataItemBA &di );
-    DataItemBA  toDataItem( bool cf = false );
+    DataItemBA  toDataItem( bool cf = false ) const;
           bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
 
 private:
