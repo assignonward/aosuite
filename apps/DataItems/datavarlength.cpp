@@ -34,14 +34,14 @@ DataVarLength::DataVarLength( const DataItemBA &di, QObject *p )
       return;
     }
   qint32 i,j;
-  typeCode     = bytesToCode( di       , i );
-  quint32 size = bytesToCode( di.mid(i), j );
-  if ( (unsigned int)di.size() < (size+i+j) )
-    { qDebug( "problem with size of DataItemBA: %d vs encoded size: %d for type: 0x%x", di.size(),size,typeCode );
+  typeCode   = bytesToCode( di       , i );
+  quint32 sz = bytesToCode( di.mid(i), j );
+  if ( (unsigned int)di.size() < (sz+i+j) )
+    { qDebug( "problem with size of DataItemBA: %d vs encoded size: %d for type: 0x%x", di.size(),sz,typeCode );
       // TODO: log an exception
       return;
     }
-  ba = di.mid(i+j);
+  ba = di.mid(i+j,sz);
 }
 
 /**
