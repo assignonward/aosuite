@@ -30,7 +30,8 @@
 DataVarLength::DataVarLength( const DataItemBA &di, QObject *p )
   : DataItem( typeCodeOf(di), p )
 { if ( di.size() < 2 ) // Shortest valid varlenlong serialized data (1 type + 1 length + 0 data)
-    { // TODO: log an exception
+    { qDebug( "DataVarLength::DataVarLength( const DataItemBA &di, QObject *p ) di.size() %d too small", di.size() );
+      // TODO: log an exception
       return;
     }
   qint32 i,j;
@@ -61,7 +62,7 @@ void DataVarLength::operator = ( const DataItemBA &di )
  * @return serialized bytearray with typeCode, size, data and checksum
  */
 DataItemBA DataVarLength::toDataItem( bool cf ) const
-{ qDebug( "DataVarLength::toDataItem() for tc 0x%x", typeCode  );
+{ // qDebug( "DataVarLength::toDataItem() for tc 0x%x", typeCode  );
   DataItemBA di; (void)cf;
   di.append( codeToBytes( typeCode  ) );
   di.append( codeToBytes( ba.size() ) );

@@ -109,7 +109,7 @@ bool  PriKey::isValid() const
  * @return the key encapsulated as a data item
  */
 DataItemBA  PriKey::toDataItem( bool cf ) const
-{ qDebug( "PriKey::toDataItem() type code 0x%x", typeCode );
+{ // qDebug( "PriKey::toDataItem() type code 0x%x", typeCode );
   switch ( typeCode )
     { case AO_ECDSA_PRI_KEY:
         return privateKeyEcdsa.toDataItem(cf);

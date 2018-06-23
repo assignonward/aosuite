@@ -27,9 +27,11 @@ DEFINES     += QAMQP_DEBUG=Y
 
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/cryptoForm.cpp
+SOURCES     += $${PWD}/cryptoEngine.cpp \
+               $${PWD}/cryptoForm.cpp
 
-HEADERS     += $${PWD}/cryptoForm.h
+HEADERS     += $${PWD}/cryptoEngine.h \
+               $${PWD}/cryptoForm.h
 
 FORMS       += $${PWD}/cryptoForm.ui
 

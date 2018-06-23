@@ -38,7 +38,6 @@ LIBS        += -L$${DEPTH}/src $${QAMQP_LIBS}
 macx:CONFIG -= app_bundle
 
 include(../AboutForm/AboutForm.pri)
-include(../CryptoEngine/CryptoEngine.pri)
 include(../CryptoForm/CryptoForm.pri)
 include(../DataCollections/DataCollections.pri)
 include(../DataItems/DataItems.pri)

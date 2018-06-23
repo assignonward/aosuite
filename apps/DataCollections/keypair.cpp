@@ -71,7 +71,7 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
 }
 
 /**
- * @brief KeyPair::KeyPair - construct from pointers to the keys
+ * @brief KeyPair::KeyPair - construct from pointers to the keys, make copies
  * @param priKp - private key pointer
  * @param pubKp - public key pointer
  * @param p - parent
@@ -81,7 +81,6 @@ KeyPair::KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p )
 { pubKey = *pubKp;
   priKey = *priKp;
 }
-
 
 /**
  * @brief KeyPair::operator =
@@ -101,7 +100,7 @@ void KeyPair::operator = ( const DataItemBA &di )
  * @return data item with the BlockRef contents
  */
 DataItemBA  KeyPair::toDataItem( bool cf ) const
-{ qDebug( "KeyPair::toDataItem() 0x%x", typeCode );
+{ // qDebug( "KeyPair::toDataItem() 0x%x", typeCode );
   QByteArrayList dil;
   if ( pubKey.isValid() )
     dil.append( pubKey.toDataItem(cf) );

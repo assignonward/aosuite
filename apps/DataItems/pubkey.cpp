@@ -135,7 +135,7 @@ bool  PubKey::isValid() const
  * @return the key encapsulated as a data item
  */
 DataItemBA  PubKey::toDataItem( bool cf ) const
-{ qDebug( "PubKey::toDataItem() type code 0x%x", typeCode );
+{ // qDebug( "PubKey::toDataItem() type code 0x%x", typeCode );
   switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
