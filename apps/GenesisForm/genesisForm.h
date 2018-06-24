@@ -37,12 +37,9 @@ class GenesisForm : public QScrollArea
     Q_OBJECT
 
 public:
-         explicit  GenesisForm( QWidget *cw, MainWinCommon *mw = NULL );
+         explicit  GenesisForm( QWidget *cw, GenericCollection *iap = NULL, MainWinCommon *mw = NULL );
                   ~GenesisForm();
 GenericCollection  calculateGenesisBlock();
-
-public:
-    Ui::GenesisForm *ui;
 
 public slots:
       void  restoreConfig();
@@ -52,6 +49,12 @@ public slots:
       void  on_chooseImage_clicked();
       void  on_importGenesisBlock_clicked();
       void  on_publishGenesisBlock_clicked();
+
+public:
+             Ui::GenesisForm *ui;
+
+private:
+  QPointer<GenericCollection> ap; // AO_ASSETS Assets Pointer
 };
 
 #endif // RABBITFORM_H

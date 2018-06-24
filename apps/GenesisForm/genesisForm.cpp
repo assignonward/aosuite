@@ -23,10 +23,20 @@
 #include "genesisForm.h"
 #include <QFileDialog>
 
-GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw ) :
+GenesisForm::GenesisForm( QWidget *cw, GenericCollection *iap, MainWinCommon *mw ) :
     QScrollArea(cw),
     ui(new Ui::GenesisForm)
-{ ui->setupUi(this);
+{ if ( iap )
+    { if ( iap->getTypeCode() == AO_ASSETS )
+        ap = iap;
+       else
+        qDebug( "unexpected type code 0x%x in iap", iap->getTypeCode() );
+    }
+  if ( !ap )
+    { ap = new GenericCollection( AO_ASSETS, this );
+      qDebug( "GenesisForm() creating local asset collection" );
+    }
+  ui->setupUi(this);
   new QVBoxLayout( cw );
   cw->layout()->addWidget( this );
   if ( mw )

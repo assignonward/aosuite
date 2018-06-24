@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
   new AboutForm( ui->aboutTab );
   cf = new CryptoForm ( ui->cryptoTab ,     this, ce );
   af = new AssetForm  ( ui->assetsTab , ce, this, ap );
-  gf = new GenesisForm( ui->genesisTab,     this     );
+  gf = new GenesisForm( ui->genesisTab, ap, this     );
   connect( this, SIGNAL(message(QString)),gf->ui->logMessages,SLOT(appendPlainText(QString)) );
   messageConnected = true;
   restoreConfig();

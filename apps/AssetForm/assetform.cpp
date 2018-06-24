@@ -36,7 +36,9 @@ AssetForm::AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw, Generic
         qDebug( "unexpected type code 0x%x in iap", iap->getTypeCode() );
     }
   if ( !ap )
-    ap = new GenericCollection( AO_ASSETS, this );
+    { ap = new GenericCollection( AO_ASSETS, this );
+      qDebug( "AssetForm() creating local asset collection" );
+    }
   ui->setupUi(this);
   new QVBoxLayout( cw );
   cw->layout()->addWidget( this );

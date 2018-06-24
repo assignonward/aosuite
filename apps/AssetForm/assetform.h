@@ -50,7 +50,7 @@ public slots:
 
 public:
      QPointer<CryptoEngine> ce;
-QPointer<GenericCollection> ap; // AO_ASSETS Asset Pointer
+QPointer<GenericCollection> ap; // AO_ASSETS Assets Pointer
              Ui::AssetForm *ui;
 };
 
