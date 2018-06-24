@@ -34,7 +34,9 @@ class PubKey : public DataItem
 {
     Q_OBJECT
 public:
-              PubKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
+              PubKey( QObject *p = NULL )
+                : DataItem( AO_UNDEFINED_DATAITEM, p ) {}
+              PubKey( typeCode_t tc, QObject *p = NULL );
               PubKey( const DataItemBA &di, QObject *p = NULL );
               PubKey( const PubKey &pk, QObject *p = NULL );
               PubKey( PublicKeyEcdsa *pkp, QObject *p = NULL )

@@ -26,6 +26,7 @@
 #include "datavarlength.h"
 #include "prikey.h"
 #include "pubkey.h"
+#include <QPointer>
 
 /**
  * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
@@ -37,15 +38,15 @@ public:
                 KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
                 KeyPair( const KeyPair &k, QObject *p = NULL )
                   : DataVarLength( AO_KEYPAIR, p ? p : k.parent() ),
-                    pubKey( k.pubKey ), priKey( k.priKey ) { toDataItem(); }
+                    pubKey( k.pubKey ), priKey( k.priKey ) {}
                 KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p = NULL );
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;
-          bool  isValid() { return pubKey.isValid() && priKey.isValid(); }
+          bool  isValid() { return pubKey->isValid() && priKey->isValid(); }
 
 private:
-        PubKey  pubKey;
-        PriKey  priKey;
+  QPointer<PubKey> pubKey;
+  QPointer<PriKey> priKey;
 };
 
 #endif // KEYPAIR_H

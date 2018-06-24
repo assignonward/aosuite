@@ -26,6 +26,7 @@
 #include "dataitem.h"
 #include "privatekeyecdsa.h"
 #include "privatekeyrsa3072.h"
+#include <QPointer>
 
 /**
  * @brief The PriKey class - multi-container for various types of private keys
@@ -34,21 +35,23 @@ class PriKey : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  PriKey( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
+              PriKey( QObject *p = NULL )
+                : DataItem( AO_UNDEFINED_DATAITEM, p ) {}
+              PriKey( typeCode_t tc, QObject *p = NULL );
               PriKey( typeCode_t tc, const QByteArray &kd, QObject *p = NULL )
                 : DataItem( tc, p ) { set(kd); }
               PriKey( const DataItemBA &di, QObject *p = NULL );
               PriKey( const PriKey &pk, QObject *p = NULL );
               PriKey( PrivateKeyEcdsa *pkp, QObject *p = NULL )
                 : DataItem( AO_ECDSA_PRI_KEY, p ? p : pkp->parent() )
-                { privateKeyEcdsa = *pkp; }
+                { priKeyEcdsa = pkp; if ( priKeyEcdsa ) priKeyEcdsa->setParent( this ); }
               PriKey( PrivateKeyRsa3072 *pkp, QObject *p = NULL )
                 : DataItem( AO_RSA3072_PRI_KEY, p ? p : pkp->parent() )
-                { privateKeyRsa3072 = *pkp; }
+                { priKeyRsa3072 = pkp; if ( priKeyRsa3072 ) priKeyRsa3072->setParent( this ); }
         void  operator = ( const PriKey &k )
-          { typeCode          = k.typeCode;
-            privateKeyEcdsa   = k.privateKeyEcdsa;
-            privateKeyRsa3072 = k.privateKeyRsa3072;
+          { typeCode      = k.typeCode;
+            priKeyEcdsa   = k.priKeyEcdsa;   if ( priKeyEcdsa   ) priKeyEcdsa  ->setParent( this );
+            priKeyRsa3072 = k.priKeyRsa3072; if ( priKeyRsa3072 ) priKeyRsa3072->setParent( this );
           }
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false ) const;
@@ -57,8 +60,8 @@ public:
         bool  isValid() const;
 
 private:
-    PrivateKeyEcdsa  privateKeyEcdsa;
-  PrivateKeyRsa3072  privateKeyRsa3072;
+  QPointer<  PrivateKeyEcdsa> priKeyEcdsa;
+  QPointer<PrivateKeyRsa3072> priKeyRsa3072;
 };
 
 #endif // PRIKEY_H

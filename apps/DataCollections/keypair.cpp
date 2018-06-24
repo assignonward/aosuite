@@ -51,12 +51,16 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
                       case AO_ECDSA_PUB_KEY4:
                       case AO_RSA3072_PUB_KEY:
                       // case AO_ID_SEQ_NUM: // TODO: this one needs a database lookup
-                        pubKey = items;
+                        if ( !pubKey )
+                          pubKey = new PubKey( this );
+                        *pubKey = items;
                         break;
 
                       case AO_ECDSA_PRI_KEY:
                       case AO_RSA3072_PRI_KEY:
-                        priKey = items;
+                        if ( !priKey )
+                          priKey = new PriKey( this );
+                        *priKey = items;
                         break;
 
                       default:
@@ -78,8 +82,8 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
  */
 KeyPair::KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p )
   : DataVarLength( AO_KEYPAIR, p ? p : (priKp->parent() ? priKp->parent() : pubKp->parent()) )
-{ pubKey = *pubKp;
-  priKey = *priKp;
+{ pubKey = pubKp; pubKey->setParent( this );
+  priKey = priKp; priKey->setParent( this );
 }
 
 /**
@@ -88,8 +92,8 @@ KeyPair::KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p )
  */
 void KeyPair::operator = ( const DataItemBA &di )
 { KeyPair temp( di );
-  pubKey   = temp.pubKey;
-  priKey   = temp.priKey;
+  pubKey   = temp.pubKey; temp.pubKey = NULL;
+  priKey   = temp.priKey; temp.priKey = NULL;
   typeCode = temp.typeCode;
   return;
 }
@@ -100,12 +104,14 @@ void KeyPair::operator = ( const DataItemBA &di )
  * @return data item with the BlockRef contents
  */
 DataItemBA  KeyPair::toDataItem( bool cf ) const
-{ // qDebug( "KeyPair::toDataItem() 0x%x", typeCode );
+{ qDebug( "KeyPair::toDataItem() 0x%x", typeCode );
   QByteArrayList dil;
-  if ( pubKey.isValid() )
-    dil.append( pubKey.toDataItem(cf) );
-  if ( priKey.isValid() )
-    dil.append( priKey.toDataItem(cf) );
+  if ( pubKey )
+    if ( pubKey->isValid() )
+      dil.append( pubKey->toDataItem(cf) );
+  if ( priKey )
+    if ( priKey->isValid() )
+      dil.append( priKey->toDataItem(cf) );
   std::sort( dil.begin(), dil.end() );
   DataItemBA diba = dil.join();
   DataItemBA di; (void)cf;

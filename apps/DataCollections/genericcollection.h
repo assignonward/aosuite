@@ -47,8 +47,10 @@ public:
    DataItemMap  mmap() { return itemMM; }
           bool  contains( const typeCode_t &tc ) { return itemMM.contains( tc ); }
       DataItem *value(    const typeCode_t &tc ) { return itemMM.   value( tc ); }
-          void  insert(   const typeCode_t &tc, DataItem *dip ) { itemMM.insert( tc, dip ); }
-          void  insert( DataItem *dip ) { itemMM.insert( dip->getTypeCode(), dip ); }
+          void  insert(   const typeCode_t &tc, DataItem *dip )
+                  { if ( dip ) { itemMM.insert(                 tc, dip ); dip->setParent( this ); } }
+          void  insert( DataItem *dip )
+                  { if ( dip ) { itemMM.insert( dip->getTypeCode(), dip ); } }
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;
     DataItemBA  toHashData( bool cf = false ) const;

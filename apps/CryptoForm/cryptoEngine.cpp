@@ -83,16 +83,15 @@ KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
   PubKey *pubKp = NULL;
   if ( tc == AO_ECDSA_PRI_KEY )
     { PrivateKeyEcdsa *eccPriKp = new PrivateKeyEcdsa( ba, p ); // storing the whole S expression in canonical form
-      priKp = new PriKey( eccPriKp, p );
+      qDebug( "eccPriKp: %s", qPrintable( QString::fromUtf8( eccPriKp->toDataItem().toHex())));
+      priKp = new PriKey( eccPriKp, p ); // priKp tookover ownership of eccPriKp
+      qDebug( "priKp: %s", qPrintable( QString::fromUtf8( priKp->toDataItem().toHex())));
       gcry_sexp_t itSexp = gcry_sexp_find_token(keypair, "q", 1);
       sz = gcry_sexp_sprint( itSexp, GCRYSEXP_FMT_DEFAULT, buffer, MAX_KEY_SZ );
       const char *data = gcry_sexp_nth_data(itSexp, 1, &sz);
       ba = QByteArray::fromRawData( data, sz );
       PublicKeyEcdsa *eccPubKp = new PublicKeyEcdsa( (DataItemBA)ba, p );
       pubKp = new PubKey( eccPubKp, p );
-      kpp = new KeyPair( priKp, pubKp );
-      delete eccPriKp;
-      delete eccPubKp;
       gcry_sexp_release(itSexp);
     }
    else if( tc == AO_RSA3072_PRI_KEY )
@@ -112,10 +111,13 @@ KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
     { qDebug( "should never get here due to checks above." ); }
 
   if ( priKp && pubKp )
-    kpp = new KeyPair( priKp, pubKp );
-  if ( priKp ) delete priKp;
-  if ( pubKp ) delete pubKp;
-
+    kpp = new KeyPair( priKp, pubKp, p );
+   else
+    { qDebug( "didn't get both keys in the pair" );
+      if ( priKp ) delete priKp;
+      if ( pubKp ) delete pubKp;
+    }
+  qDebug( "kpp: %s", qPrintable( QString::fromUtf8( kpp->toDataItem().toHex())));
   free( buffer );
   gcry_sexp_release(keypair);
   gcry_sexp_release(parms);

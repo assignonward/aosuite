@@ -35,20 +35,21 @@ PriKey::PriKey( typeCode_t tc, QObject *p ) : DataItem( tc, p )
         typeCode = tc;
         break;
       default:
+        qDebug( "PriKey::PriKey( typeCode_t tc, QObject *p ) unrecognized type code 0x%x", tc );
         // TODO: log error
         typeCode = AO_UNDEFINED_DATAITEM;
     }
 }
 
 /**
- * @brief PriKey::PriKey - copy constructor
+ * @brief PriKey::PriKey - copy constructor, takes over parentage of member pointers
  * @param pk - source key
  * @param p - alternate parentage
  */
 PriKey::PriKey( const PriKey &pk, QObject *p )
   : DataItem( pk.typeCode, p ? p : pk.parent() )
-{ privateKeyEcdsa   = pk.privateKeyEcdsa;
-  privateKeyRsa3072 = pk.privateKeyRsa3072;
+{ priKeyEcdsa   = pk.priKeyEcdsa;   if ( priKeyEcdsa   ) priKeyEcdsa  ->setParent( this );
+  priKeyRsa3072 = pk.priKeyRsa3072; if ( priKeyRsa3072 ) priKeyRsa3072->setParent( this );
 }
 
 /**
@@ -60,15 +61,16 @@ PriKey::PriKey( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATA
 { switch ( typeCodeOf( di ) )
     { case AO_ECDSA_PRI_KEY:
         typeCode = AO_ECDSA_PRI_KEY;
-        privateKeyEcdsa = PrivateKeyEcdsa( di, this );
+        priKeyEcdsa = new PrivateKeyEcdsa( di, this );
         break;
 
       case AO_RSA3072_PRI_KEY:
         typeCode = AO_RSA3072_PRI_KEY;
-        privateKeyRsa3072 = PrivateKeyRsa3072( di, this );
+        priKeyRsa3072 = new PrivateKeyRsa3072( di, this );
         break;
 
       default:
+        qDebug( "PriKey::PriKey( const DataItemBA &di, QObject *p ) unrecognized type code 0x%x", typeCodeOf( di ) );
         // TODO: log error
         typeCode = AO_UNDEFINED_DATAITEM;
     }
@@ -81,11 +83,16 @@ PriKey::PriKey( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATA
 QByteArray  PriKey::get() const
 { switch ( typeCode )
     { case AO_ECDSA_PRI_KEY:
-        return privateKeyEcdsa.get();
+        if ( !priKeyEcdsa )
+          return QByteArray();
+        return priKeyEcdsa->get();
 
       case AO_RSA3072_PRI_KEY:
-        return privateKeyRsa3072.get();
+        if ( !priKeyRsa3072 )
+          return QByteArray();
+        return priKeyRsa3072->get();
     }
+  qDebug( "PriKey::get() invalid type code 0x%x", typeCode );
   // TODO: log error
   return QByteArray();
 }
@@ -93,10 +100,14 @@ QByteArray  PriKey::get() const
 bool  PriKey::isValid() const
 { switch ( typeCode )
     { case AO_ECDSA_PRI_KEY:
-        return privateKeyEcdsa.isValid();
+        if ( !priKeyEcdsa )
+          return false;
+        return priKeyEcdsa->isValid();
 
       case AO_RSA3072_PRI_KEY:
-        return privateKeyRsa3072.isValid();
+        if ( !priKeyRsa3072 )
+          return false;
+        return priKeyRsa3072->isValid();
     }
   qDebug( "PriKey::isValid() unrecognized type code 0x%x", typeCode );
   // TODO: log error
@@ -112,14 +123,18 @@ DataItemBA  PriKey::toDataItem( bool cf ) const
 { // qDebug( "PriKey::toDataItem() type code 0x%x", typeCode );
   switch ( typeCode )
     { case AO_ECDSA_PRI_KEY:
-        return privateKeyEcdsa.toDataItem(cf);
+        if ( !priKeyEcdsa )
+          return DataItemBA();
+        return priKeyEcdsa->toDataItem(cf);
 
       case AO_RSA3072_PRI_KEY:
-        return privateKeyRsa3072.toDataItem(cf);
+        if ( !priKeyRsa3072 )
+          return DataItemBA();
+        return priKeyRsa3072->toDataItem(cf);
     }
   qDebug( "PriKey::toDataItem() unrecognized type code 0x%x", typeCode );
   // TODO: log error
-  return QByteArray();
+  return DataItemBA();
 }
 
 /**
@@ -128,9 +143,9 @@ DataItemBA  PriKey::toDataItem( bool cf ) const
  */
 void PriKey::operator = ( const DataItemBA &di )
 { PriKey temp( di );
-  privateKeyEcdsa   = temp.privateKeyEcdsa;
-  privateKeyRsa3072 = temp.privateKeyRsa3072;
-  typeCode          = temp.typeCode;
+  priKeyEcdsa   = temp.priKeyEcdsa;   if ( priKeyEcdsa   ) priKeyEcdsa  ->setParent( this );
+  priKeyRsa3072 = temp.priKeyRsa3072; if ( priKeyRsa3072 ) priKeyRsa3072->setParent( this );
+  typeCode      = temp.typeCode;
 }
 
 /**
@@ -140,16 +155,23 @@ void PriKey::operator = ( const DataItemBA &di )
 void  PriKey::set( const QByteArray &k )
 { switch ( typeCode )
     { case AO_ECDSA_PRI_KEY:
-        privateKeyEcdsa.set( k );
-        privateKeyRsa3072.clear();
+        if ( !priKeyEcdsa )
+          priKeyEcdsa = new PrivateKeyEcdsa( this );
+        priKeyEcdsa->set( k );
+        if ( priKeyRsa3072 )
+          priKeyRsa3072->clear();
         break;
 
       case AO_RSA3072_PRI_KEY:
-        privateKeyRsa3072.set( k );
-        privateKeyEcdsa.clear();
+        if ( !priKeyRsa3072 )
+          priKeyRsa3072 = new PrivateKeyRsa3072( this );
+        priKeyRsa3072->set( k );
+        if ( priKeyEcdsa )
+          priKeyEcdsa->clear();
         break;
 
       default:
+        qDebug( "PriKey::set( const QByteArray &k ) invalid type code 0x%x", typeCode );
         // TODO: log error
         break;
     }
