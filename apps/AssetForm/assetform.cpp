@@ -51,7 +51,7 @@ void  AssetForm::restoreConfig()
 { QSettings s;
   if ( s.contains( "assets" ) )
     assets = s.value( "assets" ).toByteArray();
-  // assets.debugShow();
+  assets.debugShow();
   updateLabels();
 }
 
@@ -59,6 +59,7 @@ void  AssetForm::saveConfig()
 { qDebug( "AssetForm::saveConfig()" );
   QSettings s;
   s.setValue( "assets", assets.toDataItem() );
+  assets.debugShow();
 }
 
 void  AssetForm::updateLabels()
@@ -122,14 +123,10 @@ void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
   KeyPair *kp = cf->ce.makeNewGCryPair( keyType, &assets );
-  qDebug( "kp: %s", qPrintable( QString::fromUtf8( kp->toDataItem().toHex())));
-  if ( kp ) // BUG: losing the content of the kp 8070 private key when inserted into generic collection
+  if ( kp )
     { GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, &assets );
       ka->insert( kp );
-      qDebug( "ka: %s", qPrintable( QString::fromUtf8( ka->toDataItem().toHex())));
-      qDebug( "kp: %s", qPrintable( QString::fromUtf8( kp->toDataItem().toHex())));
       assets.insert( ka );
-      qDebug( "as: %s", qPrintable( QString::fromUtf8( assets.toDataItem().toHex())));
     }
   updateLabels();
   saveConfig();

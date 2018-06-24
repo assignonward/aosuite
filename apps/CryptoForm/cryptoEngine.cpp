@@ -62,7 +62,7 @@ KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
 #define MAX_KEY_SZ 16384
    void *buffer = malloc( MAX_KEY_SZ );
       size_t sz = gcry_sexp_sprint( keypair, GCRYSEXP_FMT_CANON, (char *)buffer, MAX_KEY_SZ );
-  QByteArray ba = QByteArray::fromRawData( (const char *)buffer, sz );
+  QByteArray ba = QByteArray( (const char *)buffer, sz ); // Make a deep copy of buffer
 
   // https://www.gnupg.org/documentation/manuals/gcrypt/Working-with-S_002dexpressions.html
 
@@ -83,13 +83,11 @@ KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
   PubKey *pubKp = NULL;
   if ( tc == AO_ECDSA_PRI_KEY )
     { PrivateKeyEcdsa *eccPriKp = new PrivateKeyEcdsa( ba, p ); // storing the whole S expression in canonical form
-      qDebug( "eccPriKp: %s", qPrintable( QString::fromUtf8( eccPriKp->toDataItem().toHex())));
       priKp = new PriKey( eccPriKp, p ); // priKp tookover ownership of eccPriKp
-      qDebug( "priKp: %s", qPrintable( QString::fromUtf8( priKp->toDataItem().toHex())));
       gcry_sexp_t itSexp = gcry_sexp_find_token(keypair, "q", 1);
       sz = gcry_sexp_sprint( itSexp, GCRYSEXP_FMT_DEFAULT, buffer, MAX_KEY_SZ );
       const char *data = gcry_sexp_nth_data(itSexp, 1, &sz);
-      ba = QByteArray::fromRawData( data, sz );
+      ba = QByteArray( data, sz );
       PublicKeyEcdsa *eccPubKp = new PublicKeyEcdsa( (DataItemBA)ba, p );
       pubKp = new PubKey( eccPubKp, p );
       gcry_sexp_release(itSexp);
@@ -97,10 +95,11 @@ KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
    else if( tc == AO_RSA3072_PRI_KEY )
     { PrivateKeyRsa3072 *rsaPriKp = new PrivateKeyRsa3072( ba, p ); // storing the whole S expression in canonical form
       priKp = new PriKey( rsaPriKp, p );
+      // TODO: properly strip down to the RSA private key, this is likely wrong.
       gcry_sexp_t itSexp = gcry_sexp_find_token(keypair, "q", 1);
       sz = gcry_sexp_sprint( itSexp, GCRYSEXP_FMT_DEFAULT, buffer, MAX_KEY_SZ );
       const char *data = gcry_sexp_nth_data(itSexp, 1, &sz);
-      ba = QByteArray::fromRawData( data, sz );
+      ba = QByteArray( data, sz );
       PublicKeyRsa3072 *rsaPubKp = new PublicKeyRsa3072( (DataItemBA)ba, p );
       pubKp = new PubKey( rsaPubKp, p );
       delete rsaPriKp;
@@ -117,7 +116,6 @@ KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
       if ( priKp ) delete priKp;
       if ( pubKp ) delete pubKp;
     }
-  qDebug( "kpp: %s", qPrintable( QString::fromUtf8( kpp->toDataItem().toHex())));
   free( buffer );
   gcry_sexp_release(keypair);
   gcry_sexp_release(parms);
