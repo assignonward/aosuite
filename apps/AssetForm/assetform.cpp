@@ -25,11 +25,15 @@
 #include "sharesref.h"
 #include <QSettings>
 
-AssetForm::AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw ) :
+AssetForm::AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw, GenericCollection *iap ) :
     QScrollArea(cw),
     ce(cep),
     ui(new Ui::AssetForm)
-{ assets.setTypeCode( AO_ASSETS );
+{ if ( iap )
+    if ( iap->getTypeCode() == AO_ASSETS )
+      ap = iap;
+  if ( !ap )
+    ap = new GenericCollection( AO_ASSETS, this );
   ui->setupUi(this);
   new QVBoxLayout( cw );
   cw->layout()->addWidget( this );
@@ -50,7 +54,7 @@ AssetForm::~AssetForm()
 void  AssetForm::restoreConfig()
 { QSettings s;
   if ( s.contains( "assets" ) )
-    assets = s.value( "assets" ).toByteArray();
+    *ap = s.value( "assets" ).toByteArray();
   // assets.debugShow();
   updateLabels();
 }
@@ -58,7 +62,7 @@ void  AssetForm::restoreConfig()
 void  AssetForm::saveConfig()
 { // qDebug( "AssetForm::saveConfig()" );
   QSettings s;
-  s.setValue( "assets", assets.toDataItem() );
+  s.setValue( "assets", ap->toDataItem() );
   // assets.debugShow();
 }
 
@@ -70,7 +74,7 @@ void  AssetForm::updateLabels()
   int sharesAssigned     = 0;
   int assignmentPending  = 0;
   int sharesEscrowed     = 0;
-  QMapIterator DataItemMap_t it( assets.itemMM );
+  QMapIterator DataItemMap_t it( ap->itemMM );
   // qDebug( "reading assets.mmap() size %d", assets.mmap().size() );
 
   while ( it.hasNext() )
@@ -122,19 +126,19 @@ void  AssetForm::updateLabels()
 void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
-  KeyPair *kp = ce->makeNewGCryPair( keyType, &assets );
+  KeyPair *kp = ce->makeNewGCryPair( keyType, ap );
   if ( kp )
-    { GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, &assets );
+    { GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, ap );
       ka->insert( kp );
-      assets.insert( ka );
+      ap->insert( ka );
     }
   updateLabels();
   saveConfig();
 }
 
 void  AssetForm::on_importToGpg_clicked()
-{ QMapIterator DataItemMap_t it( assets.itemMM );
-  qDebug( "reading assets.mmap() size %d", assets.mmap().size() );
+{ QMapIterator DataItemMap_t it( ap->itemMM );
+  qDebug( "reading assets.mmap() size %d", ap->mmap().size() );
   while ( it.hasNext() )
     { it.next();
       DataItem *di = it.value();

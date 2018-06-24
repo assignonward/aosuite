@@ -38,7 +38,7 @@ class AssetForm : public QScrollArea
     Q_OBJECT
 
 public:
-      explicit  AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw = NULL);
+      explicit  AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw = NULL, GenericCollection *iap = NULL );
                ~AssetForm();
           void  updateLabels();
 
@@ -49,9 +49,9 @@ public slots:
           void  on_importToGpg_clicked();
 
 public:
-QPointer<CryptoEngine> ce;
-    GenericCollection  assets;
-        Ui::AssetForm *ui;
+     QPointer<CryptoEngine> ce;
+QPointer<GenericCollection> ap; // AO_ASSETS Asset Pointer
+             Ui::AssetForm *ui;
 };
 
 #endif // ASSETFORM_H
