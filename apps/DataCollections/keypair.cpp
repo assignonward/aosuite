@@ -104,7 +104,7 @@ void KeyPair::operator = ( const DataItemBA &di )
  * @return data item with the BlockRef contents
  */
 DataItemBA  KeyPair::toDataItem( bool cf ) const
-{ qDebug( "KeyPair::toDataItem() 0x%x", typeCode );
+{ // qDebug( "KeyPair::toDataItem() 0x%x", typeCode );
   QByteArrayList dil;
   if ( pubKey )
     if ( pubKey->isValid() )

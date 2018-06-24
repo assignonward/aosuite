@@ -25,9 +25,9 @@
 #include "sharesref.h"
 #include <QSettings>
 
-AssetForm::AssetForm( QWidget *cw, CryptoForm *cfp, MainWinCommon *mw ) :
+AssetForm::AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw ) :
     QScrollArea(cw),
-    cf(cfp),
+    ce(cep),
     ui(new Ui::AssetForm)
 { assets.setTypeCode( AO_ASSETS );
   ui->setupUi(this);
@@ -51,15 +51,15 @@ void  AssetForm::restoreConfig()
 { QSettings s;
   if ( s.contains( "assets" ) )
     assets = s.value( "assets" ).toByteArray();
-  assets.debugShow();
+  // assets.debugShow();
   updateLabels();
 }
 
 void  AssetForm::saveConfig()
-{ qDebug( "AssetForm::saveConfig()" );
+{ // qDebug( "AssetForm::saveConfig()" );
   QSettings s;
   s.setValue( "assets", assets.toDataItem() );
-  assets.debugShow();
+  // assets.debugShow();
 }
 
 void  AssetForm::updateLabels()
@@ -122,7 +122,7 @@ void  AssetForm::updateLabels()
 void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
-  KeyPair *kp = cf->ce.makeNewGCryPair( keyType, &assets );
+  KeyPair *kp = ce->makeNewGCryPair( keyType, &assets );
   if ( kp )
     { GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, &assets );
       ka->insert( kp );
@@ -173,7 +173,7 @@ void  AssetForm::on_importToGpg_clicked()
                             qDebug( "qobject_cast<PrivateKeyRsa3072 *> returned NULL" );
                         }
                       if ( ba.size() > 0 )
-                        { if ( !cf->ce.importKey( ba ) )
+                        { if ( !ce->importKey( ba ) )
                             qDebug( "importKey failed" );
                         }
                     } // if proceed

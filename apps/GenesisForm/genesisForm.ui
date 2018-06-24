@@ -550,6 +550,12 @@ p, li { white-space: pre-wrap; }
           <verstretch>100</verstretch>
          </sizepolicy>
         </property>
+        <property name="font">
+         <font>
+          <family>Ubuntu Mono</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
        </widget>
       </item>
      </layout>

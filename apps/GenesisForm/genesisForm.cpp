@@ -33,16 +33,16 @@ GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw ) :
     { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));
       connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
     }
-  connect( ui->hashType, SIGNAL(currentIndexChanged(int)), SLOT(updateHash()) );
-  connect( ui->protocol, SIGNAL(currentIndexChanged(int)), SLOT(updateHash()) );
-  connect( ui->protocolRev, SIGNAL(    valueChanged(int)), SLOT(updateHash()) );
-  connect( ui->symbol,      SIGNAL( textChanged(QString)), SLOT(updateHash()) );
-  connect( ui->description, SIGNAL(        textChanged()), SLOT(updateHash()) );
-  connect( ui->startingShares, SIGNAL( valueChanged(int)), SLOT(updateHash()) );
-  connect( ui->minBlockTime, SIGNAL(valueChanged(double)), SLOT(updateHash()) );
-  connect( ui->totalCoins,   SIGNAL(   valueChanged(int)), SLOT(updateHash()) );
-  connect( ui->recordingTax, SIGNAL(   valueChanged(int)), SLOT(updateHash()) );
-  connect( ui->hashData,     SIGNAL(       clicked(bool)), SLOT(updateHash()) );
+  connect( ui->hashType,       SIGNAL(currentIndexChanged(int)), SLOT(updateHash()) );
+  connect( ui->protocol,       SIGNAL(currentIndexChanged(int)), SLOT(updateHash()) );
+  connect( ui->protocolRev,    SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->symbol,         SIGNAL(    textChanged(QString)), SLOT(updateHash()) );
+  connect( ui->description,    SIGNAL(           textChanged()), SLOT(updateHash()) );
+  connect( ui->startingShares, SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->minBlockTime,   SIGNAL(    valueChanged(double)), SLOT(updateHash()) );
+  connect( ui->totalCoins,     SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->recordingTax,   SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->hashData,       SIGNAL(           clicked(bool)), SLOT(updateHash()) );
   updateHash();
 }
 
