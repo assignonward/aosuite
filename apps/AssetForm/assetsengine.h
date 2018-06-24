@@ -20,6 +20,7 @@ public:
              void  insert( DataItem *it ) { assets.insert( it ); }
       DataItemMap  itemMM() { return assets.itemMM; }
 GenericCollection *getUnusedKeyPair( QByteArray pkp );
+GenericCollection *getNewKeyPair( typeCode_t keyType = AO_ECDSA_PRI_KEY );
 
 signals:
 

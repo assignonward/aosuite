@@ -119,13 +119,9 @@ void  AssetForm::updateLabels()
 
 void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
+  if ( !ae ) { qDebug( "AssetsEngine pointer is NULL" ); return; }
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
-  KeyPair *kp = ce->makeNewGCryPair( keyType, ae );
-  if ( kp )
-    { GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, ae );
-      ka->insert( kp );
-      ae->insert( ka );
-    }
+  ae->getNewKeyPair( keyType );
   updateLabels();
   saveConfig();
 }

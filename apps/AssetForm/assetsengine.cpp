@@ -74,8 +74,17 @@ GenericCollection *AssetsEngine::getUnusedKeyPair( QByteArray pkp )
     } //  while ( it.hasNext() )
 
   // No match found in assets, make a new key pair and return it
-  if ( !ce ) return NULL; // can't make a pair without a CryptoEngine
-  KeyPair *kp = ce->makeNewGCryPair( AO_ECDSA_PRI_KEY, this );         if ( !kp ) return NULL;
+  return getNewKeyPair();
+}
+
+/**
+ * @brief AssetsEngine::getNewKeyPair - make a new key pair, store it in
+ *   the assets map, and return it.
+ * @return a newly made key pair, NULL if there is a problem.
+ */
+GenericCollection *AssetsEngine::getNewKeyPair( typeCode_t keyType )
+{ if ( !ce ) return NULL; // can't make a pair without a CryptoEngine
+  KeyPair *kp = ce->makeNewGCryPair( keyType, this );         if ( !kp ) return NULL;
   GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, this ); if ( !ka ) return NULL;
   ka->insert( kp );
   insert( ka );
