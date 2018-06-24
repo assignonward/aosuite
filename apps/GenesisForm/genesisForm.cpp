@@ -48,6 +48,7 @@ GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw, AssetsEngine *iae ) :
   connect( ui->recordingTax,   SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
   connect( ui->hashData,       SIGNAL(           clicked(bool)), SLOT(updateHash()) );
   updateHash();
+  connect( ae, SIGNAL(newKeyAdded()), SLOT(updateKeyList()) );
 }
 
 GenesisForm::~GenesisForm()
@@ -154,4 +155,21 @@ void GenesisForm::updateHash()
     }
   ui->hash->setPlainText( QString::fromUtf8( gb.getHash(ht).toHex() ) );
   ui->block->setPlainText( QString::fromUtf8( ui->hashData->isChecked() ? gb.toHashData().toHex() : gb.toDataItem().toHex() ) );
+}
+
+/**
+ * @brief GenesisForm::updateKeyList - get a new list of unused key pair ids from the
+ *   asset engine and update the signingKey combo box to show them.
+ */
+void GenesisForm::updateKeyList()
+{ QString cur = ui->signingKey->currentText();
+  ui->signingKey->clear();
+  if ( !ae ) return;
+  QByteArrayList kl = ae->getUnusedKeyPairIDs();
+  std::sort( kl.begin(), kl.end() );
+  QStringList klh;
+  foreach( QByteArray pkid, kl )
+    klh.append( QString::fromUtf8( pkid.toHex() ) );
+  ui->signingKey->addItems( klh );
+  ui->signingKey->setCurrentText( cur );
 }

@@ -45,6 +45,7 @@ public slots:
              void  restoreConfig();
              void  saveConfig();
              void  updateHash();
+             void  updateKeyList();
              void  on_chooseIcon_clicked();
              void  on_chooseImage_clicked();
              void  on_importGenesisBlock_clicked();

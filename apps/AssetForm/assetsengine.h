@@ -21,8 +21,11 @@ public:
       DataItemMap  itemMM() { return assets.itemMM; }
 GenericCollection *getUnusedKeyPair( QByteArray pkp );
 GenericCollection *getNewKeyPair( typeCode_t keyType = AO_ECDSA_PRI_KEY );
+             bool  isKeyPairUnused( GenericCollection *ka );
+   QByteArrayList  getUnusedKeyPairIDs();
 
 signals:
+             void  newKeyAdded();
 
 public slots:
 
