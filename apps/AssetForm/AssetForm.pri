@@ -27,9 +27,11 @@ DEFINES     += QAMQP_DEBUG=Y
 
 INCLUDEPATH += $${PWD}
 
-SOURCES     += $${PWD}/assetform.cpp
+SOURCES     += $${PWD}/assetform.cpp \
+    $$PWD/assetsengine.cpp
 
-HEADERS     += $${PWD}/assetform.h
+HEADERS     += $${PWD}/assetform.h \
+    $$PWD/assetsengine.h
 
 FORMS       += $${PWD}/assetform.ui
 

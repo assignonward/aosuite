@@ -24,7 +24,7 @@
 #define ASSETFORM_H
 
 #include <QScrollArea>
-#include "genericcollection.h"
+#include "assetsengine.h"
 #include "MainWinCommon.h"
 #include "cryptoForm.h"
 #include "ui_assetform.h"
@@ -38,7 +38,7 @@ class AssetForm : public QScrollArea
     Q_OBJECT
 
 public:
-      explicit  AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw = NULL, GenericCollection *iap = NULL );
+      explicit  AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw = NULL, AssetsEngine *iae = NULL );
                ~AssetForm();
           void  updateLabels();
 
@@ -50,7 +50,7 @@ public slots:
 
 public:
      QPointer<CryptoEngine> ce;
-QPointer<GenericCollection> ap; // AO_ASSETS Assets Pointer
+     QPointer<AssetsEngine> ae;
              Ui::AssetForm *ui;
 };
 

@@ -24,7 +24,7 @@
 #define GENESISFORM_H
 
 #include <QtGui>
-#include "genericcollection.h"
+#include "assetsengine.h"
 #include "ui_genesisForm.h"
 #include "MainWinCommon.h"
 
@@ -37,7 +37,7 @@ class GenesisForm : public QScrollArea
     Q_OBJECT
 
 public:
-         explicit  GenesisForm( QWidget *cw, GenericCollection *iap = NULL, MainWinCommon *mw = NULL );
+         explicit  GenesisForm( QWidget *cw, AssetsEngine *iae = NULL, MainWinCommon *mw = NULL );
                   ~GenesisForm();
 GenericCollection  calculateGenesisBlock();
 
@@ -51,10 +51,10 @@ public slots:
       void  on_publishGenesisBlock_clicked();
 
 public:
-             Ui::GenesisForm *ui;
+        Ui::GenesisForm *ui;
 
 private:
-  QPointer<GenericCollection> ap; // AO_ASSETS Assets Pointer
+  QPointer<AssetsEngine> ae;
 };
 
 #endif // RABBITFORM_H

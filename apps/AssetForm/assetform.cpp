@@ -24,20 +24,17 @@
 #include "prikey.h"
 #include "sharesref.h"
 #include <QSettings>
+#include <QPointer>
 
-AssetForm::AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw, GenericCollection *iap ) :
+AssetForm::AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw, AssetsEngine *iae ) :
     QScrollArea(cw),
     ce(cep),
     ui(new Ui::AssetForm)
-{ if ( iap )
-    { if ( iap->getTypeCode() == AO_ASSETS )
-        ap = iap;
-       else
-        qDebug( "unexpected type code 0x%x in iap", iap->getTypeCode() );
-    }
-  if ( !ap )
-    { ap = new GenericCollection( AO_ASSETS, this );
-      qDebug( "AssetForm() creating local asset collection" );
+{ if ( iae )
+    ae = iae;
+   else
+    { ae = new AssetsEngine( this );
+      qDebug( "AssetForm() creating local AssetsEngine" );
     }
   ui->setupUi(this);
   new QVBoxLayout( cw );
@@ -57,18 +54,12 @@ AssetForm::~AssetForm()
  *   of the assets.  Might at least want to put some security on them.
  */
 void  AssetForm::restoreConfig()
-{ QSettings s;
-  if ( s.contains( "assets" ) )
-    *ap = s.value( "assets" ).toByteArray();
-  // assets.debugShow();
+{ ae->restoreConfig();
   updateLabels();
 }
 
 void  AssetForm::saveConfig()
-{ // qDebug( "AssetForm::saveConfig()" );
-  QSettings s;
-  s.setValue( "assets", ap->toDataItem() );
-  // assets.debugShow();
+{ ae->saveConfig();
 }
 
 void  AssetForm::updateLabels()
@@ -79,7 +70,7 @@ void  AssetForm::updateLabels()
   int sharesAssigned     = 0;
   int assignmentPending  = 0;
   int sharesEscrowed     = 0;
-  QMapIterator DataItemMap_t it( ap->itemMM );
+  QMapIterator DataItemMap_t it( ae->itemMM() );
   // qDebug( "reading assets.mmap() size %d", assets.mmap().size() );
 
   while ( it.hasNext() )
@@ -131,19 +122,19 @@ void  AssetForm::updateLabels()
 void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
-  KeyPair *kp = ce->makeNewGCryPair( keyType, ap );
+  KeyPair *kp = ce->makeNewGCryPair( keyType, ae );
   if ( kp )
-    { GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, ap );
+    { GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, ae );
       ka->insert( kp );
-      ap->insert( ka );
+      ae->insert( ka );
     }
   updateLabels();
   saveConfig();
 }
 
 void  AssetForm::on_importToGpg_clicked()
-{ QMapIterator DataItemMap_t it( ap->itemMM );
-  qDebug( "reading assets.mmap() size %d", ap->mmap().size() );
+{ QMapIterator DataItemMap_t it( ae->itemMM() );
+  qDebug( "reading assets.mmap() size %d", ae->itemMM().size() );
   while ( it.hasNext() )
     { it.next();
       DataItem *di = it.value();
