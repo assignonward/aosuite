@@ -23,12 +23,10 @@
 #include "genesisForm.h"
 #include <QFileDialog>
 
-GenesisForm::GenesisForm( QWidget *cw, AssetsEngine *iae, MainWinCommon *mw ) :
+GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw, AssetsEngine *iae ) :
     QScrollArea(cw),
     ui(new Ui::GenesisForm)
-{ if ( iae )
-    ae = iae;
-   else
+{ if ( iae ) ae = iae; else
     { ae = new AssetsEngine( this );
       qDebug( "GenesisForm() creating local asset engine" );
     }

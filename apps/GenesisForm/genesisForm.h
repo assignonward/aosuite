@@ -37,18 +37,18 @@ class GenesisForm : public QScrollArea
     Q_OBJECT
 
 public:
-         explicit  GenesisForm( QWidget *cw, AssetsEngine *iae = NULL, MainWinCommon *mw = NULL );
+         explicit  GenesisForm( QWidget *cw, MainWinCommon *mw = NULL, AssetsEngine *iae = NULL );
                   ~GenesisForm();
 GenericCollection  calculateGenesisBlock();
 
 public slots:
-      void  restoreConfig();
-      void  saveConfig();
-      void  updateHash();
-      void  on_chooseIcon_clicked();
-      void  on_chooseImage_clicked();
-      void  on_importGenesisBlock_clicked();
-      void  on_publishGenesisBlock_clicked();
+             void  restoreConfig();
+             void  saveConfig();
+             void  updateHash();
+             void  on_chooseIcon_clicked();
+             void  on_chooseImage_clicked();
+             void  on_importGenesisBlock_clicked();
+             void  on_publishGenesisBlock_clicked();
 
 public:
         Ui::GenesisForm *ui;

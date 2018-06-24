@@ -14,8 +14,7 @@ void  AssetsEngine::restoreConfig()
 }
 
 void  AssetsEngine::saveConfig()
-{ // qDebug( "AssetForm::saveConfig()" );
-  QSettings s;
+{ QSettings s;
   s.setValue( "assets", assets.toDataItem() );
   // assets.debugShow();
 }

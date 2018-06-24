@@ -26,13 +26,14 @@
 #include <QSettings>
 #include <QPointer>
 
-AssetForm::AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw, AssetsEngine *iae ) :
+AssetForm::AssetForm( QWidget *cw, MainWinCommon *mw, CryptoEngine *ice, AssetsEngine *iae ) :
     QScrollArea(cw),
-    ce(cep),
     ui(new Ui::AssetForm)
-{ if ( iae )
-    ae = iae;
-   else
+{ if ( ice ) ce = ice; else
+    { ce = new CryptoEngine( this );
+      qDebug( "AssetForm() creating local CryptoEngine" );
+    }
+  if ( iae ) ae = iae; else
     { ae = new AssetsEngine( this );
       qDebug( "AssetForm() creating local AssetsEngine" );
     }

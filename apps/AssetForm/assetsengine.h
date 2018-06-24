@@ -12,7 +12,7 @@ class AssetsEngine : public QObject
 {
     Q_OBJECT
 public:
-    explicit  AssetsEngine(QObject *parent = nullptr);
+    explicit  AssetsEngine(QObject *parent = NULL);
         void  restoreConfig();
         void  saveConfig();
         void  insert( DataItem *it ) { assets.insert( it ); }
