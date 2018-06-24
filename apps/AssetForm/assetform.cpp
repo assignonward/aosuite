@@ -30,8 +30,11 @@ AssetForm::AssetForm( QWidget *cw, CryptoEngine *cep, MainWinCommon *mw, Generic
     ce(cep),
     ui(new Ui::AssetForm)
 { if ( iap )
-    if ( iap->getTypeCode() == AO_ASSETS )
-      ap = iap;
+    { if ( iap->getTypeCode() == AO_ASSETS )
+        ap = iap;
+       else
+        qDebug( "unexpected type code 0x%x in iap", iap->getTypeCode() );
+    }
   if ( !ap )
     ap = new GenericCollection( AO_ASSETS, this );
   ui->setupUi(this);

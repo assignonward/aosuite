@@ -26,10 +26,14 @@
 #include "random.h"
 #include "gcrypt.h"
 
-CryptoForm::CryptoForm( QWidget *cw, MainWinCommon *mw ) :
+CryptoForm::CryptoForm( QWidget *cw, MainWinCommon *mw, CryptoEngine *ice ) :
     QScrollArea(cw),
     ui(new Ui::CryptoForm)
-{ ui->setupUi(this);
+{ if ( ice )
+    ce = ice;
+   else
+    ce = new CryptoEngine( this );
+  ui->setupUi(this);
   new QVBoxLayout( cw );
   cw->layout()->addWidget( this );
   if ( mw )
@@ -46,19 +50,19 @@ CryptoForm::~CryptoForm()
 void  CryptoForm::restoreConfig()
 { QSettings s;
   if ( s.contains( "homeFolder" ) )
-    { ce.configFolder = s.value( "homeFolder" ).toString();
-      ui->homeFolder->setText( ce.configFolder );
+    { ce->configFolder = s.value( "homeFolder" ).toString();
+      ui->homeFolder->setText( ce->configFolder );
     }
   if ( s.contains( "passphrase" ) )
-    { ce.setPassphrase( s.value( "passphrase" ).toString() );
-      ui->passphrase->setText( ce.passphrase );
+    { ce->setPassphrase( s.value( "passphrase" ).toString() );
+      ui->passphrase->setText( ce->passphrase );
     }
 }
 
 void  CryptoForm::saveConfig()
 { QSettings s;
-  s.setValue( "homeFolder", ce.configFolder );
-  s.setValue( "passphrase", ce.passphrase   );
+  s.setValue( "homeFolder", ce->configFolder );
+  s.setValue( "passphrase", ce->passphrase   );
 }
 
 void CryptoForm::on_reread_clicked()
@@ -68,7 +72,7 @@ void CryptoForm::on_reread_clicked()
 }
 
 void  CryptoForm::on_homeFolder_textEdited( QString hf )
-{ ce.configFolder = hf; }
+{ ce->configFolder = hf; }
 
 void  CryptoForm::on_passphrase_textEdited( QString pp )
 { QByteArray ppa = pp.toUtf8();
@@ -77,7 +81,7 @@ void  CryptoForm::on_passphrase_textEdited( QString pp )
   QByteArray ha = h.result();
   QString hs = ha.toBase64();
   ui->hashed->setText( hs.left( 16 ) );
-  ce.setPassphrase( pp );
+  ce->setPassphrase( pp );
 }
 
 
@@ -86,7 +90,7 @@ void  CryptoForm::on_passphrase_textEdited( QString pp )
  * @return false if failed somewhere
  */
 bool CryptoForm::getKeyInfo()
-{ qint32 n = ce.getKeyInfo();
+{ qint32 n = ce->getKeyInfo();
   ui->selectedKeyNumber->setSuffix( QString( " of %1" ).arg(n) );
   ui->selectedKeyNumber->setMinimum( 1 );
   ui->selectedKeyNumber->setMaximum( n );
@@ -106,7 +110,7 @@ void CryptoForm::on_selectedKeyNumber_valueChanged( int v )
   gpgme_error_t err;
   SHOW_IF_GPGERR( gpgme_new( &ctx ) )
   gpgme_data_t keydata;
-  gpgme_key_t  key = ce.gpgKeys[n];
+  gpgme_key_t  key = ce->gpgKeys[n];
   if ( !key )
     return;
   info.append( QString( "id:%1\nname:%2\nemail:%3\ncomment:%4" )
@@ -175,9 +179,9 @@ void CryptoForm::on_selectedSubkeyNumber_valueChanged( int v )
     { ui->selectedSubkeyInfo->setText( "no keys" );
       return;
     }
-  if ( !ce.gpgKeys[n] )
+  if ( !ce->gpgKeys[n] )
     return;
-  gpgme_subkey_t subkey = ce.gpgKeys[n]->subkeys;
+  gpgme_subkey_t subkey = ce->gpgKeys[n]->subkeys;
   if ( !subkey )
     { ui->selectedSubkeyInfo->setText( "subkeys empty" );
       return;
@@ -223,7 +227,7 @@ bool CryptoForm::getGpgInfo()
 { gpgme_ctx_t   ctx;
   gpgme_error_t err;
 
-  FAIL_IF_GPGERR( ce.initGpgme() )
+  FAIL_IF_GPGERR( ce->initGpgme() )
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
   FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
   gpgme_engine_info_t ei = gpgme_ctx_get_engine_info( ctx );
@@ -251,7 +255,7 @@ bool CryptoForm::getGpgKeys()
   gpgme_error_t err;
   gpgme_data_t  keydata,tempkeydata;
 
-  FAIL_IF_GPGERR( ce.initGpgme() )
+  FAIL_IF_GPGERR( ce->initGpgme() )
   FAIL_IF_GPGERR( gpgme_new( &ctx ) )
   FAIL_IF_GPGERR( gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP ) )
   // gpgme_set_armor( ctx, 1 );
@@ -264,12 +268,12 @@ bool CryptoForm::getGpgKeys()
   bool done = false;
   while ( !done )
     { qDebug( "Getting key %d", n );
-      err = gpgme_op_keylist_next( ctx, &(ce.gpgKeys[n]) );
+      err = gpgme_op_keylist_next( ctx, &(ce->gpgKeys[n]) );
       if ( gpg_err_code(err) == GPG_ERR_EOF )
         done = true;
        else
         { FAIL_IF_GPGERR(err)
-          gpgme_key_t key = ce.gpgKeys[n];
+          gpgme_key_t key = ce->gpgKeys[n];
           qDebug( "%s", qPrintable( QString( " got key %1 id:%2 name:%3 email:%4" )
                        .arg( n, 4 ).arg( key->subkeys->keyid )
                        .arg( (key->uids && key->uids->name ) ? key->uids->name  : "undefined" )
@@ -316,7 +320,7 @@ bool CryptoForm::getGpgKeys()
   qDebug( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 
   gpgme_data_seek( keydata, 0, SEEK_SET );
-  SHOW_IF_GPGERR( gpgme_op_export_keys( ctx, ce.gpgKeys, GPGME_EXPORT_MODE_MINIMAL | GPGME_EXPORT_MODE_SECRET, keydata ) )
+  SHOW_IF_GPGERR( gpgme_op_export_keys( ctx, ce->gpgKeys, GPGME_EXPORT_MODE_MINIMAL | GPGME_EXPORT_MODE_SECRET, keydata ) )
   gpgme_data_seek( keydata, 0, SEEK_SET );
   dt = gpgme_data_identify(keydata,0);
   qDebug( "keydata type %d %s", dt, dt == GPGME_DATA_TYPE_PGP_KEY ? "That's a PGP KEY" : "unexpected type" );
@@ -328,7 +332,7 @@ bool CryptoForm::getGpgKeys()
   n = 0;
   done = false;
   while ( !done )
-    { gpgme_key_t key = ce.gpgKeys[n];
+    { gpgme_key_t key = ce->gpgKeys[n];
       if ( !key )
         done = true;
        else

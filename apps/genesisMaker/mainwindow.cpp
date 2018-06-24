@@ -27,11 +27,13 @@
 MainWindow::MainWindow(QWidget *parent) :
     MainWinCommon(parent),
     ui(new Ui::MainWindow)
-{ ui->setupUi(this);
+{ ap = new GenericCollection( AO_ASSETS, this );
+  ce = new CryptoEngine( this );
+  ui->setupUi(this);
   new AboutForm( ui->aboutTab );
-  cf = new CryptoForm ( ui->cryptoTab , this );
-  af = new AssetForm  ( ui->assetsTab , &(cf->ce), this );
-  gf = new GenesisForm( ui->genesisTab, this );
+  cf = new CryptoForm ( ui->cryptoTab ,     this, ce );
+  af = new AssetForm  ( ui->assetsTab , ce, this, ap );
+  gf = new GenesisForm( ui->genesisTab,     this     );
   connect( this, SIGNAL(message(QString)),gf->ui->logMessages,SLOT(appendPlainText(QString)) );
   messageConnected = true;
   restoreConfig();

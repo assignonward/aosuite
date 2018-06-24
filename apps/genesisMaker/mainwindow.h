@@ -45,10 +45,12 @@ public:
         void  saveConfig();
 
 private:
-      Ui::MainWindow *ui;
-  QPointer<AssetForm> af;
- QPointer<CryptoForm> cf;
-QPointer<GenesisForm> gf;
+            Ui::MainWindow *ui;
+QPointer<GenericCollection> ap; // AO_ASSETS asset pointer
+     QPointer<CryptoEngine> ce;
+        QPointer<AssetForm> af;
+       QPointer<CryptoForm> cf;
+      QPointer<GenesisForm> gf;
 };
 
 #endif // MAINWINDOW_H

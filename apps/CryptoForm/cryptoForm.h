@@ -28,6 +28,7 @@
 #include "MainWinCommon.h"
 #include "cryptoEngine.h"
 #include "dataitem.h"
+#include <QPointer>
 
 namespace Ui {
 class CryptoForm;
@@ -38,7 +39,7 @@ class CryptoForm : public QScrollArea
     Q_OBJECT
 
 public:
-         explicit  CryptoForm( QWidget *cw, MainWinCommon *mw = NULL );
+         explicit  CryptoForm( QWidget *cw, MainWinCommon *mw = NULL, CryptoEngine *ice = NULL );
                   ~CryptoForm();
 
              bool  getGpgKeys();
@@ -55,8 +56,8 @@ public slots:
              void  saveConfig();
 
 public:
-      CryptoEngine  ce;
-    Ui::CryptoForm *ui;
+QPointer<CryptoEngine> ce;
+       Ui::CryptoForm *ui;
 
 };
 
