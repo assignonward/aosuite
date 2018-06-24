@@ -43,6 +43,8 @@ public:
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;
           bool  isValid() { return pubKey->isValid() && priKey->isValid(); }
+        PubKey *getPubKey() { return pubKey; }
+        PriKey *getPriKey() { return priKey; }
 
 private:
   QPointer<PubKey> pubKey;

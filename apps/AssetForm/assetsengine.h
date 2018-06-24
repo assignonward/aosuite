@@ -2,6 +2,8 @@
 #define ASSETSENGINE_H
 
 #include <QObject>
+#include <QPointer>
+#include "cryptoEngine.h"
 #include "genericcollection.h"
 
 /**
@@ -12,18 +14,20 @@ class AssetsEngine : public QObject
 {
     Q_OBJECT
 public:
-    explicit  AssetsEngine(QObject *parent = NULL);
-        void  restoreConfig();
-        void  saveConfig();
-        void  insert( DataItem *it ) { assets.insert( it ); }
- DataItemMap  itemMM() { return assets.itemMM; }
+         explicit  AssetsEngine( CryptoEngine *ice = NULL, QObject *parent = NULL);
+             void  restoreConfig();
+             void  saveConfig();
+             void  insert( DataItem *it ) { assets.insert( it ); }
+      DataItemMap  itemMM() { return assets.itemMM; }
+GenericCollection *getUnusedKeyPair( QByteArray pkp );
 
 signals:
 
 public slots:
 
 private:
-  GenericCollection  assets;
+      GenericCollection  assets;
+  QPointer<CryptoEngine> ce;
 };
 
 #endif // ASSETSENGINE_H

@@ -27,8 +27,8 @@ GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw, AssetsEngine *iae ) :
     QScrollArea(cw),
     ui(new Ui::GenesisForm)
 { if ( iae ) ae = iae; else
-    { ae = new AssetsEngine( this );
-      qDebug( "GenesisForm() creating local asset engine" );
+    { ae = new AssetsEngine( new CryptoEngine(this), this );
+      qDebug( "GenesisForm() creating local asset engine (with embedded local CryptoEngine)" );
     }
   ui->setupUi(this);
   new QVBoxLayout( cw );

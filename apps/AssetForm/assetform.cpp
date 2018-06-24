@@ -34,7 +34,7 @@ AssetForm::AssetForm( QWidget *cw, MainWinCommon *mw, CryptoEngine *ice, AssetsE
       qDebug( "AssetForm() creating local CryptoEngine" );
     }
   if ( iae ) ae = iae; else
-    { ae = new AssetsEngine( this );
+    { ae = new AssetsEngine( ce, this );
       qDebug( "AssetForm() creating local AssetsEngine" );
     }
   ui->setupUi(this);
@@ -84,12 +84,11 @@ void  AssetForm::updateLabels()
             { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); }
            else
             { // qDebug( "ka typeCode 0x%x %d items", ka->getTypeCode(), ka->itemMM.size() );
-              if ( ka->contains( AO_ECDSA_PRI_KEY ) ||
-                   ka->contains( AO_RSA3072_PRI_KEY ) )
+              if ( ka->contains( AO_KEYPAIR ) )
                 { if ( ka->contains( AO_SHARES_REF ) )
                     { SharesRef *sr = qobject_cast<SharesRef *>(DataItem::fromDataItem( ka->value(AO_SHARES_REF) ));
                       switch ( sr->shareState.value() )
-                        { case KEYS_UNUSED:              unused++;             break;
+                        { case KEYS_UNUSED:              unused++;             break;  // Can get here for instance when a negotiation falls through
                           case KEYS_RECEIPT_NEGOTIATING: receiptNegotiating++; break;
                           case KEYS_RECEIPT_RECORDING:   receiptRecording++;   break;
                           case KEYS_CONTROL_SHARES:      controlShares++;      break;
@@ -102,8 +101,6 @@ void  AssetForm::updateLabels()
                    else
                     unused++;  // No AO_SHARES_REF implies that the keypair is unused
                 }
-               else if ( ka->contains( AO_KEYPAIR ) )
-                unused++;
                else
                 { qDebug( "unexpected: AO_KEY_ASSET with no AO_X_PRI_KEY or AO_KEYPAIR" ); }
             } // else - was a successful qobject_cast

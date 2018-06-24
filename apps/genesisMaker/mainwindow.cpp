@@ -27,8 +27,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     MainWinCommon(parent),
     ui(new Ui::MainWindow)
-{ ce = new CryptoEngine( this );
-  ae = new AssetsEngine( this );
+{ ce = new CryptoEngine(     this );
+  ae = new AssetsEngine( ce, this );
   ui->setupUi(this);
   new AboutForm( ui->aboutTab );
   cf = new CryptoForm ( ui-> cryptoTab, this, ce     );
