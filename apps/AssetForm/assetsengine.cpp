@@ -125,5 +125,3 @@ QByteArrayList  AssetsEngine::getUnusedKeyPairIDs()
     } // foreach( DataItem *di, keyAssetList )
   return ukpids;
 }
-
-

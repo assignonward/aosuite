@@ -55,7 +55,8 @@ qint32 DataItem::typeSize( typeCode_t tc ) const
  */
 qint32 DataItem::typeSizeTable( typeCode_t tc )
 { switch ( tc )
-  { case AO_ECDSA_PUB_KEY2:          return 32;
+  { case AO_INDEXV:                  return -2;
+    case AO_ECDSA_PUB_KEY2:          return 32;
     case AO_ECDSA_PUB_KEY3:          return 32;
     case AO_ECDSA_PUB_KEY4:          return 64;
     case AO_HASH512:                 return 64;
@@ -64,24 +65,25 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
     case AO_PUB_RSA3072_ID:          return 32;
     case AO_HASH224SALT32:           return 32;
     case AO_TIME_OF_SIG:             return 16;
-    case AO_TIME_RECORDED:           return 16;
+    case AO_PROPOSAL_TIME:           return 16;
     case AO_RECORDING_DEADLINE:      return 16;
+    case AO_TIME_RECORDED:           return 16;
     case AO_TIME_DIFF:               return 16;
     case AO_UNDERWRITING_EXPIRATION: return 16;
-    case AO_ASSIGNMENT_AMT:          return 16;
+    case AO_AMT:                     return 16;
     case AO_UNDERWRITING_AMT:        return 16;
     case AO_RECORDING_BID:           return 16;
     case AO_SHARES_OUT:              return 16;
     case AO_N_COINS:                 return 16;
     case AO_SHARE_STATE:             return 1;
-    case AO_LISTSIZE:                return 2;
+    case AO_LISTSIZE:                return -2;
     case AO_INDEX:                   return 2;
     case CB_FIRST_ID_SEQ_NUM:        return 8;
     case CB_N_ID_SEQ_NUM:            return 2;
     case AO_ID_SEQ_NUM:              return 8;
+    case AO_INDEX32:                 return 4;
     case AO_RSA3072_PUB_KEY:         return 384;
     case AO_RSA3072_SIG:             return 384;
-    case AO_INDEX32:                 return 4;
     case AO_KEY_INDEX:               return 8;
     case GB_PROTOCOL:                return 2;
     case GB_PROTOCOL_REV:            return 2;
@@ -105,13 +107,15 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
 qint32 DataItem::typeSize( const DataItemBA &di ) const
 { if ( di.size() < 1 )
     return -1;
-  qint32 tcSz = 0; // Size of the typeCode
+  qint32 tcSz = 0;                   // Size of the typeCode
   typeCode_t tc = bytesToCode( di, tcSz );
   qint32 fdSz = typeSizeTable( tc ); // See if fixed size, or variable, based on type
   if ( fdSz >= 0 )
-    return tcSz+fdSz; // Total size of the data item's byte array, including type code and its fixed size data
-  qint32 scSz = 0; // Size of the size code
+    return tcSz+fdSz;    // Total size of the data item's byte array, including type code and its fixed size data
+  qint32 scSz = 0;       // Size of the size code
   qint32 vdSz = bytesToCode( di.mid( tcSz ), scSz ); // Size of the variable data
+  if ( fdSz == -2 )      // -2 means that a single variable byte code value follows the type code
+    return tcSz+scSz;    // with no additional data
   return tcSz+scSz+vdSz; // Total size of the data item's byte array, including type and size codes
 }
 
@@ -119,7 +123,9 @@ qint32 DataItem::typeSize( const DataItemBA &di ) const
 #include "aotime.h"
 #include "assets.h"
 #include "databytearray.h"
+#include "data16.h"
 #include "data32.h"
+#include "datavarint32.h"
 #include "data64.h"
 #include "hash224salt32.h"
 #include "hash256.h"
@@ -152,77 +158,80 @@ qint32 DataItem::typeSize( const DataItemBA &di ) const
 DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
 { // qDebug( "making data item type 0x%x size %d", typeCodeOf(di), di.size() );
   switch ( typeCodeOf( di ) )
-  { case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( di, p );
-    case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( di, p );
-    case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( di, p );
-    case AO_HASH512:                 return new Hash512( di, p );
-    case AO_HASH256:                 return new Hash256( di, p );
-    case AO_SALT256:                 return new Salt256( di, p );
-    case AO_PUB_RSA3072_ID:          return new Hash256( di, p );
-    case AO_HASH224SALT32:           return new Hash224Salt32( di, p );
-    case AO_TIME_OF_SIG:             return new AOTime( di, p );
-    case AO_TIME_RECORDED:           return new AOTime( di, p );
-    case AO_RECORDING_DEADLINE:      return new AOTime( di, p );
-    case AO_TIME_DIFF:               return new AOTime( di, p );
-    case AO_UNDERWRITING_EXPIRATION: return new AOTime( di, p );
-    case AO_ASSIGNMENT_AMT:          return new Shares( di, p );
-    case AO_UNDERWRITING_AMT:        return new Shares( di, p );
-    case AO_RECORDING_BID:           return new Shares( di, p );
-    case AO_SHARES_OUT:              return new Shares( di, p );
-    case AO_N_COINS:                 return new AOCoins( di, p );
-    case AO_SHARE_STATE:             return new Data8( di, p );
-    case AO_LISTSIZE:                return new Data16( di, p );
-    case AO_INDEX:                   return new Data16( di, p );
-    case CB_FIRST_ID_SEQ_NUM:        return new Data64( di, p );
-    case CB_N_ID_SEQ_NUM:            return new Data16( di, p );
-    case AO_ID_SEQ_NUM:              return new Data64( di, p );
-    case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( di, p );
-    case AO_RSA3072_SIG:             return new SigRsa3072( di, p );
-    case AO_ECDSA_SIG:               return new SigEcdsa( di, p );
-    case AO_ASSIGNMENT:              return new Assignment( di, p );
-    case AO_PARTICIPANT:             return new Participant( di, p );
-    case AO_PARTICIPANT_CF:          return new Participant( di, p );
-    case AO_AUTHORIZATION:           return new Authorization( di, p );
-    case AO_ASSIGN_REF:              return new GenericCollection( di, p );
-    case AO_DATABYTEARRAY:           return new DataByteArray( di, p );
-    case AO_NOTE:                    return new Note( di, p );
-    case AO_KEY_ASSET:               return new GenericCollection( di, p );
-    case AO_INDEX32:                 return new Data32( di, p );
-    case AO_BLOCK_REF:               return new BlockRef( di, p );
-    case AO_PAGE_REF:                return new PageRef( di, p );
-    case AO_GENESIS_REF:             return new GenesisRef( di, p );
-    case AO_KEY_INDEX:               return new Data64( di, p );
-    case AO_SHARES_REF:              return new SharesRef( di, p );
-    case AO_ASSETS:                  return new Assets( di, p );
-    case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( di, p );
-    case AO_RSA3072_PRI_KEY:         return new PrivateKeyRsa3072( di, p );
-    case AO_KEYPAIR:                 return new KeyPair( di, p );
-    case AO_NETADDRESS:              return new NetAddress( di, p );
-    case AO_ORGANIZER:               return new Organizer( di, p );
-    case AO_RECORDER:                return new Recorder( di, p );
-    case CB_CHAIN_BLOCK:             return new GenericCollection( di, p );
-    case CB_BLOCKMAKER:              return new PubKey( di, p );
-    case CB_BLOCK_SIG:               return new Signature( di, p );
-    case AO_AUTH_SIG:                return new Signature( di, p );
-    case AO_SIG_WITH_TIME:           return new Signature( di, p );
-    case GB_GENESIS_BLOCK:           return new GenericCollection( di, p );
-    case GB_PROTOCOL:                return new Data16( di, p );
-    case GB_PROTOCOL_REV:            return new Data16( di, p );
-    case GB_TEXT_SYMBOL:             return new Note( di, p );
-    case GB_DESCRIPTION:             return new Note( di, p );
-    case GB_ICON:                    return new DataByteArray( di, p );
-    case GB_IMAGE:                   return new DataByteArray( di, p );
-    case GB_STARTING_SHARES:         return new Shares( di, p );
-    case GB_MIN_BLOCK_INT:           return new AOTime( di, p );
-    case GB_N_COINS_TOTAL:           return new AOCoins( di, p );
-    case GB_RECORDING_TAX:           return new AOCoins( di, p );
+  { case AO_INDEXV:                  return new DataVarInt32( di, p );
+  case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( di, p );
+  case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( di, p );
+  case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( di, p );
+  case AO_HASH512:                 return new Hash512( di, p );
+  case AO_HASH256:                 return new Hash256( di, p );
+  case AO_SALT256:                 return new Salt256( di, p );
+  case AO_PUB_RSA3072_ID:          return new Hash256( di, p );
+  case AO_HASH224SALT32:           return new Hash224Salt32( di, p );
+  case AO_TIME_OF_SIG:             return new AOTime( di, p );
+  case AO_PROPOSAL_TIME:           return new AOTime( di, p );
+  case AO_RECORDING_DEADLINE:      return new AOTime( di, p );
+  case AO_TIME_RECORDED:           return new AOTime( di, p );
+  case AO_TIME_DIFF:               return new AOTime( di, p );
+  case AO_UNDERWRITING_EXPIRATION: return new AOTime( di, p );
+  case AO_AMT:                     return new Shares( di, p );
+  case AO_UNDERWRITING_AMT:        return new Shares( di, p );
+  case AO_RECORDING_BID:           return new Shares( di, p );
+  case AO_SHARES_OUT:              return new Shares( di, p );
+  case AO_N_COINS:                 return new AOCoins( di, p );
+  case AO_SHARE_STATE:             return new Data8( di, p );
+  case AO_LISTSIZE:                return new DataVarInt32( di, p );
+  case AO_INDEX:                   return new Data16( di, p );
+  case CB_FIRST_ID_SEQ_NUM:        return new Data64( di, p );
+  case CB_N_ID_SEQ_NUM:            return new Data16( di, p );
+  case AO_ID_SEQ_NUM:              return new Data64( di, p );
+  case AO_INDEX32:                 return new Data32( di, p );
+  case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( di, p );
+  case AO_RSA3072_SIG:             return new SigRsa3072( di, p );
+  case AO_ECDSA_SIG:               return new SigEcdsa( di, p );
+  case AO_ASSIGNMENT:              return new Assignment( di, p );
+  case AO_PARTICIPANT:             return new Participant( di, p );
+  case AO_PARTICIPANT_CF:          return new Participant( di, p );
+  case AO_AUTHORIZATION:           return new Authorization( di, p );
+  case AO_ASSIGN_REF:              return new GenericCollection( di, p );
+  case AO_DATABYTEARRAY:           return new DataByteArray( di, p );
+  case AO_NOTE:                    return new Note( di, p );
+  case AO_KEY_ASSET:               return new GenericCollection( di, p );
+  case AO_BLOCK_REF:               return new BlockRef( di, p );
+  case AO_PAGE_REF:                return new PageRef( di, p );
+  case AO_GENESIS_REF:             return new GenesisRef( di, p );
+  case AO_KEY_INDEX:               return new Data64( di, p );
+  case AO_SHARES_REF:              return new SharesRef( di, p );
+  case AO_ASSETS:                  return new Assets( di, p );
+  case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( di, p );
+  case AO_RSA3072_PRI_KEY:         return new PrivateKeyRsa3072( di, p );
+  case AO_KEYPAIR:                 return new KeyPair( di, p );
+  case AO_NETADDRESS:              return new NetAddress( di, p );
+  case AO_ORGANIZER:               return new Organizer( di, p );
+  case AO_RECORDER:                return new Recorder( di, p );
+  case CB_CHAIN_BLOCK:             return new GenericCollection( di, p );
+  case CB_BLOCKMAKER:              return new PubKey( di, p );
+  case CB_BLOCK_SIG:               return new Signature( di, p );
+  case AO_AUTH_SIG:                return new Signature( di, p );
+  case AO_SIG_WITH_TIME:           return new Signature( di, p );
+  case GB_GENESIS_BLOCK:           return new GenericCollection( di, p );
+  case GB_PROTOCOL:                return new Data16( di, p );
+  case GB_PROTOCOL_REV:            return new Data16( di, p );
+  case GB_TEXT_SYMBOL:             return new Note( di, p );
+  case GB_DESCRIPTION:             return new Note( di, p );
+  case GB_ICON:                    return new DataByteArray( di, p );
+  case GB_IMAGE:                   return new DataByteArray( di, p );
+  case GB_STARTING_SHARES:         return new Shares( di, p );
+  case GB_MIN_BLOCK_INT:           return new AOTime( di, p );
+  case GB_N_COINS_TOTAL:           return new AOCoins( di, p );
+  case GB_RECORDING_TAX:           return new AOCoins( di, p );
   }
   return new DataItem( AO_UNDEFINED_DATAITEM, p );
 }
 
 DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
 { switch ( ditm->typeCode )
-  { case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
+  { case AO_INDEXV:                  return new DataVarInt32( *((DataVarInt32 *)ditm), p );
+    case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
     case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
     case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
     case AO_HASH512:                 return new Hash512( *((Hash512 *)ditm), p );
@@ -231,21 +240,23 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_PUB_RSA3072_ID:          return new Hash256( *((Hash256 *)ditm), p );
     case AO_HASH224SALT32:           return new Hash224Salt32( *((Hash224Salt32 *)ditm), p );
     case AO_TIME_OF_SIG:             return new AOTime( *((AOTime *)ditm), p );
-    case AO_TIME_RECORDED:           return new AOTime( *((AOTime *)ditm), p );
+    case AO_PROPOSAL_TIME:           return new AOTime( *((AOTime *)ditm), p );
     case AO_RECORDING_DEADLINE:      return new AOTime( *((AOTime *)ditm), p );
+    case AO_TIME_RECORDED:           return new AOTime( *((AOTime *)ditm), p );
     case AO_TIME_DIFF:               return new AOTime( *((AOTime *)ditm), p );
     case AO_UNDERWRITING_EXPIRATION: return new AOTime( *((AOTime *)ditm), p );
-    case AO_ASSIGNMENT_AMT:          return new Shares( *((Shares *)ditm), p );
+    case AO_AMT:                     return new Shares( *((Shares *)ditm), p );
     case AO_UNDERWRITING_AMT:        return new Shares( *((Shares *)ditm), p );
     case AO_RECORDING_BID:           return new Shares( *((Shares *)ditm), p );
     case AO_SHARES_OUT:              return new Shares( *((Shares *)ditm), p );
     case AO_N_COINS:                 return new AOCoins( *((AOCoins *)ditm), p );
     case AO_SHARE_STATE:             return new Data8( *((Data8 *)ditm), p );
-    case AO_LISTSIZE:                return new Data16( *((Data16 *)ditm), p );
+    case AO_LISTSIZE:                return new DataVarInt32( *((DataVarInt32 *)ditm), p );
     case AO_INDEX:                   return new Data16( *((Data16 *)ditm), p );
     case CB_FIRST_ID_SEQ_NUM:        return new Data64( *((Data64 *)ditm), p );
     case CB_N_ID_SEQ_NUM:            return new Data16( *((Data16 *)ditm), p );
     case AO_ID_SEQ_NUM:              return new Data64( *((Data64 *)ditm), p );
+    case AO_INDEX32:                 return new Data32( *((Data32 *)ditm), p );
     case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( *((PublicKeyRsa3072 *)ditm), p );
     case AO_RSA3072_SIG:             return new SigRsa3072( *((SigRsa3072 *)ditm), p );
     case AO_ECDSA_SIG:               return new SigEcdsa( *((SigEcdsa *)ditm), p );
@@ -257,7 +268,6 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_DATABYTEARRAY:           return new DataByteArray( *((DataByteArray *)ditm), p );
     case AO_NOTE:                    return new Note( *((Note *)ditm), p );
     case AO_KEY_ASSET:               return new GenericCollection( *((GenericCollection *)ditm), p );
-    case AO_INDEX32:                 return new Data32( *((Data32 *)ditm), p );
     case AO_BLOCK_REF:               return new BlockRef( *((BlockRef *)ditm), p );
     case AO_PAGE_REF:                return new PageRef( *((PageRef *)ditm), p );
     case AO_GENESIS_REF:             return new GenesisRef( *((GenesisRef *)ditm), p );

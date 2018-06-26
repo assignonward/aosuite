@@ -30,6 +30,9 @@ signals:
 public slots:
 
 private:
+      // Simple "bag'o stuff" for early applications with small asset collections to organize
+      // anticipate multiple maps into the assets and specialized collections for the heavier
+      // load applications like recorders.
       GenericCollection  assets;
   QPointer<CryptoEngine> ce;
 };

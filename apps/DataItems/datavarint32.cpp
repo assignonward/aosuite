@@ -20,37 +20,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef ASSIGNREF_H
-#define ASSIGNREF_H
-
 #include "datavarint32.h"
-#include "datavarlength.h"
-#include "pageref.h"
-#include "pubkey.h"
-#include "shares.h"
 
 /**
- * @brief The AssignRef class - refers to a record of shares assignment onward (given),
- *   on a page, in a block, in a chain.
+ * @brief DataVarInt32::DataVarInt32
+ * @param di - data item for initialization
+ * @param p - object parent, if any.
  */
-class AssignRef : public DataVarLength
-{
-    Q_OBJECT
-public:
-    explicit  AssignRef( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
-              AssignRef( const AssignRef &r, QObject *p = NULL )
-                : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ),
-                  page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
-        void  operator = ( const DataItemBA &di );
-  DataItemBA  toDataItem( bool cf = false );
-        bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
+DataVarInt32::DataVarInt32( const DataItemBA &di, QObject *p )
+  : Data32( 0, AO_UNDEFINED_DATAITEM, p )
+{ qint32 tcSz = 0;
+  qint32  vSz = 0;
+  typeCode = bytesToCode( di          , tcSz );
+  v        = bytesToCode( di.mid(tcSz),  vSz );
+}
 
-private:
-     PageRef  page;    // page these shares are recorded on
-DataVarInt32  seqNum;  // share assignment sequence number in the page
-      PubKey  key;     // Id (public key) of shares
-        Hash  keyHash; // Id (hashed public key) of shares
-      Shares  amount;  // amount of shares assigned
-};
+/**
+ * @brief DataVarInt32::operator =
+ * @param di - data item to assign
+ */
+void DataVarInt32::operator = ( const DataItemBA &di )
+{ DataVarInt32 temp( di );
+  v        = temp.v;
+  typeCode = temp.typeCode;
+  return;
+}
 
-#endif // ASSIGNREF_H
+/**
+ * @brief DataVarInt32::toDataItem
+ * @param cf - compact (or chain) form, no difference at this level - unused
+ * @return byte array starting with type code, followed by 32 bit data
+ */
+DataItemBA DataVarInt32::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
+  di.append( codeToBytes( typeCode ) );
+  di.append( codeToBytes( v )        );
+  return di;
+}

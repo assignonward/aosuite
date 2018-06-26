@@ -22,24 +22,26 @@
  */
 // Assign Onward
 //
-// Shares represents a number of shares in a blockchain's share balance
+// DataVarInt32 is the base class for objects which are basically a 32 bit integer, but stored as
+//   a variable byte code 1-5 bytes long.
 //
-#ifndef SHARES_H
-#define SHARES_H
+#ifndef DATAVARINT32_H
+#define DATAVARINT32_H
 
-#include "data128.h"
+#include "data32.h"
 
-class Shares : public Data128
+class DataVarInt32 : public Data32
 {
+    Q_OBJECT
 public:
-    explicit  Shares( __int128 val = 0, typeCode_t tc = AO_AMT, QObject *p = NULL )
-                : Data128( val, tc, p ) {}
-              Shares( const DataItemBA &di, QObject *p = NULL )
-                : Data128( di, p ) {}
-              Shares( const Shares &f, QObject *p = NULL )
-                : Data128( f.v, f.typeCode, p ? p : f.parent() ) {}
-        void  operator = ( const DataItemBA &di ) { Data128::operator = ( di ); }
-        void  operator = ( const __int128 &val ) { v = val; }
+    explicit  DataVarInt32( qint32 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
+                : Data32( d, tc, p ) {}
+              DataVarInt32( const DataVarInt32 &d, QObject *p = NULL )
+                : Data32( d.v, d.typeCode, p ? p : d.parent() ) {}
+              DataVarInt32( const DataItemBA &di, QObject *p = NULL );
+  DataItemBA  toDataItem( bool cf = false ) const;
+virtual void  operator = ( const DataItemBA &di );
+        void  operator = ( const qint32 &d ) { v = d; }
 };
 
-#endif // SHARES_H
+#endif // DATAVARINT32_H

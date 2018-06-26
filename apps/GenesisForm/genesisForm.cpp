@@ -37,16 +37,17 @@ GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw, AssetsEngine *iae ) :
     { connect( mw, SIGNAL(restoringConfig()), SLOT(restoreConfig()));
       connect( mw, SIGNAL(   savingConfig()), SLOT(   saveConfig()));
     }
-  connect( ui->hashType,       SIGNAL(currentIndexChanged(int)), SLOT(updateHash()) );
-  connect( ui->protocol,       SIGNAL(currentIndexChanged(int)), SLOT(updateHash()) );
-  connect( ui->protocolRev,    SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
-  connect( ui->symbol,         SIGNAL(    textChanged(QString)), SLOT(updateHash()) );
-  connect( ui->description,    SIGNAL(           textChanged()), SLOT(updateHash()) );
-  connect( ui->startingShares, SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
-  connect( ui->minBlockTime,   SIGNAL(    valueChanged(double)), SLOT(updateHash()) );
-  connect( ui->totalCoins,     SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
-  connect( ui->recordingTax,   SIGNAL(       valueChanged(int)), SLOT(updateHash()) );
-  connect( ui->hashData,       SIGNAL(           clicked(bool)), SLOT(updateHash()) );
+  connect( ui->hashType,       SIGNAL(   currentIndexChanged(int)), SLOT(updateHash()) );
+  connect( ui->protocol,       SIGNAL(   currentIndexChanged(int)), SLOT(updateHash()) );
+  connect( ui->protocolRev,    SIGNAL(          valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->symbol,         SIGNAL(       textChanged(QString)), SLOT(updateHash()) );
+  connect( ui->description,    SIGNAL(              textChanged()), SLOT(updateHash()) );
+  connect( ui->signingKey,     SIGNAL(currentTextChanged(QString)), SLOT(updateHash()) );
+  connect( ui->startingShares, SIGNAL(          valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->minBlockTime,   SIGNAL(       valueChanged(double)), SLOT(updateHash()) );
+  connect( ui->totalCoins,     SIGNAL(          valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->recordingTax,   SIGNAL(          valueChanged(int)), SLOT(updateHash()) );
+  connect( ui->hashData,       SIGNAL(              clicked(bool)), SLOT(updateHash()) );
   updateHash();
   connect( ae, SIGNAL(newKeyAdded()), SLOT(updateKeyList()) );
 }
@@ -61,6 +62,7 @@ void  GenesisForm::restoreConfig()
   if ( s.contains( "symbol"         ) ) ui->symbol        ->setText        ( s.value( "symbol"         ).toString() );
   if ( s.contains( "icon"           ) ) ui->icon          ->setText        ( s.value( "icon"           ).toString() );
   if ( s.contains( "image"          ) ) ui->image         ->setText        ( s.value( "image"          ).toString() );
+  if ( s.contains( "signingKey"     ) ) ui->signingKey    ->setCurrentText ( s.value( "signingKey"     ).toString() );
   if ( s.contains( "startingShares" ) ) ui->startingShares->setValue       ( s.value( "startingShares" ).toInt()    );
   if ( s.contains( "totalCoins"     ) ) ui->totalCoins    ->setValue       ( s.value( "totalCoins"     ).toInt()    );
   if ( s.contains( "recordingTax"   ) ) ui->recordingTax  ->setValue       ( s.value( "recordingTax"   ).toInt()    );
@@ -74,6 +76,7 @@ void  GenesisForm::saveConfig()
   s.setValue( "symbol"        , ui->symbol        ->text()         );
   s.setValue( "icon"          , ui->icon          ->text()         );
   s.setValue( "image"         , ui->image         ->text()         );
+  s.setValue( "signingKey"    , ui->signingKey    ->currentText()  );
   s.setValue( "startingShares", ui->startingShares->value()        );
   s.setValue( "totalCoins"    , ui->totalCoins    ->value()        );
   s.setValue( "recordingTax"  , ui->recordingTax  ->value()        );
@@ -99,6 +102,7 @@ void  GenesisForm::on_importGenesisBlock_clicked()
 
 #include "aocoins.h"
 #include "aotime.h"
+#include "authorization.h"
 #include "databytearray.h"
 #include "data16.h"
 #include "data64.h"
@@ -125,23 +129,53 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
 GenericCollection GenesisForm::calculateGenesisBlock()
 { GenericCollection gb( GB_GENESIS_BLOCK );
   __int128_t tv;
-  gb.insert( GB_PROTOCOL    , new Data16       ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
-  gb.insert( GB_PROTOCOL_REV, new Data16       ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
-  gb.insert( GB_TEXT_SYMBOL , new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  &gb ) );
+  gb.insert( new Data16       ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
+  gb.insert( new Data16       ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
+  gb.insert( new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  &gb ) );
   if ( ui->description->toPlainText().size() > 0 )
-  gb.insert( GB_DESCRIPTION , new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  &gb ) );
+  gb.insert( new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  &gb ) );
   //  gb.add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
   //  gb.add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.insert( GB_STARTING_SHARES , new Shares( tv, GB_STARTING_SHARES, &gb ) );
+  gb.insert( new Shares( tv, GB_STARTING_SHARES, &gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
-  gb.insert( GB_MIN_BLOCK_INT   , new AOTime( tv, GB_MIN_BLOCK_INT  , &gb ) );
+  gb.insert( new AOTime( tv, GB_MIN_BLOCK_INT  , &gb ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb.insert( GB_N_COINS_TOTAL   , new AOCoins( tv, GB_N_COINS_TOTAL , &gb ) );
+  gb.insert( new AOCoins( tv, GB_N_COINS_TOTAL , &gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb.insert( GB_RECORDING_TAX   , new AOCoins( tv, GB_RECORDING_TAX , &gb ) );
-  gb.insert( CB_FIRST_ID_SEQ_NUM, new Data64( 0, CB_FIRST_ID_SEQ_NUM, &gb ) );
-  gb.insert( CB_N_ID_SEQ_NUM    , new Data16( 1, CB_N_ID_SEQ_NUM    , &gb ) );
+  gb.insert( new AOCoins( tv, GB_RECORDING_TAX , &gb ) );
+  gb.insert( new Data64( 0, CB_FIRST_ID_SEQ_NUM, &gb ) );
+  gb.insert( new Data16( 1, CB_N_ID_SEQ_NUM    , &gb ) );
+
+  Authorization *auth = new Authorization( DataItemBA(), &gb );
+  Assignment    *asgn = new Assignment( DataItemBA(), &gb );
+  Participant   *part = new Participant( DataItemBA(), &gb );
+  QByteArray pubKeyBA = QByteArray::fromHex( ui->signingKey->currentText().toUtf8() );
+
+  part->setIndex( DataVarInt32( 0, AO_INDEXV, &gb ) );
+  DataItem *di = ae->getUnusedKeyPair( pubKeyBA );
+  if ( di )
+    { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+      if ( ka )
+        if ( ka->getTypeCode() == AO_KEY_ASSET )
+          { di = ka->value( AO_KEYPAIR );
+            if ( di )
+              { KeyPair *kp = qobject_cast<KeyPair *>(di);
+                if ( kp )
+                  { PubKey *pk = kp->getPubKey();
+                    if ( pk )
+                      part->setKey( *pk );
+                  }
+              }
+          }
+    }
+  tv = 1; tv = tv << ui->startingShares->value();
+  part->setAmount( tv );
+  asgn->append( *part );
+  auth->setAssignment( asgn );
+  auth->setNSigs( asgn->getNParticipants() );
+  // auth.sigs.append( signature of assignment );
+  gb.insert( auth );
   return gb;
 }
 

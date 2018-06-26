@@ -32,6 +32,7 @@
 #define typeCode_t quint32
 #define AO_SEPARABLE_TYPE          0x0800 // Types with this bit set are separable
 
+#define AO_INDEXV                  0x01 // (01+var) DataVarInt32: Variable length unsigned integer using variable byte code up to 5 bytes in length, stored in an int32.  Meaning varies based on context, but generally used as a list index
 #define AO_ECDSA_PUB_KEY2          0x02 // (02+32) PublicKeyEcdsa: ECDSA Public Key, type 2 compressed
 #define AO_ECDSA_PUB_KEY3          0x03 // (03+32) PublicKeyEcdsa: ECDSA Public Key, type 3 compressed
 #define AO_ECDSA_PUB_KEY4          0x04 // (04+64) PublicKeyEcdsa: ECDSA Public Key, type 4 uncompressed
@@ -41,17 +42,18 @@
 #define AO_PUB_RSA3072_ID          0x08 // (08+32) Hash256: Hash256 of a PublicKeyRsa3072
 #define AO_HASH224SALT32           0x0c // (0c+32) Hash224Salt32: Hash224 of some data including a 32 bit salt
 #define AO_TIME_OF_SIG             0x20 // (20+16) AOTime: UTC time (secs since epoch << 64) when a signature was made
-#define AO_TIME_RECORDED           0x21 // (21+16) AOTime: UTC time (secs since epoch << 64) when a record was made
-#define AO_RECORDING_DEADLINE      0x22 // (22+16) AOTime: UTC time (secs since epoch << 64) when a record is contracted to be recorded
+#define AO_PROPOSAL_TIME           0x82 // (8201+16) AOTime: UTC time (secs since epoch << 64) when a transaction was proposed (fixes coin-shares representations)
+#define AO_RECORDING_DEADLINE      0x83 // (8301+16) AOTime: UTC time (secs since epoch << 64) when a record is contracted to be recorded
+#define AO_TIME_RECORDED           0x84 // (8401+16) AOTime: UTC time (secs since epoch << 64) when a record was made
 #define AO_TIME_DIFF               0x23 // (23+16) AOTime: UTC time (secs since epoch << 64) defining a time interval, or difference
 #define AO_UNDERWRITING_EXPIRATION 0x24 // (24+16) AOTime: UTC time (secs since epoch << 64) when underwriting shares are bound until
-#define AO_ASSIGNMENT_AMT          0x25 // (25+16) Shares: 128 bit signed integer number of shares assigned
+#define AO_AMT                     0x25 // (25+16) Shares: 128 bit signed integer number of shares assigned
 #define AO_UNDERWRITING_AMT        0x26 // (26+16) Shares: 128 bit signed integer number of shares committed as underwriting
-#define AO_RECORDING_BID           0x27 // (27+16) Shares: 128 bit signed integer number of shares bid for recording
+#define AO_RECORDING_BID           0xa0 // (a001+16) Shares: 128 bit signed integer number of shares bid for recording
 #define AO_SHARES_OUT              0x28 // (28+16) Shares: 128 bit signed integer number of shares outstanding (recorded on blocks)
 #define AO_N_COINS                 0x2c // (2c+16) AOCoins: Number of coins, as a fixed point 64.64 bit number
 #define AO_SHARE_STATE             0x2f // (2f+1) Data8: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
-#define AO_LISTSIZE                0x30 // (30+2) Data16: 16 bit signed integer declares the size of a list, as a check that all intended data is present.
+#define AO_LISTSIZE                0x30 // (30+var) DataVarInt32: 32 bit unsigned integer stored as variable byte code, declares the size of a list, as a check that all intended data is present.
 #define AO_INDEX                   0x31 // (31+2) Data16: 16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.
 #define CB_FIRST_ID_SEQ_NUM        0x32 // (32+8) Data64: First sequential ID number (of public keys) recorded in this block.
 #define CB_N_ID_SEQ_NUM            0x33 // (33+2) Data16: Number of sequential ID numbers (of public keys) recorded in this block, redundant check.
@@ -73,7 +75,7 @@
 #define AO_GENESIS_REF             0x1b // (1b+var) GenesisRef: Uniquely describes a genesis block, includes list of properties used to calculate new blocks
 #define AO_KEY_INDEX               0x1a // (1a+8) Data64: Key/shares index in the blockchain, simple index number of a public key/shares receipt object in the blockchain
 #define AO_SHARES_REF              0x19 // (19+var) SharesRef: Reference to shares received
-#define AO_ASSETS                  0x820 // (a010+var) Assets: A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
+#define AO_ASSETS                  0x820 // (a010+var) Assets:separable A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
 #define AO_ECDSA_PRI_KEY           0x3800 // (8070+var) PrivateKeyEcdsa:separable An ECDSA private key
 #define AO_RSA3072_PRI_KEY         0x3801 // (8170+var) PrivateKeyRsa3072:separable An RSA3072 private key
 #define AO_KEYPAIR                 0x3802 // (8270+var) KeyPair:separable A (hopefully matching) public-private key pair

@@ -48,7 +48,10 @@ Authorization::Authorization(const DataItemBA &di, QObject *p)
                 { Signature sig;
                   switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
                     { case AO_ASSIGNMENT:
-                        assignment = items;
+                        if ( assignment ) { qDebug( "unexpected extra assignment in data item BA" ); } else
+                          { assignment = new Assignment( DataItemBA(), this );
+                            *assignment = items;
+                          }
                         break;
 
                       case AO_SIG_WITH_TIME:
@@ -84,7 +87,7 @@ void Authorization::operator = ( const DataItemBA &di )
 
 DataItemBA Authorization::toDataItem( bool cf )
 { QByteArrayList dil;
-  dil.append( assignment.toDataItem(cf) );
+  dil.append( assignment->toDataItem(cf) );
   if ( sigs.size() > 0 )
     foreach( Signature s, sigs )
       dil.append( s.toDataItem(cf) );

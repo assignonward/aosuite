@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QDateTime>
 #include <QSettings>
+#include <QFile>
 #include "appname.h"
 #include "mainwindow.h"
 #include "random.h"

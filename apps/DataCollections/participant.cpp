@@ -40,7 +40,7 @@ Participant::Participant( DataItemBA di, QObject *p )
   : DataVarLength( typeCodeOf( di ), p )
 { // See if there's anything interesting in the data item
   index = -1;
-  index.setTypeCode( AO_INDEX );
+  index.setTypeCode( AO_INDEXV );
   if ( di.size() > 0 )
     { if (( typeCodeOf( di ) != AO_PARTICIPANT ) &&
           ( typeCodeOf( di ) != AO_PARTICIPANT_CF ))
@@ -58,7 +58,7 @@ Participant::Participant( DataItemBA di, QObject *p )
                 }
                else
                 { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
-                    { case AO_ASSIGNMENT_AMT:
+                    { case AO_AMT:
                         amount = items;
                         break;
 
@@ -75,7 +75,7 @@ Participant::Participant( DataItemBA di, QObject *p )
                       case AO_NOTE:
                         note = items;
 
-                      case AO_INDEX:
+                      case AO_INDEXV:
                         index = items;
 
                       default:
@@ -126,7 +126,7 @@ DataItemBA Participant::toDataItem( bool cf )
         if ( note.size() > 0 )
           dil.append( note.toDataItem(false) );
         if ( index > -1 )
-          { index.setTypeCode( AO_INDEX );
+          { index.setTypeCode( AO_INDEXV );
             dil.append( index.toDataItem(false) );
           }
         break;
@@ -139,7 +139,7 @@ DataItemBA Participant::toDataItem( bool cf )
         if ( note.size() > 0 )
           dil.append( note.toDataItem(true) );
         if ( index > -1 )
-          { index.setTypeCode( AO_INDEX );
+          { index.setTypeCode( AO_INDEXV );
             dil.append( index.toDataItem(true) );
           }
         break;

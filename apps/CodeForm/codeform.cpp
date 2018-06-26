@@ -45,7 +45,7 @@ CodeForm::CodeForm( QWidget *cw, MainWinCommon *mw ) :
     QMap<typeCode_t,QString>codeNames;
     foreach( ByteCodeDef bcd, bcds.bcdList )
       { ui->bytecodeDefinitions->appendPlainText( bcd.toDefine() );
-        if ( bcd.sz >= 0 ) ui->typeSizeTable->appendPlainText( bcd.toSizeCase() );
+        if (( bcd.sz >= 0 ) || ( bcd.sz == -2 )) ui->typeSizeTable->appendPlainText( bcd.toSizeCase() );
         ui->copyDataItem->appendPlainText( bcd.toCaseDataItem() );
         ui->copyDataItemFromBytes->appendPlainText( bcd.toCase() );
 

@@ -26,7 +26,7 @@
 #include <QObject>
 #include "aotime.h"
 #include "blockref.h"
-#include "data16.h"
+#include "datavarint32.h"
 #include "datavarlength.h"
 #include "note.h"
 #include "pageref.h"
@@ -56,19 +56,20 @@ public:
         bool  valid();
         bool  validSum();
         bool  validTimeline();
+        void  append( Participant p ) { participants.append(p); nParticipants = participants.size(); }
+      qint32  getNParticipants() { return nParticipants.value(); }
 
 private:
             PageRef  proposedChain;     // Reference to the signature page of a recent block in the chain this assignment is proposed to be recorded on, and valid child of this block should also be acceptable
              AOTime  recordingDeadline; // When the assignment contract is expected to be recorded in the chain
              Shares  recordingBid;      // Positive amount to bid for all underwriting and recording taxes
                Note  note;              // top level note, applies to all participants whereas participant level notes may only apply to that participant
-             Data16  nParticipants;
+       DataVarInt32  nParticipants;
   QList<Participant> participants;
 };
 
 /* A structure to hold:
  *   <TRAN> Coin transfer transaction proposal:
- *     [SALT] 256 bit random number included in all signatures
  *     [TPRO] "now" from Alice's Wallet clock
  *     [TRMX] "now"+6 hours (closing deadline)
  *     [RBID] 3 coin (maximum recording fee)

@@ -1,5 +1,12 @@
 [
     {
+        "code": 1,
+        "desc": "Variable length unsigned integer using variable byte code up to 5 bytes in length, stored in an int32.  Meaning varies based on context, but generally used as a list index",
+        "pdef": "AO_INDEXV",
+        "size": -2,
+        "type": "DataVarInt32"
+    },
+    {
         "code": 2,
         "desc": "ECDSA Public Key, type 2 compressed",
         "pdef": "AO_ECDSA_PUB_KEY2",
@@ -63,16 +70,23 @@
         "type": "AOTime"
     },
     {
-        "code": 33,
-        "desc": "UTC time (secs since epoch << 64) when a record was made",
-        "pdef": "AO_TIME_RECORDED",
+        "code": 130,
+        "desc": "UTC time (secs since epoch << 64) when a transaction was proposed (fixes coin-shares representations)",
+        "pdef": "AO_PROPOSAL_TIME",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 34,
+        "code": 131,
         "desc": "UTC time (secs since epoch << 64) when a record is contracted to be recorded",
         "pdef": "AO_RECORDING_DEADLINE",
+        "size": 16,
+        "type": "AOTime"
+    },
+    {
+        "code": 132,
+        "desc": "UTC time (secs since epoch << 64) when a record was made",
+        "pdef": "AO_TIME_RECORDED",
         "size": 16,
         "type": "AOTime"
     },
@@ -93,7 +107,7 @@
     {
         "code": 37,
         "desc": "128 bit signed integer number of shares assigned",
-        "pdef": "AO_ASSIGNMENT_AMT",
+        "pdef": "AO_AMT",
         "size": 16,
         "type": "Shares"
     },
@@ -105,7 +119,7 @@
         "type": "Shares"
     },
     {
-        "code": 39,
+        "code": 160,
         "desc": "128 bit signed integer number of shares bid for recording",
         "pdef": "AO_RECORDING_BID",
         "size": 16,
@@ -134,10 +148,10 @@
     },
     {
         "code": 48,
-        "desc": "16 bit signed integer declares the size of a list, as a check that all intended data is present.",
+        "desc": "32 bit unsigned integer stored as variable byte code, declares the size of a list, as a check that all intended data is present.",
         "pdef": "AO_LISTSIZE",
-        "size": 2,
-        "type": "Data16"
+        "size": -2,
+        "type": "DataVarInt32"
     },
     {
         "code": 49,

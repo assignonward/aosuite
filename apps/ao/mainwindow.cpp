@@ -81,15 +81,14 @@ void MainWindow::saveConfig()
  *
  * <PAGE> ledger entry page contents:
  *
- *   <TRAN> Coin transfer transaction contents:
- *     [SALT] 256 bit random number included in all signatures
- *     [TPRO] time of proposal
- *     [TRMX] latest acceptable time of recording
- *     [RBID] maximum acceptable total recording fee
+ *   <AO_ASSIGNMENT> Coin transfer transaction contents:
+ *     [AO_PROPOSAL_TIME] time of proposal
+ *     [AO_RECORDING_DEADLINE] latest acceptable time of recording
+ *     [AO_RECORDING_BID] maximum acceptable total recording fee
  *     <PART> List of each participant's:
  *       [KEY]  public key
- *       [AMT]  amount to be transacted (signed 128 bit integer)
- *       [NOTE] freeform binary data field (length+data), of any size
+ *       [AO_AMT]  amount to be transacted (signed 128 bit integer)
+ *       [AO_NOTE] freeform binary data field (length+data), of any size
  *              but bear in mind that transaction size affects tax rate
  *              and there is a maximum block size of 1MB.
  *
@@ -98,7 +97,7 @@ void MainWindow::saveConfig()
  *       [TSIG] time of signing (approving) the proposed transaction <TRAN>
  *       [SIG]  signature on: TRAN+AUTH(PART(TSIG))
  *       For givers (empty for receivers):
- *       <PAGE> of participant's source of funds
+ *       <PAGE> of participant's source of funds - actually redundant with the unique KEY
  *         [TREC] recording time of AUTH(PART(PAGE))
  *         [HASH] hash of AUTH(PART(PAGE)) - this page must show the giver as recipient of the AMT proposed in TRAN
  *

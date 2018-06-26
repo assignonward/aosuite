@@ -22,7 +22,7 @@
 #
 TEMPLATE = subdirs
 SUBDIRS +=  \
-# ao           \
+ao           \
 codeGenerator \
 genesisMaker   \
 # recorder        \

@@ -24,8 +24,9 @@
 #define AUTHORIZATION_H
 
 #include <QObject>
+#include <QPointer>
 #include "assignment.h"
-#include "data16.h"
+#include "datavarint32.h"
 #include "datavarlength.h"
 #include "signature.h"
 
@@ -47,11 +48,13 @@ public:
                  assignment( a.assignment ), sigs( a.sigs ) {}
        void  operator = ( const DataItemBA &di );
  DataItemBA  toDataItem( bool cf = false );
+       void  setAssignment( Assignment *a ) { assignment = a; }
+       void  setNSigs( qint32 n ) { nSigs = n; }
 
 private:
-         Assignment  assignment;
+QPointer<Assignment> assignment;
     QList<Signature> sigs;   // Same length as the participants list in the assignment, index numbers match signature to participant
-             Data16  nSigs;  // Used primarily as a check during serialization and deserialization
+       DataVarInt32  nSigs;  // Used primarily as a check during serialization and deserialization
 };
 
 #endif // AUTHORIZATION_H

@@ -38,7 +38,7 @@ Assignment::Assignment(const DataItemBA &di, QObject *p)
           return;
         }
        else
-        { DataVarLength temp( di );          // It's our type
+        { DataVarLength temp( di );        // It's our type
           DataItemBA items = temp.get();  // typeCode has been stripped off
           while ( items.size() > 0 )
             { int sz = typeSize( items );
