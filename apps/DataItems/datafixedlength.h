@@ -49,6 +49,7 @@ virtual void  operator =  ( const DataItemBA &di );
         void  set( QByteArray sba );
 // virtual bool  isValid() const { return ( ( typeSize() - 2 ) == ba.size() ); }
 virtual bool  isValid() const { return true; }
+        void  debugShow( qint32 level = 0 ) const;
 
 protected:
   QByteArray  ba;       // generic data, not including type or checksum

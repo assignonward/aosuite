@@ -25,7 +25,7 @@
 #ifndef PARTICIPANT_H
 #define PARTICIPANT_H
 
-#include "datavarint32.h"
+#include "datavbc64.h"
 #include "datavarlength.h"
 #include "note.h"
 #include "pageref.h"
@@ -53,8 +53,8 @@ public:
         void  setAmount( Shares v )   { amount = v;  /* TODO: log error for 0 */ }
         void  setAmount( __int128 v ) { amount = v; }
         void  setNote( QByteArray n ) { note.set( n ); }
-DataVarInt32  getIndex() const { return index; }
-        void  setIndex( const DataVarInt32 &i ) { index = i; }
+DataVbc64  getIndex() const { return index; }
+        void  setIndex( const DataVbc64 &i ) { index = i; }
         void  setKey( const PubKey &pk ) { key = pk; }
 
 private:
@@ -62,7 +62,7 @@ private:
       PubKey  key;     // Full public key, suitable for checking signatures
      PageRef  page;    // Reference for givers
         Note  note;    // Arbitrary data to record with the transaction
-DataVarInt32  index;   // When part of a participant list, this is the index number (starting with 0)
+DataVbc64  index;   // When part of a participant list, this is the index number (starting with 0)
 };
 
 #endif // PARTICIPANT_H

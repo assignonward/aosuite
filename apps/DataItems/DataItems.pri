@@ -35,7 +35,7 @@ SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/data32.cpp            \
                $${PWD}/data64.cpp            \
                $${PWD}/data128.cpp           \
-               $${PWD}/datavarint32.cpp      \
+               $${PWD}/datavbc64.cpp         \
                $${PWD}/data136float.cpp      \
                $${PWD}/datafixedlength.cpp   \
                $${PWD}/datavarlength.cpp     \
@@ -67,7 +67,7 @@ HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/data32.h            \
                $${PWD}/data64.h            \
                $${PWD}/data128.h           \
-               $${PWD}/datavarint32.h      \
+               $${PWD}/datavbc64.h         \
                $${PWD}/data136float.h      \
                $${PWD}/datafixedlength.h   \
                $${PWD}/datavarlength.h     \

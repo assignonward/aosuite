@@ -125,7 +125,7 @@ qint32 DataItem::typeSize( const DataItemBA &di ) const
 #include "databytearray.h"
 #include "data16.h"
 #include "data32.h"
-#include "datavarint32.h"
+#include "datavbc64.h"
 #include "data64.h"
 #include "hash224salt32.h"
 #include "hash256.h"
@@ -158,7 +158,7 @@ qint32 DataItem::typeSize( const DataItemBA &di ) const
 DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
 { // qDebug( "making data item type 0x%x size %d", typeCodeOf(di), di.size() );
   switch ( typeCodeOf( di ) )
-  { case AO_INDEXV:                  return new DataVarInt32( di, p );
+  { case AO_INDEXV:                  return new DataVbc64( di, p );
   case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( di, p );
   case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( di, p );
   case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( di, p );
@@ -179,7 +179,7 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
   case AO_SHARES_OUT:              return new Shares( di, p );
   case AO_N_COINS:                 return new AOCoins( di, p );
   case AO_SHARE_STATE:             return new Data8( di, p );
-  case AO_LISTSIZE:                return new DataVarInt32( di, p );
+  case AO_LISTSIZE:                return new DataVbc64( di, p );
   case AO_INDEX:                   return new Data16( di, p );
   case CB_FIRST_ID_SEQ_NUM:        return new Data64( di, p );
   case CB_N_ID_SEQ_NUM:            return new Data16( di, p );
@@ -230,7 +230,7 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
 
 DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
 { switch ( ditm->typeCode )
-  { case AO_INDEXV:                  return new DataVarInt32( *((DataVarInt32 *)ditm), p );
+  { case AO_INDEXV:                  return new DataVbc64( *((DataVbc64 *)ditm), p );
     case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
     case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
     case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
@@ -251,7 +251,7 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
     case AO_SHARES_OUT:              return new Shares( *((Shares *)ditm), p );
     case AO_N_COINS:                 return new AOCoins( *((AOCoins *)ditm), p );
     case AO_SHARE_STATE:             return new Data8( *((Data8 *)ditm), p );
-    case AO_LISTSIZE:                return new DataVarInt32( *((DataVarInt32 *)ditm), p );
+    case AO_LISTSIZE:                return new DataVbc64( *((DataVbc64 *)ditm), p );
     case AO_INDEX:                   return new Data16( *((Data16 *)ditm), p );
     case CB_FIRST_ID_SEQ_NUM:        return new Data64( *((Data64 *)ditm), p );
     case CB_N_ID_SEQ_NUM:            return new Data16( *((Data16 *)ditm), p );
@@ -322,7 +322,7 @@ DataItemBA DataItem::toHashData( bool cf ) const
 }
 
 void  DataItem::debugShow( qint32 level ) const
-{ qDebug( "%sDataItem typeCode 0x%x", qPrintable(QString( level, QChar('.') )), typeCode );
+{ qDebug( "%sDataItem typeCode %lld", qPrintable(QString( level, QChar('.') )), typeCode );
 }
 
 /**

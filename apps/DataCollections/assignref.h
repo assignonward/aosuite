@@ -23,7 +23,7 @@
 #ifndef ASSIGNREF_H
 #define ASSIGNREF_H
 
-#include "datavarint32.h"
+#include "datavbc64.h"
 #include "datavarlength.h"
 #include "pageref.h"
 #include "pubkey.h"
@@ -47,7 +47,7 @@ public:
 
 private:
      PageRef  page;    // page these shares are recorded on
-DataVarInt32  seqNum;  // share assignment sequence number in the page
+DataVbc64  seqNum;  // share assignment sequence number in the page
       PubKey  key;     // Id (public key) of shares
         Hash  keyHash; // Id (hashed public key) of shares
       Shares  amount;  // amount of shares assigned

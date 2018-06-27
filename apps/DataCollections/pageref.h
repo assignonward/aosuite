@@ -25,7 +25,7 @@
 
 #include "aotime.h"
 #include "blockref.h"
-#include "datavarint32.h"
+#include "datavbc64.h"
 #include "datavarlength.h"
 #include "hash.h"
 
@@ -49,7 +49,7 @@ public:
 
 private:
     BlockRef block;           // block this page is recorded in
-DataVarInt32 sequenceNumber;  // page's sequence number in the block
+DataVbc64 sequenceNumber;  // page's sequence number in the block
         Hash hash;            // Hash of page - redundant check
 };
 

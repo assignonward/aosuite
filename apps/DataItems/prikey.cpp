@@ -35,7 +35,7 @@ PriKey::PriKey( typeCode_t tc, QObject *p ) : DataItem( tc, p )
         typeCode = tc;
         break;
       default:
-        qDebug( "PriKey::PriKey( typeCode_t tc, QObject *p ) unrecognized type code 0x%x", tc );
+        qDebug( "PriKey::PriKey( typeCode_t tc, QObject *p ) unrecognized type code %lld", tc );
         // TODO: log error
         typeCode = AO_UNDEFINED_DATAITEM;
     }
@@ -70,7 +70,7 @@ PriKey::PriKey( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATA
         break;
 
       default:
-        qDebug( "PriKey::PriKey( const DataItemBA &di, QObject *p ) unrecognized type code 0x%x", typeCodeOf( di ) );
+        qDebug( "PriKey::PriKey( const DataItemBA &di, QObject *p ) unrecognized type code %lld", typeCodeOf( di ) );
         // TODO: log error
         typeCode = AO_UNDEFINED_DATAITEM;
     }
@@ -92,7 +92,7 @@ QByteArray  PriKey::get() const
           return QByteArray();
         return priKeyRsa3072->get();
     }
-  qDebug( "PriKey::get() invalid type code 0x%x", typeCode );
+  qDebug( "PriKey::get() invalid type code %lld", typeCode );
   // TODO: log error
   return QByteArray();
 }
@@ -109,7 +109,7 @@ bool  PriKey::isValid() const
           return false;
         return priKeyRsa3072->isValid();
     }
-  qDebug( "PriKey::isValid() unrecognized type code 0x%x", typeCode );
+  qDebug( "PriKey::isValid() unrecognized type code %lld", typeCode );
   // TODO: log error
   return false;
 }
@@ -132,7 +132,7 @@ DataItemBA  PriKey::toDataItem( bool cf ) const
           return DataItemBA();
         return priKeyRsa3072->toDataItem(cf);
     }
-  qDebug( "PriKey::toDataItem() unrecognized type code 0x%x", typeCode );
+  qDebug( "PriKey::toDataItem() unrecognized type code %lld", typeCode );
   // TODO: log error
   return DataItemBA();
 }
@@ -171,7 +171,7 @@ void  PriKey::set( const QByteArray &k )
         break;
 
       default:
-        qDebug( "PriKey::set( const QByteArray &k ) invalid type code 0x%x", typeCode );
+        qDebug( "PriKey::set( const QByteArray &k ) invalid type code %lld", typeCode );
         // TODO: log error
         break;
     }

@@ -28,26 +28,34 @@
  * @param i - returns the length of the code array in bytes
  * @return code value
  */
-quint32  VarSizeCode::bytesToCode( const QByteArray &ca, qint32 &i )
-{ quint32 code = 0;
-  qint32  m    = 1;
+qint64  VarSizeCode::bytesToCode( const QByteArray &ca, qint32 &i )
+{ qint64 code = 0;
+  qint64 m    = 1;
   i = 0;
-  while (( i < ca.size() ) && ( i < 5 ))
+  while (( i < ca.size() ) && ( i < 10 ))
     { code += m * ( ca.at( i ) & 0x7F );
       if ( (ca.at( i ) & 0x80) == 0 )
         { i++;
-          return code;
+          if ( code & 1 )
+            return -(code-1)/2;
+          return code/2;
         }
       m = m << 7;
       i++;
     }
-  // TODO: if ( i >= 5 ) log error
-  return code;
+  // TODO: if ( i >= 10 ) log error
+  if ( code & 1 )
+    return -(code-1)/2;
+  return code/2;
 }
 
-QByteArray  VarSizeCode::codeToBytes( const quint32 &c )
+QByteArray  VarSizeCode::codeToBytes( const qint64 &c )
 { QByteArray ca;
-  quint32 code = c;
+  qint64 code;
+  if ( c < 0 )
+    code = -c * 2 + 1;
+   else
+    code = c * 2;
   if ( code == 0 )
     ca.append( (char)0 );
    else

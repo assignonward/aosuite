@@ -47,8 +47,10 @@ public:
         PriKey *getPriKey() { return priKey; }
 
 private:
-  QPointer<PubKey> pubKey;
-  QPointer<PriKey> priKey;
+//  QPointer<PubKey> pubKey;
+//  QPointer<PriKey> priKey;
+  PubKey *pubKey;
+  PriKey *priKey;
 };
 
 #endif // KEYPAIR_H

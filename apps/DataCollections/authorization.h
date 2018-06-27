@@ -26,7 +26,7 @@
 #include <QObject>
 #include <QPointer>
 #include "assignment.h"
-#include "datavarint32.h"
+#include "datavbc64.h"
 #include "datavarlength.h"
 #include "signature.h"
 
@@ -54,7 +54,7 @@ public:
 private:
 QPointer<Assignment> assignment;
     QList<Signature> sigs;   // Same length as the participants list in the assignment, index numbers match signature to participant
-       DataVarInt32  nSigs;  // Used primarily as a check during serialization and deserialization
+       DataVbc64  nSigs;  // Used primarily as a check during serialization and deserialization
 };
 
 #endif // AUTHORIZATION_H

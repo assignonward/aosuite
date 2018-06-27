@@ -52,16 +52,16 @@ CodeForm::CodeForm( QWidget *cw, MainWinCommon *mw ) :
         // Ensure that the separable bit is properly implemented
         if ( bcd.sepr )
           { if (( bcd.code & AO_SEPARABLE_TYPE ) == 0)
-              qDebug( "%s typecode %x indicates not separable but the separable flag is set.", qPrintable( bcd.pdef ), bcd.code );
+              qDebug( "%s typecode %lld indicates not separable but the separable flag is set.", qPrintable( bcd.pdef ), bcd.code );
           }
          else
           { if (( bcd.code & AO_SEPARABLE_TYPE ) != 0)
-              qDebug( "%s typecode %x indicates separable but the separable flag is not set.", qPrintable( bcd.pdef ), bcd.code );
+              qDebug( "%s typecode %lld indicates separable but the separable flag is not set.", qPrintable( bcd.pdef ), bcd.code );
           }
 
         // Check for duplicates
         if ( codeNames.contains( bcd.code ) )
-          qDebug( "%s already defined %d, %s also trying to use it.", qPrintable( codeNames[bcd.code] ), bcd.code, qPrintable( bcd.pdef ) );
+          qDebug( "%s already defined %lld, %s also trying to use it.", qPrintable( codeNames[bcd.code] ), bcd.code, qPrintable( bcd.pdef ) );
          else
           codeNames.insert( bcd.code, bcd.pdef );
       }
@@ -96,7 +96,7 @@ void CodeForm::on_massage_clicked()
             { done = false;
               while ( codeNames.contains( bcd.code ) )
                bcd.code++;
-              qDebug( "found new code %d for %s", bcd.code, qPrintable( bcd.pdef ) );
+              qDebug( "found new code %lld for %s", bcd.code, qPrintable( bcd.pdef ) );
             }
         }
       bcdn.bcdList.append( bcd );

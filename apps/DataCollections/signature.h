@@ -24,7 +24,7 @@
 #define SIGNATURE_H
 
 #include "aotime.h"
-#include "datavarint32.h"
+#include "datavbc64.h"
 #include "datavarlength.h"
 #include "pubkey.h"
 #include "sigecdsa.h"
@@ -66,8 +66,8 @@ public:
       AOTime  getTime() const { return sigTime; }
         void  setTime( const AOTime &t ) { sigTime = t; }
   typeCode_t  getType() const { return sigType; }
-DataVarInt32  getIndex() const { return index; }
-        void  setIndex( const DataVarInt32 &i ) { index = i; }
+DataVbc64  getIndex() const { return index; }
+        void  setIndex( const DataVbc64 &i ) { index = i; }
 
 private:
   // Every signature has a time of signing
@@ -77,7 +77,7 @@ private:
     SigEcdsa  sigEcdsa;
   SigRsa3072  sigRsa3072;
 
-DataVarInt32  index;   // AO_INDEXV, Optional: used in Authorizations to match to index numbers in the participant list
+DataVbc64  index;   // AO_INDEXV, Optional: used in Authorizations to match to index numbers in the participant list
       PubKey  pubKey;  // Optional: when included, contains the pubKey used to sign
 };
 

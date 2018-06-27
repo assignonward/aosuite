@@ -71,7 +71,7 @@ PubKey::PubKey( const DataItemBA &di, QObject *p )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
-        typeCode = di.at(0);
+        typeCode = typeCodeOf( di );
         publicKeyEcdsa = PublicKeyEcdsa( di, this );
         break;
 
@@ -124,7 +124,7 @@ bool  PubKey::isValid() const
       case AO_ID_SEQ_NUM:
         return false;  // TODO: database lookup required
     }
-  qDebug( "PubKey::isValid() unrecognized type code 0x%x", typeCode );
+  qDebug( "PubKey::isValid() unrecognized type code %lld", typeCode );
   // TODO: log error
   return false;
 }
@@ -135,7 +135,7 @@ bool  PubKey::isValid() const
  * @return the key encapsulated as a data item
  */
 DataItemBA  PubKey::toDataItem( bool cf ) const
-{ // qDebug( "PubKey::toDataItem() type code 0x%x", typeCode );
+{ // qDebug( "PubKey::toDataItem() type code %lld", typeCode );
   switch ( typeCode )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
@@ -148,7 +148,7 @@ DataItemBA  PubKey::toDataItem( bool cf ) const
       case AO_ID_SEQ_NUM:
         return publicKeyIndex.toDataItem(cf);
     }
-  qDebug( "PubKey::toDataItem() unrecognized type code 0x%x", typeCode );
+  qDebug( "PubKey::toDataItem() unrecognized type code %lld", typeCode );
   // TODO: log error
   return DataItemBA();
 }

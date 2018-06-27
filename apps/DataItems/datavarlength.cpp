@@ -38,7 +38,7 @@ DataVarLength::DataVarLength( const DataItemBA &di, QObject *p )
   typeCode   = bytesToCode( di       , i );
   quint32 sz = bytesToCode( di.mid(i), j );
   if ( (unsigned int)di.size() < (sz+i+j) )
-    { qDebug( "problem with size of DataItemBA: %d vs encoded size: %d for type: 0x%x", di.size(),sz,typeCode );
+    { qDebug( "problem with size of DataItemBA: %d vs encoded size: %d for type: %lld", di.size(),sz,typeCode );
       // TODO: log an exception
       return;
     }
@@ -69,3 +69,8 @@ DataItemBA DataVarLength::toDataItem( bool cf ) const
   di.append( ba );
   return di;
 }
+
+void  DataVarLength::debugShow( qint32 level ) const
+{ qDebug( "%sDataFixedLength typeCode %lld size %d", qPrintable(QString( level, QChar('.') )), typeCode, ba.size() );
+}
+

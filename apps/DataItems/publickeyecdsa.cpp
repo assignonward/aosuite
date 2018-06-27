@@ -43,29 +43,37 @@ QByteArray  PublicKeyEcdsa::get() const
  * @param k - 33 byte compressed or 65 byte uncompressed key
  */
 void  PublicKeyEcdsa::set( const QByteArray &k )
-{ qint32 i;
-  switch ( k.at(0) )
-    { case AO_ECDSA_PUB_KEY2:
-      case AO_ECDSA_PUB_KEY3:
+{ switch ( k.at(0) )
+    { case 2:
+        if ( k.size() != 33 )
+          { qDebug( "Expected 33 bytes, got %d", k.size() );
+            // TODO: log error
+            return;
+          }
+        typeCode = AO_ECDSA_PUB_KEY2;
+        ba = k.mid(1);
+        return;
+
+      case 3:
         if ( k.size() != 33 )
             { qDebug( "Expected 33 bytes, got %d", k.size() );
               // TODO: log error
               return;
             }
-        typeCode = bytesToCode( k, i );
-        ba = k.mid(i);
+        typeCode = AO_ECDSA_PUB_KEY3;
+        ba = k.mid(1);
         return;
 
-      case AO_ECDSA_PUB_KEY4:
+      case 4:
         if ( k.size() != 65 )
             { qDebug( "Expected 65 bytes, got %d", k.size() );
               // TODO: log error
               return;
             }
-        typeCode = bytesToCode( k, i );
-        ba = k.mid(i);
+        typeCode = AO_ECDSA_PUB_KEY4;
+        ba = k.mid(1);
         return;
     }
-  qDebug( "Unexpected typeCode 0x%x", k.at(0) );
+  qDebug( "Unexpected ecdsa key code 0x%x", k.at(0) );
   // TODO: log error
 }

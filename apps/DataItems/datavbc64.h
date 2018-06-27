@@ -20,40 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "datavarint32.h"
+// Assign Onward
+//
+// DataVlbc64 is the base class for objects which are basically a 64 bit integer, but stored as
+//   a variable byte code 1-9 bytes long.
+//
+#ifndef DATAVBC64_H
+#define DATAVBC64_H
+
+#include "data64.h"
 
 /**
- * @brief DataVarInt32::DataVarInt32
- * @param di - data item for initialization
- * @param p - object parent, if any.
+ * @brief The DataVbc64 class - 64 bit integer, stored as a variable byte code 1-9 bytes long
  */
-DataVarInt32::DataVarInt32( const DataItemBA &di, QObject *p )
-  : Data32( 0, AO_UNDEFINED_DATAITEM, p )
-{ qint32 tcSz = 0;
-  qint32  vSz = 0;
-  typeCode = bytesToCode( di          , tcSz );
-  v        = bytesToCode( di.mid(tcSz),  vSz );
-}
+class DataVbc64 : public Data64
+{
+    Q_OBJECT
+public:
+    explicit  DataVbc64( qint64 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
+                : Data64( d, tc, p ) {}
+              DataVbc64( const DataVbc64 &d, QObject *p = NULL )
+                : Data64( d.v, d.typeCode, p ? p : d.parent() ) {}
+              DataVbc64( const DataItemBA &di, QObject *p = NULL );
+  DataItemBA  toDataItem( bool cf = false ) const;
+virtual void  operator = ( const DataItemBA &di );
+        void  operator = ( const qint64 &d ) { v = d; }
+};
 
-/**
- * @brief DataVarInt32::operator =
- * @param di - data item to assign
- */
-void DataVarInt32::operator = ( const DataItemBA &di )
-{ DataVarInt32 temp( di );
-  v        = temp.v;
-  typeCode = temp.typeCode;
-  return;
-}
-
-/**
- * @brief DataVarInt32::toDataItem
- * @param cf - compact (or chain) form, no difference at this level - unused
- * @return byte array starting with type code, followed by 32 bit data
- */
-DataItemBA DataVarInt32::toDataItem( bool cf ) const
-{ QByteArray di; (void)cf;
-  di.append( codeToBytes( typeCode ) );
-  di.append( codeToBytes( v )        );
-  return di;
-}
+#endif // DATAVBC64_H

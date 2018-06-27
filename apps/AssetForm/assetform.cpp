@@ -106,7 +106,7 @@ void  AssetForm::updateLabels()
             } // else - was a successful qobject_cast
         }
        else
-        { qDebug( "TODO: handle additional typecode 0x%x", di->getTypeCode() ); }
+        { qDebug( "TODO: handle additional typecode %lld", di->getTypeCode() ); }
     }
   ui->keysUnused            ->setText( QString::number( unused             ) );
   ui->keysReceiptNegotiating->setText( QString::number( receiptNegotiating ) );
@@ -121,8 +121,10 @@ void  AssetForm::on_makeNewKey_clicked()
 { ui->keyAssetOperationLog->appendPlainText( "makeNewKey" );
   if ( !ae ) { qDebug( "AssetsEngine pointer is NULL" ); return; }
   typeCode_t keyType = (ui->keyType->currentText() != "ECDSA256") ? AO_RSA3072_PRI_KEY : AO_ECDSA_PRI_KEY;
-  ae->getNewKeyPair( keyType );
+  GenericCollection *kp = ae->getNewKeyPair( keyType );
   updateLabels();
+  if ( kp )
+    ui->keyAssetOperationLog->appendPlainText( QString::fromUtf8( kp->toDataItem().toHex() ) );
   saveConfig();
 }
 

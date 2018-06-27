@@ -30,6 +30,8 @@
 KeyPair::KeyPair( DataItemBA di, QObject *p )
   : DataVarLength( AO_KEYPAIR, p )
 { // See if there's anything interesting in the data item
+  priKey = NULL;
+  pubKey = NULL;
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_KEYPAIR )
         { // TODO: log an error
@@ -104,19 +106,25 @@ void KeyPair::operator = ( const DataItemBA &di )
  * @return data item with the BlockRef contents
  */
 DataItemBA  KeyPair::toDataItem( bool cf ) const
-{ // qDebug( "KeyPair::toDataItem() 0x%x", typeCode );
+{ // qDebug( "KeyPair::toDataItem() %lld", typeCode );
   QByteArrayList dil;
   if ( pubKey )
     if ( pubKey->isValid() )
-      dil.append( pubKey->toDataItem(cf) );
+      { dil.append( pubKey->toDataItem(cf) );
+        // pubKey->debugShow();
+      }
   if ( priKey )
     if ( priKey->isValid() )
-      dil.append( priKey->toDataItem(cf) );
+      { dil.append( priKey->toDataItem(cf) );
+        // priKey->debugShow();
+      }
   std::sort( dil.begin(), dil.end() );
   DataItemBA diba = dil.join();
   DataItemBA di; (void)cf;
   di.append( codeToBytes( typeCode  ) );
   di.append( codeToBytes( diba.size() ) );
   di.append( diba );
+  // debugShow();
+  // qDebug( "KeyPair:%s", qPrintable( QString::fromUtf8(di.toHex())));
   return di;
 }

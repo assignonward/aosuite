@@ -38,8 +38,8 @@ class VarSizeCode
 {
 public:
                    VarSizeCode() {}
-static    quint32  bytesToCode( const QByteArray &sa, qint32 &i );
-static QByteArray  codeToBytes( const quint32 &s );
+static     qint64  bytesToCode( const QByteArray &sa, qint32 &i );
+static QByteArray  codeToBytes( const qint64 &s );
 };
 
 #endif // VARSIZECODE_H

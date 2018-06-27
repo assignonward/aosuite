@@ -42,25 +42,25 @@ void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
 
 QJsonObject  ByteCodeDef::toJsonObject() const
 { QJsonObject jo;
-  jo.insert( "code", QJsonValue( (qint64)code ) );
+  jo.insert( "code", QJsonValue( code ) );
   if ( cont.size() )
-  jo.insert( "cont", QJsonValue(         cont ) );
-  jo.insert( "desc", QJsonValue(         desc ) );
+  jo.insert( "cont", QJsonValue( cont ) );
+  jo.insert( "desc", QJsonValue( desc ) );
   if ( gbcr.size() )
-  jo.insert( "gbcr", QJsonValue(         gbcr ) );
+  jo.insert( "gbcr", QJsonValue( gbcr ) );
   if ( sepr )
-  jo.insert( "sepr", QJsonValue(         sepr ) );
-  jo.insert( "size", QJsonValue(    (int)sz   ) );
-  jo.insert( "type", QJsonValue(         tn   ) );
-  jo.insert( "pdef", QJsonValue(         pdef ) );
+  jo.insert( "sepr", QJsonValue( sepr ) );
+  jo.insert( "size", QJsonValue(   sz ) );
+  jo.insert( "type", QJsonValue(   tn ) );
+  jo.insert( "pdef", QJsonValue( pdef ) );
   return jo;
 }
 
 QString ByteCodeDef::toDefine( qint32 maxLenPdef )
-{ return QString( "#define %1%2 0x%3 // (%4+%5) %6:%7%8" )
+{ return QString( "#define %1%2 %3 // (%4+%5) %6:%7%8" )
            .arg( pdef )
            .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) )
-           .arg( code, 2, 16, QChar('0') )
+           .arg( code, 6 )
            .arg( QString::fromUtf8( VarSizeCode::codeToBytes(code).toHex() ) )
            .arg( (sz<0) ? "var" : QString::number(sz) )
            .arg( tn )

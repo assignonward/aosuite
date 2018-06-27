@@ -26,7 +26,7 @@
 #include <QObject>
 #include "aotime.h"
 #include "blockref.h"
-#include "datavarint32.h"
+#include "datavbc64.h"
 #include "datavarlength.h"
 #include "note.h"
 #include "pageref.h"
@@ -64,7 +64,7 @@ private:
              AOTime  recordingDeadline; // When the assignment contract is expected to be recorded in the chain
              Shares  recordingBid;      // Positive amount to bid for all underwriting and recording taxes
                Note  note;              // top level note, applies to all participants whereas participant level notes may only apply to that participant
-       DataVarInt32  nParticipants;
+       DataVbc64  nParticipants;
   QList<Participant> participants;
 };
 

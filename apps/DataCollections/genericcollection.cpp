@@ -47,7 +47,7 @@ GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
           ( typeCodeOf( di ) != AO_KEY_ASSET     ) &&
           ( typeCodeOf( di ) != CB_CHAIN_BLOCK   )) // TODO: add more as they are defined
         { typeCode = AO_UNDEFINED_DATAITEM;
-          qDebug( "0x%x is not a GenericCollection", typeCodeOf( di ) );
+          qDebug( "%lld is not a GenericCollection", typeCodeOf( di ) );
           // TODO: log an error
           return;
         }
@@ -57,7 +57,7 @@ GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
           qint32     sz  = bytesToCode( di.mid(tcs), scs );
           DataItemBA dib = di.mid( tcs+scs );               // strip off typeCode and size code
           if ( dib.size() != sz )
-            { qDebug( "size disagreement between items %d and container %d for type 0x%x", dib.size(), sz, itc );
+            { qDebug( "size disagreement between items %d and container %d for type %lld", dib.size(), sz, itc );
               setTypeCode( AO_UNDEFINED_DATAITEM );
             }
            else
@@ -102,7 +102,7 @@ DataItemBA  GenericCollection::toDataItem( bool cf ) const
   while ( it.hasNext() )
     { it.next();
       if ( it.key() != it.value()->getTypeCode() )
-        { qDebug( "ERROR: key 0x%x does not match typeCode 0x%x, skipping.", it.key(), it.value()->getTypeCode() ); }
+        { qDebug( "ERROR: key %lld does not match typeCode %lld, skipping.", it.key(), it.value()->getTypeCode() ); }
        else
         { dil.append( it.value()->toDataItem(cf) );
         }
@@ -113,6 +113,7 @@ DataItemBA  GenericCollection::toDataItem( bool cf ) const
   di.append( codeToBytes( typeCode   ) );
   di.append( codeToBytes( dba.size() ) ); // variable length form...
   di.append( dba );
+  // qDebug( "GenericCollection:%s", qPrintable( QString::fromUtf8(di.toHex())));
   return di;
 }
 
@@ -161,7 +162,7 @@ void  GenericCollection::debugShow( qint32 level ) const
   QMapIterator DataItemMap_t it( itemMM );
   while ( it.hasNext() )
     { it.next();
-      qDebug( "%sGenericCollection %d itemMM.key: 0x%x", qPrintable(QString( level, QChar('.') )), i, it.key() );
+      qDebug( "%sGenericCollection %d itemMM.key: %lld", qPrintable(QString( level, QChar('.') )), i, it.key() );
       qDebug( "%sGenericCollection %d itemMM.contents:", qPrintable(QString( level, QChar('.') )), i );
       i++;
       it.value()->debugShow( level+1 );

@@ -152,7 +152,7 @@ GenericCollection GenesisForm::calculateGenesisBlock()
   Participant   *part = new Participant( DataItemBA(), &gb );
   QByteArray pubKeyBA = QByteArray::fromHex( ui->signingKey->currentText().toUtf8() );
 
-  part->setIndex( DataVarInt32( 0, AO_INDEXV, &gb ) );
+  part->setIndex( DataVbc64( 0, AO_INDEXV, &gb ) );
   DataItem *di = ae->getUnusedKeyPair( pubKeyBA );
   if ( di )
     { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
@@ -175,7 +175,7 @@ GenericCollection GenesisForm::calculateGenesisBlock()
   auth->setAssignment( asgn );
   auth->setNSigs( asgn->getNParticipants() );
   // auth.sigs.append( signature of assignment );
-  gb.insert( auth );
+  // gb.insert( auth );
   return gb;
 }
 

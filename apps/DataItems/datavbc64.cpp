@@ -20,28 +20,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-// Assign Onward
-//
-// DataVarInt32 is the base class for objects which are basically a 32 bit integer, but stored as
-//   a variable byte code 1-5 bytes long.
-//
-#ifndef DATAVARINT32_H
-#define DATAVARINT32_H
+#include "datavbc64.h"
 
-#include "data32.h"
+/**
+ * @brief DataVbc64::DataVbc64
+ * @param di - data item for initialization
+ * @param p - object parent, if any.
+ */
+DataVbc64::DataVbc64( const DataItemBA &di, QObject *p )
+  : Data64( 0, AO_UNDEFINED_DATAITEM, p )
+{ qint32 tcSz = 0;
+  qint32  vSz = 0;
+  typeCode = bytesToCode( di          , tcSz );
+  v        = bytesToCode( di.mid(tcSz),  vSz );
+}
 
-class DataVarInt32 : public Data32
-{
-    Q_OBJECT
-public:
-    explicit  DataVarInt32( qint32 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
-                : Data32( d, tc, p ) {}
-              DataVarInt32( const DataVarInt32 &d, QObject *p = NULL )
-                : Data32( d.v, d.typeCode, p ? p : d.parent() ) {}
-              DataVarInt32( const DataItemBA &di, QObject *p = NULL );
-  DataItemBA  toDataItem( bool cf = false ) const;
-virtual void  operator = ( const DataItemBA &di );
-        void  operator = ( const qint32 &d ) { v = d; }
-};
+/**
+ * @brief DataVbc64::operator =
+ * @param di - data item to assign
+ */
+void DataVbc64::operator = ( const DataItemBA &di )
+{ DataVbc64 temp( di );
+  v        = temp.v;
+  typeCode = temp.typeCode;
+  return;
+}
 
-#endif // DATAVARINT32_H
+/**
+ * @brief DataVbc64::toDataItem
+ * @param cf - compact (or chain) form, no difference at this level - unused
+ * @return byte array starting with type code, followed by 32 bit data
+ */
+DataItemBA DataVbc64::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
+  di.append( codeToBytes( typeCode ) );
+  di.append( codeToBytes( v )        );
+  return di;
+}

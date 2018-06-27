@@ -1,27 +1,27 @@
 [
     {
-        "code": 1,
+        "code": 3,
         "desc": "Variable length unsigned integer using variable byte code up to 5 bytes in length, stored in an int32.  Meaning varies based on context, but generally used as a list index",
         "pdef": "AO_INDEXV",
         "size": -2,
-        "type": "DataVarInt32"
+        "type": "DataVbc64"
     },
     {
-        "code": 2,
+        "code": 1,
         "desc": "ECDSA Public Key, type 2 compressed",
         "pdef": "AO_ECDSA_PUB_KEY2",
         "size": 32,
         "type": "PublicKeyEcdsa"
     },
     {
-        "code": 3,
+        "code": -1,
         "desc": "ECDSA Public Key, type 3 compressed",
         "pdef": "AO_ECDSA_PUB_KEY3",
         "size": 32,
         "type": "PublicKeyEcdsa"
     },
     {
-        "code": 4,
+        "code": 2,
         "desc": "ECDSA Public Key, type 4 uncompressed",
         "pdef": "AO_ECDSA_PUB_KEY4",
         "size": 64,
@@ -151,7 +151,7 @@
         "desc": "32 bit unsigned integer stored as variable byte code, declares the size of a list, as a check that all intended data is present.",
         "pdef": "AO_LISTSIZE",
         "size": -2,
-        "type": "DataVarInt32"
+        "type": "DataVbc64"
     },
     {
         "code": 49,
@@ -246,7 +246,7 @@
         "type": "GenericCollection"
     },
     {
-        "code": 2048,
+        "code": 1024,
         "desc": "Arbitrary data of any form, may contain NULL bytes, any length (within reason)",
         "pdef": "AO_DATABYTEARRAY",
         "sepr": true,
@@ -254,7 +254,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": 2049,
+        "code": 1025,
         "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
         "pdef": "AO_NOTE",
         "sepr": true,
@@ -262,7 +262,7 @@
         "type": "Note"
     },
     {
-        "code": 2050,
+        "code": 1026,
         "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_KEYPAIR,AO_SHARES_REF,AO_INDEX32",
         "desc": "Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.",
         "pdef": "AO_KEY_ASSET",
@@ -306,7 +306,7 @@
         "type": "SharesRef"
     },
     {
-        "code": 2080,
+        "code": 1027,
         "desc": "A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs",
         "pdef": "AO_ASSETS",
         "sepr": true,
@@ -314,7 +314,7 @@
         "type": "Assets"
     },
     {
-        "code": 14336,
+        "code": 1028,
         "desc": "An ECDSA private key",
         "pdef": "AO_ECDSA_PRI_KEY",
         "sepr": true,
@@ -322,7 +322,7 @@
         "type": "PrivateKeyEcdsa"
     },
     {
-        "code": 14337,
+        "code": 1029,
         "desc": "An RSA3072 private key",
         "pdef": "AO_RSA3072_PRI_KEY",
         "sepr": true,
@@ -330,7 +330,7 @@
         "type": "PrivateKeyRsa3072"
     },
     {
-        "code": 14338,
+        "code": 1030,
         "desc": "A (hopefully matching) public-private key pair",
         "pdef": "AO_KEYPAIR",
         "sepr": true,
@@ -338,7 +338,7 @@
         "type": "KeyPair"
     },
     {
-        "code": 14339,
+        "code": 1031,
         "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
         "pdef": "AO_NETADDRESS",
         "sepr": true,
@@ -418,7 +418,7 @@
         "type": "Data16"
     },
     {
-        "code": 12935,
+        "code": 4743,
         "desc": "Short unique symbol that uniquely identifies the chain e.g. TⒶ1a",
         "gbcr": "Text",
         "pdef": "GB_TEXT_SYMBOL",
@@ -426,7 +426,7 @@
         "type": "Note"
     },
     {
-        "code": 2183,
+        "code": 1159,
         "desc": "Text description of the chain",
         "gbcr": "Text",
         "pdef": "GB_DESCRIPTION",
@@ -435,7 +435,7 @@
         "type": "Note"
     },
     {
-        "code": 6279,
+        "code": 5255,
         "desc": "Image suitable for icon use to represent the chain",
         "gbcr": "File",
         "pdef": "GB_ICON",
@@ -444,7 +444,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": 6407,
+        "code": 5383,
         "desc": "Large format image to represent the chain",
         "gbcr": "File",
         "pdef": "GB_IMAGE",
@@ -485,7 +485,7 @@
         "type": "AOCoins"
     },
     {
-        "code": 14335,
+        "code": 4407,
         "desc": "An undefined data item, usually an error",
         "pdef": "AO_UNDEFINED_DATAITEM",
         "size": 0,

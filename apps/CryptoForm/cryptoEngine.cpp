@@ -52,7 +52,7 @@ KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
    else if ( tc == AO_RSA3072_PRI_KEY )
     { SHOW_IF_GPGERR( gcry_sexp_build(&parms, NULL, "(genkey (rsa (nbits 4:3072)))") ) }
    else
-    { qDebug( "CryptoEngine::makeNewGCryPair(0x%x) invalid type", tc );
+    { qDebug( "CryptoEngine::makeNewGCryPair(%lld) invalid type", tc );
       gcry_sexp_release(parms);
       return kpp;
     }
@@ -143,10 +143,10 @@ gpgme_error_t CryptoEngine::initGpgme()
  * @return fingerprint string of the new key pair if successful, empty byte array if fail.
  */
 QByteArray CryptoEngine::makeNewGpgPair( typeCode_t tc )
-{ qDebug( "CryptoEngine::makeNewGpgPair( 0x%x )", tc );
+{ qDebug( "CryptoEngine::makeNewGpgPair( %lld )", tc );
   if (( tc != AO_ECDSA_PRI_KEY ) &&
       ( tc != AO_RSA3072_PRI_KEY ))
-    { qDebug( "CryptoEngine::makeNewGpgPair unrecognized type (0x%x)", tc );
+    { qDebug( "CryptoEngine::makeNewGpgPair unrecognized type (%lld)", tc );
       return QByteArray();
     }
   gpgme_ctx_t ctx;
@@ -200,7 +200,7 @@ QByteArray CryptoEngine::makeNewGpgPair( typeCode_t tc )
   BAFAIL_IF_GPGERR( gpgme_op_genkey(ctx, def.toStdString().c_str(), NULL, NULL ) );
   if (err == gpgme_err_code(GPG_ERR_NO_ERROR) )
     { gpgme_genkey_result_t res = gpgme_op_genkey_result(ctx);
-      qDebug( "KeyPair::makeNewPair(0x%x) primary:%d sub:%d uid:%d fpr:%s"
+      qDebug( "KeyPair::makeNewPair(%lld) primary:%d sub:%d uid:%d fpr:%s"
               , tc, res->primary, res->sub, res->uid, res->fpr );
 
       if (res->primary && res->sub)

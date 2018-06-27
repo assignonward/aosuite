@@ -44,6 +44,7 @@ virtual DataItemBA  toDataItem( bool cf = false ) const;
         QByteArray  get() const { return ba; } // Just the meat, without typecode
               void  set( const QByteArray &sba ) { ba = sba; }
             qint32  size() const { return ba.size(); }
+              void  debugShow( qint32 level = 0 ) const;
 
 protected:
         QByteArray  ba;    // generic data, not including type or checksum

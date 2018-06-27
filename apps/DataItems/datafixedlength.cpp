@@ -32,13 +32,13 @@ DataFixedLength::DataFixedLength( const DataItemBA &di, QObject *p )
 { qint32 tcSz = 0;
   typeCode = bytesToCode( di, tcSz );
   if ( typeSize() < 0 )
-    { qDebug( "type 0x%x is not fixed length.", typeCode );
+    { qDebug( "type %lld is not fixed length.", typeCode );
       // TODO: log an exception
       typeCode = AO_UNDEFINED_DATAITEM;
       return;
     }
   if ( di.size() < typeSize()+tcSz )
-    { qDebug( "passed data too small (%d) for type 0x%x, expected %d", di.size()-tcSz, typeCode, typeSize() );
+    { qDebug( "passed data too small (%d) for type %lld, expected %d", di.size()-tcSz, typeCode, typeSize() );
       // TODO: log an exception
       return;
     }
@@ -79,6 +79,11 @@ void DataFixedLength::set( QByteArray sba )
     { ba = sba;
     }
    else
-    { qDebug( "DataFixedLength::set, size of passed array (%d) does not match the expected size (%d) for type (0x%x)", sba.size(), typeSize(), typeCode );
+    { qDebug( "DataFixedLength::set, size of passed array (%d) does not match the expected size (%d) for type (%lld)", sba.size(), typeSize(), typeCode );
     }
 }
+
+void  DataFixedLength::debugShow( qint32 level ) const
+{ qDebug( "%sDataFixedLength typeCode %lld ba size %d", qPrintable(QString( level, QChar('.') )), typeCode, ba.size() );
+}
+
