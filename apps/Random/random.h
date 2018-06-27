@@ -33,6 +33,7 @@ public:
          void  seed( __int128 seed );
      uint64_t  rnd_uint64();
       int64_t  rnd_int64();
+         bool  rnd_bool();
    QByteArray  rnd_bytes( qint32 n = 4 );
         float  rnd_float( float min, float max );
   QStringList  rnd_nameAndEmail();

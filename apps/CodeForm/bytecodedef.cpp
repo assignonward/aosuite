@@ -57,7 +57,18 @@ QJsonObject  ByteCodeDef::toJsonObject() const
 }
 
 QString ByteCodeDef::toDefine( qint32 maxLenPdef )
-{ return QString( "#define %1%2 %3 // (%4+%5) %6:%7%8" )
+{ if ( DataItem::typeCodeIsSeparable( code ) )
+    return QString( "#define %1%2 %3 // <%4+%5> %6:%7%8" )
+           .arg( pdef )
+           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) )
+           .arg( code, 6 )
+           .arg( QString::fromUtf8( VarSizeCode::codeToBytes(code).toHex() ) )
+           .arg( (sz<0) ? "var" : QString::number(sz) )
+           .arg( tn )
+           .arg( sepr ? "separable " : " " )
+           .arg( desc );
+
+    return QString( "#define %1%2 %3 // (%4+%5) %6:%7%8" )
            .arg( pdef )
            .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) )
            .arg( code, 6 )

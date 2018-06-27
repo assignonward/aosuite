@@ -27,6 +27,7 @@
 #include "prikey.h"
 #include "pubkey.h"
 #include <QPointer>
+#define USE_QPOINTERS
 
 /**
  * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
@@ -47,10 +48,13 @@ public:
         PriKey *getPriKey() { return priKey; }
 
 private:
-//  QPointer<PubKey> pubKey;
-//  QPointer<PriKey> priKey;
+#ifdef USE_QPOINTERS
+  QPointer<PubKey> pubKey;
+  QPointer<PriKey> priKey;
+#else
   PubKey *pubKey;
   PriKey *priKey;
+#endif
 };
 
 #endif // KEYPAIR_H

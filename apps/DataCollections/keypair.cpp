@@ -30,8 +30,10 @@
 KeyPair::KeyPair( DataItemBA di, QObject *p )
   : DataVarLength( AO_KEYPAIR, p )
 { // See if there's anything interesting in the data item
+#ifndef USE_QPOINTERS
   priKey = NULL;
   pubKey = NULL;
+#endif
   if ( di.size() > 0 )
     { if ( typeCodeOf( di ) != AO_KEYPAIR )
         { // TODO: log an error

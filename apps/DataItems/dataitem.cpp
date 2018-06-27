@@ -309,12 +309,20 @@ DataItemBA  DataItem::toDataItem( bool cf ) const
  */
 DataItemBA DataItem::toHashData( bool cf ) const
 { //qDebug( "DataItem:toHashData" );
-  if ( typeCode & AO_SEPARABLE_TYPE )
+  if ( typeCodeIsSeparable() )
     { Hash256 h;
       return h.calculate( toDataItem(cf) ).toDataItem(cf);
     }
   return toDataItem(cf);
 }
+
+bool DataItem::typeCodeIsSeparable( typeCode_t tc )
+{ return ((( tc & AO_SEPARABLE_TYPE1 ) != 0 ) !=
+          (( tc & AO_SEPARABLE_TYPE2 ) != 0 ) );
+}
+
+bool DataItem::typeCodeIsSeparable() const
+{ return typeCodeIsSeparable( getTypeCode() ); }
 
 void  DataItem::debugShow( qint32 level ) const
 { qDebug( "%sDataItem typeCode %lld", qPrintable(QString( level, QChar('.') )), typeCode );

@@ -22,6 +22,7 @@
  */
 #include "bytecodedef.h"
 #include "codeform.h"
+#include "random.h"
 
 extern ByteCodeDefinitions bcds;
 
@@ -51,11 +52,11 @@ CodeForm::CodeForm( QWidget *cw, MainWinCommon *mw ) :
 
         // Ensure that the separable bit is properly implemented
         if ( bcd.sepr )
-          { if (( bcd.code & AO_SEPARABLE_TYPE ) == 0)
+          { if ( !DataItem::typeCodeIsSeparable( bcd.code ) )
               qDebug( "%s typecode %lld indicates not separable but the separable flag is set.", qPrintable( bcd.pdef ), bcd.code );
           }
          else
-          { if (( bcd.code & AO_SEPARABLE_TYPE ) != 0)
+          { if ( DataItem::typeCodeIsSeparable( bcd.code ) )
               qDebug( "%s typecode %lld indicates separable but the separable flag is not set.", qPrintable( bcd.pdef ), bcd.code );
           }
 
@@ -85,10 +86,12 @@ void CodeForm::on_massage_clicked()
     { bool done = false;
       while ( !done )
         { done = true;
-          if ( bcd.sepr )
-            bcd.code |= AO_SEPARABLE_TYPE;
-           else
-            bcd.code &= ~(AO_SEPARABLE_TYPE);
+          if ( bcd.sepr != DataItem::typeCodeIsSeparable( bcd.code ) )
+            { if ( rng.rnd_bool() )
+                bcd.code ^= AO_SEPARABLE_TYPE1;
+               else
+                bcd.code ^= AO_SEPARABLE_TYPE2;
+            }
 
           if ( !codeNames.contains( bcd.code ) )
             codeNames.insert( bcd.code, bcd.pdef );
@@ -103,4 +106,19 @@ void CodeForm::on_massage_clicked()
     }
   ui->json->appendPlainText( bcdn.toString() );
 }
+
+void CodeForm::on_vbcHex_textChanged( QString hex )
+{ qint32 sz;
+  QByteArray hb = QByteArray::fromHex( hex.toUtf8() );
+  QString hs = QString::fromUtf8( hb.toHex(' ') );
+  typeCode_t tc = VarSizeCode::bytesToCode( hb, sz );
+  ui->intCode->setText( QString::number( tc ) );
+  QByteArray ba = VarSizeCode::codeToBytes( tc );
+  ui->encodedInt->setText( QString::fromUtf8( ba.toHex(' ') ) );
+  if ( hs != ui->encodedInt->text() )
+    hs.prepend( "!" );
+  ui->hexString->setText( hs );
+  ui->separable->setText( DataItem::typeCodeIsSeparable( tc ) ? "separable" : "not separable" );
+}
+
 

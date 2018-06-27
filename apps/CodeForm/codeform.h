@@ -41,6 +41,7 @@ public:
 
 public slots:
         void  on_massage_clicked();
+        void  on_vbcHex_textChanged( QString );
 
 private:
     Ui::CodeForm *ui;

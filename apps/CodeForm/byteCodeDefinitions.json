@@ -70,21 +70,21 @@
         "type": "AOTime"
     },
     {
-        "code": 130,
+        "code": 7692,
         "desc": "UTC time (secs since epoch << 64) when a transaction was proposed (fixes coin-shares representations)",
         "pdef": "AO_PROPOSAL_TIME",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 131,
+        "code": 7564,
         "desc": "UTC time (secs since epoch << 64) when a record is contracted to be recorded",
         "pdef": "AO_RECORDING_DEADLINE",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 132,
+        "code": 7500,
         "desc": "UTC time (secs since epoch << 64) when a record was made",
         "pdef": "AO_TIME_RECORDED",
         "size": 16,
@@ -119,7 +119,7 @@
         "type": "Shares"
     },
     {
-        "code": 160,
+        "code": 7620,
         "desc": "128 bit signed integer number of shares bid for recording",
         "pdef": "AO_RECORDING_BID",
         "size": 16,
@@ -239,7 +239,7 @@
         "type": "GenericCollection"
     },
     {
-        "code": 1024,
+        "code": 4096,
         "desc": "Arbitrary data of any form, may contain NULL bytes, any length (within reason)",
         "pdef": "AO_DATABYTEARRAY",
         "sepr": true,
@@ -247,7 +247,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": 1025,
+        "code": -4160,
         "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
         "pdef": "AO_NOTE",
         "sepr": true,
@@ -255,7 +255,7 @@
         "type": "Note"
     },
     {
-        "code": 1026,
+        "code": 3765,
         "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_KEYPAIR,AO_SHARES_REF,AO_INDEXV",
         "desc": "Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.",
         "pdef": "AO_KEY_ASSET",
@@ -299,7 +299,7 @@
         "type": "SharesRef"
     },
     {
-        "code": 1027,
+        "code": 3856,
         "desc": "A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs",
         "pdef": "AO_ASSETS",
         "sepr": true,
@@ -307,7 +307,7 @@
         "type": "Assets"
     },
     {
-        "code": 1028,
+        "code": 3893,
         "desc": "An ECDSA private key",
         "pdef": "AO_ECDSA_PRI_KEY",
         "sepr": true,
@@ -315,7 +315,7 @@
         "type": "PrivateKeyEcdsa"
     },
     {
-        "code": 1029,
+        "code": 3829,
         "desc": "An RSA3072 private key",
         "pdef": "AO_RSA3072_PRI_KEY",
         "sepr": true,
@@ -323,7 +323,7 @@
         "type": "PrivateKeyRsa3072"
     },
     {
-        "code": 1030,
+        "code": 3957,
         "desc": "A (hopefully matching) public-private key pair",
         "pdef": "AO_KEYPAIR",
         "sepr": true,
@@ -331,7 +331,7 @@
         "type": "KeyPair"
     },
     {
-        "code": 1031,
+        "code": 3125,
         "desc": "IP4 or IP6 or named network contact address, potentially including :port number",
         "pdef": "AO_NETADDRESS",
         "sepr": true,
@@ -339,14 +339,14 @@
         "type": "NetAddress"
     },
     {
-        "code": 128,
+        "code": 2832,
         "desc": "Contact information for an asset organizer (user software)",
         "pdef": "AO_ORGANIZER",
         "size": -1,
         "type": "Organizer"
     },
     {
-        "code": 129,
+        "code": 2064,
         "desc": "Contact information for a recorder (chainmaker software)",
         "pdef": "AO_RECORDER",
         "size": -1,
@@ -388,14 +388,14 @@
         "type": "Signature"
     },
     {
-        "code": 135,
+        "code": 80,
         "desc": "A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it",
         "pdef": "GB_GENESIS_BLOCK",
         "size": -1,
         "type": "GenericCollection"
     },
     {
-        "code": 263,
+        "code": 144,
         "desc": "Basic level of protocol, identifies functionality",
         "gbcr": "Combo",
         "pdef": "GB_PROTOCOL",
@@ -403,7 +403,7 @@
         "type": "DataVbc64"
     },
     {
-        "code": 391,
+        "code": 208,
         "desc": "Revision of the protocol, may indicate additional types supported",
         "gbcr": "Combo",
         "pdef": "GB_PROTOCOL_REV",
@@ -411,7 +411,7 @@
         "type": "DataVbc64"
     },
     {
-        "code": 4743,
+        "code": 272,
         "desc": "Short unique symbol that uniquely identifies the chain e.g. TⒶ1a",
         "gbcr": "Text",
         "pdef": "GB_TEXT_SYMBOL",
@@ -419,7 +419,7 @@
         "type": "Note"
     },
     {
-        "code": 1159,
+        "code": 1040,
         "desc": "Text description of the chain",
         "gbcr": "Text",
         "pdef": "GB_DESCRIPTION",
@@ -428,7 +428,7 @@
         "type": "Note"
     },
     {
-        "code": 5255,
+        "code": 1104,
         "desc": "Image suitable for icon use to represent the chain",
         "gbcr": "File",
         "pdef": "GB_ICON",
@@ -437,7 +437,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": 5383,
+        "code": 1168,
         "desc": "Large format image to represent the chain",
         "gbcr": "File",
         "pdef": "GB_IMAGE",
@@ -446,7 +446,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": 4103,
+        "code": 336,
         "desc": "Starting number of shares",
         "gbcr": "Pow2",
         "pdef": "GB_STARTING_SHARES",
@@ -454,7 +454,7 @@
         "type": "Shares"
     },
     {
-        "code": 4231,
+        "code": 400,
         "desc": "Minimuim block interval time",
         "gbcr": "f64.64",
         "pdef": "GB_MIN_BLOCK_INT",
@@ -462,7 +462,7 @@
         "type": "AOTime"
     },
     {
-        "code": 4359,
+        "code": 464,
         "desc": "Number of coins that the sum of all shares outstanding represents",
         "gbcr": "Pow2",
         "pdef": "GB_N_COINS_TOTAL",
@@ -470,7 +470,7 @@
         "type": "AOCoins"
     },
     {
-        "code": 4487,
+        "code": 528,
         "desc": "Recording Tax in coins per byte (usually a very small number)",
         "gbcr": "Pow2",
         "pdef": "GB_RECORDING_TAX",
@@ -478,7 +478,7 @@
         "type": "AOCoins"
     },
     {
-        "code": 4407,
+        "code": 977775,
         "desc": "An undefined data item, usually an error",
         "pdef": "AO_UNDEFINED_DATAITEM",
         "size": 0,

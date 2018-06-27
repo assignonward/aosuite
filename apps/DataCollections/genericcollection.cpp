@@ -24,6 +24,9 @@
 #include "stdio.h"
 
 
+/**
+ * @brief GenericCollection::deleteItemsLater - clean out the DataItemMap
+ */
 void GenericCollection::deleteItemsLater()
 { QMapIterator DataItemMap_t it( itemMM );
   while ( it.hasNext() )
@@ -126,7 +129,7 @@ DataItemBA  GenericCollection::toHashData( bool cf ) const
     { it.next();
       DataItemBA di = it.value()->toDataItem(cf);
       QByteArray ba;
-      if ( typeCodeOf( di ) & AO_SEPARABLE_TYPE )
+      if ( typeCodeIsSeparable( typeCodeOf( di ) ) )
         ba = it.value()->toHashData(cf);
       dil.append( QPair<DataItemBA,QByteArray>( di, ba ) );
     }
@@ -135,7 +138,7 @@ DataItemBA  GenericCollection::toHashData( bool cf ) const
   QByteArrayList hdl;
   QPair<DataItemBA,QByteArray> pr;
   foreach ( pr, dil )
-    { if ( typeCodeOf( pr.first ) & AO_SEPARABLE_TYPE )
+    { if ( typeCodeIsSeparable( typeCodeOf( pr.first ) ) )
         hdl.append( pr.second );
        else
         hdl.append( pr.first );
@@ -147,7 +150,7 @@ DataItemBA  GenericCollection::toHashData( bool cf ) const
   hd.append( dba );
 
   // If this item itself is separable, then return its hash
-  if ( typeCode & AO_SEPARABLE_TYPE )
+  if ( typeCodeIsSeparable() )
     { Hash256 h;
       return h.calculate( hd ).toDataItem(cf);
     }

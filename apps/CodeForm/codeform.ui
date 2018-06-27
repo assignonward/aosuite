@@ -27,11 +27,82 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>bytecode definitions</string>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="topMargin">
+       <number>0</number>
       </property>
-     </widget>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>bytecode definitions</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="vbcHex">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>vbc hex</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="intCode">
+        <property name="text">
+         <string>integer code</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="separable">
+        <property name="text">
+         <string>separable</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="hexString">
+        <property name="text">
+         <string>hex string</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="encodedInt">
+        <property name="text">
+         <string>encoded int</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QPlainTextEdit" name="bytecodeDefinitions">

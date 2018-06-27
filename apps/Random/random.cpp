@@ -59,6 +59,17 @@ int64_t Random::rnd_int64()
   return v;
 }
 
+bool Random::rnd_bool()
+{ uint64_t x = s[0];
+  uint64_t const y = s[1];
+  s[0] = y;
+  x ^= x << 23; // a
+  s[1] = x ^ y ^ (x >> 17) ^ (y >> 26); // b, c
+  uint64_t r = s[1] + y;
+   int64_t v = *((int64_t *)&r);
+  return (v & 0x01);
+}
+
 QByteArray Random::rnd_bytes( qint32 n )
 { QByteArray ba;
   union _64_as_8
