@@ -50,9 +50,7 @@ GenericCollection *AssetsEngine::getUnusedKeyPair( QByteArray pkp )
                 { KeyPair *kp = qobject_cast<KeyPair *>(DataItem::fromDataItem( ka->value(AO_KEYPAIR) ));
                   if ( !kp ) { qDebug( "AO_KEYPAIR did not qobject_cast to a KeyPair" ); } else
                     { PubKey *pubKey = kp->getPubKey();
-                      if ( !pubKey )
-                        { qDebug( "pubKey NULL" ); }
-                       else
+                      if ( !pubKey ) { qDebug( "pubKey NULL" ); } else
                         { if ( pkp.size() < 1 )
                             return ka;
                           QByteArray akp = pubKey->get(); // Asset Key Pattern
@@ -117,9 +115,7 @@ QByteArrayList  AssetsEngine::getUnusedKeyPairIDs()
                 { KeyPair *kp = qobject_cast<KeyPair *>(DataItem::fromDataItem( ka->value(AO_KEYPAIR) ));
                   if ( !kp ) { qDebug( "AO_KEYPAIR did not qobject_cast to a KeyPair" ); } else
                     { PubKey *pubKey = kp->getPubKey();
-                      if ( !pubKey )
-                        { qDebug( "pubKey NULL" ); }
-                       else
+                      if ( !pubKey ) { qDebug( "pubKey NULL" ); } else
                         { ukpids.append( pubKey->get() ); // Asset Key Pattern
                         } // if ( !pubKey ) else
                     } // if ( !kp ) else

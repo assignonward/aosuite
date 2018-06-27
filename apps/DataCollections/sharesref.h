@@ -24,7 +24,6 @@
 #define SHARESREF_H
 
 #include "assignref.h"
-#include "data8.h"
 #include "datavbc64.h"
 #include "datavarlength.h"
 #include "pageref.h"
@@ -61,8 +60,8 @@ public:
       PubKey  key;        // Id (public key) of shares
 
      PageRef  page;       // page these shares are recorded on
-DataVbc64  seqNum;     // shares sequence number in the page
-       Data8  shareState; // available, or other?
+   DataVbc64  seqNum;     // shares sequence number in the page
+   DataVbc64  shareState; // available, or other?
       AOTime  lockExp;    // if the state is locked, when does the lock expire?
    AssignRef  assignRef;  // if these shares have been assigned away, this is the optional record of when/where
 };

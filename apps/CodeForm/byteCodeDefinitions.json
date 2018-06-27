@@ -143,8 +143,8 @@
         "code": 47,
         "desc": "8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)",
         "pdef": "AO_SHARE_STATE",
-        "size": 1,
-        "type": "Data8"
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
         "code": 48,
@@ -157,8 +157,8 @@
         "code": 49,
         "desc": "16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.",
         "pdef": "AO_INDEX",
-        "size": 2,
-        "type": "Data16"
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
         "code": 50,
@@ -171,8 +171,8 @@
         "code": 51,
         "desc": "Number of sequential ID numbers (of public keys) recorded in this block, redundant check.",
         "pdef": "CB_N_ID_SEQ_NUM",
-        "size": 2,
-        "type": "Data16"
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
         "code": 52,
@@ -180,13 +180,6 @@
         "pdef": "AO_ID_SEQ_NUM",
         "size": 8,
         "type": "Data64"
-    },
-    {
-        "code": 53,
-        "desc": "32 bit signed integer declares position of an element in a list, used for index numbers in potentially bigger lists.",
-        "pdef": "AO_INDEX32",
-        "size": 4,
-        "type": "Data32"
     },
     {
         "code": 61,
@@ -263,7 +256,7 @@
     },
     {
         "code": 1026,
-        "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_KEYPAIR,AO_SHARES_REF,AO_INDEX32",
+        "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_KEYPAIR,AO_SHARES_REF,AO_INDEXV",
         "desc": "Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.",
         "pdef": "AO_KEY_ASSET",
         "sepr": true,
@@ -406,16 +399,16 @@
         "desc": "Basic level of protocol, identifies functionality",
         "gbcr": "Combo",
         "pdef": "GB_PROTOCOL",
-        "size": 2,
-        "type": "Data16"
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
         "code": 391,
         "desc": "Revision of the protocol, may indicate additional types supported",
         "gbcr": "Combo",
         "pdef": "GB_PROTOCOL_REV",
-        "size": 2,
-        "type": "Data16"
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
         "code": 4743,

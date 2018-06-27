@@ -104,7 +104,6 @@ void  GenesisForm::on_importGenesisBlock_clicked()
 #include "aotime.h"
 #include "authorization.h"
 #include "databytearray.h"
-#include "data16.h"
 #include "data64.h"
 #include "genericcollection.h"
 #include "shares.h"
@@ -129,8 +128,8 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
 GenericCollection GenesisForm::calculateGenesisBlock()
 { GenericCollection gb( GB_GENESIS_BLOCK );
   __int128_t tv;
-  gb.insert( new Data16       ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
-  gb.insert( new Data16       ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
+  gb.insert( new DataVbc64    ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
+  gb.insert( new DataVbc64    ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
   gb.insert( new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  &gb ) );
   if ( ui->description->toPlainText().size() > 0 )
   gb.insert( new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  &gb ) );
@@ -144,8 +143,8 @@ GenericCollection GenesisForm::calculateGenesisBlock()
   gb.insert( new AOCoins( tv, GB_N_COINS_TOTAL , &gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
   gb.insert( new AOCoins( tv, GB_RECORDING_TAX , &gb ) );
-  gb.insert( new Data64( 0, CB_FIRST_ID_SEQ_NUM, &gb ) );
-  gb.insert( new Data16( 1, CB_N_ID_SEQ_NUM    , &gb ) );
+  gb.insert( new DataVbc64( 0, CB_FIRST_ID_SEQ_NUM, &gb ) );
+  gb.insert( new DataVbc64( 1, CB_N_ID_SEQ_NUM    , &gb ) );
 
   Authorization *auth = new Authorization( DataItemBA(), &gb );
   Assignment    *asgn = new Assignment( DataItemBA(), &gb );

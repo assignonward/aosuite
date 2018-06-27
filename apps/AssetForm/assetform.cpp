@@ -95,7 +95,7 @@ void  AssetForm::updateLabels()
                           case KEYS_SHARES_ASSIGNED:     sharesAssigned++;     break;
                           case KEYS_ASSIGNMENT_PENDING:  assignmentPending++;  break;
                           case KEYS_SHARES_ESCROWED:     sharesEscrowed++;     break;
-                          default: qDebug( "unexpected shareState value: %d", sr->shareState.value() );
+                          default: qDebug( "unexpected shareState value: %lld", sr->shareState.value() );
                         }
                     }
                    else

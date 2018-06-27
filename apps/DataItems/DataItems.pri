@@ -30,13 +30,9 @@ SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/aotime.cpp            \
                $${PWD}/databytearray.cpp     \
                $${PWD}/dataitem.cpp          \
-               $${PWD}/data8.cpp             \
-               $${PWD}/data16.cpp            \
-               $${PWD}/data32.cpp            \
                $${PWD}/data64.cpp            \
                $${PWD}/data128.cpp           \
                $${PWD}/datavbc64.cpp         \
-               $${PWD}/data136float.cpp      \
                $${PWD}/datafixedlength.cpp   \
                $${PWD}/datavarlength.cpp     \
                $${PWD}/hash.cpp              \
@@ -62,13 +58,9 @@ HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/aotime.h            \
                $${PWD}/databytearray.h     \
                $${PWD}/dataitem.h          \
-               $${PWD}/data8.h             \
-               $${PWD}/data16.h            \
-               $${PWD}/data32.h            \
                $${PWD}/data64.h            \
                $${PWD}/data128.h           \
                $${PWD}/datavbc64.h         \
-               $${PWD}/data136float.h      \
                $${PWD}/datafixedlength.h   \
                $${PWD}/datavarlength.h     \
                $${PWD}/hash.h              \

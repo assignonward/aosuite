@@ -32,7 +32,7 @@
 #define typeCode_t qint64
 #define AO_SEPARABLE_TYPE          0x0400 // Types with this bit set are separable
 
-#define AO_INDEXV                       3 // (06+var) DataVarInt32: Variable length unsigned integer using variable byte code up to 5 bytes in length, stored in an int32.  Meaning varies based on context, but generally used as a list index
+#define AO_INDEXV                       3 // (06+var) DataVbc64: Variable length unsigned integer using variable byte code up to 5 bytes in length, stored in an int32.  Meaning varies based on context, but generally used as a list index
 #define AO_ECDSA_PUB_KEY2               1 // (02+32) PublicKeyEcdsa: ECDSA Public Key, type 2 compressed
 #define AO_ECDSA_PUB_KEY3              -1 // (03+32) PublicKeyEcdsa: ECDSA Public Key, type 3 compressed
 #define AO_ECDSA_PUB_KEY4               2 // (04+64) PublicKeyEcdsa: ECDSA Public Key, type 4 uncompressed
@@ -52,13 +52,12 @@
 #define AO_RECORDING_BID              160 // (c002+16) Shares: 128 bit signed integer number of shares bid for recording
 #define AO_SHARES_OUT                  40 // (50+16) Shares: 128 bit signed integer number of shares outstanding (recorded on blocks)
 #define AO_N_COINS                     44 // (58+16) AOCoins: Number of coins, as a fixed point 64.64 bit number
-#define AO_SHARE_STATE                 47 // (5e+1) Data8: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
-#define AO_LISTSIZE                    48 // (60+var) DataVarInt32: 32 bit unsigned integer stored as variable byte code, declares the size of a list, as a check that all intended data is present.
-#define AO_INDEX                       49 // (62+2) Data16: 16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.
+#define AO_SHARE_STATE                 47 // (5e+var) DataVbc64: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
+#define AO_LISTSIZE                    48 // (60+var) DataVbc64: 32 bit unsigned integer stored as variable byte code, declares the size of a list, as a check that all intended data is present.
+#define AO_INDEX                       49 // (62+var) DataVbc64: 16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.
 #define CB_FIRST_ID_SEQ_NUM            50 // (64+8) Data64: First sequential ID number (of public keys) recorded in this block.
-#define CB_N_ID_SEQ_NUM                51 // (66+2) Data16: Number of sequential ID numbers (of public keys) recorded in this block, redundant check.
+#define CB_N_ID_SEQ_NUM                51 // (66+var) DataVbc64: Number of sequential ID numbers (of public keys) recorded in this block, redundant check.
 #define AO_ID_SEQ_NUM                  52 // (68+8) Data64: 64 bit integer that identifies a particular public key in the chain.
-#define AO_INDEX32                     53 // (6a+4) Data32: 32 bit signed integer declares position of an element in a list, used for index numbers in potentially bigger lists.
 #define AO_RSA3072_PUB_KEY             61 // (7a+384) PublicKeyRsa3072: an RSA3072 public key
 #define AO_RSA3072_SIG                 62 // (7c+384) SigRsa3072: an RSA3072 signature
 #define AO_ECDSA_SIG                   63 // (7e+var) SigEcdsa: An ECDSA signature
@@ -88,8 +87,8 @@
 #define AO_AUTH_SIG                    58 // (74+var) Signature: Authorization signature, includes a AO_TIME_OF_SIG time and AO_INDEX index of the participant doing the signing
 #define AO_SIG_WITH_TIME               59 // (76+var) Signature: Generic signature with All signatures include AO_TIME_OF_SIG time of signature, but no Index or PubKey
 #define GB_GENESIS_BLOCK              135 // (8e02+var) GenericCollection: A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it
-#define GB_PROTOCOL                   263 // (8e04+2) Data16: Basic level of protocol, identifies functionality
-#define GB_PROTOCOL_REV               391 // (8e06+2) Data16: Revision of the protocol, may indicate additional types supported
+#define GB_PROTOCOL                   263 // (8e04+var) DataVbc64: Basic level of protocol, identifies functionality
+#define GB_PROTOCOL_REV               391 // (8e06+var) DataVbc64: Revision of the protocol, may indicate additional types supported
 #define GB_TEXT_SYMBOL               4743 // (8e4a+var) Note: Short unique symbol that uniquely identifies the chain e.g. TⒶ1a
 #define GB_DESCRIPTION               1159 // (8e12+var) Note:separable Text description of the chain
 #define GB_ICON                      5255 // (8e52+var) DataByteArray:separable Image suitable for icon use to represent the chain
@@ -98,8 +97,7 @@
 #define GB_MIN_BLOCK_INT             4231 // (8e42+16) AOTime: Minimuim block interval time
 #define GB_N_COINS_TOTAL             4359 // (8e44+16) AOCoins: Number of coins that the sum of all shares outstanding represents
 #define GB_RECORDING_TAX             4487 // (8e46+16) AOCoins: Recording Tax in coins per byte (usually a very small number)
-#define AO_UNDEFINED_DATAITEM        4407 // (ee46+0) DataItem: An undefined data item, usually an error
-
+#define AO_UNDEFINED_DATAITEM        4407 // (ee44+0) DataItem: An undefined data item, usually an error
 
 class DataItem : public QObject, public VarSizeCode
 {

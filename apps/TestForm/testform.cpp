@@ -64,14 +64,14 @@ void TestForm::on_randomName_clicked()
 
 #include "aotime.h"
 #include "aocoins.h"
-#include "data16.h"
+#include "datavbc64.h"
 #include "genericcollection.h"
 #include "shares.h"
 void  TestForm::testGenesisBlock()
 { GenericCollection gb( GB_GENESIS_BLOCK );
   __int128_t tv;
-  gb.insert( GB_PROTOCOL    , new Data16       (      1, GB_PROTOCOL    , &gb ) );
-  gb.insert( GB_PROTOCOL_REV, new Data16       (      2, GB_PROTOCOL_REV, &gb ) );
+  gb.insert( GB_PROTOCOL    , new DataVbc64    (      1, GB_PROTOCOL    , &gb ) );
+  gb.insert( GB_PROTOCOL_REV, new DataVbc64    (      2, GB_PROTOCOL_REV, &gb ) );
   gb.insert( GB_TEXT_SYMBOL , new DataVarLength( "tSmb", GB_TEXT_SYMBOL , &gb ) );
   gb.insert( GB_DESCRIPTION , new DataVarLength( "Test description string of reasonably long length, exceeding 128 bytes so as to trigger some multi-byte length code action.", GB_DESCRIPTION, &gb ) );
 //  gb.add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
