@@ -63,22 +63,16 @@
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <widget class="QLabel" name="hexString">
         <property name="text">
          <string>hex string</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="encodedInt">
+        <property name="text">
+         <string>encoded int</string>
         </property>
        </widget>
       </item>
@@ -96,9 +90,23 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="encodedInt">
+       <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>encoded int</string>
+         <string>Project Root</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="projectRoot">
+        <property name="text">
+         <string>../../../</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="writeFiles">
+        <property name="text">
+         <string>Write Files</string>
         </property>
        </widget>
       </item>

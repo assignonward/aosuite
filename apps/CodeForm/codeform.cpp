@@ -23,6 +23,7 @@
 #include "bytecodedef.h"
 #include "codeform.h"
 #include "random.h"
+#include <QTextStream>
 
 extern ByteCodeDefinitions bcds;
 
@@ -106,6 +107,16 @@ void CodeForm::on_massage_clicked()
     }
   ui->json->appendPlainText( bcdn.toString() );
 }
+
+void  CodeForm::on_writeFiles_clicked()
+{ QString fileName = ui->projectRoot->text() + "aosuite/apps/DataItems/dataitem-auto.h";
+  QFile file( fileName );
+  file.open( QIODevice::WriteOnly );
+  QTextStream ts( &file );
+  ts << ui->bytecodeDefinitions->toPlainText();
+
+}
+
 
 void CodeForm::on_vbcHex_textChanged( QString hex )
 { qint32 sz;

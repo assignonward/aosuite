@@ -58,6 +58,7 @@ HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/aotime.h            \
                $${PWD}/databytearray.h     \
                $${PWD}/dataitem.h          \
+               $${PWD}/dataitem-auto.h     \
                $${PWD}/data64.h            \
                $${PWD}/data128.h           \
                $${PWD}/datavbc64.h         \
