@@ -71,13 +71,11 @@ void  AssetForm::updateLabels()
   int sharesAssigned     = 0;
   int assignmentPending  = 0;
   int sharesEscrowed     = 0;
-  QMapIterator DataItemMap_t it( ae->mmap() );
+  QList<DataItem *>dipl = ae->mmap().values();
   // qDebug( "reading assets.mmap() size %d", assets.mmap().size() );
 
-  while ( it.hasNext() )
-    { it.next();
-      DataItem *di = it.value();
-      // qDebug( "item (of %d) type 0x%x", assets.itemMM.size(), di->getTypeCode() );
+  foreach( DataItem *di, dipl )
+    { // qDebug( "item (of %d) type 0x%x", assets.itemMM.size(), di->getTypeCode() );
       if ( di->getTypeCode() == AO_KEY_ASSET )
         { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
           if ( !ka )
@@ -129,12 +127,10 @@ void  AssetForm::on_makeNewKey_clicked()
 }
 
 void  AssetForm::on_importToGpg_clicked()
-{ QMapIterator DataItemMap_t it( ae->mmap() );
+{ QList<DataItem *>dipl = ae->mmap().values();
   qDebug( "reading assets.mmap() size %d", ae->mmap().size() );
-  while ( it.hasNext() )
-    { it.next();
-      DataItem *di = it.value();
-      // qDebug( "item (of %d) type 0x%x", assets.itemMM.size(), di->getTypeCode() );
+  foreach( DataItem *di, dipl )
+    { // qDebug( "item (of %d) type 0x%x", assets.itemMM.size(), di->getTypeCode() );
       if ( di->getTypeCode() == AO_KEY_ASSET )
         { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
           if ( !ka )
@@ -150,19 +146,19 @@ void  AssetForm::on_importToGpg_clicked()
                         proceed = false;
                     }
                   if ( proceed )
-                    { DataItem *di;
+                    { DataItem *pdi;
                       QByteArray ba;
                       if ( ka->contains( AO_ECDSA_PRI_KEY ) )
-                        { di = ka->value( AO_ECDSA_PRI_KEY );
-                          PrivateKeyEcdsa *pk = qobject_cast<PrivateKeyEcdsa *>(di);
+                        { pdi = ka->value( AO_ECDSA_PRI_KEY );
+                          PrivateKeyEcdsa *pk = qobject_cast<PrivateKeyEcdsa *>(pdi);
                           if ( pk )
                             ba = pk->get();
                            else
                             qDebug( "qobject_cast<PrivateKeyEcdsa *> returned NULL" );
                         }
                        else
-                        { di = ka->value( AO_RSA3072_PRI_KEY );
-                          PrivateKeyRsa3072 *pk = qobject_cast<PrivateKeyRsa3072 *>(di);
+                        { pdi = ka->value( AO_RSA3072_PRI_KEY );
+                          PrivateKeyRsa3072 *pk = qobject_cast<PrivateKeyRsa3072 *>(pdi);
                           if ( pk )
                             ba = pk->get();
                            else

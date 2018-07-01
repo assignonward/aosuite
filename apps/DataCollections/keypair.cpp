@@ -100,7 +100,8 @@ void KeyPair::operator = ( const DataItemBA &di )
 { KeyPair temp( di );
   pubKey   = temp.pubKey;
   priKey   = temp.priKey;
-  itemMM   = temp.itemMM;
+  deleteItemsLater();
+  insert( temp.values() );
   typeCode = temp.typeCode;
 #ifdef USE_QPOINTERS
   temp.pubKey = NULL; // prevent the keys from being deleted when temp goes out of scope

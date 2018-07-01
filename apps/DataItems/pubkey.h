@@ -23,7 +23,8 @@
 #ifndef PUBKEY_H
 #define PUBKEY_H
 
-#include "data64.h"
+#include <QPointer>
+#include "datavbc64.h"
 #include "publickeyecdsa.h"
 #include "publickeyrsa3072.h"
 
@@ -41,13 +42,13 @@ public:
               PubKey( const PubKey &pk, QObject *p = NULL );
               PubKey( PublicKeyEcdsa *pkp, QObject *p = NULL )
                 : DataItem( AO_ECDSA_PUB_KEY4, p ? p : pkp->parent() )
-                { publicKeyEcdsa = *pkp; }
+                { publicKeyEcdsa = pkp; }
               PubKey( PublicKeyRsa3072 *pkp, QObject *p = NULL )
                 : DataItem( AO_RSA3072_PUB_KEY, p ? p : pkp->parent() )
-                { publicKeyRsa3072 = *pkp; }
-              PubKey( Data64 *pkp, QObject *p = NULL )
+                { publicKeyRsa3072 = pkp; }
+              PubKey( DataVbc64 *pkp, QObject *p = NULL )
                 : DataItem( AO_KEY_INDEX, p ? p : pkp->parent() )
-                { publicKeyIndex = *pkp; }
+                { publicKeyIndex = pkp; }
         void  operator = ( const PubKey &k )
                 { typeCode         = k.typeCode;
                   publicKeyEcdsa   = k.publicKeyEcdsa;
@@ -61,9 +62,9 @@ public:
         bool  isValid() const;
 
 private:
-            Data64  publicKeyIndex;  // AO_ID_SEQ_NUM index number of a public key on the blockchain
-    PublicKeyEcdsa  publicKeyEcdsa;
-  PublicKeyRsa3072  publicKeyRsa3072;
+QPointer<       DataVbc64> publicKeyIndex;  // AO_ID_SEQ_NUM index number of a public key on the blockchain
+QPointer<  PublicKeyEcdsa> publicKeyEcdsa;
+QPointer<PublicKeyRsa3072> publicKeyRsa3072;
 };
 
 #endif // PUBKEY_H

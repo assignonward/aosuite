@@ -37,7 +37,9 @@ class DataVbc64 : public Data64
 {
     Q_OBJECT
 public:
-    explicit  DataVbc64( qint64 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
+              DataVbc64( QObject *p = NULL )
+                : Data64( 0, AO_UNDEFINED_DATAITEM, p ) {}
+              DataVbc64( qint64 d, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
                 : Data64( d, tc, p ) {}
               DataVbc64( const DataVbc64 &d, QObject *p = NULL )
                 : Data64( d.v, d.typeCode, p ? p : d.parent() ) {}

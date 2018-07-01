@@ -29,7 +29,7 @@
  * @param p - object parent, if any
  */
 PubKey::PubKey( typeCode_t tc, QObject *p )
-  : DataItem( tc, p ), publicKeyIndex( -1 )
+  : DataItem( tc, p )
 { switch ( tc )
     { case AO_ECDSA_PUB_KEY2: // valid type codes for PubKey
       case AO_ECDSA_PUB_KEY3:
@@ -51,9 +51,9 @@ PubKey::PubKey( typeCode_t tc, QObject *p )
  */
 PubKey::PubKey( const PubKey &pk, QObject *p )
   : DataItem( pk.typeCode, p ? p : pk.parent() )
-{ publicKeyEcdsa   = pk.publicKeyEcdsa;
-  publicKeyRsa3072 = pk.publicKeyRsa3072;
-  publicKeyIndex   = pk.publicKeyIndex;
+{ publicKeyEcdsa   = pk.publicKeyEcdsa;   if ( publicKeyEcdsa   ) publicKeyEcdsa  ->setParent( this );
+  publicKeyRsa3072 = pk.publicKeyRsa3072; if ( publicKeyRsa3072 ) publicKeyRsa3072->setParent( this );
+  publicKeyIndex   = pk.publicKeyIndex;   if ( publicKeyIndex   ) publicKeyIndex  ->setParent( this );
 }
 
 /**
@@ -62,7 +62,7 @@ PubKey::PubKey( const PubKey &pk, QObject *p )
  * @param p - object parent, if any
  */
 PubKey::PubKey( const DataItemBA &di, QObject *p )
-  : DataItem( AO_UNDEFINED_DATAITEM, p ), publicKeyIndex( -1 )
+  : DataItem( AO_UNDEFINED_DATAITEM, p )
 { if ( di.size() < 34 )
     { // TODO: log error
       return;
@@ -72,17 +72,17 @@ PubKey::PubKey( const DataItemBA &di, QObject *p )
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
         typeCode = typeCodeOf( di );
-        publicKeyEcdsa = PublicKeyEcdsa( di, this );
+        publicKeyEcdsa = new PublicKeyEcdsa( di, this );
         break;
 
       case AO_RSA3072_PUB_KEY:
         typeCode = AO_RSA3072_PUB_KEY;
-        publicKeyRsa3072 = PublicKeyRsa3072( di, this );
+        publicKeyRsa3072 = new PublicKeyRsa3072( di, this );
         break;
 
       case AO_ID_SEQ_NUM:
         typeCode = AO_ID_SEQ_NUM;
-        publicKeyIndex = Data64( di, this );
+        publicKeyIndex = new DataVbc64( di, this );
 
       default:
         // TODO: log error
@@ -99,10 +99,14 @@ QByteArray  PubKey::get() const
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
-        return publicKeyEcdsa.get();
+        if ( !publicKeyEcdsa )
+          return QByteArray();
+        return publicKeyEcdsa->get();
 
       case AO_RSA3072_PUB_KEY:
-        return publicKeyRsa3072.get();
+        if ( !publicKeyRsa3072 )
+          return QByteArray();
+        return publicKeyRsa3072->get();
 
       case AO_ID_SEQ_NUM:
         return QByteArray(); // TODO: database lookup required
@@ -116,10 +120,13 @@ bool  PubKey::isValid() const
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
-        return publicKeyEcdsa.isValid();
+        if ( !publicKeyEcdsa )
+          return false;
+        return publicKeyEcdsa->isValid();
 
       case AO_RSA3072_PUB_KEY:
-        return publicKeyRsa3072.isValid();
+        if ( !publicKeyRsa3072 )
+        return publicKeyRsa3072->isValid();
 
       case AO_ID_SEQ_NUM:
         return false;  // TODO: database lookup required
@@ -140,13 +147,19 @@ DataItemBA  PubKey::toDataItem( bool cf ) const
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
-        return publicKeyEcdsa.toDataItem(cf);
+        if ( !publicKeyEcdsa )
+          return DataItemBA();
+        return publicKeyEcdsa->toDataItem(cf);
 
       case AO_RSA3072_PUB_KEY:
-        return publicKeyRsa3072.toDataItem(cf);
+        if ( !publicKeyRsa3072 )
+          return DataItemBA();
+        return publicKeyRsa3072->toDataItem(cf);
 
       case AO_ID_SEQ_NUM:
-        return publicKeyIndex.toDataItem(cf);
+        if ( !publicKeyIndex )
+          return DataItemBA();
+        return publicKeyIndex->toDataItem(cf);
     }
   qDebug( "PubKey::toDataItem() unrecognized type code %lld", typeCode );
   // TODO: log error
@@ -159,9 +172,9 @@ DataItemBA  PubKey::toDataItem( bool cf ) const
  */
 void PubKey::operator = ( const DataItemBA &di )
 { PubKey temp( di );
-  publicKeyEcdsa   = temp.publicKeyEcdsa;
-  publicKeyRsa3072 = temp.publicKeyRsa3072;
-  publicKeyIndex   = temp.publicKeyIndex;
+  publicKeyEcdsa   = temp.publicKeyEcdsa;   if ( publicKeyEcdsa   ) publicKeyEcdsa  ->setParent( this );
+  publicKeyRsa3072 = temp.publicKeyRsa3072; if ( publicKeyRsa3072 ) publicKeyRsa3072->setParent( this );
+  publicKeyIndex   = temp.publicKeyIndex;   if ( publicKeyIndex   ) publicKeyIndex  ->setParent( this );
   typeCode         = temp.typeCode;
 }
 
@@ -174,16 +187,16 @@ QByteArray  PubKey::getId( bool cf ) const
 { if (( typeCode == AO_ECDSA_PUB_KEY2 ) ||
       ( typeCode == AO_ECDSA_PUB_KEY3 ) ||
       ( typeCode == AO_ECDSA_PUB_KEY4 ))
-    return publicKeyEcdsa.toDataItem(cf);
+    return publicKeyEcdsa->toDataItem(cf);
 
   if ( typeCode == AO_RSA3072_PUB_KEY )
-    { Hash256 hid( publicKeyRsa3072.get() );
+    { Hash256 hid( publicKeyRsa3072->get() );
       DataFixedLength did( AO_PUB_RSA3072_ID, hid.get() );
       return did.toDataItem(cf);
     }
 
   if ( typeCode == AO_ID_SEQ_NUM )
-    return publicKeyIndex.toDataItem(cf);
+    return publicKeyIndex->toDataItem(cf);
 
   // TODO: log error
   return QByteArray();
@@ -198,28 +211,41 @@ void  PubKey::set( const QByteArray k )
   switch ( k.size() )
     { case 33:
       case 65:
-        publicKeyEcdsa.set( k );
-        publicKeyRsa3072.clear();
-        publicKeyIndex = -1;
+        if ( !publicKeyEcdsa )
+          publicKeyEcdsa = new PublicKeyEcdsa( this );
+        publicKeyEcdsa->set( k );
+        if ( publicKeyRsa3072 )
+          publicKeyRsa3072->clear();
+        if ( publicKeyIndex )
+          *publicKeyIndex = -1;
         break;
 
       case 384:
-        publicKeyRsa3072.set( k );
-        publicKeyEcdsa.clear();
-        publicKeyIndex = -1;
+        if ( !publicKeyRsa3072 )
+          publicKeyRsa3072 = new PublicKeyRsa3072( this );
+        publicKeyRsa3072->set( k );
+        if ( publicKeyEcdsa )
+          publicKeyEcdsa->clear();
+        if ( publicKeyIndex )
+          *publicKeyIndex = -1;
         break;
 
       case 8:
-        publicKeyRsa3072.clear();
-        publicKeyEcdsa.clear();
+        if ( publicKeyRsa3072 )
+          publicKeyRsa3072->clear();
+        if ( publicKeyEcdsa )
+          publicKeyEcdsa->clear();
         diba.append( k );
-        publicKeyIndex = diba;
+        if ( !publicKeyIndex )
+          publicKeyIndex = new DataVbc64( this );
+        *publicKeyIndex = diba;
         break;
 
       default:
-        publicKeyRsa3072.clear();
-        publicKeyEcdsa.clear();
-        publicKeyIndex = -1;
+        if ( publicKeyRsa3072 ) publicKeyRsa3072->clear();
+        if ( publicKeyEcdsa   ) publicKeyEcdsa->clear();
+        if ( publicKeyIndex   ) *publicKeyIndex = -1;
+        qDebug( "PubKey::set( const QByteArray &k ) invalid type code %lld", typeCode );
         // TODO: log error
         break;
     }

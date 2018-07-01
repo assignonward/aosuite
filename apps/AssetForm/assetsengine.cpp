@@ -39,11 +39,9 @@ void  AssetsEngine::saveConfig()
  *   unused, one will be made if necessary, NULL if making fails.
  */
 GenericCollection *AssetsEngine::getUnusedKeyPair( QByteArray pkp )
-{ QMapIterator DataItemMap_t it( mmap() );
-  while ( it.hasNext() )
-    { it.next();
-      DataItem *di = it.value();
-      if ( di->getTypeCode() == AO_KEY_ASSET )
+{ QList<DataItem *>dipl = mmap().values();
+  foreach( DataItem *di, dipl )
+    { if ( di->getTypeCode() == AO_KEY_ASSET )
         { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
           if ( !ka ) { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); } else
             { if ( isKeyPairUnused( ka ) )

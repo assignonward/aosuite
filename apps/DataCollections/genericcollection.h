@@ -39,18 +39,30 @@ class GenericCollection : public DataItem
 public:
                 GenericCollection( QObject *p = NULL )
                   : DataItem( AO_UNDEFINED_DATAITEM, p ) {}
-                GenericCollection( const DataItemBA &di, QObject *p = NULL );
                 GenericCollection( typeCode_t tc, QObject *p = NULL )
                   : DataItem( tc, p ) {} // Empty collection, of a specified type
                 GenericCollection( const GenericCollection &r, QObject *p )
                   : DataItem( r.typeCode, p ? p : r.parent() ),
                     itemMM( r.itemMM ) {} // Copy constructor, with optional parent change
+                GenericCollection( const DataItemBA &di, QObject *p = NULL );
           void  deleteItemsLater();
    DataItemMap  mmap() { return itemMM; }
+           int  size() { return itemMM.size(); }
           bool  contains( const typeCode_t &tc ) { return itemMM.contains( tc ); }
       DataItem *value(    const typeCode_t &tc ) { return itemMM.   value( tc ); }
-          void  insert( DataItem *dip )
-                  { if ( dip ) { itemMM.insert( dip->getTypeCode(), dip ); dip->setParent(this); } }
+QList<DataItem *>values(  const typeCode_t &tc ) { return itemMM.  values( tc ); }
+QList<DataItem *>values()                        { return itemMM.  values();     }
+          void  insert( DataItem *di )
+                  { if ( di )
+                      { itemMM.insert( di->getTypeCode(), di );
+                        di->setParent(this);
+                  }   }
+          void  insert( QList<DataItem *>dipl )
+                  { foreach( DataItem *di, dipl )
+                      { if ( di )
+                          { itemMM.insert( di->getTypeCode(), di );
+                            di->setParent(this);
+                  }   }   }
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;
     DataItemBA  toHashData( bool cf = false ) const;
