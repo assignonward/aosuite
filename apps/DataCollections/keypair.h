@@ -43,7 +43,7 @@ public:
                 KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p = NULL );
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;
-          bool  isValid() { return pubKey->isValid() && priKey->isValid(); }
+          bool  isValid() { return pubKey->isValid() && priKey->isValid(); } // TODO: ensure they match
         PubKey *getPubKey() { return pubKey; }
         PriKey *getPriKey() { return priKey; }
 
