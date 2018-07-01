@@ -49,7 +49,8 @@ CodeForm::CodeForm( QWidget *cw, MainWinCommon *mw ) :
       { ui->bytecodeDefinitions->appendPlainText( bcd.toDefine() );
         if (( bcd.sz >= 0 ) || ( bcd.sz == -2 )) ui->typeSizeTable->appendPlainText( bcd.toSizeCase() );
         ui->copyDataItem->appendPlainText( bcd.toCaseDataItem() );
-        ui->copyDataItemFromBytes->appendPlainText( bcd.toCase() );
+        if ( bcd.code != AO_UNDEFINED_DATAITEM )
+          ui->copyDataItemFromBytes->appendPlainText( bcd.toCase() );
 
         // Ensure that the separable bit is properly implemented
         if ( bcd.sepr )
@@ -109,12 +110,20 @@ void CodeForm::on_massage_clicked()
 }
 
 void  CodeForm::on_writeFiles_clicked()
-{ QString fileName = ui->projectRoot->text() + "aosuite/apps/DataItems/dataitem-auto.h";
-  QFile file( fileName );
+{ QFile file( ui->projectRoot->text() + "aosuite/apps/DataItems/dataitem-auto.h" );
   file.open( QIODevice::WriteOnly );
   QTextStream ts( &file );
   ts << ui->bytecodeDefinitions->toPlainText();
 
+  file.close();
+  file.setFileName( ui->projectRoot->text() + "aosuite/apps/DataItems/dataitem-auto.cpp" );
+  file.open( QIODevice::WriteOnly );
+  ts << QString( ui->cppShell->toPlainText() )
+           .arg( ui->copyDataItemFromBytes->toPlainText() )
+           .arg( ui->copyDataItem->toPlainText() )
+           .arg( ui->typeSizeTable->toPlainText() );
+
+  ui->writeFiles->setText( "Files Written" );
 }
 
 

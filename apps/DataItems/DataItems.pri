@@ -30,6 +30,7 @@ SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/aotime.cpp            \
                $${PWD}/databytearray.cpp     \
                $${PWD}/dataitem.cpp          \
+               $${PWD}/dataitem-auto.cpp     \
                $${PWD}/data64.cpp            \
                $${PWD}/data128.cpp           \
                $${PWD}/datavbc64.cpp         \
