@@ -71,7 +71,7 @@ void  AssetForm::updateLabels()
   int sharesAssigned     = 0;
   int assignmentPending  = 0;
   int sharesEscrowed     = 0;
-  QMapIterator DataItemMap_t it( ae->itemMM() );
+  QMapIterator DataItemMap_t it( ae->mmap() );
   // qDebug( "reading assets.mmap() size %d", assets.mmap().size() );
 
   while ( it.hasNext() )
@@ -129,8 +129,8 @@ void  AssetForm::on_makeNewKey_clicked()
 }
 
 void  AssetForm::on_importToGpg_clicked()
-{ QMapIterator DataItemMap_t it( ae->itemMM() );
-  qDebug( "reading assets.mmap() size %d", ae->itemMM().size() );
+{ QMapIterator DataItemMap_t it( ae->mmap() );
+  qDebug( "reading assets.mmap() size %d", ae->mmap().size() );
   while ( it.hasNext() )
     { it.next();
       DataItem *di = it.value();

@@ -18,7 +18,7 @@ public:
              void  restoreConfig();
              void  saveConfig();
              void  insert( DataItem *it ) { assets.insert( it ); }
-      DataItemMap  itemMM() { return assets.itemMM; }
+      DataItemMap  mmap() { return assets.mmap(); }
 GenericCollection *getUnusedKeyPair( QByteArray pkp );
 GenericCollection *getNewKeyPair( typeCode_t keyType = AO_ECDSA_PRI_KEY );
              bool  isKeyPairUnused( GenericCollection *ka );

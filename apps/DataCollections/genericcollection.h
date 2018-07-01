@@ -37,7 +37,9 @@ class GenericCollection : public DataItem
 {
     Q_OBJECT
 public:
-                GenericCollection( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
+                GenericCollection( QObject *p = NULL )
+                  : DataItem( AO_UNDEFINED_DATAITEM, p ) {}
+                GenericCollection( const DataItemBA &di, QObject *p = NULL );
                 GenericCollection( typeCode_t tc, QObject *p = NULL )
                   : DataItem( tc, p ) {} // Empty collection, of a specified type
                 GenericCollection( const GenericCollection &r, QObject *p )
@@ -54,6 +56,7 @@ public:
     DataItemBA  toHashData( bool cf = false ) const;
           void  debugShow( qint32 level = 0 ) const;
 
+private:
    DataItemMap  itemMM;  // Collection of pointers to data items of various types
 };
 
