@@ -23,7 +23,7 @@
 #ifndef KEYPAIR_H
 #define KEYPAIR_H
 
-#include "datavarlength.h"
+#include "genericcollection.h"
 #include "prikey.h"
 #include "pubkey.h"
 #include <QPointer>
@@ -32,17 +32,16 @@
 /**
  * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
  */
-class KeyPair : public DataVarLength
+class KeyPair : public GenericCollection
 {
     Q_OBJECT
 public:
                 KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
                 KeyPair( const KeyPair &k, QObject *p = NULL )
-                  : DataVarLength( AO_KEYPAIR, p ? p : k.parent() ),
+                  : GenericCollection( AO_KEYPAIR, p ? p : k.parent() ),
                     pubKey( k.pubKey ), priKey( k.priKey ) {}
                 KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p = NULL );
           void  operator = ( const DataItemBA &di );
-    DataItemBA  toDataItem( bool cf = false ) const;
           bool  isValid() { return pubKey->isValid() && priKey->isValid(); } // TODO: ensure they match
         PubKey *getPubKey() { return pubKey; }
         PriKey *getPriKey() { return priKey; }

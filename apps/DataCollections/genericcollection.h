@@ -48,7 +48,7 @@ public:
           bool  contains( const typeCode_t &tc ) { return itemMM.contains( tc ); }
       DataItem *value(    const typeCode_t &tc ) { return itemMM.   value( tc ); }
           void  insert( DataItem *dip )
-                  { if ( dip ) { itemMM.insert( dip->getTypeCode(), dip ); } }
+                  { if ( dip ) { itemMM.insert( dip->getTypeCode(), dip ); dip->setParent(this); } }
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;
     DataItemBA  toHashData( bool cf = false ) const;

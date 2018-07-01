@@ -28,7 +28,7 @@
  * @param p - optional parent object
  */
 KeyPair::KeyPair( DataItemBA di, QObject *p )
-  : DataVarLength( AO_KEYPAIR, p )
+  : GenericCollection( AO_KEYPAIR, p )
 { // See if there's anything interesting in the data item
 #ifndef USE_QPOINTERS
   priKey = NULL;
@@ -58,6 +58,7 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
                         if ( !pubKey )
                           pubKey = new PubKey( this );
                         *pubKey = items;
+                        insert( pubKey );
                         break;
 
                       case AO_ECDSA_PRI_KEY:
@@ -65,6 +66,7 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
                         if ( !priKey )
                           priKey = new PriKey( this );
                         *priKey = items;
+                        insert( priKey );
                         break;
 
                       default:
@@ -85,9 +87,9 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
  * @param p - parent
  */
 KeyPair::KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p )
-  : DataVarLength( AO_KEYPAIR, p ? p : (priKp->parent() ? priKp->parent() : pubKp->parent()) )
-{ pubKey = pubKp; pubKey->setParent( this );
-  priKey = priKp; priKey->setParent( this );
+  : GenericCollection( AO_KEYPAIR, p ? p : (priKp->parent() ? priKp->parent() : pubKp->parent()) )
+{ pubKey = pubKp; insert( pubKey );
+  priKey = priKp; insert( priKey );
 }
 
 /**
@@ -96,37 +98,13 @@ KeyPair::KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p )
  */
 void KeyPair::operator = ( const DataItemBA &di )
 { KeyPair temp( di );
-  pubKey   = temp.pubKey; temp.pubKey = NULL;
-  priKey   = temp.priKey; temp.priKey = NULL;
+  pubKey   = temp.pubKey;
+  priKey   = temp.priKey;
+  itemMM   = temp.itemMM;
   typeCode = temp.typeCode;
+#ifdef USE_QPOINTERS
+  temp.pubKey = NULL; // prevent the keys from being deleted when temp goes out of scope
+  temp.priKey = NULL;
+#endif
   return;
-}
-
-/**
- * @brief KeyPair::toDataItem
- * @param cf - compact (or chain) form?  Pass along to children.
- * @return data item with the BlockRef contents
- */
-DataItemBA  KeyPair::toDataItem( bool cf ) const
-{ // qDebug( "KeyPair::toDataItem() %lld", typeCode );
-  QByteArrayList dil;
-  if ( pubKey )
-    if ( pubKey->isValid() )
-      { dil.append( pubKey->toDataItem(cf) );
-        // pubKey->debugShow();
-      }
-  if ( priKey )
-    if ( priKey->isValid() )
-      { dil.append( priKey->toDataItem(cf) );
-        // priKey->debugShow();
-      }
-  std::sort( dil.begin(), dil.end() );
-  DataItemBA diba = dil.join();
-  DataItemBA di; (void)cf;
-  di.append( codeToBytes( typeCode  ) );
-  di.append( codeToBytes( diba.size() ) );
-  di.append( diba );
-  // debugShow();
-  // qDebug( "KeyPair:%s", qPrintable( QString::fromUtf8(di.toHex())));
-  return di;
 }

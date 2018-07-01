@@ -23,7 +23,6 @@
 #include "genericcollection.h"
 #include "stdio.h"
 
-
 /**
  * @brief GenericCollection::deleteItemsLater - clean out the DataItemMap
  */
@@ -48,6 +47,7 @@ GenericCollection::GenericCollection( const DataItemBA &di, QObject *p )
           ( typeCodeOf( di ) != AO_ASSETS        ) &&
           ( typeCodeOf( di ) != AO_ASSIGN_REF    ) &&
           ( typeCodeOf( di ) != AO_KEY_ASSET     ) &&
+          ( typeCodeOf( di ) != AO_KEYPAIR       ) &&
           ( typeCodeOf( di ) != CB_CHAIN_BLOCK   )) // TODO: add more as they are defined
         { typeCode = AO_UNDEFINED_DATAITEM;
           qDebug( "%lld is not a GenericCollection", typeCodeOf( di ) );
