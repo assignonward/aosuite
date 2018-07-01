@@ -21,9 +21,9 @@
 #define AO_SHARE_STATE                 47 // (5e+var) DataVbc64: 8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
 #define AO_LISTSIZE                    48 // (60+var) DataVbc64: 32 bit unsigned integer stored as variable byte code, declares the size of a list, as a check that all intended data is present.
 #define AO_INDEX                       49 // (62+var) DataVbc64: 16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.
-#define CB_FIRST_ID_SEQ_NUM            50 // (64+8) Data64: First sequential ID number (of public keys) recorded in this block.
+#define CB_FIRST_ID_SEQ_NUM            50 // (64+var) DataVbc64: First sequential ID number (of public keys) recorded in this block.
 #define CB_N_ID_SEQ_NUM                51 // (66+var) DataVbc64: Number of sequential ID numbers (of public keys) recorded in this block, redundant check.
-#define AO_ID_SEQ_NUM                  52 // (68+8) Data64: 64 bit integer that identifies a particular public key in the chain.
+#define AO_ID_SEQ_NUM                  52 // (68+var) DataVbc64: 64 bit integer that identifies a particular public key in the chain.
 #define AO_RSA3072_PUB_KEY             61 // (7a+384) PublicKeyRsa3072: an RSA3072 public key
 #define AO_RSA3072_SIG                 62 // (7c+384) SigRsa3072: an RSA3072 signature
 #define AO_ECDSA_SIG                   63 // (7e+var) SigEcdsa: An ECDSA signature
@@ -38,7 +38,7 @@
 #define AO_BLOCK_REF                   29 // (3a+var) BlockRef: Describes a whole block in the chain
 #define AO_PAGE_REF                    28 // (38+var) PageRef: UTF-8 free text, no specific function, but recorded in the blockchain
 #define AO_GENESIS_REF                 27 // (36+var) GenesisRef: Uniquely describes a genesis block, includes list of properties used to calculate new blocks
-#define AO_KEY_INDEX                   26 // (34+8) Data64: Key/shares index in the blockchain, simple index number of a public key/shares receipt object in the blockchain
+#define AO_KEY_INDEX                   26 // (34+var) DataVbc64: Key/shares index in the blockchain, simple index number of a public key/shares receipt object in the blockchain
 #define AO_SHARES_REF                  25 // (32+var) SharesRef: Reference to shares received
 #define AO_ASSETS                    3856 // <a03c+var> Assets:separable A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
 #define AO_ECDSA_PRI_KEY             3893 // <ea3c+var> PrivateKeyEcdsa:separable An ECDSA private key

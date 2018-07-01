@@ -164,8 +164,8 @@
         "code": 50,
         "desc": "First sequential ID number (of public keys) recorded in this block.",
         "pdef": "CB_FIRST_ID_SEQ_NUM",
-        "size": 8,
-        "type": "Data64"
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
         "code": 51,
@@ -178,8 +178,8 @@
         "code": 52,
         "desc": "64 bit integer that identifies a particular public key in the chain.",
         "pdef": "AO_ID_SEQ_NUM",
-        "size": 8,
-        "type": "Data64"
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
         "code": 61,
@@ -288,8 +288,8 @@
         "code": 26,
         "desc": "Key/shares index in the blockchain, simple index number of a public key/shares receipt object in the blockchain",
         "pdef": "AO_KEY_INDEX",
-        "size": 8,
-        "type": "Data64"
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
         "code": 25,

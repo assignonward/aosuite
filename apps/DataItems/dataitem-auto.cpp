@@ -3,7 +3,6 @@
 #include "assets.h"
 #include "databytearray.h"
 #include "datavbc64.h"
-#include "data64.h"
 #include "hash224salt32.h"
 #include "hash256.h"
 #include "hash512.h"
@@ -59,9 +58,9 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
       case AO_SHARE_STATE:             return new DataVbc64( di, p );
       case AO_LISTSIZE:                return new DataVbc64( di, p );
       case AO_INDEX:                   return new DataVbc64( di, p );
-      case CB_FIRST_ID_SEQ_NUM:        return new Data64( di, p );
+      case CB_FIRST_ID_SEQ_NUM:        return new DataVbc64( di, p );
       case CB_N_ID_SEQ_NUM:            return new DataVbc64( di, p );
-      case AO_ID_SEQ_NUM:              return new Data64( di, p );
+      case AO_ID_SEQ_NUM:              return new DataVbc64( di, p );
       case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( di, p );
       case AO_RSA3072_SIG:             return new SigRsa3072( di, p );
       case AO_ECDSA_SIG:               return new SigEcdsa( di, p );
@@ -76,7 +75,7 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
       case AO_BLOCK_REF:               return new BlockRef( di, p );
       case AO_PAGE_REF:                return new PageRef( di, p );
       case AO_GENESIS_REF:             return new GenesisRef( di, p );
-      case AO_KEY_INDEX:               return new Data64( di, p );
+      case AO_KEY_INDEX:               return new DataVbc64( di, p );
       case AO_SHARES_REF:              return new SharesRef( di, p );
       case AO_ASSETS:                  return new Assets( di, p );
       case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( di, p );
@@ -131,9 +130,9 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
       case AO_SHARE_STATE:             return new DataVbc64( *((DataVbc64 *)ditm), p );
       case AO_LISTSIZE:                return new DataVbc64( *((DataVbc64 *)ditm), p );
       case AO_INDEX:                   return new DataVbc64( *((DataVbc64 *)ditm), p );
-      case CB_FIRST_ID_SEQ_NUM:        return new Data64( *((Data64 *)ditm), p );
+      case CB_FIRST_ID_SEQ_NUM:        return new DataVbc64( *((DataVbc64 *)ditm), p );
       case CB_N_ID_SEQ_NUM:            return new DataVbc64( *((DataVbc64 *)ditm), p );
-      case AO_ID_SEQ_NUM:              return new Data64( *((Data64 *)ditm), p );
+      case AO_ID_SEQ_NUM:              return new DataVbc64( *((DataVbc64 *)ditm), p );
       case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( *((PublicKeyRsa3072 *)ditm), p );
       case AO_RSA3072_SIG:             return new SigRsa3072( *((SigRsa3072 *)ditm), p );
       case AO_ECDSA_SIG:               return new SigEcdsa( *((SigEcdsa *)ditm), p );
@@ -148,7 +147,7 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
       case AO_BLOCK_REF:               return new BlockRef( *((BlockRef *)ditm), p );
       case AO_PAGE_REF:                return new PageRef( *((PageRef *)ditm), p );
       case AO_GENESIS_REF:             return new GenesisRef( *((GenesisRef *)ditm), p );
-      case AO_KEY_INDEX:               return new Data64( *((Data64 *)ditm), p );
+      case AO_KEY_INDEX:               return new DataVbc64( *((DataVbc64 *)ditm), p );
       case AO_SHARES_REF:              return new SharesRef( *((SharesRef *)ditm), p );
       case AO_ASSETS:                  return new Assets( *((Assets *)ditm), p );
       case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( *((PrivateKeyEcdsa *)ditm), p );
@@ -209,12 +208,12 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
       case AO_SHARE_STATE:             return -2;
       case AO_LISTSIZE:                return -2;
       case AO_INDEX:                   return -2;
-      case CB_FIRST_ID_SEQ_NUM:        return 8;
+      case CB_FIRST_ID_SEQ_NUM:        return -2;
       case CB_N_ID_SEQ_NUM:            return -2;
-      case AO_ID_SEQ_NUM:              return 8;
+      case AO_ID_SEQ_NUM:              return -2;
       case AO_RSA3072_PUB_KEY:         return 384;
       case AO_RSA3072_SIG:             return 384;
-      case AO_KEY_INDEX:               return 8;
+      case AO_KEY_INDEX:               return -2;
       case GB_PROTOCOL:                return -2;
       case GB_PROTOCOL_REV:            return -2;
       case GB_STARTING_SHARES:         return 16;

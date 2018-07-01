@@ -526,7 +526,7 @@ p, li { white-space: pre-wrap; }
           <item row="1" column="1">
            <widget class="QLabel" name="label_26">
             <property name="text">
-             <string>F2P Small world network</string>
+             <string>F2F Small world network</string>
             </property>
            </widget>
           </item>
