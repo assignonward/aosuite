@@ -35,15 +35,21 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
 { // qDebug( "making data item type 0x%x size %d", typeCodeOf(di), di.size() );
   switch ( typeCodeOf( di ) )
   { 
-      case AO_INDEXV:                  return new DataVbc64( di, p );
       case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( di, p );
       case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( di, p );
       case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( di, p );
-      case AO_HASH512:                 return new Hash512( di, p );
       case AO_HASH256:                 return new Hash256( di, p );
+      case AO_HASH512:                 return new Hash512( di, p );
+      case AO_HASH224SALT32:           return new Hash224Salt32( di, p );
       case AO_SALT256:                 return new Salt256( di, p );
       case AO_PUB_RSA3072_ID:          return new Hash256( di, p );
-      case AO_HASH224SALT32:           return new Hash224Salt32( di, p );
+      case AO_LISTSIZE:                return new DataVbc64( di, p );
+      case AO_INDEX:                   return new DataVbc64( di, p );
+      case CB_FIRST_ID_SEQ_NUM:        return new DataVbc64( di, p );
+      case CB_N_ID_SEQ_NUM:            return new DataVbc64( di, p );
+      case PG_ID_SEQ_DIFF:             return new DataVbc64( di, p );
+      case AO_ID_SEQ_NUM:              return new DataVbc64( di, p );
+      case AO_SHARE_STATE:             return new DataVbc64( di, p );
       case AO_TIME_OF_SIG:             return new AOTime( di, p );
       case AO_PROPOSAL_TIME:           return new AOTime( di, p );
       case AO_RECORDING_DEADLINE:      return new AOTime( di, p );
@@ -55,12 +61,6 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
       case AO_RECORDING_BID:           return new Shares( di, p );
       case AO_SHARES_OUT:              return new Shares( di, p );
       case AO_N_COINS:                 return new AOCoins( di, p );
-      case AO_SHARE_STATE:             return new DataVbc64( di, p );
-      case AO_LISTSIZE:                return new DataVbc64( di, p );
-      case AO_INDEX:                   return new DataVbc64( di, p );
-      case CB_FIRST_ID_SEQ_NUM:        return new DataVbc64( di, p );
-      case CB_N_ID_SEQ_NUM:            return new DataVbc64( di, p );
-      case AO_ID_SEQ_NUM:              return new DataVbc64( di, p );
       case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( di, p );
       case AO_RSA3072_SIG:             return new SigRsa3072( di, p );
       case AO_ECDSA_SIG:               return new SigEcdsa( di, p );
@@ -75,7 +75,6 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
       case AO_BLOCK_REF:               return new BlockRef( di, p );
       case AO_PAGE_REF:                return new PageRef( di, p );
       case AO_GENESIS_REF:             return new GenesisRef( di, p );
-      case AO_KEY_INDEX:               return new DataVbc64( di, p );
       case AO_SHARES_REF:              return new SharesRef( di, p );
       case AO_ASSETS:                  return new Assets( di, p );
       case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( di, p );
@@ -107,15 +106,21 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
 DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
 { switch ( ditm->typeCode )
   { 
-      case AO_INDEXV:                  return new DataVbc64( *((DataVbc64 *)ditm), p );
       case AO_ECDSA_PUB_KEY2:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
       case AO_ECDSA_PUB_KEY3:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
       case AO_ECDSA_PUB_KEY4:          return new PublicKeyEcdsa( *((PublicKeyEcdsa *)ditm), p );
-      case AO_HASH512:                 return new Hash512( *((Hash512 *)ditm), p );
       case AO_HASH256:                 return new Hash256( *((Hash256 *)ditm), p );
+      case AO_HASH512:                 return new Hash512( *((Hash512 *)ditm), p );
+      case AO_HASH224SALT32:           return new Hash224Salt32( *((Hash224Salt32 *)ditm), p );
       case AO_SALT256:                 return new Salt256( *((Salt256 *)ditm), p );
       case AO_PUB_RSA3072_ID:          return new Hash256( *((Hash256 *)ditm), p );
-      case AO_HASH224SALT32:           return new Hash224Salt32( *((Hash224Salt32 *)ditm), p );
+      case AO_LISTSIZE:                return new DataVbc64( *((DataVbc64 *)ditm), p );
+      case AO_INDEX:                   return new DataVbc64( *((DataVbc64 *)ditm), p );
+      case CB_FIRST_ID_SEQ_NUM:        return new DataVbc64( *((DataVbc64 *)ditm), p );
+      case CB_N_ID_SEQ_NUM:            return new DataVbc64( *((DataVbc64 *)ditm), p );
+      case PG_ID_SEQ_DIFF:             return new DataVbc64( *((DataVbc64 *)ditm), p );
+      case AO_ID_SEQ_NUM:              return new DataVbc64( *((DataVbc64 *)ditm), p );
+      case AO_SHARE_STATE:             return new DataVbc64( *((DataVbc64 *)ditm), p );
       case AO_TIME_OF_SIG:             return new AOTime( *((AOTime *)ditm), p );
       case AO_PROPOSAL_TIME:           return new AOTime( *((AOTime *)ditm), p );
       case AO_RECORDING_DEADLINE:      return new AOTime( *((AOTime *)ditm), p );
@@ -127,12 +132,6 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
       case AO_RECORDING_BID:           return new Shares( *((Shares *)ditm), p );
       case AO_SHARES_OUT:              return new Shares( *((Shares *)ditm), p );
       case AO_N_COINS:                 return new AOCoins( *((AOCoins *)ditm), p );
-      case AO_SHARE_STATE:             return new DataVbc64( *((DataVbc64 *)ditm), p );
-      case AO_LISTSIZE:                return new DataVbc64( *((DataVbc64 *)ditm), p );
-      case AO_INDEX:                   return new DataVbc64( *((DataVbc64 *)ditm), p );
-      case CB_FIRST_ID_SEQ_NUM:        return new DataVbc64( *((DataVbc64 *)ditm), p );
-      case CB_N_ID_SEQ_NUM:            return new DataVbc64( *((DataVbc64 *)ditm), p );
-      case AO_ID_SEQ_NUM:              return new DataVbc64( *((DataVbc64 *)ditm), p );
       case AO_RSA3072_PUB_KEY:         return new PublicKeyRsa3072( *((PublicKeyRsa3072 *)ditm), p );
       case AO_RSA3072_SIG:             return new SigRsa3072( *((SigRsa3072 *)ditm), p );
       case AO_ECDSA_SIG:               return new SigEcdsa( *((SigEcdsa *)ditm), p );
@@ -147,7 +146,6 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
       case AO_BLOCK_REF:               return new BlockRef( *((BlockRef *)ditm), p );
       case AO_PAGE_REF:                return new PageRef( *((PageRef *)ditm), p );
       case AO_GENESIS_REF:             return new GenesisRef( *((GenesisRef *)ditm), p );
-      case AO_KEY_INDEX:               return new DataVbc64( *((DataVbc64 *)ditm), p );
       case AO_SHARES_REF:              return new SharesRef( *((SharesRef *)ditm), p );
       case AO_ASSETS:                  return new Assets( *((Assets *)ditm), p );
       case AO_ECDSA_PRI_KEY:           return new PrivateKeyEcdsa( *((PrivateKeyEcdsa *)ditm), p );
@@ -185,15 +183,21 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
 qint32 DataItem::typeSizeTable( typeCode_t tc )
 { switch ( tc )
   {
-      case AO_INDEXV:                  return -2;
       case AO_ECDSA_PUB_KEY2:          return 32;
       case AO_ECDSA_PUB_KEY3:          return 32;
       case AO_ECDSA_PUB_KEY4:          return 64;
-      case AO_HASH512:                 return 64;
       case AO_HASH256:                 return 32;
+      case AO_HASH512:                 return 64;
+      case AO_HASH224SALT32:           return 32;
       case AO_SALT256:                 return 32;
       case AO_PUB_RSA3072_ID:          return 32;
-      case AO_HASH224SALT32:           return 32;
+      case AO_LISTSIZE:                return -2;
+      case AO_INDEX:                   return -2;
+      case CB_FIRST_ID_SEQ_NUM:        return -2;
+      case CB_N_ID_SEQ_NUM:            return -2;
+      case PG_ID_SEQ_DIFF:             return -2;
+      case AO_ID_SEQ_NUM:              return -2;
+      case AO_SHARE_STATE:             return -2;
       case AO_TIME_OF_SIG:             return 16;
       case AO_PROPOSAL_TIME:           return 16;
       case AO_RECORDING_DEADLINE:      return 16;
@@ -205,15 +209,8 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
       case AO_RECORDING_BID:           return 16;
       case AO_SHARES_OUT:              return 16;
       case AO_N_COINS:                 return 16;
-      case AO_SHARE_STATE:             return -2;
-      case AO_LISTSIZE:                return -2;
-      case AO_INDEX:                   return -2;
-      case CB_FIRST_ID_SEQ_NUM:        return -2;
-      case CB_N_ID_SEQ_NUM:            return -2;
-      case AO_ID_SEQ_NUM:              return -2;
       case AO_RSA3072_PUB_KEY:         return 384;
       case AO_RSA3072_SIG:             return 384;
-      case AO_KEY_INDEX:               return -2;
       case GB_PROTOCOL:                return -2;
       case GB_PROTOCOL_REV:            return -2;
       case GB_STARTING_SHARES:         return 16;

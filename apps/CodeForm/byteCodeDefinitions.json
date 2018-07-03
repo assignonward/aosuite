@@ -1,12 +1,5 @@
 [
     {
-        "code": 3,
-        "desc": "Variable length unsigned integer using variable byte code up to 5 bytes in length, stored in an int32.  Meaning varies based on context, but generally used as a list index",
-        "pdef": "AO_INDEXV",
-        "size": -2,
-        "type": "DataVbc64"
-    },
-    {
         "code": 1,
         "desc": "ECDSA Public Key, type 2 compressed",
         "pdef": "AO_ECDSA_PUB_KEY2",
@@ -29,6 +22,13 @@
     },
     {
         "code": 5,
+        "desc": "SHA2-256 hash of some data",
+        "pdef": "AO_HASH256",
+        "size": 32,
+        "type": "Hash256"
+    },
+    {
+        "code": -5,
         "desc": "SHA3-512 hash of some data",
         "pdef": "AO_HASH512",
         "size": 64,
@@ -36,10 +36,10 @@
     },
     {
         "code": 6,
-        "desc": "SHA2-256 hash of some data",
-        "pdef": "AO_HASH256",
+        "desc": "Hash224 of some data including a 32 bit salt",
+        "pdef": "AO_HASH224SALT32",
         "size": 32,
-        "type": "Hash256"
+        "type": "Hash224Salt32"
     },
     {
         "code": 7,
@@ -49,42 +49,84 @@
         "type": "Salt256"
     },
     {
-        "code": 8,
+        "code": 3,
         "desc": "Hash256 of a PublicKeyRsa3072",
         "pdef": "AO_PUB_RSA3072_ID",
         "size": 32,
         "type": "Hash256"
     },
     {
-        "code": 12,
-        "desc": "Hash224 of some data including a 32 bit salt",
-        "pdef": "AO_HASH224SALT32",
-        "size": 32,
-        "type": "Hash224Salt32"
+        "code": 8,
+        "desc": "declares the number of items in a list, as a check that all intended data is present.",
+        "pdef": "AO_LISTSIZE",
+        "size": -2,
+        "type": "DataVbc64"
     },
     {
-        "code": 32,
+        "code": -8,
+        "desc": "signed integer declares position of an element in a list, used to check/correlate two lists with each other.",
+        "pdef": "AO_INDEX",
+        "size": -2,
+        "type": "DataVbc64"
+    },
+    {
+        "code": -40,
+        "desc": "First sequential ID number (of public keys) recorded in this block.",
+        "pdef": "CB_FIRST_ID_SEQ_NUM",
+        "size": -2,
+        "type": "DataVbc64"
+    },
+    {
+        "code": 41,
+        "desc": "Number of sequential ID numbers (of public keys) recorded in this block, redundant check.",
+        "pdef": "CB_N_ID_SEQ_NUM",
+        "size": -2,
+        "type": "DataVbc64"
+    },
+{
+    "code": -41,
+    "desc": "Add this number to the CB_FIRST_ID_SEQ_NUM in the block to get the AO_ID_SEQ_NUM value of the first ID on the page.",
+    "pdef": "PG_ID_SEQ_DIFF",
+    "size": -2,
+    "type": "DataVbc64"
+},
+    {
+        "code": -42,
+        "desc": "integer that identifies a particular public key in the chain, unique per blockchain.",
+        "pdef": "AO_ID_SEQ_NUM",
+        "size": -2,
+        "type": "DataVbc64"
+    },
+    {
+        "code": 42,
+        "desc": "integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)",
+        "pdef": "AO_SHARE_STATE",
+        "size": -2,
+        "type": "DataVbc64"
+    },
+    {
+        "code": -34,
         "desc": "UTC time (secs since epoch << 64) when a signature was made",
         "pdef": "AO_TIME_OF_SIG",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 7692,
+        "code": 32,
         "desc": "UTC time (secs since epoch << 64) when a transaction was proposed (fixes coin-shares representations)",
         "pdef": "AO_PROPOSAL_TIME",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 7564,
+        "code": -39,
         "desc": "UTC time (secs since epoch << 64) when a record is contracted to be recorded",
         "pdef": "AO_RECORDING_DEADLINE",
         "size": 16,
         "type": "AOTime"
     },
     {
-        "code": 7500,
+        "code": -37,
         "desc": "UTC time (secs since epoch << 64) when a record was made",
         "pdef": "AO_TIME_RECORDED",
         "size": 16,
@@ -119,7 +161,7 @@
         "type": "Shares"
     },
     {
-        "code": 7620,
+        "code": -43,
         "desc": "128 bit signed integer number of shares bid for recording",
         "pdef": "AO_RECORDING_BID",
         "size": 16,
@@ -138,48 +180,6 @@
         "pdef": "AO_N_COINS",
         "size": 16,
         "type": "AOCoins"
-    },
-    {
-        "code": 47,
-        "desc": "8 bit signed integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)",
-        "pdef": "AO_SHARE_STATE",
-        "size": -2,
-        "type": "DataVbc64"
-    },
-    {
-        "code": 48,
-        "desc": "32 bit unsigned integer stored as variable byte code, declares the size of a list, as a check that all intended data is present.",
-        "pdef": "AO_LISTSIZE",
-        "size": -2,
-        "type": "DataVbc64"
-    },
-    {
-        "code": 49,
-        "desc": "16 bit signed integer declares position of an element in a list, used to check/correlate two lists with each other.",
-        "pdef": "AO_INDEX",
-        "size": -2,
-        "type": "DataVbc64"
-    },
-    {
-        "code": 50,
-        "desc": "First sequential ID number (of public keys) recorded in this block.",
-        "pdef": "CB_FIRST_ID_SEQ_NUM",
-        "size": -2,
-        "type": "DataVbc64"
-    },
-    {
-        "code": 51,
-        "desc": "Number of sequential ID numbers (of public keys) recorded in this block, redundant check.",
-        "pdef": "CB_N_ID_SEQ_NUM",
-        "size": -2,
-        "type": "DataVbc64"
-    },
-    {
-        "code": 52,
-        "desc": "64 bit integer that identifies a particular public key in the chain.",
-        "pdef": "AO_ID_SEQ_NUM",
-        "size": -2,
-        "type": "DataVbc64"
     },
     {
         "code": 61,
@@ -210,7 +210,7 @@
         "type": "Assignment"
     },
     {
-        "code": 42,
+        "code": 46,
         "desc": "Participant in a Shares Assignment agreement",
         "pdef": "AO_PARTICIPANT",
         "size": -1,
@@ -239,7 +239,7 @@
         "type": "GenericCollection"
     },
     {
-        "code": 4096,
+        "code": 4240,
         "desc": "Arbitrary data of any form, may contain NULL bytes, any length (within reason)",
         "pdef": "AO_DATABYTEARRAY",
         "sepr": true,
@@ -247,7 +247,7 @@
         "type": "DataByteArray"
     },
     {
-        "code": -4160,
+        "code": 4176,
         "desc": "UTF-8 free text, no specific function, but recorded in the blockchain",
         "pdef": "AO_NOTE",
         "sepr": true,
@@ -256,7 +256,7 @@
     },
     {
         "code": 3765,
-        "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_KEYPAIR,AO_SHARES_REF,AO_INDEXV",
+        "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_KEYPAIR,AO_SHARES_REF,AO_INDEX",
         "desc": "Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.",
         "pdef": "AO_KEY_ASSET",
         "sepr": true,
@@ -283,13 +283,6 @@
         "pdef": "AO_GENESIS_REF",
         "size": -1,
         "type": "GenesisRef"
-    },
-    {
-        "code": 26,
-        "desc": "Key/shares index in the blockchain, simple index number of a public key/shares receipt object in the blockchain",
-        "pdef": "AO_KEY_INDEX",
-        "size": -2,
-        "type": "DataVbc64"
     },
     {
         "code": 25,
@@ -339,50 +332,50 @@
         "type": "NetAddress"
     },
     {
-        "code": 2832,
+        "code": 2869,
         "desc": "Contact information for an asset organizer (user software)",
         "pdef": "AO_ORGANIZER",
         "size": -1,
         "type": "Organizer"
     },
     {
-        "code": 2064,
+        "code": 2101,
         "desc": "Contact information for a recorder (chainmaker software)",
         "pdef": "AO_RECORDER",
         "size": -1,
         "type": "Recorder"
     },
     {
-        "code": 55,
+        "code": -13,
         "desc": "A full chain block, including all data - though potentially censored as required by local laws",
         "pdef": "CB_CHAIN_BLOCK",
         "size": -1,
         "type": "GenericCollection"
     },
     {
-        "code": 56,
+        "code": -21,
         "desc": "ID (public key) of the blockmaker, which holds claim on the residual shares in the block",
         "pdef": "CB_BLOCKMAKER",
         "size": -1,
         "type": "PubKey"
     },
     {
-        "code": 57,
+        "code": -45,
         "desc": "Blockmaker's signature, includes a AO_TIME_OF_SIG time and CB_BLOCKMAKER PubKey",
         "pdef": "CB_BLOCK_SIG",
         "size": -1,
         "type": "Signature"
     },
     {
-        "code": 58,
+        "code": 45,
         "desc": "Authorization signature, includes a AO_TIME_OF_SIG time and AO_INDEX index of the participant doing the signing",
         "pdef": "AO_AUTH_SIG",
         "size": -1,
         "type": "Signature"
     },
     {
-        "code": 59,
-        "desc": "Generic signature with All signatures include AO_TIME_OF_SIG time of signature, but no Index or PubKey",
+        "code": 47,
+        "desc": "Generic signature with AO_TIME_OF_SIG time of signature, but not necessaraily an AO_INDEX or PubKey",
         "pdef": "AO_SIG_WITH_TIME",
         "size": -1,
         "type": "Signature"

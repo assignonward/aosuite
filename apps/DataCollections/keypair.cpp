@@ -103,9 +103,5 @@ void KeyPair::operator = ( const DataItemBA &di )
   deleteItemsLater();
   insert( temp.values() );
   typeCode = temp.typeCode;
-#ifdef USE_QPOINTERS
-  temp.pubKey = NULL; // prevent the keys from being deleted when temp goes out of scope
-  temp.priKey = NULL;
-#endif
   return;
 }

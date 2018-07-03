@@ -71,17 +71,17 @@ PubKey::PubKey( const DataItemBA &di, QObject *p )
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
-        typeCode = typeCodeOf( di );
+        typeCode       = typeCodeOf( di );
         publicKeyEcdsa = new PublicKeyEcdsa( di, this );
         break;
 
       case AO_RSA3072_PUB_KEY:
-        typeCode = AO_RSA3072_PUB_KEY;
+        typeCode         = AO_RSA3072_PUB_KEY;
         publicKeyRsa3072 = new PublicKeyRsa3072( di, this );
         break;
 
       case AO_ID_SEQ_NUM:
-        typeCode = AO_ID_SEQ_NUM;
+        typeCode       = AO_ID_SEQ_NUM;
         publicKeyIndex = new DataVbc64( di, this );
 
       default:
@@ -147,18 +147,15 @@ DataItemBA  PubKey::toDataItem( bool cf ) const
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
-        if ( !publicKeyEcdsa )
-          return DataItemBA();
+        if ( !publicKeyEcdsa ) return DataItemBA();
         return publicKeyEcdsa->toDataItem(cf);
 
       case AO_RSA3072_PUB_KEY:
-        if ( !publicKeyRsa3072 )
-          return DataItemBA();
+        if ( !publicKeyRsa3072 ) return DataItemBA();
         return publicKeyRsa3072->toDataItem(cf);
 
       case AO_ID_SEQ_NUM:
-        if ( !publicKeyIndex )
-          return DataItemBA();
+        if ( !publicKeyIndex ) return DataItemBA();
         return publicKeyIndex->toDataItem(cf);
     }
   qDebug( "PubKey::toDataItem() unrecognized type code %lld", typeCode );
@@ -214,27 +211,21 @@ void  PubKey::set( const QByteArray k )
         if ( !publicKeyEcdsa )
           publicKeyEcdsa = new PublicKeyEcdsa( this );
         publicKeyEcdsa->set( k );
-        if ( publicKeyRsa3072 )
-          publicKeyRsa3072->clear();
-        if ( publicKeyIndex )
-          *publicKeyIndex = -1;
+        if ( publicKeyRsa3072 ) publicKeyRsa3072->clear();
+        if ( publicKeyIndex   ) *publicKeyIndex = -1;
         break;
 
       case 384:
         if ( !publicKeyRsa3072 )
           publicKeyRsa3072 = new PublicKeyRsa3072( this );
         publicKeyRsa3072->set( k );
-        if ( publicKeyEcdsa )
-          publicKeyEcdsa->clear();
-        if ( publicKeyIndex )
-          *publicKeyIndex = -1;
+        if ( publicKeyEcdsa ) publicKeyEcdsa->clear();
+        if ( publicKeyIndex ) *publicKeyIndex = -1;
         break;
 
       case 8:
-        if ( publicKeyRsa3072 )
-          publicKeyRsa3072->clear();
-        if ( publicKeyEcdsa )
-          publicKeyEcdsa->clear();
+        if ( publicKeyRsa3072 ) publicKeyRsa3072->clear();
+        if ( publicKeyEcdsa   ) publicKeyEcdsa  ->clear();
         diba.append( k );
         if ( !publicKeyIndex )
           publicKeyIndex = new DataVbc64( this );
@@ -243,7 +234,7 @@ void  PubKey::set( const QByteArray k )
 
       default:
         if ( publicKeyRsa3072 ) publicKeyRsa3072->clear();
-        if ( publicKeyEcdsa   ) publicKeyEcdsa->clear();
+        if ( publicKeyEcdsa   ) publicKeyEcdsa  ->clear();
         if ( publicKeyIndex   ) *publicKeyIndex = -1;
         qDebug( "PubKey::set( const QByteArray &k ) invalid type code %lld", typeCode );
         // TODO: log error

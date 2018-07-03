@@ -38,6 +38,7 @@ class AboutForm : public QScrollArea
 public:
     explicit  AboutForm( QWidget *cw );
              ~AboutForm();
+        void  showLibVersions();
 
 public:
        Ui::AboutForm *ui;

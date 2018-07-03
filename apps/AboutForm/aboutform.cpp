@@ -33,9 +33,18 @@ AboutForm::AboutForm( QWidget *cw ) :
   ui->appDesc   ->setText( APPDESC    );
   ui->appVersion->setText( APPVERSION );
   ui->appStatus ->setText( APPSTATUS  );
+  showLibVersions();
 }
 
 AboutForm::~AboutForm()
 { delete ui;
 }
 
+#include <gmp.h>
+#include <gcrypt.h>
+
+void AboutForm::showLibVersions()
+{ ui->libVersions->append( QString( "GMP %1"      ).arg( gmp_version                                   ) );
+  // ui->libVersions->append( QString( "libgcrypt %1").arg( QString::fromUtf8( gcry_check_version(NULL) ) ) );
+  ui->libVersions->append( QString( "Qt %1"       ).arg( QString::fromUtf8( qVersion()               ) ) );
+}

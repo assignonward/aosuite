@@ -27,11 +27,9 @@
  * @brief GenericCollection::deleteItemsLater - clean out the DataItemMap
  */
 void GenericCollection::deleteItemsLater()
-{ QMapIterator DataItemMap_t it( itemMM );
-  while ( it.hasNext() )
-    { it.next();
-      it.value()->deleteLater();
-    }
+{ QList<DataItem *>dipl = itemMM.values();
+  foreach( DataItem *di, dipl )
+    di->deleteLater();
 }
 
 /**

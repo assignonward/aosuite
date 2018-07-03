@@ -30,7 +30,7 @@
 Signature::Signature( typeCode_t tc, QObject *p )
   : DataVarLength( tc, p )
 { typeCode = AO_SIG_WITH_TIME;
-  index.setTypeCode( AO_INDEXV );
+  index.setTypeCode( AO_INDEX );
   index = -1;
   switch ( tc )
     { case AO_ECDSA_SIG: // valid type codes for Signature
@@ -65,7 +65,7 @@ Signature::Signature( const Signature &s, QObject *p )
 Signature::Signature( const DataItemBA &di, QObject *p )
   : DataVarLength( AO_UNDEFINED_DATAITEM, p ), index( -1 )
 { sigType = AO_UNDEFINED_DATAITEM;
-  index.setTypeCode( AO_INDEXV );
+  index.setTypeCode( AO_INDEX );
   index = -1;
   // See if there's anything interesting in the data item
   if ( di.size() > 0 )
@@ -98,7 +98,7 @@ Signature::Signature( const DataItemBA &di, QObject *p )
                         sigType    = AO_RSA3072_SIG;
                         break;
 
-                      case AO_INDEXV:
+                      case AO_INDEX:
                         index = items;
                         break;
 

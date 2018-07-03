@@ -27,6 +27,18 @@ TEMPLATE     = app
 DEPTH = ../..
 
 # sudo apt-get install libgpgme11-dev libgcrypt11-dev libbz2-dev lib64z1-dev
+# tar -xf gmp-6.1.2
+# cd gmp-6.1.2
+# ./configure --enable-cxx --disable-fft
+# make
+# sudo make install
+# make check
+# cd ..
+# rm -rf gmp-6.1.2
+# cd gpg
+# ./wipe.sh
+# ./build.sh
+#
 INCLUDEPATH += $${DEPTH}/OpenPGP
 INCLUDEPATH += /usr/local/include
 LIBS        += -lOpenPGP -lgmp -lgmpxx -lbz2 -lz -ldl -lgcrypt -lgpgme -lgpg-error -L$$PWD/$${DEPTH}/OpenPGP -L/usr/local/lib

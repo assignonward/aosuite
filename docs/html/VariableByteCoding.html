@@ -90,42 +90,11 @@
 <body>
 <div class="page">
 <div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
 
 <span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Variable Byte Coding</h1>
 
-
-<span itemprop="articleBody">Assign Onward uses a variable byte encoding scheme<div class="tooltip"><sup>1</sup><span class="tooltiptext">vaguely related to <a href="https://en.wikipedia.org/wiki/Golomb_coding#Rice_coding">Rice Coding</a></span></div> to represent data type codes and sizes of variable length data.  The scheme represents numbers in the range from 0 through 268,435,455 (2^28) using one to 4 bytes.  In the range 0-127, the coding scheme is the same as a single unsigned byte.  When a byte has the most significant bit set, that indicates that the following byte is also included in the code.<div class="tooltip"><sup>2</sup><span class="tooltiptext">Currently, Assign Onward only recognizes variable byte codes up to 4 bytes in length, so a 1 in the most significant bit of the 4th byte is an error, unrecognized code.</span></div>  Each byte encodes 7 bits in little-endian form.<br/><br/>
-
-The following is an example binary encoded block:
-
-<pre>
-<font color="008000"><b>87 01</b></font> <font color="A00000"><b>AB 01</b></font> <font color="008000">87 02</font> 01 00 <font color="008000">87 03</font> 00 00 <font color="008000">87 10</font> 00 00 00 00 00 00 00 00 00 00 40 00 00 00 00 00 <font color="008000">87 11</font> 
-00 00 00 00 00 00 00 00 58 02 00 00 00 00 00 00 <font color="008000">87 12</font> 00 00 00 00 00 00 00 00 00 00 00 00 02 00 
-00 00 <font color="008000">87 13</font> 00 00 00 00 04 00 00 00 00 00 00 00 00 00 00 00 <font color="008000">87 30</font> <font color="A00000">06</font> 54 E2 92 B6 31 61 <font color="008080">C7 31</font> <font color="A00000">4F</font> 
-54 61 6F 20 4F 6E 65 20 41 20 2D 20 54 65 73 74 69 6E 67 20 6C 65 76 65 6C 20 6F 6E 65 2C 20 73 
-69 6D 70 6C 65 20 70 72 6F 74 6F 63 6F 6C 2E 20 20 53 69 6E 67 6C 65 20 72 65 63 6F 72 64 65 72 
-2C 20 74 65 73 74 20 63 68 61 69 6E 20 41 2E
-</pre>
-
-<ul>
-<li><font color="008000"><b>87 01</b></font>: a variable length wrapper item that contains all the following data.</li>
-<li><font color="A00000"><b>AB 01</b></font>: the length of the wrapped data: 171 (0xAB) bytes.</li>
-<li><font color="008000">87 02</font>: a fixed length data item, coincidentally 2 bytes long</li>
-<li>01 00: the value contained in the <font color="008000">87 02</font> item.</li>
-<li><font color="008000">87 03</font>: another 2 byte fixed length data item</li>
-<li>00 00: the value contained in the <font color="008000">87 03</font> item.</li>
-<li><font color="008000">87 10</font>: a fixed length data item, coincidentally 16 bytes long</li>
-<li>00 00 00 00 00 00 00 00 00 00 40 00 00 00 00 00: the value contained in the <font color="008000">87 10</font> item.</li>
-<li><font color="008000">87 11</font>: another 16 byte fixed length data item</li>
-<li>00 00 00 00 00 00 00 00 58 02 00 00 00 00 00 00: the value contained in the <font color="008000">87 11</font> item.</li>
-<li>...
-<li><font color="008000">87 30</font>: a variable length data item</li>
-<li><font color="A00000">06</font>: the length of the <font color="008000">87 30</font> data item: 6 bytes</li>
-<li>54 E2 92 B6 31 61: the data contained in the <font color="008000">87 30</font> <font color="A00000">06</font> item.</li>
-<li><font color="008080">C7 31</font>: a variable length <a href="SeparableItems.html">separable</a> data item</li>
-<li><font color="A00000">4F</font>: the length of the <font color="008080">C7 31</font> data item: 79 bytes</li>
-<li>54 61 6F 20...: the data contained in the <font color="008080">C7 31</font> <font color="A00000">4F</font> data item.</li>
-</ul>
+<span itemprop="articleBody">Assign Onward uses a variable byte encoding scheme<div class="tooltip"><sup>1</sup><span class="tooltiptext">vaguely related to <a href="https://en.wikipedia.org/wiki/Golomb_coding#Rice_coding">Rice Coding</a></span></div> to represent data type codes and sizes of variable length data.  The scheme represents 64 bit signed integers using one to 10 bytes.  The least significant bit of the first byte is the sign bit, set indicates negative.  In the range 0-63, the coding scheme is the same as a single unsigned byte multiplied by 2.  When a byte has the most significant bit set, that indicates that the following byte is also included in the code.<div class="tooltip"><sup>2</sup><span class="tooltiptext">Currently, Assign Onward only recognizes variable byte codes up to 10 bytes in length, so a 1 in the most significant bit of the 10th byte is an error, unrecognized code.  Also, 64 bit signed integers are used to hold the VBC values, so most of the bits in a 10th byte (if present) are ignored.</span></div>  Each byte encodes 7 bits in little-endian form.<br/><br/>
 
 </span>
 </div>

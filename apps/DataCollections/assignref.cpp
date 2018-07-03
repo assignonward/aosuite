@@ -45,7 +45,7 @@ AssignRef::AssignRef( const DataItemBA &di, QObject *p )
                         page = items;
                         break;
 
-                      case AO_INDEXV:
+                      case AO_INDEX:
                         seqNum = items;
                         break;
 
@@ -96,7 +96,7 @@ DataItemBA  AssignRef::toDataItem( bool cf )
     { if ( page.isValid() )
         dil.append( page.toDataItem(false) );
       if ( seqNum >= 0 )
-        { seqNum.setTypeCode( AO_INDEXV );
+        { seqNum.setTypeCode( AO_INDEX );
           dil.append( seqNum.toDataItem(false) );
         }
       if ( key.isValid() )

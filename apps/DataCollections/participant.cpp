@@ -40,7 +40,7 @@ Participant::Participant( DataItemBA di, QObject *p )
   : DataVarLength( typeCodeOf( di ), p )
 { // See if there's anything interesting in the data item
   index = -1;
-  index.setTypeCode( AO_INDEXV );
+  index.setTypeCode( AO_INDEX );
   if ( di.size() > 0 )
     { if (( typeCodeOf( di ) != AO_PARTICIPANT ) &&
           ( typeCodeOf( di ) != AO_PARTICIPANT_CF ))
@@ -75,7 +75,7 @@ Participant::Participant( DataItemBA di, QObject *p )
                       case AO_NOTE:
                         note = items;
 
-                      case AO_INDEXV:
+                      case AO_INDEX:
                         index = items;
 
                       default:
@@ -126,7 +126,7 @@ DataItemBA Participant::toDataItem( bool cf )
         if ( note.size() > 0 )
           dil.append( note.toDataItem(false) );
         if ( index > -1 )
-          { index.setTypeCode( AO_INDEXV );
+          { index.setTypeCode( AO_INDEX );
             dil.append( index.toDataItem(false) );
           }
         break;
@@ -139,7 +139,7 @@ DataItemBA Participant::toDataItem( bool cf )
         if ( note.size() > 0 )
           dil.append( note.toDataItem(true) );
         if ( index > -1 )
-          { index.setTypeCode( AO_INDEXV );
+          { index.setTypeCode( AO_INDEX );
             dil.append( index.toDataItem(true) );
           }
         break;

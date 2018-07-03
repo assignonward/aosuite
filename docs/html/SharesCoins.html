@@ -90,6 +90,7 @@
 <body>
 <div class="page">
 <div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
 
 <span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Shares and Coins</h1>
 
@@ -104,6 +105,9 @@
   </div>
 
 <h2>Fixed point fractions</h2>
+
+The fixed point fraction concept is likely to be replaced with the GMP multi-precision arithmetic library.
+<font color=#AAAAAA>
 To ensure repeatability across platforms, shares and coins arithmetic is carried out in fixed point integer, instead of floating point.  The fixedFract data types include an 8 bit exponent which gives the range of shift left +127 (*2^127) to shift right -128 (/2^128).
 
 <h3>Some example shares and coins operations:</h3>
@@ -117,29 +121,13 @@ To ensure repeatability across platforms, shares and coins arithmetic is carried
 <LI>Number of shares in 50 coins: 50 * N Shares >> 33</LI> 
 <LI>N shares, expressed in coins: (N shares << 33) / N shares outstanding
 </UL>
+</font>
 
 Thought: maybe instead of one coin per person in the world, we should target 100,000 coins per person in the world, which would be 2^50ish.  Or, instead of trying to take on the world, we could, instead, target a set of shares to a smaller population, say 100,000 users per genesis block/blockchain, averaging 100,000 coin on the chainshares - this comes back around to the idea of ~10B coins again, or around 2^33 (~8.6B) - and then you'll need on the order of 80,000 value chains to serve the whole world population.
 
 <h3>No Fractional Shares</h3>
 
-2^86, or whatever number of shares we eventually come to, is an extremely large number - representing 2^23, or ~8 million nano-coins.  Share calculations are rounded and remainders ignored.
-
-<h4>Random Links:</h4>
-<UL>
-<LI>Fixed point implementations</LI>
-    <UL>
-    <LI>https://gcc.gnu.org/onlinedocs/gcc/Fixed-Point.html</LI>
-    <LI>http://www.drdobbs.com/cpp/fixed-point-arithmetic-types-for-c/184401992</LI>
-    <LI>https://github.com/eteran/cpp-utilities/blob/master/Fixed.h</LI>
-    <LI>https://github.com/lhartmann/fixed_point/blob/master/fixed.h</LI>
-    </UL>
-<LI>128+ bit arithmethic without native support</LI>
-    <UL>
-    <LI>https://stackoverflow.com/questions/741301/how-can-i-add-and-subtract-128-bit-integers-in-c-or-c-if-my-compiler-does-not</LI>
-    <LI>https://locklessinc.com/articles/256bit_arithmetic/</LI>
-    <LI>https://github.com/calccrypto/uint256_t</LI>
-    </UL>
-</UL>
+2^86 is an extremely large number.  Share calculations that produce fractional results are rounded to the nearest integer.
 
   </span>
 </span>

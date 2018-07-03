@@ -47,7 +47,7 @@ public:
                 : DataItem( AO_RSA3072_PUB_KEY, p ? p : pkp->parent() )
                 { publicKeyRsa3072 = pkp; }
               PubKey( DataVbc64 *pkp, QObject *p = NULL )
-                : DataItem( AO_KEY_INDEX, p ? p : pkp->parent() )
+                : DataItem( AO_ID_SEQ_NUM, p ? p : pkp->parent() )
                 { publicKeyIndex = pkp; }
         void  operator = ( const PubKey &k )
                 { typeCode         = k.typeCode;

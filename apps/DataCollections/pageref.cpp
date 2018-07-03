@@ -45,7 +45,7 @@ PageRef::PageRef( const DataItemBA &di, QObject *p )
                         block = items;
                         break;
 
-                      case AO_INDEXV:
+                      case AO_INDEX:
                         sequenceNumber = items;
                         break;
 
@@ -81,7 +81,7 @@ DataItemBA  PageRef::toDataItem( bool cf )
 { QByteArrayList dil;
   dil.append(            block.toDataItem(cf) );
   if ( sequenceNumber >= 0 )
-    { sequenceNumber.setTypeCode( AO_INDEXV );
+    { sequenceNumber.setTypeCode( AO_INDEX );
       dil.append( sequenceNumber.toDataItem(cf) );
     }
   if ( hash.isValid() )

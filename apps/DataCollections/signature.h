@@ -66,7 +66,7 @@ public:
       AOTime  getTime() const { return sigTime; }
         void  setTime( const AOTime &t ) { sigTime = t; }
   typeCode_t  getType() const { return sigType; }
-DataVbc64  getIndex() const { return index; }
+   DataVbc64  getIndex() const { return index; }
         void  setIndex( const DataVbc64 &i ) { index = i; }
 
 private:
@@ -77,7 +77,7 @@ private:
     SigEcdsa  sigEcdsa;
   SigRsa3072  sigRsa3072;
 
-DataVbc64  index;   // AO_INDEXV, Optional: used in Authorizations to match to index numbers in the participant list
+   DataVbc64  index;   // AO_INDEX, Optional: used in Authorizations to match to index numbers in the participant list
       PubKey  pubKey;  // Optional: when included, contains the pubKey used to sign
 };
 

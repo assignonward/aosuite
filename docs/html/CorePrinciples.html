@@ -90,16 +90,18 @@
 <body>
 <div class="page">
 <div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
 
 <h1>Core Principles</h1>
 
-These assertions are driven from desire for secure, efficient and future-ready implementation.
+These assertions<div class="tooltip"><sup>1</sup><span class="tooltiptext">Not quite the same as <a href="Goals.html">goals</a>.</span></div> are driven from desire for secure, efficient and future-ready implementation.
 
 <ul><li><a href="Signatures.html">Signatures</a> always include time of signing.</li>
-    <li><a href="KeyReuse.html">Public/Private Key Pairs</a> are never reused.</li>
+    <li><a href="KeyReuse.html">Public/Private Key Pairs</a> are never reused.<div class="tooltip"><sup>2</sup><span class="tooltiptext">Keys are never reused for share transfers.  Other keys used to establish personal identity of course get reused until they are expired and replaced with new ones signed by the expiring ones.</span></div></li>
     <li><a href="CryptographicPrimitives.html">Cryptographic Algorithms</a> may expand to include new ones in the future.</li>
-    <li><a href="SeparableItems.html">Separable items</a> to support removal of illegal content without degrading integrity of the remaining data.</li>
-    <li>Share expiration, no immortal shares - keys get lost, life goes on.</li>
+    <li><a href="SeparableItems.html">Separable items</a> to support removal of illegal<div class="tooltip"><sup>3</sup><span class="tooltiptext">or simply unwanted</span></div> content without degrading integrity of the remaining data.<div class="tooltip"><sup>4</sup><span class="tooltiptext">Note that information essential to contract processing can never be separable.</span></div></li>
+    <li><a href="Expiration.html">Share expiration</a>, no immortal shares - keys get lost, life goes on.</li>
+    <li>No dependency on <a href="ProofOfWork.html">proof of work</a>.</li>
 </ul>
 
 

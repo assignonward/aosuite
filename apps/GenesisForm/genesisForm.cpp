@@ -30,6 +30,7 @@ GenesisForm::GenesisForm( QWidget *cw, MainWinCommon *mw, AssetsEngine *iae ) :
     { ae = new AssetsEngine( new CryptoEngine(this), this );
       qDebug( "GenesisForm() creating local asset engine (with embedded local CryptoEngine)" );
     }
+
   ui->setupUi(this);
   new QVBoxLayout( cw );
   cw->layout()->addWidget( this );
@@ -151,7 +152,7 @@ GenericCollection GenesisForm::calculateGenesisBlock()
   Participant   *part = new Participant( DataItemBA(), &gb );
   QByteArray pubKeyBA = QByteArray::fromHex( ui->signingKey->currentText().toUtf8() );
 
-  part->setIndex( DataVbc64( 0, AO_INDEXV, &gb ) );
+  part->setIndex( DataVbc64( 0, AO_INDEX, &gb ) );
   DataItem *di = ae->getUnusedKeyPair( pubKeyBA );
   if ( di )
     { GenericCollection *ka = qobject_cast<GenericCollection *>(di);

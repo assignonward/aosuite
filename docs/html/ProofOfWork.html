@@ -84,7 +84,7 @@
 </style>
 
 <meta charset="UTF-8"/>
-<title>Cryptographic Primitives</title>
+<title>Proof Of Work</title>
 </head>
 
 <body>
@@ -92,19 +92,28 @@
 <div class="zoom">
 <img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
 
-<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Cryptographic Primitives</h1>
+<h1>Proof Of Work</h1>
 
-<span itemprop="articleBody">
+Short story: Assign Onward does not depend on proof of work to function.
 
-The two (primary) cryptographic tools used in creation of the blockchain are <a href="BlockchainBasics.html#KeyPairs">public-private key pairs</a> and <a href="BlockchainBasics.html#Hashes">hashes</a>.  Many different algorithms can be used to implement these concepts, a small subset of avaialble algorithms will be implemented by the Assign Onward suite of applications - starting with 256 bit ECDSA and 3072 bit RSA for signatures, and SHA2-256 and SHA3-512 for hashes.  The key point of "baking in" multiple cryptographic primitives to the protocols is having the structure to easily accomodate new cryptographic primitives when it becomes necessary, for instance: before Quantum computers become a practical method of breaking the current technology.  Algorithms considered Quantum ready today have considerably longer public key sizes, and so are unattractive while they are not needed, but at some point in the (anticipated to be near) future the larger key size will be a good trade for security against quantum breaking of the share title secrets.
+<h2>Trust</h2>
 
-</span>
+If you are not going to trust the largest consensus of transaction processors to record your transaction, who will you trust?  That all depends on what you are trusting them with... If you are pre-purchasing coffees from a particular coffee shop, you are already implicitly trusting that coffee shop to honor those pre-purchases in the future.  You might also trust an established coupon processor to provide reliable recording and exchange services.
+
+<h2>Bridges</h2>
+
+Although Assign Onward as implemented does not use Proof Of Work, it makes sense to build automated exchanges with existing blockchains that do use Proof Of Work (such as Bitcoin...)
+
+<h2>Open Source</h2>
+
+Of course, being open source, modular, and simple, it would not be difficult to add a Bitcoin-like Proof Of Work requirement into the Assign Onward protocol, but would it make any sense to do so?  I think not... Bitcoin is established, and small-time Proof Of Work based blockchains have already been proven vulnerable to double-spend attack.  Unless a Proof Of Work blockchain enters the market with substantial miner share, competitive with Bitcoin and Ethereum, it will be vulnerable in the way the Bitcoin Gold and many other smaller cryptocurrencies were demonstrated to be vulnerable to 51% attacks in mid 2018.
+
+To be continued...
 
 </div>
-
 <br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
-<span itemprop="name">Assign Onward</span></span></a><br/>
-<span itemprop="datePublished" content="2018-05-22"><div class="tooltip">22 May 2018<span class="tooltiptext">
+<span itemprop="name">Assign Onward</span></a></span><br/>
+<span itemprop="datePublished" content="2018-07-02"><div class="tooltip">2 July 2018<span class="tooltiptext">
 MIT License
 <br/>
 Copyright (c) 2018 Assign Onward
@@ -127,8 +136,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 </span></div></span>
-
 </div>
-
 </body></html>
-
