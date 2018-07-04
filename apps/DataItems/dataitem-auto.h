@@ -34,21 +34,24 @@
 #define AO_ASSIGN_REF                  30 // (3c+var) GenericCollection: Describes a record of shares when they were given in a recorded assignment agreement
 #define AO_DATABYTEARRAY             4240 // <a042+var> DataByteArray:separable Arbitrary data of any form, may contain NULL bytes, any length (within reason)
 #define AO_NOTE                      4176 // <a041+var> Note:separable UTF-8 free text, no specific function, but recorded in the blockchain
-#define AO_KEY_ASSET                 3765 // <ea3a+var> GenericCollection:separable Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.
 #define AO_BLOCK_REF                   29 // (3a+var) BlockRef: Describes a whole block in the chain
 #define AO_PAGE_REF                    28 // (38+var) PageRef: UTF-8 free text, no specific function, but recorded in the blockchain
 #define AO_GENESIS_REF                 27 // (36+var) GenesisRef: Uniquely describes a genesis block, includes list of properties used to calculate new blocks
 #define AO_SHARES_REF                  25 // (32+var) SharesRef: Reference to shares received
-#define AO_ASSETS                    3856 // <a03c+var> Assets:separable A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
-#define AO_ECDSA_PRI_KEY             3893 // <ea3c+var> PrivateKeyEcdsa:separable An ECDSA private key
-#define AO_RSA3072_PRI_KEY           3829 // <ea3b+var> PrivateKeyRsa3072:separable An RSA3072 private key
-#define AO_KEYPAIR                   3957 // <ea3d+var> KeyPair:separable A (hopefully matching) public-private key pair
+#define AO_ASSETS                    3984 // <a03e+var> Assets:separable A collection of lists of addresses for other asset organizers and recorders, references to shares, and unused keypairs
+#define AO_KEY_ASSET                -3984 // <a13e+var> KeyAsset:separable Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.
+#define AO_KEYPAIR                   3985 // <a23e+var> KeyPair:separable A (hopefully matching) public-private key pair
+#define AO_ECDSA_PRI_KEY            -3985 // <a33e+var> PrivateKeyEcdsa:separable An ECDSA private key
+#define AO_RSA3072_PRI_KEY           3986 // <a43e+var> PrivateKeyRsa3072:separable An RSA3072 private key
 #define AO_NETADDRESS                3125 // <ea30+var> NetAddress:separable IP4 or IP6 or named network contact address, potentially including :port number
 #define AO_ORGANIZER                 2869 // (ea2c+var) Organizer: Contact information for an asset organizer (user software)
 #define AO_RECORDER                  2101 // (ea20+var) Recorder: Contact information for a recorder (chainmaker software)
-#define CB_CHAIN_BLOCK                -13 // (1b+var) GenericCollection: A full chain block, including all data - though potentially censored as required by local laws
+#define CB_COMPLETE                  -101 // (cb01+var) GenericCollection: A complete chain block, including the signed block and its hash
+#define CB_SIGNED                    -165 // (cb02+var) GenericCollection: The signed chain block, what gets hashed and put into the CB_COMPLETE structure with the hash code
+#define CB_CONTENTS                  -229 // (cb03+var) GenericCollection: The contents of a chain block, what gets signed and put into the CB_SIGNED structure with the signature
+#define PG_CONTENTS                   -93 // (bb01+var) GenericCollection: One authorized assignment, plus chain block housekeeping.  CB_CONTENTS is a list of these
 #define CB_BLOCKMAKER                 -21 // (2b+var) PubKey: ID (public key) of the blockmaker, which holds claim on the residual shares in the block
-#define CB_BLOCK_SIG                  -45 // (5b+var) Signature: Blockmaker's signature, includes a AO_TIME_OF_SIG time and CB_BLOCKMAKER PubKey
+#define CB_SIGNATURE                  -45 // (5b+var) Signature: Blockmaker's signature, includes a AO_TIME_OF_SIG time and CB_BLOCKMAKER PubKey
 #define AO_AUTH_SIG                    45 // (5a+var) Signature: Authorization signature, includes a AO_TIME_OF_SIG time and AO_INDEX index of the participant doing the signing
 #define AO_SIG_WITH_TIME               47 // (5e+var) Signature: Generic signature with AO_TIME_OF_SIG time of signature, but not necessaraily an AO_INDEX or PubKey
 #define GB_GENESIS_BLOCK               80 // (a001+var) GenericCollection: A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it

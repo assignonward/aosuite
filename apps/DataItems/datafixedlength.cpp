@@ -63,11 +63,11 @@ void DataFixedLength::operator = ( const DataItemBA &di )
  */
 DataItemBA DataFixedLength::toDataItem( bool cf ) const
 { // qDebug( "DataFixedLength::toDataItem() for tc 0x%x", typeCode );
-  QByteArray di; (void)cf;
-  di.append( codeToBytes( typeCode ) );
-  di.append( ba );
+  QByteArray db; (void)cf;
+  db.append( codeToBytes( typeCode ) );
+  db.append( ba );
   // qDebug( "DataFixedLength::toDataItem(size=%d)%s", ba.size(), qPrintable( QString::fromUtf8( di.toHex() ) ) );
-  return di;
+  return db;
 }
 
 /**

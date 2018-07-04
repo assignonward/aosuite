@@ -54,14 +54,14 @@ QList<DataItem *>values(  const typeCode_t &tc ) { return itemMM.  values( tc );
 QList<DataItem *>values()                        { return itemMM.  values();     }
           void  insert( DataItem *di )
                   { if ( di )
-                      { itemMM.insert( di->getTypeCode(), di );
-                        di->setParent(this);
+                      { di->setParent(this);
+                        itemMM.insert( di->getTypeCode(), di );
                   }   }
           void  insert( QList<DataItem *>dipl )
                   { foreach( DataItem *di, dipl )
                       { if ( di )
-                          { itemMM.insert( di->getTypeCode(), di );
-                            di->setParent(this);
+                          { di->setParent(this);
+                            itemMM.insert( di->getTypeCode(), di );
                   }   }   }
           void  operator = ( const DataItemBA &di );
     DataItemBA  toDataItem( bool cf = false ) const;

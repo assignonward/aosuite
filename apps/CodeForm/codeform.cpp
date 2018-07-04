@@ -55,18 +55,18 @@ CodeForm::CodeForm( QWidget *cw, MainWinCommon *mw ) :
         // Ensure that the separable bit is properly implemented
         if ( bcd.sepr )
           { if ( !DataItem::typeCodeIsSeparable( bcd.code ) )
-              qDebug( "%s typecode %lld indicates not separable but the separable flag is set.", qPrintable( bcd.pdef ), bcd.code );
+              qDebug( "%s typecode %lld indicates not separable but the separable flag is set.", qPrintable( bcd.acry ), bcd.code );
           }
          else
           { if ( DataItem::typeCodeIsSeparable( bcd.code ) )
-              qDebug( "%s typecode %lld indicates separable but the separable flag is not set.", qPrintable( bcd.pdef ), bcd.code );
+              qDebug( "%s typecode %lld indicates separable but the separable flag is not set.", qPrintable( bcd.acry ), bcd.code );
           }
 
         // Check for duplicates
         if ( codeNames.contains( bcd.code ) )
-          qDebug( "%s already defined %lld, %s also trying to use it.", qPrintable( codeNames[bcd.code] ), bcd.code, qPrintable( bcd.pdef ) );
+          qDebug( "%s already defined %lld, %s also trying to use it.", qPrintable( codeNames[bcd.code] ), bcd.code, qPrintable( bcd.acry ) );
          else
-          codeNames.insert( bcd.code, bcd.pdef );
+          codeNames.insert( bcd.code, bcd.acry );
       }
     ui->json->appendPlainText( bcds.toString() );
 }
@@ -96,12 +96,12 @@ void CodeForm::on_massage_clicked()
             }
 
           if ( !codeNames.contains( bcd.code ) )
-            codeNames.insert( bcd.code, bcd.pdef );
+            codeNames.insert( bcd.code, bcd.acry );
            else
             { done = false;
               while ( codeNames.contains( bcd.code ) )
                bcd.code++;
-              qDebug( "found new code %lld for %s", bcd.code, qPrintable( bcd.pdef ) );
+              qDebug( "found new code %lld for %s", bcd.code, qPrintable( bcd.acry ) );
             }
         }
       bcdn.bcdList.append( bcd );

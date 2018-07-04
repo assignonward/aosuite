@@ -117,45 +117,46 @@ void  GenesisForm::on_publishGenesisBlock_clicked()
 { QString name = QFileDialog::getSaveFileName( this, "save Genesis Block to file:" );
   if ( name.size() < 1 )
     return;
-  GenericCollection gb = calculateGenesisBlock();
+  GenericCollection *gb = calculateGenesisBlock();
   QFile file( name );
   if ( !file.open( QIODevice::WriteOnly ) )
-    { qDebug() << gb.toDataItem();
+    { qDebug() << gb->toDataItem();
       return;
     }
-  file.write( ui->hashData->isChecked() ? gb.toHashData() : gb.toDataItem() );
+  file.write( ui->hashData->isChecked() ? gb->toHashData() : gb->toDataItem() );
+  gb->deleteLater();
 }
 
-GenericCollection GenesisForm::calculateGenesisBlock()
-{ GenericCollection gb( GB_GENESIS_BLOCK );
+GenericCollection *GenesisForm::calculateGenesisBlock()
+{ GenericCollection *gb = new GenericCollection( GB_GENESIS_BLOCK );
   __int128_t tv;
-  gb.insert( new DataVbc64    ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     &gb ) );
-  gb.insert( new DataVbc64    ( ui->protocolRev->value()               , GB_PROTOCOL_REV, &gb ) );
-  gb.insert( new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  &gb ) );
+  gb->insert( new DataVbc64    ( ui->protocol   ->currentIndex()        , GB_PROTOCOL,     gb ) );
+  gb->insert( new DataVbc64    ( ui->protocolRev->value()               , GB_PROTOCOL_REV, gb ) );
+  gb->insert( new DataVarLength( ui->symbol     ->text().toUtf8()       , GB_TEXT_SYMBOL,  gb ) );
   if ( ui->description->toPlainText().size() > 0 )
-  gb.insert( new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  &gb ) );
-  //  gb.add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
-  //  gb.add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
+  gb->insert( new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  gb ) );
+  //  gb->add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
+  //  gb->add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
   tv = 1; tv = tv << ui->startingShares->value();
-  gb.insert( new Shares( tv, GB_STARTING_SHARES, &gb ) );
+  gb->insert( new Shares   ( tv, GB_STARTING_SHARES, gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
-  gb.insert( new AOTime( tv, GB_MIN_BLOCK_INT  , &gb ) );
+  gb->insert( new AOTime   ( tv, GB_MIN_BLOCK_INT  , gb ) );
   tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb.insert( new AOCoins( tv, GB_N_COINS_TOTAL , &gb ) );
+  gb->insert( new AOCoins  ( tv, GB_N_COINS_TOTAL  , gb ) );
   tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb.insert( new AOCoins( tv, GB_RECORDING_TAX , &gb ) );
-  gb.insert( new DataVbc64( 0, CB_FIRST_ID_SEQ_NUM, &gb ) );
-  gb.insert( new DataVbc64( 1, CB_N_ID_SEQ_NUM    , &gb ) );
+  gb->insert( new AOCoins  ( tv, GB_RECORDING_TAX  , gb ) );
+  gb->insert( new DataVbc64( 0, CB_FIRST_ID_SEQ_NUM, gb ) );
+  gb->insert( new DataVbc64( 1, CB_N_ID_SEQ_NUM    , gb ) );
 
-  Authorization *auth = new Authorization( DataItemBA(), &gb );
-  Assignment    *asgn = new Assignment( DataItemBA(), &gb );
-  Participant   *part = new Participant( DataItemBA(), &gb );
+  Authorization *auth = new Authorization( gb );
+  Assignment    *asgn = new Assignment( gb );
+  Participant   *part = new Participant( gb );
   QByteArray pubKeyBA = QByteArray::fromHex( ui->signingKey->currentText().toUtf8() );
 
-  part->setIndex( DataVbc64( 0, AO_INDEX, &gb ) );
+  part->setIndex( 0 );
   DataItem *di = ae->getUnusedKeyPair( pubKeyBA );
   if ( di )
-    { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+    { KeyAsset *ka = qobject_cast<KeyAsset *>(di);
       if ( ka )
         if ( ka->getTypeCode() == AO_KEY_ASSET )
           { di = ka->value( AO_KEYPAIR );
@@ -164,7 +165,7 @@ GenericCollection GenesisForm::calculateGenesisBlock()
                 if ( kp )
                   { PubKey *pk = kp->getPubKey();
                     if ( pk )
-                      part->setKey( *pk );
+                      part->setKey( new PubKey( pk->toDataItem() ) );
                   }
               }
           }
@@ -175,20 +176,21 @@ GenericCollection GenesisForm::calculateGenesisBlock()
   auth->setAssignment( asgn );
   auth->setNSigs( asgn->getNParticipants() );
   // auth.sigs.append( signature of assignment );
-  // gb.insert( auth );
+  // gb->insert( auth );
   return gb;
 }
 
 void GenesisForm::updateHash()
-{ GenericCollection gb = calculateGenesisBlock();
+{ GenericCollection *gb = calculateGenesisBlock();
   typeCode_t ht = AO_HASH256;
   switch( ui->hashType->currentIndex() )
     { case 0: ht = AO_HASH256; break;
       case 1: ht = AO_HASH512; break;
       case 2: ht = AO_HASH224SALT32; break;
     }
-  ui->hash->setPlainText( QString::fromUtf8( gb.getHash(ht).toHex() ) );
-  ui->block->setPlainText( QString::fromUtf8( ui->hashData->isChecked() ? gb.toHashData().toHex() : gb.toDataItem().toHex() ) );
+  ui->hash->setPlainText( QString::fromUtf8( gb->getHash(ht).toHex() ) );
+  ui->block->setPlainText( QString::fromUtf8( ui->hashData->isChecked() ? gb->toHashData().toHex() : gb->toDataItem().toHex() ) );
+  gb->deleteLater();
 }
 
 /**

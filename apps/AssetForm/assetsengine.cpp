@@ -5,7 +5,7 @@
 
 AssetsEngine::AssetsEngine(CryptoEngine *ice, QObject *parent)
   : QObject(parent)
-{ assets.setTypeCode( AO_ASSETS );
+{ assets = new GenericCollection( AO_ASSETS, this );
   if ( ice ) ce = ice; else
     { ce = new CryptoEngine( this );
       qDebug( "AssetsEngine() creating local CryptoEngine" );
@@ -15,16 +15,16 @@ AssetsEngine::AssetsEngine(CryptoEngine *ice, QObject *parent)
 void  AssetsEngine::restoreConfig()
 { QSettings s;
   if ( s.contains( "assets" ) )
-    { assets = s.value( "assets" ).toByteArray();
+    { *assets = s.value( "assets" ).toByteArray();
       emit newKeyAdded();
     }
-  // assets.debugShow();
+  // assets->debugShow();
 }
 
 void  AssetsEngine::saveConfig()
 { QSettings s;
-  s.setValue( "assets", assets.toDataItem() );
-  // assets.debugShow();
+  s.setValue( "assets", assets->toDataItem() );
+//  assets->debugShow();
 }
 
 /**
@@ -39,27 +39,25 @@ void  AssetsEngine::saveConfig()
  *   unused, one will be made if necessary, NULL if making fails.
  */
 GenericCollection *AssetsEngine::getUnusedKeyPair( QByteArray pkp )
-{ QList<DataItem *>dipl = mmap().values();
+{ QList<DataItem *>dipl = mmap().values( AO_KEY_ASSET );
   foreach( DataItem *di, dipl )
-    { if ( di->getTypeCode() == AO_KEY_ASSET )
-        { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
-          if ( !ka ) { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); } else
-            { if ( isKeyPairUnused( ka ) )
-                { KeyPair *kp = qobject_cast<KeyPair *>(DataItem::fromDataItem( ka->value(AO_KEYPAIR) ));
-                  if ( !kp ) { qDebug( "AO_KEYPAIR did not qobject_cast to a KeyPair" ); } else
-                    { PubKey *pubKey = kp->getPubKey();
-                      if ( !pubKey ) { qDebug( "pubKey NULL" ); } else
-                        { if ( pkp.size() < 1 )
-                            return ka;
-                          QByteArray akp = pubKey->get(); // Asset Key Pattern
-                          if ( akp.mid( 0, pkp.size() ) == pkp )
-                            return ka; // found a match
-                        } // if ( !pubKey ) else
-                    } // if ( !kp ) else
-                } // if ( isKeyPairUnused( ka ) )
-            } // if ( !ka ) else
-        } // if ( di->getTypeCode() == AO_KEY_ASSET )
-    } //  while ( it.hasNext() )
+    { KeyAsset *ka = qobject_cast<KeyAsset *>(di);
+      if ( !ka ) { qDebug( "AO_KEY_ASSET did not qobject_cast to a KeyAsset" ); } else
+        { if ( isKeyPairUnused( ka ) )
+            { KeyPair *kp = qobject_cast<KeyPair *>(DataItem::fromDataItem( ka->value(AO_KEYPAIR) ));
+              if ( !kp ) { qDebug( "AO_KEYPAIR did not qobject_cast to a KeyPair" ); } else
+                { PubKey *pubKey = kp->getPubKey();
+                  if ( !pubKey ) { qDebug( "pubKey NULL" ); } else
+                    { if ( pkp.size() < 1 )
+                        return ka;
+                      QByteArray akp = pubKey->get(); // Asset Key Pattern
+                      if ( akp.mid( 0, pkp.size() ) == pkp )
+                        return ka; // found a match
+                    } // if ( !pubKey ) else
+                } // if ( !kp ) else
+            } // if ( isKeyPairUnused( ka ) )
+        } // if ( !ka ) else
+    } // foreach( DataItem *di, dipl )
 
   // No match found in assets, make a new key pair and return it
   return getNewKeyPair();
@@ -72,8 +70,8 @@ GenericCollection *AssetsEngine::getUnusedKeyPair( QByteArray pkp )
  */
 GenericCollection *AssetsEngine::getNewKeyPair( typeCode_t keyType )
 { if ( !ce ) return NULL; // can't make a pair without a CryptoEngine
-  KeyPair *kp = ce->makeNewGCryPair( keyType, this );                  if ( !kp ) return NULL;
-  GenericCollection *ka = new GenericCollection( AO_KEY_ASSET, this ); if ( !ka ) return NULL;
+  KeyAsset *ka = new KeyAsset( this ); if ( !ka ) return NULL;
+  KeyPair *kp = ce->makeNewGCryPair( keyType, ka ); if ( !kp ) { delete ka; return NULL; }
   ka->insert( kp );
   insert( ka );
   emit newKeyAdded();
@@ -86,10 +84,10 @@ GenericCollection *AssetsEngine::getNewKeyPair( typeCode_t keyType )
  * @param ka - pointer to an AO_KEY_ASSET
  * @return true if the passed asset contains an unused key pair
  */
-bool AssetsEngine::isKeyPairUnused( GenericCollection *ka )
+bool AssetsEngine::isKeyPairUnused( KeyAsset *ka )
 { if ( !ka )                                return false;
   if (  ka->getTypeCode() != AO_KEY_ASSET ) return false;
-  if ( !ka->contains( AO_KEYPAIR ) )        return false;
+  if ( !ka->contains( AO_KEYPAIR    ) )     return false;
   if ( !ka->contains( AO_SHARES_REF ) )     return true;
   SharesRef *sr = qobject_cast<SharesRef *>(DataItem::fromDataItem( ka->value(AO_SHARES_REF) ));
   if ( !sr ) { qDebug( "AO_SHARES_REF did not qobject_cast to a SharesRef" ); return false; }
@@ -106,20 +104,18 @@ QByteArrayList  AssetsEngine::getUnusedKeyPairIDs()
 { QByteArrayList ukpids;
   QList<DataItem *>keyAssetList = mmap().values( AO_KEY_ASSET );
   foreach( DataItem *di, keyAssetList )
-    { if ( di->getTypeCode() != AO_KEY_ASSET ) { qDebug( "expected an AO_KEY_ASSET not type code %lld", di->getTypeCode() ); } else
-        { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
-          if ( !ka ) { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); } else
-            { if ( isKeyPairUnused( ka ) )
-                { KeyPair *kp = qobject_cast<KeyPair *>(DataItem::fromDataItem( ka->value(AO_KEYPAIR) ));
-                  if ( !kp ) { qDebug( "AO_KEYPAIR did not qobject_cast to a KeyPair" ); } else
-                    { PubKey *pubKey = kp->getPubKey();
-                      if ( !pubKey ) { qDebug( "pubKey NULL" ); } else
-                        { ukpids.append( pubKey->get() ); // Asset Key Pattern
-                        } // if ( !pubKey ) else
-                    } // if ( !kp ) else
-                } // if ( isKeyPairUnused( ka ) )
-            } // if ( !ka ) else
-        } // if ( di->getTypeCode() != AO_KEY_ASSET ) else
+    { KeyAsset *ka = qobject_cast<KeyAsset *>(di);
+      if ( !ka ) { qDebug( "AO_KEY_ASSET did not qobject_cast to a KeyAsset" ); } else
+        { if ( isKeyPairUnused( ka ) )
+            { KeyPair *kp = qobject_cast<KeyPair *>(DataItem::fromDataItem( ka->value(AO_KEYPAIR) ));
+              if ( !kp ) { qDebug( "AO_KEYPAIR did not qobject_cast to a KeyPair" ); } else
+                { PubKey *pubKey = kp->getPubKey();
+                  if ( !pubKey ) { qDebug( "pubKey NULL" ); } else
+                    { ukpids.append( pubKey->get() ); // Asset Key Pattern
+                    } // if ( !pubKey ) else
+                } // if ( !kp ) else
+            } // if ( isKeyPairUnused( ka ) )
+        } // if ( !ka ) else
     } // foreach( DataItem *di, keyAssetList )
   return ukpids;
 }

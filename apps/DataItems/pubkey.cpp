@@ -147,15 +147,27 @@ DataItemBA  PubKey::toDataItem( bool cf ) const
     { case AO_ECDSA_PUB_KEY2:
       case AO_ECDSA_PUB_KEY3:
       case AO_ECDSA_PUB_KEY4:
-        if ( !publicKeyEcdsa ) return DataItemBA();
+        if ( !publicKeyEcdsa )
+          { qDebug( "publicKeyEcdsa is NULL but typecode is %lld",typeCode );
+            // TODO: log error
+            return DataItemBA();
+          }
         return publicKeyEcdsa->toDataItem(cf);
 
       case AO_RSA3072_PUB_KEY:
-        if ( !publicKeyRsa3072 ) return DataItemBA();
+        if ( !publicKeyRsa3072 )
+          { qDebug( "publicKeyRsa3072 is NULL but typecode is %lld",typeCode );
+            // TODO: log error
+            return DataItemBA();
+          }
         return publicKeyRsa3072->toDataItem(cf);
 
       case AO_ID_SEQ_NUM:
-        if ( !publicKeyIndex ) return DataItemBA();
+        if ( !publicKeyIndex )
+          { qDebug( "publicKeyIndex is NULL but typecode is %lld",typeCode );
+            // TODO: log error
+            return DataItemBA();
+          }
         return publicKeyIndex->toDataItem(cf);
     }
   qDebug( "PubKey::toDataItem() unrecognized type code %lld", typeCode );

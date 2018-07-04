@@ -26,7 +26,7 @@
 #define PARTICIPANT_H
 
 #include "datavbc64.h"
-#include "datavarlength.h"
+#include "genericcollection.h"
 #include "note.h"
 #include "pageref.h"
 #include "pubkey.h"
@@ -35,16 +35,18 @@
 /**
  * @brief The Participant class - identifies a source or recipient of shares
  */
-class Participant : public DataVarLength
+class Participant : public GenericCollection
 {
     Q_OBJECT
 public:
-    explicit  Participant( DataItemBA di = DataItemBA(), QObject *p = NULL );
+              Participant( QObject *p = NULL )
+                : GenericCollection( AO_PARTICIPANT, p ) {}
+              Participant( DataItemBA di, QObject *p = NULL );
               Participant( const Participant &r, QObject *p = NULL )
-                : DataVarLength( QByteArray(), AO_PARTICIPANT, p ? p : r.parent() ),
+                : GenericCollection( AO_PARTICIPANT, p ? p : r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
         void  operator = ( const DataItemBA &di );
-  DataItemBA  toDataItem( bool cf = false );
+  DataItemBA  toDataItem( bool cf );
   QByteArray  getId()     const { return key.getId(); }
       PubKey  getKey()    const { return key;         }
       Shares  getAmount() const { return amount;      }
@@ -53,16 +55,16 @@ public:
         void  setAmount( Shares v )   { amount = v;  /* TODO: log error for 0 */ }
         void  setAmount( __int128 v ) { amount = v; }
         void  setNote( QByteArray n ) { note.set( n ); }
-DataVbc64  getIndex() const { return index; }
-        void  setIndex( const DataVbc64 &i ) { index = i; }
+     quint64  getIndex() const { return index->value(); }
+        void  setIndex( qint64 v );
         void  setKey( const PubKey &pk ) { key = pk; }
 
 private:
-      Shares  amount;  // Negative for givers, positive for receivers, 0 is invalid
-      PubKey  key;     // Full public key, suitable for checking signatures
-     PageRef  page;    // Reference for givers
-        Note  note;    // Arbitrary data to record with the transaction
-DataVbc64  index;   // When part of a participant list, this is the index number (starting with 0)
+            Shares  amount;  // Negative for givers, positive for receivers, 0 is invalid
+            PubKey  key;     // Full public key, suitable for checking signatures
+           PageRef  page;    // Reference for givers
+              Note  note;    // Arbitrary data to record with the transaction
+QPointer<DataVbc64> index;   // When part of a participant list, this is the index number (starting with 0)
 };
 
 #endif // PARTICIPANT_H

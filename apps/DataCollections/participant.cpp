@@ -37,10 +37,9 @@
 #include "participant.h"
 
 Participant::Participant( DataItemBA di, QObject *p )
-  : DataVarLength( typeCodeOf( di ), p )
+  : GenericCollection( typeCodeOf( di ), p )
 { // See if there's anything interesting in the data item
-  index = -1;
-  index.setTypeCode( AO_INDEX );
+  setIndex( -1 );
   if ( di.size() > 0 )
     { if (( typeCodeOf( di ) != AO_PARTICIPANT ) &&
           ( typeCodeOf( di ) != AO_PARTICIPANT_CF ))
@@ -57,26 +56,27 @@ Participant::Participant( DataItemBA di, QObject *p )
                   return;
                 }
                else
-                { switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                { DataItemBA item = items.left( sz );
+                  switch ( typeCodeOf( item ) ) // read valid items from the byte array, in any order
                     { case AO_AMT:
-                        amount = items;
+                        amount = item;
                         break;
 
                       case AO_ECDSA_PUB_KEY2:
                       case AO_ECDSA_PUB_KEY3:
                       case AO_RSA3072_PUB_KEY:
                       case AO_ID_SEQ_NUM:
-                        key = items;
+                        key = item;
                         break;
 
                       case AO_PAGE_REF:
-                        page = items;
+                        page = item;
 
                       case AO_NOTE:
-                        note = items;
+                        note = item;
 
                       case AO_INDEX:
-                        index = items;
+                        *index = item;
 
                       default:
                         // TODO: log anomaly - unrecognized data type
@@ -125,10 +125,8 @@ DataItemBA Participant::toDataItem( bool cf )
           dil.append( page.toDataItem(false) );
         if ( note.size() > 0 )
           dil.append( note.toDataItem(false) );
-        if ( index > -1 )
-          { index.setTypeCode( AO_INDEX );
-            dil.append( index.toDataItem(false) );
-          }
+        if ( *index > -1 )
+          dil.append( index->toDataItem(false) );
         break;
 
       case AO_PARTICIPANT_CF:
@@ -138,10 +136,8 @@ DataItemBA Participant::toDataItem( bool cf )
           dil.append( key.getId(true) );
         if ( note.size() > 0 )
           dil.append( note.toDataItem(true) );
-        if ( index > -1 )
-          { index.setTypeCode( AO_INDEX );
-            dil.append( index.toDataItem(true) );
-          }
+        if ( *index > -1 )
+          dil.append( index->toDataItem(true) );
         break;
 
       default:
@@ -149,8 +145,38 @@ DataItemBA Participant::toDataItem( bool cf )
         return QByteArray();
     }
   std::sort( dil.begin(), dil.end() );
-  ba = dil.join();
-  return DataVarLength::toDataItem(cf);
+  QByteArray ba = dil.join();
+  DataItemBA db;
+  db.append( codeToBytes( typeCode  ) );
+  db.append( codeToBytes( ba.size() ) );
+  db.append( ba );
+  return db;
 }
+
+
+/**
+ * @brief Participant::setIndex - if it does not exist, create the index data item
+ *   and insert it in the collection.  Either way, set the index data item value to v.
+ * @param v - value to set index to
+ */
+void Participant::setIndex( qint64 v )
+{ if ( !index )
+    if ( contains( AO_INDEX ) )
+      { qDebug( "weird, we've got an AO_INDEX in the collection, but not in the index pointer" );
+        index = qobject_cast<DataVbc64 *>( value( AO_INDEX ) );
+        if ( !index )
+          qDebug( "weirder, AO_INDEX object would not cast to DataVbc64*" );
+      }
+  if ( index )
+    { index->set( v );
+      return;
+    }
+  index = new DataVbc64( v, AO_INDEX, this );
+  if ( !index )
+    qDebug( "problem creating index" );
+   else
+    insert( index );
+}
+
 
 

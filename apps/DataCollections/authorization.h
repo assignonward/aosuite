@@ -42,7 +42,9 @@ class Authorization : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit Authorization( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
+             Authorization( QObject *p = NULL )
+               : DataVarLength( AO_AUTHORIZATION, p ) {}
+             Authorization( const DataItemBA &di, QObject *p = NULL );
              Authorization( const Authorization &a, QObject *p = NULL )
                : DataVarLength( AO_AUTHORIZATION, p ? p : a.parent() ),
                  assignment( a.assignment ), sigs( a.sigs ) {}

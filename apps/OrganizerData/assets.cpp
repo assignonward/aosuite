@@ -48,26 +48,27 @@ Assets::Assets(const DataItemBA &di, QObject *p)
                 { Organizer org;
                   Recorder rec;
                   SharesRef shr;
-                  GenericCollection gc;
-                  switch ( typeCodeOf( items ) ) // read valid items from the byte array, in any order
+                  KeyAsset ka;
+                  DataItemBA item = items.left(sz);
+                  switch ( typeCodeOf( item ) ) // read valid items from the byte array, in any order
                     { case AO_ORGANIZER:
-                        org = items;
+                        org = item;
                         organizers.append( org );
                         break;
 
                       case AO_RECORDER:
-                        rec = items;
+                        rec = item;
                         recorders.append( rec );
                         break;
 
                       case AO_SHARES_REF:
-                        shr = items;
+                        shr = item;
                         sharesRefs.append( shr );
                         break;
 
                       case AO_KEY_ASSET:
-                        gc = items;
-                        keyAssets.append( gc );
+                        ka = item;
+                        keyAssets.append( ka );
                         break;
 
                       default:
@@ -103,7 +104,7 @@ DataItemBA  Assets::toDataItem( bool cf )
     foreach( SharesRef s, sharesRefs )
       dil.append( s.toDataItem(false) );
   if ( keyAssets.size() > 0 )
-    foreach( GenericCollection k, keyAssets )
+    foreach( KeyAsset k, keyAssets )
       dil.append( k.toDataItem(false) );
   // TODO: randomize order of dil
   ba.clear();

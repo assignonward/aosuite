@@ -39,6 +39,7 @@ public:
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
               Data64( const DataItemBA &di, QObject *p = NULL );
       qint64  value() { return v; }
+        void  set( qint64 nv ) { v = nv; }
   DataItemBA  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const DataItemBA &di );
         void  operator = ( const Data64 &d ) { v = d.v; typeCode = d.typeCode; }

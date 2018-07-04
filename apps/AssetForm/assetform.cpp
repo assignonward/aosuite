@@ -77,9 +77,9 @@ void  AssetForm::updateLabels()
   foreach( DataItem *di, dipl )
     { // qDebug( "item (of %d) type 0x%x", assets.itemMM.size(), di->getTypeCode() );
       if ( di->getTypeCode() == AO_KEY_ASSET )
-        { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+        { KeyAsset *ka = qobject_cast<KeyAsset *>(di);
           if ( !ka )
-            { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); }
+            { qDebug( "AO_KEY_ASSET did not qobject_cast to a KeyAsset" ); }
            else
             { // qDebug( "ka typeCode 0x%x %d items", ka->getTypeCode(), ka->itemMM.size() );
               if ( ka->contains( AO_KEYPAIR ) )
@@ -132,9 +132,9 @@ void  AssetForm::on_importToGpg_clicked()
   foreach( DataItem *di, dipl )
     { // qDebug( "item (of %d) type 0x%x", assets.itemMM.size(), di->getTypeCode() );
       if ( di->getTypeCode() == AO_KEY_ASSET )
-        { GenericCollection *ka = qobject_cast<GenericCollection *>(di);
+        { KeyAsset *ka = qobject_cast<KeyAsset *>(di);
           if ( !ka )
-            { qDebug( "AO_KEY_ASSET did not qobject_cast to a GenericCollection" ); }
+            { qDebug( "AO_KEY_ASSET did not qobject_cast to a KeyAsset" ); }
            else
             { // qDebug( "ka typeCode 0x%x %d items", ka->getTypeCode(), ka->itemMM.size() );
               if ( ka->contains( AO_ECDSA_PRI_KEY ) ||

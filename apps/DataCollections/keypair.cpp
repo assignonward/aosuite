@@ -24,28 +24,30 @@
 
 /**
  * @brief KeyPair::KeyPair - constructor
- * @param di - optional data item
- * @param p - optional parent object
+ * @param db - data item byte array
+ * @param p  - optional parent object
  */
-KeyPair::KeyPair( DataItemBA di, QObject *p )
+KeyPair::KeyPair( const DataItemBA &db, QObject *p )
   : GenericCollection( AO_KEYPAIR, p )
 { // See if there's anything interesting in the data item
 #ifndef USE_QPOINTERS
   priKey = NULL;
   pubKey = NULL;
 #endif
-  if ( di.size() > 0 )
-    { if ( typeCodeOf( di ) != AO_KEYPAIR )
-        { // TODO: log an error
+  if ( db.size() > 0 )
+    { if ( typeCodeOf( db ) != AO_KEYPAIR )
+        { qDebug( "unexpected type code %lld", typeCodeOf( db ) );
+          // TODO: log an error
           return;
         }
        else
-        { DataVarLength temp( di );        // It's our type
+        { DataVarLength temp( db );        // It's our type
           DataItemBA items = temp.get();  // typeCode has been stripped off
           while ( items.size() > 0 )
             { int sz = typeSize( items );
               if ( sz <= 0 )
-                { // TODO: log error
+                { qDebug( "size error" );
+                  // TODO: log error
                   return;
                 }
                else
@@ -56,17 +58,17 @@ KeyPair::KeyPair( DataItemBA di, QObject *p )
                       case AO_RSA3072_PUB_KEY:
                       // case AO_ID_SEQ_NUM: // TODO: this one needs a database lookup
                         if ( !pubKey )
-                          pubKey = new PubKey( this );
-                        *pubKey = items;
-                        insert( pubKey );
+                          { pubKey = new PubKey( (DataItemBA)items.left( sz ) );
+                            insert( pubKey );
+                          }
                         break;
 
                       case AO_ECDSA_PRI_KEY:
                       case AO_RSA3072_PRI_KEY:
                         if ( !priKey )
-                          priKey = new PriKey( this );
-                        *priKey = items;
-                        insert( priKey );
+                          { priKey = new PriKey( (DataItemBA)items.left( sz ) );
+                            insert( priKey );
+                          }
                         break;
 
                       default:

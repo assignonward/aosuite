@@ -41,18 +41,19 @@ public:
               PubKey( const DataItemBA &di, QObject *p = NULL );
               PubKey( const PubKey &pk, QObject *p = NULL );
               PubKey( PublicKeyEcdsa *pkp, QObject *p = NULL )
-                : DataItem( AO_ECDSA_PUB_KEY4, p ? p : pkp->parent() )
-                { publicKeyEcdsa = pkp; }
+                : DataItem( AO_ECDSA_PUB_KEY4 , p ? p : pkp->parent() )
+                { publicKeyEcdsa   = pkp; publicKeyEcdsa  ->setParent( this ); }
               PubKey( PublicKeyRsa3072 *pkp, QObject *p = NULL )
                 : DataItem( AO_RSA3072_PUB_KEY, p ? p : pkp->parent() )
-                { publicKeyRsa3072 = pkp; }
+                { publicKeyRsa3072 = pkp; publicKeyRsa3072->setParent( this ); }
               PubKey( DataVbc64 *pkp, QObject *p = NULL )
-                : DataItem( AO_ID_SEQ_NUM, p ? p : pkp->parent() )
-                { publicKeyIndex = pkp; }
+                : DataItem( AO_ID_SEQ_NUM     , p ? p : pkp->parent() )
+                { publicKeyIndex   = pkp; publicKeyIndex  ->setParent( this ); }
         void  operator = ( const PubKey &k )
                 { typeCode         = k.typeCode;
                   publicKeyEcdsa   = k.publicKeyEcdsa;
                   publicKeyRsa3072 = k.publicKeyRsa3072;
+                  publicKeyIndex   = k.publicKeyIndex;
                 }
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false ) const;
@@ -65,6 +66,10 @@ private:
 QPointer<       DataVbc64> publicKeyIndex;  // AO_ID_SEQ_NUM index number of a public key on the blockchain
 QPointer<  PublicKeyEcdsa> publicKeyEcdsa;
 QPointer<PublicKeyRsa3072> publicKeyRsa3072;
+
+//       DataVbc64 *publicKeyIndex = NULL;  // AO_ID_SEQ_NUM index number of a public key on the blockchain
+//  PublicKeyEcdsa *publicKeyEcdsa = NULL;
+//PublicKeyRsa3072 *publicKeyRsa3072 = NULL;
 };
 
 #endif // PUBKEY_H

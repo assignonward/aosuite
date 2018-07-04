@@ -24,6 +24,7 @@
 #define ASSETS_H
 
 #include "genericcollection.h"
+#include "keyasset.h"
 #include "organizer.h"
 #include "recorder.h"
 #include "sharesref.h"
@@ -43,10 +44,10 @@ public:
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false );
 
-  QList<        Organizer> organizers;
-  QList<         Recorder> recorders;
-  QList<        SharesRef> sharesRefs;
-  QList<GenericCollection> keyAssets;  // AO_KEY_ASSET key pairs, unused, holding shares and assigned
+  QList<Organizer> organizers;
+  QList< Recorder> recorders;
+  QList<SharesRef> sharesRefs;
+  QList< KeyAsset> keyAssets;  // AO_KEY_ASSET key pairs, unused, holding shares and assigned
 };
 
 #endif // ASSETS_H

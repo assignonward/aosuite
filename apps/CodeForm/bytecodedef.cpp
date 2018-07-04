@@ -37,11 +37,12 @@ void  ByteCodeDef::fromJsonObject( const QJsonObject &jo )
   if ( jo.contains( "sepr" ) ) sepr = jo.value( "sepr" ).toBool();
   if ( jo.contains( "size" ) ) sz   = jo.value( "size" ).toInt();
   if ( jo.contains( "type" ) ) tn   = jo.value( "type" ).toString();
-  if ( jo.contains( "pdef" ) ) pdef = jo.value( "pdef" ).toString();
+  if ( jo.contains( "acry" ) ) acry = jo.value( "acry" ).toString();
 }
 
 QJsonObject  ByteCodeDef::toJsonObject() const
 { QJsonObject jo;
+  jo.insert( "acry", QJsonValue( acry ) );
   jo.insert( "code", QJsonValue( code ) );
   if ( cont.size() )
   jo.insert( "cont", QJsonValue( cont ) );
@@ -52,15 +53,14 @@ QJsonObject  ByteCodeDef::toJsonObject() const
   jo.insert( "sepr", QJsonValue( sepr ) );
   jo.insert( "size", QJsonValue(   sz ) );
   jo.insert( "type", QJsonValue(   tn ) );
-  jo.insert( "pdef", QJsonValue( pdef ) );
   return jo;
 }
 
-QString ByteCodeDef::toDefine( qint32 maxLenPdef )
+QString ByteCodeDef::toDefine( qint32 maxLenAcry )
 { if ( DataItem::typeCodeIsSeparable( code ) )
     return QString( "#define %1%2 %3 // <%4+%5> %6:%7%8" )
-           .arg( pdef )
-           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) )
+           .arg( acry )
+           .arg( QString( maxLenAcry - acry.size(), QChar(' ') ) )
            .arg( code, 6 )
            .arg( QString::fromUtf8( VarSizeCode::codeToBytes(code).toHex() ) )
            .arg( (sz<0) ? "var" : QString::number(sz) )
@@ -69,8 +69,8 @@ QString ByteCodeDef::toDefine( qint32 maxLenPdef )
            .arg( desc );
 
     return QString( "#define %1%2 %3 // (%4+%5) %6:%7%8" )
-           .arg( pdef )
-           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) )
+           .arg( acry )
+           .arg( QString( maxLenAcry - acry.size(), QChar(' ') ) )
            .arg( code, 6 )
            .arg( QString::fromUtf8( VarSizeCode::codeToBytes(code).toHex() ) )
            .arg( (sz<0) ? "var" : QString::number(sz) )
@@ -79,22 +79,22 @@ QString ByteCodeDef::toDefine( qint32 maxLenPdef )
            .arg( desc );
 }
 
-QString ByteCodeDef::toCase( qint32 maxLenPdef )
+QString ByteCodeDef::toCase( qint32 maxLenAcry )
 { return QString( "      case %1:%3 return new %2( di, p );" )
-           .arg( pdef ).arg( tn )
-           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
+           .arg( acry ).arg( tn )
+           .arg( QString( maxLenAcry - acry.size(), QChar(' ') ) );
 }
 
-QString ByteCodeDef::toCaseDataItem( qint32 maxLenPdef )
+QString ByteCodeDef::toCaseDataItem( qint32 maxLenAcry )
 { return QString( "      case %1:%3 return new %2( *((%2 *)ditm), p );" )
-           .arg( pdef ).arg( tn )
-           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
+           .arg( acry ).arg( tn )
+           .arg( QString( maxLenAcry - acry.size(), QChar(' ') ) );
 }
 
-QString ByteCodeDef::toSizeCase( qint32 maxLenPdef )
+QString ByteCodeDef::toSizeCase( qint32 maxLenAcry )
 { return QString( "      case %1:%3 return %2;" )
-           .arg( pdef ).arg( sz )
-           .arg( QString( maxLenPdef - pdef.size(), QChar(' ') ) );
+           .arg( acry ).arg( sz )
+           .arg( QString( maxLenAcry - acry.size(), QChar(' ') ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

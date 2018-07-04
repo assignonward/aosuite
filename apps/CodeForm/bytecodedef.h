@@ -44,7 +44,7 @@ public:
                   gbcr( k.gbcr ),
                     tn( k.tn   ),
                   desc( k.desc ),
-                  pdef( k.pdef ) {}
+                  acry( k.acry ) {}
         void  operator = ( const ByteCodeDef &k )
                 { code = k.code;
                   cont = k.cont;
@@ -53,7 +53,7 @@ public:
                   gbcr = k.gbcr;
                     tn = k.tn  ;
                   desc = k.desc;
-                  pdef = k.pdef; }
+                  acry = k.acry; }
         void  fromJsonObject( const QJsonObject &jo );
  QJsonObject  toJsonObject() const;
      QString  toDefine( qint32 maxLenPdef = 26 );
@@ -68,7 +68,7 @@ public:
      QString  gbcr; // Genesis block creator ui type
      QString  tn;   // DataItem subclass name that the value is stored as
      QString  desc; // text description of the bytecode usage
-     QString  pdef; // #define short name used in program code
+     QString  acry; // #define short name used in program code
 };
 
 /**

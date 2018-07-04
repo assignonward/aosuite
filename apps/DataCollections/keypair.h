@@ -27,7 +27,7 @@
 #include "prikey.h"
 #include "pubkey.h"
 #include <QPointer>
-#define USE_QPOINTERS
+//#define USE_QPOINTERS
 
 /**
  * @brief The KeyPair class - contains a (hopefully matching) public/private key pair
@@ -36,10 +36,15 @@ class KeyPair : public GenericCollection
 {
     Q_OBJECT
 public:
-                KeyPair( DataItemBA di = DataItemBA(), QObject *p = NULL );
+                KeyPair( QObject *p = NULL )
+                  : GenericCollection( AO_KEYPAIR, p ) {}
+                KeyPair( const DataItemBA &di, QObject *p = NULL );
                 KeyPair( const KeyPair &k, QObject *p = NULL )
                   : GenericCollection( AO_KEYPAIR, p ? p : k.parent() ),
-                    pubKey( k.pubKey ), priKey( k.priKey ) {}
+                    pubKey( k.pubKey ), priKey( k.priKey )
+                    { insert( pubKey );
+                      insert( priKey );
+                    }
                 KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p = NULL );
           void  operator = ( const DataItemBA &di );
           bool  isValid() { return pubKey->isValid() && priKey->isValid(); } // TODO: ensure they match

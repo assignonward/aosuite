@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QPointer>
 #include "cryptoEngine.h"
+#include "keyasset.h"
 #include "genericcollection.h"
 
 /**
@@ -14,14 +15,23 @@ class AssetsEngine : public QObject
 {
     Q_OBJECT
 public:
-         explicit  AssetsEngine( CryptoEngine *ice = NULL, QObject *parent = NULL);
+         explicit  AssetsEngine( CryptoEngine *ice = NULL, QObject *parent = NULL );
              void  restoreConfig();
              void  saveConfig();
-             void  insert( DataItem *it ) { assets.insert( it ); }
-      DataItemMap  mmap() { return assets.mmap(); }
+             void  insert( DataItem *it )
+                     { if ( assets )
+                         assets->insert( it );
+                        else
+                         qDebug( "assets NULL" );
+                     }
+      DataItemMap  mmap()
+                     { if ( !assets )
+                         return DataItemMap();
+                       return assets->mmap();
+                     }
 GenericCollection *getUnusedKeyPair( QByteArray pkp );
 GenericCollection *getNewKeyPair( typeCode_t keyType = AO_ECDSA_PRI_KEY );
-             bool  isKeyPairUnused( GenericCollection *ka );
+             bool  isKeyPairUnused( KeyAsset *ka );
    QByteArrayList  getUnusedKeyPairIDs();
 
 signals:
@@ -33,8 +43,8 @@ private:
       // Simple "bag'o stuff" for early applications with small asset collections to organize
       // anticipate multiple maps into the assets and specialized collections for the heavier
       // load applications like recorders.
-      GenericCollection  assets;
-  QPointer<CryptoEngine> ce;
+QPointer<GenericCollection> assets;
+     QPointer<CryptoEngine> ce;
 };
 
 #endif // ASSETSENGINE_H

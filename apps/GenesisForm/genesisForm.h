@@ -39,7 +39,7 @@ class GenesisForm : public QScrollArea
 public:
          explicit  GenesisForm( QWidget *cw, MainWinCommon *mw = NULL, AssetsEngine *iae = NULL );
                   ~GenesisForm();
-GenericCollection  calculateGenesisBlock();
+GenericCollection *calculateGenesisBlock();
 
 public slots:
              void  restoreConfig();

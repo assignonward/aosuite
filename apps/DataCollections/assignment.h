@@ -44,7 +44,9 @@ class Assignment : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  Assignment( const DataItemBA &di = QByteArray(), QObject *p = NULL );
+              Assignment( QObject *p = NULL )
+                  : DataVarLength( AO_ASSIGNMENT, p ) {}
+              Assignment( const DataItemBA &di, QObject *p = NULL );
               Assignment( const Assignment &a, QObject *p = NULL )
                 : DataVarLength( AO_ASSIGNMENT, p ? p : a.parent() ), proposedChain( a.proposedChain ),
                   recordingDeadline( a.recordingDeadline ), recordingBid( a.recordingBid ), note( a.note ),
