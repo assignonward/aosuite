@@ -3,6 +3,9 @@
 
 #include "genericcollection.h"
 
+/**
+ * @brief The KeyAsset class - nothing special, just a GenericCollection of a specific type
+ */
 class KeyAsset : public GenericCollection
 {
     Q_OBJECT

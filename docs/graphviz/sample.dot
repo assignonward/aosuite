@@ -1,0 +1,261 @@
+digraph G {
+genesis [shape=Msquare];
+
+subgraph cluster_1 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+c1 [shape=rectangle];
+c1 -> p1;
+		label = "Time 1";
+	}
+
+p1 -> genesis;
+p1 -> genesis [style=dotted dir=back];
+
+
+subgraph cluster_2 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p2 -> c1;
+p3 -> c1;
+p4 -> c1;
+
+c2 [shape=rectangle];
+c2 -> p2;
+c2 -> p3;
+c2 -> p4;
+		label = "Time 2";
+	}
+
+p2 -> p1 [style=dotted dir=back];
+p3 -> p1 [style=dotted dir=back];
+p4 -> p1 [style=dotted dir=back];
+
+
+subgraph cluster_3 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p5 -> c2;
+p6 -> c2;
+p7 -> c2;
+p8 -> c2;
+
+c3 [shape=rectangle];
+c3 -> p5;
+c3 -> p6;
+c3 -> p7;
+c3 -> p8;
+
+		label = "Time 3";
+	}
+
+p5 -> p1 [style=dotted dir=back];
+p6 -> p1 [style=dotted dir=back];
+p7 -> p3 [style=dotted dir=back];
+p8 -> p1 [style=dotted dir=back];
+
+subgraph cluster_4 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p9  -> c3;
+p10 -> c3;
+p11 -> c2;
+p12 -> c3;
+
+c4 [shape=rectangle];
+c4 -> p9;
+c4 -> p10;
+c4 -> p11;
+c4 -> p12;
+		label = "Time 4";
+	}
+
+p9  -> p1 [style=dotted dir=back];
+p10 -> p2 [style=dotted dir=back];
+p11 -> p3 [style=dotted dir=back];
+p12 -> p1 [style=dotted dir=back];
+
+
+subgraph cluster_5 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p13 -> c4;
+p14 -> c4;
+p15 -> c4;
+p16 -> c4;
+
+c5 [shape=rectangle];
+c5 -> p13;
+c5 -> p14;
+c5 -> p15;
+c5 -> p16;
+		label = "Time 5";
+	}
+
+p13 -> p7  [style=dotted dir=back];
+p13 -> p8  [style=dotted dir=back];
+p14 -> p9  [style=dotted dir=back];
+p14 -> p10 [style=dotted dir=back];
+p15 -> p3  [style=dotted dir=back];
+p16 -> p1  [style=dotted dir=back];
+
+
+subgraph cluster_6 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p17 -> c5;
+p18 -> c5;
+p19 -> c5;
+
+c6 [shape=rectangle];
+c6 -> p17;
+c6 -> p18;
+c6 -> p19;
+		label = "Time 6";
+	}
+
+subgraph cluster_7 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p20 -> c5;
+p21 -> c5;
+
+c7 [shape=rectangle];
+c7 -> p20;
+c7 -> p21;
+		label = "Also Time 6";
+	}
+
+p17 -> p7  [style=dotted dir=back];
+p18 -> p8  [style=dotted dir=back];
+p19 -> p9  [style=dotted dir=back];
+p20 -> p10 [style=dotted dir=back];
+p21 -> p3  [style=dotted dir=back];
+
+
+subgraph cluster_8 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p22 -> c6;
+p23 -> c6;
+p24 -> c7;
+p25 -> c7;
+
+c8 [shape=rectangle];
+c8 -> p22;
+c8 -> p23;
+c8 -> p24;
+c8 -> p25;
+		label = "Time 7";
+	}
+
+p22 -> p21 [style=dotted dir=back];
+p22 -> p18 [style=dotted dir=back];
+p23 -> p15 [style=dotted dir=back];
+p24 -> p10 [style=dotted dir=back];
+p25 -> p17 [style=dotted dir=back];
+p25 -> p1  [style=dotted dir=back];
+
+
+subgraph cluster_9 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p26 -> c8;
+p27 -> c7;
+
+c9 [shape=rectangle];
+c9 -> p26;
+c9 -> p27;
+		label = "Time 8";
+	}
+
+subgraph cluster_10 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p28 -> c8;
+p29 -> c8;
+p30 -> c8;
+
+c10 [shape=rectangle];
+c10 -> p28;
+c10 -> p29;
+c10 -> p30;
+		label = "Also Time 8";
+	}
+
+p26 -> p21 [style=dotted dir=back];
+p27 -> p18 [style=dotted dir=back];
+p28 -> p15 [style=dotted dir=back];
+p29 -> p10 [style=dotted dir=back];
+p30 -> p17 [style=dotted dir=back];
+p30 -> p12 [style=dotted dir=back];
+
+
+subgraph cluster_11 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p31 -> c9;
+p32 -> c10;
+
+c11 [shape=rectangle];
+c11 -> p31;
+c11 -> p32;
+		label = "Time 9";
+	}
+
+
+subgraph cluster_12 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p33 -> c10;
+
+c12 [shape=rectangle];
+c12 -> p33;
+		label = "Also Time 9";
+	}
+
+p31 -> p21 [style=dotted dir=back];
+p32 -> p18 [style=dotted dir=back];
+p33 -> p15 [style=dotted dir=back];
+
+
+subgraph cluster_13 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+p34 -> c11;
+p35 -> c12;
+p36 -> c12;
+p37 -> c12;
+p38 -> c12;
+
+c13 [shape=rectangle];
+c13 -> p34;
+c13 -> p35;
+c13 -> p36;
+c13 -> p37;
+c13 -> p38;
+		label = "Time 10";
+	}
+
+p34 -> p21 [style=dotted dir=back];
+p34 -> p18 [style=dotted dir=back];
+p35 -> p15 [style=dotted dir=back];
+p36 -> p19 [style=dotted dir=back];
+p37 -> p23 [style=dotted dir=back];
+p37 -> p27 [style=dotted dir=back];
+p38 -> p32 [style=dotted dir=back];
+
+}

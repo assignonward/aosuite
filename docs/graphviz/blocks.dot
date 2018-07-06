@@ -1,0 +1,41 @@
+digraph G 
+{ rankdir=LR;
+
+  subgraph cluster_1 
+  { style=filled;
+    color=grey80;
+    node [style=filled,color=white,shape=rectangle];
+    label = "CB_COMPLETE";
+
+    subgraph cluster_2 
+    { style=filled;
+      color=grey60;
+      node [style=filled,color=white];
+      label = "CB_SIGNED";
+
+      subgraph cluster_3 
+      { style=filled;
+        color=grey40;
+        node [style=filled,color=white,shape=rectangle];
+        c3s [label="Signature\nof CB_CONTENTS +\nAO_TIME_OF_SIG"];
+        c3t [label="AO_TIME_OF_SIG"];
+        label = "AO_SIG_WITH_TIME";
+      }
+
+      subgraph cluster_4
+      { style=filled;
+        color=grey40;
+        node [style=filled,color=white,shape=rectangle];
+        c4h1 [label="Hash\nof previous\nCB_SIGNED"];
+        c4fi [label="CB_FIRST_ID_SEQ_NUM"]
+        c4ni [label="CB_N_ID_SEQ_NUM"]
+        c4h2 [label="Other\nHousekeeping\nBlock Info"];
+        c4a1 [label="PG_CONTENTS"];
+        c4a2 [label="PG_CONTENTS"];
+        c4ls [label="AO_LISTSIZE"];
+        label = "CB_CONTENTS";
+      }
+    }
+   c1 [label="Hash\nof CB_SIGNED"];
+ }
+}

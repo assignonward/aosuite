@@ -1,0 +1,14 @@
+digraph G 
+{ rankdir=LR;
+
+  subgraph cluster_1 
+  { style=filled;
+    color=grey80;
+    node [style=filled,color=white,shape=rectangle];
+    label = "PG_CONTENTS";
+
+    ca [label="AO_AUTHORIZATION"];
+    ci [label="AO_INDEX"];
+    cs [label="PG_ID_SEQ_DIFF"];
+  }
+}
