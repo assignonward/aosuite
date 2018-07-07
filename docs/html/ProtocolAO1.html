@@ -106,9 +106,9 @@ Public keys in an Ⓐ¹ blockchain<div class="tooltip"><sup>2</sup><span class="
 
 The primary format specification for blockchain data is how it is stored and communicated when "on the chain."  This format may be translated and interpreted and presented in various forms, but the conceptual contents remain the same.  DataItems contain all data stored and communicated in Assign Onward protocols, they can be either fixed or variable size.  DataContainers are variable size DataItems which contain zero or more data items.  All DataItems include an item type code, and 0 or more bytes of data.  When in binary form, if a DataItem is variable size, the size of the data immediately follows the item type, then the data follows that.  If a DataItem is a DataContainer, then its data section contains zero or more DataItems, each starting with the item type identifier.
 
-<h2>Variable Byte Codes</h2>
+<h3>Variable Byte Codes</h3>
 
-Item type identifiers, data sizes, and most other small integers are stored as a variable byte code (VBC) from 1 to 10 bytes in length.  The VBC continues until the first byte in which the MSb is 0.  VBCs represent a 64 bit signed integer.  Integers from -63 to 63 are represented in a single byte, -8191 to 8191 in two bytes, and increasing by 7 bits for each additional byte in the code.  The LSB of the first byte is the sign bit (set is negative, clear is positive), and the remaining bits are organized in little-endian fashion, up to and including the first byte in the code which has a MSb of 0.  MSb in VBC are only used to indicate whether the next byte is also included in the value, otherwise they are not included in computation of value.
+Item type identifiers, data sizes, and most other small integers are stored as a <a href="VariableByteCoding.html">variable byte code</a> (VBC) which represents a 64 bit signed integer.
 
 <h3>DataItem type codes</h3>
 
