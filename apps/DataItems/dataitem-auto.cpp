@@ -89,8 +89,8 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
       case PG_CONTENTS:                return new GenericCollection( di, p );
       case CB_BLOCKMAKER:              return new PubKey( di, p );
       case CB_SIGNATURE:               return new Signature( di, p );
-      case AO_AUTH_SIG:                return new Signature( di, p );
       case AO_SIG_WITH_TIME:           return new Signature( di, p );
+      case AO_AUTH_SIG:                return new Signature( di, p );
       case GB_GENESIS_BLOCK:           return new GenericCollection( di, p );
       case GB_PROTOCOL:                return new DataVbc64( di, p );
       case GB_PROTOCOL_REV:            return new DataVbc64( di, p );
@@ -163,8 +163,8 @@ DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
       case PG_CONTENTS:                return new GenericCollection( *((GenericCollection *)ditm), p );
       case CB_BLOCKMAKER:              return new PubKey( *((PubKey *)ditm), p );
       case CB_SIGNATURE:               return new Signature( *((Signature *)ditm), p );
-      case AO_AUTH_SIG:                return new Signature( *((Signature *)ditm), p );
       case AO_SIG_WITH_TIME:           return new Signature( *((Signature *)ditm), p );
+      case AO_AUTH_SIG:                return new Signature( *((Signature *)ditm), p );
       case GB_GENESIS_BLOCK:           return new GenericCollection( *((GenericCollection *)ditm), p );
       case GB_PROTOCOL:                return new DataVbc64( *((DataVbc64 *)ditm), p );
       case GB_PROTOCOL_REV:            return new DataVbc64( *((DataVbc64 *)ditm), p );

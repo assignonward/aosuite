@@ -8,13 +8,11 @@ digraph G
     node [style=filled,color=white,shape=rectangle];
     label = "AO_AUTHORIZATION";
 
-    
-
     subgraph cluster_2
     { style=filled;
       color=grey60;
       node [style=filled,color=white,shape=rectangle];
-      c2s [label="Signature of\nAO_ASSIGNMENT\n+AO_TIME_OF_SIG\nby participant w/ matching\nAO_INDEX"];
+      c2s [label="Signature of\nAO_ASGN_HASH\n+AO_TIME_OF_SIG\nby participant w/ matching\nAO_INDEX"];
       c2i [label="AO_TIME_OF_SIG"];
       c2t [label="AO_INDEX"];
       label = "AO_AUTH_SIG";
@@ -24,37 +22,47 @@ digraph G
     { style=filled;
       color=grey60;
       node [style=filled,color=white,shape=rectangle];
-      c3s [label="Signature of\nAO_ASSIGNMENT\n+AO_TIME_OF_SIG\nby participant w/ matching\nAO_INDEX"];
+      c3s [label="Signature of\nAO_ASGN_HASH\n+AO_TIME_OF_SIG\nby participant w/ matching\nAO_INDEX"];
       c3i [label="AO_TIME_OF_SIG"];
       c3t [label="AO_INDEX"];
       label = "AO_AUTH_SIG";
     }
 
-    subgraph cluster_4
+    subgraph cluster_7
     { style=filled;
       color=grey60;
       node [style=filled,color=white,shape=rectangle];
 
-      subgraph cluster_5
+      subgraph cluster_4
       { style=filled;
         color=grey40;
         node [style=filled,color=white,shape=rectangle];
-        c5i [label="AO_ID_SEQ_NUM"];
-        c5t [label="AO_INDEX"];
-        label = "AO_PARTICIPANT";
+
+        subgraph cluster_5
+        { style=filled;
+          color=grey20;
+          fontcolor=white;
+          node [style=filled,color=white,shape=rectangle];
+          c5i [label="AO_ID_SEQ_NUM"];
+          c5t [label="AO_INDEX"];
+          label = "AO_PARTICIPANT";
+        }
+        subgraph cluster_6
+        { style=filled;
+          color=grey20;
+          fontcolor=white;
+          node [style=filled,color=white,shape=rectangle];
+          c6i [label="AO_ECDSA_PUB_KEY4\n(any type of PubKey)"];
+          c6a [label="AO_AMT"];
+          c6t [label="AO_INDEX"];
+          label = "AO_PARTICIPANT";
+        }
+        c4r [label="AO_RECORDING_BID"];
+        c4t [label="AO_LISTSIZE"];
+        label = "AO_ASSIGNMENT";
       }
-      subgraph cluster_6
-      { style=filled;
-        color=grey40;
-        node [style=filled,color=white,shape=rectangle];
-        c6i [label="AO_ECDSA_PUB_KEY4\n(any type of PubKey)"];
-        c6a [label="AO_AMT"];
-        c6t [label="AO_INDEX"];
-        label = "AO_PARTICIPANT";
-      }
-      c4r [label="AO_RECORDING_BID"];
-      c4t [label="AO_LISTSIZE"];
-      label = "AO_ASSIGNMENT";
+      c7h [label="AO_ASGN_HASH\nseperable hash of\nAO_ASSIGNMENT"];
+      label = "AO_ASGN_COMPLETE";
     }
- }
+  }
 }

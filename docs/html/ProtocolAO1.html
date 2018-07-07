@@ -1,0 +1,155 @@
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Protocol Ⓐ¹</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name"><a href="Protocols.html">Protocol</a> Ⓐ¹</h1>
+
+<img src="blocks.png" alt="Block structure" style="float:right">
+
+<span itemprop="articleBody">Simple, but extensible and interoperable with more sophisiticated protocols.  Ⓐ¹ embraces the concept of a single blockchain recorder entity<div class="tooltip"><sup>1</sup><span class="tooltiptext"><a href="https://ripple.com/">Ripple</a> managed to briefly achieve over $140B market cap while paying no more than lip-service to the idea of multiple/independent chain recorders.</span></div> and builds out a practical implementation on that basis.
+
+<h2>Sequenced IDs</h2>
+
+Public keys in an Ⓐ¹ blockchain<div class="tooltip"><sup>2</sup><span class="tooltiptext">base share assignment protocol.  Long term identities with multiple use key pairs may be layered atop of the base protocol, and the blockmaker's ID is normally reused many times until it is refreshed with a new ID signed by the previous one.</span></div> are used only once, associated with the receipt of a specific amount of shares in a single page of a single block.  That location is assigned a<div class="tooltip"><sup>3</sup><span class="tooltiptext">monotonically increasing</span></div> sequence number which may be used once in a later block, in combination with the matching secret key, to release all of the shares<div class="tooltip"><sup>4</sup><span class="tooltiptext">of course, whoever is giving all of these shares may also be taking a portion of them back under a new key in the assignment</span></div> in a new assignment operation.  Sequenced IDs only work well for protocols like Ⓐ¹ with strictly linear blockchains, so they are not used in protocols which facilitate blockchain fork and merges.
+
+<h2>Data Items and Containers</h2>
+
+The primary format specification for blockchain data is how it is stored and communicated when "on the chain."  This format may be translated and interpreted and presented in various forms, but the conceptual contents remain the same.  DataItems contain all data stored and communicated in Assign Onward protocols, they can be either fixed or variable size.  DataContainers are variable size DataItems which contain zero or more data items.  All DataItems include an item type code, and 0 or more bytes of data.  When in binary form, if a DataItem is variable size, the size of the data immediately follows the item type, then the data follows that.  If a DataItem is a DataContainer, then its data section contains zero or more DataItems, each starting with the item type identifier.
+
+<h2>Variable Byte Codes</h2>
+
+Item type identifiers, data sizes, and most other small integers are stored as a variable byte code (VBC) from 1 to 10 bytes in length.  The VBC continues until the first byte in which the MSb is 0.  VBCs represent a 64 bit signed integer.  Integers from -63 to 63 are represented in a single byte, -8191 to 8191 in two bytes, and increasing by 7 bits for each additional byte in the code.  The LSB of the first byte is the sign bit (set is negative, clear is positive), and the remaining bits are organized in little-endian fashion, up to and including the first byte in the code which has a MSb of 0.  MSb in VBC are only used to indicate whether the next byte is also included in the value, otherwise they are not included in computation of value.
+
+<h3>DataItem type codes</h3>
+
+When travelling in binary form,<div class="tooltip"><sup>5</sup><span class="tooltiptext">DataItems may be represented in json or any other form of nestable key-value storage, but the initial Ⓐ implementations are focused on binary representations.</span></div> DataItem type codes are represented as VBCs, and have unique meanings based on code and the container structure that code is nested in.  Some codes like AO_INDEX are reused in many locations.  Generally, codes which appear multiple times in a block are usually represented as a single byte, while codes for optional, separable or rare items are 2 bytes or potentially longer.
+
+<h2>Block format</h2>
+<img src="page.png" alt="Page structure" style="float:left">
+
+A <a href="BlockchainBasics.html">blockchain</a> is made up of a sequence of blocks.  The top level structure of a block is shown above.  A complete block on the chain consists of a signed block and a hash of that signed block.<div class="tooltip"><sup>6</sup><span class="tooltiptext">The top level hash quashes any concerns about <a href="https://en.wikipedia.org/wiki/Malleability_(cryptography)">malleability</a> that a signature algorithm alone might have.</span></div>  The signed block includes a signature of the block contents+time of signing and the public key of the signer.<div class="tooltip"><sup>7</sup><span class="tooltiptext">The matching private key can be used by the blockmaker to claim rewards in a rewarded chain, in a single blockmaker chain like Ⓐ¹ this public key is just the current identity of the blockmaker and should be verifiable with an external trust identity source like a <a href="https://pgp.mit.edu/">GPG public key server</a>.</span></div>  The block contents include the hash of the previous signed block (thus making a block-chain), some chain housekeeping info like ID sequence numbers, zero or more pages each of which contains an authorized <a href="AssignmentAgreement.html">assignment</a>, and an AO_LISTSIZE which tells how many pages should be present.  A page is a simple container which includes the page number as an AO_INDEX (starting at 0), a PG_ID_SEQ_DIFF which is semi-redundant with the ID_SEQ information in the block itself: telling where the IDs in this page start relative to the absolute CB_FIRST_ID_SEQ_NUM in the block.  A minimal assignment agreement just exchanges shares between key owners and leaves enough surplus to cover recording fees, additional information of basically any format may be embedded in assignment agreements, in either <a href="SeparableItems.html">separable</a> or non-separable form, and can be used to implement additional protocol layers "on top of" the basic Ⓐ¹ protocol.
+
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-07-06"><div class="tooltip">6 July 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
+

@@ -8,8 +8,8 @@
 #define AO_PUB_RSA3072_ID               3 // (06+32) Hash256: Hash256 of a PublicKeyRsa3072
 #define AO_LISTSIZE                     8 // (10+var) DataVbc64: declares the number of items in a list, as a check that all intended data is present.
 #define AO_INDEX                       -8 // (11+var) DataVbc64: signed integer declares position of an element in a list, used to check/correlate two lists with each other.
-#define CB_FIRST_ID_SEQ_NUM           -40 // (51+var) DataVbc64: First sequential ID number (of public keys) recorded in this block.
-#define CB_N_ID_SEQ_NUM                41 // (52+var) DataVbc64: Number of sequential ID numbers (of public keys) recorded in this block, redundant check.
+#define CB_FIRST_ID_SEQ_NUM         -2085 // (cb20+var) DataVbc64: First sequential ID number (of public keys) recorded in this block.
+#define CB_N_ID_SEQ_NUM             -2149 // (cb21+var) DataVbc64: Number of sequential ID numbers (of public keys) recorded in this block, redundant check.
 #define PG_ID_SEQ_DIFF                -41 // (53+var) DataVbc64: Add this number to the CB_FIRST_ID_SEQ_NUM in the block to get the AO_ID_SEQ_NUM value of the first ID on the page.
 #define AO_ID_SEQ_NUM                 -42 // (55+var) DataVbc64: integer that identifies a particular public key in the chain, unique per blockchain.
 #define AO_SHARE_STATE                 42 // (54+var) DataVbc64: integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
@@ -49,11 +49,11 @@
 #define CB_COMPLETE                  -101 // (cb01+var) GenericCollection: A complete chain block, including the signed block and its hash
 #define CB_SIGNED                    -165 // (cb02+var) GenericCollection: The signed chain block, what gets hashed and put into the CB_COMPLETE structure with the hash code
 #define CB_CONTENTS                  -229 // (cb03+var) GenericCollection: The contents of a chain block, what gets signed and put into the CB_SIGNED structure with the signature
-#define PG_CONTENTS                   -93 // (bb01+var) GenericCollection: One authorized assignment, plus chain block housekeeping.  CB_CONTENTS is a list of these
-#define CB_BLOCKMAKER                 -21 // (2b+var) PubKey: ID (public key) of the blockmaker, which holds claim on the residual shares in the block
-#define CB_SIGNATURE                  -45 // (5b+var) Signature: Blockmaker's signature, includes a AO_TIME_OF_SIG time and CB_BLOCKMAKER PubKey
+#define PG_CONTENTS                   -61 // (7b+var) GenericCollection: One authorized assignment, plus chain block housekeeping.  CB_CONTENTS is a list of these
+#define CB_BLOCKMAKER               -5157 // (cb50+var) PubKey: ID (public key) of the blockmaker, which holds claim on the residual shares in the block
+#define CB_SIGNATURE                -5221 // (cb51+var) Signature: Blockmaker's signature, includes a AO_TIME_OF_SIG time and CB_BLOCKMAKER PubKey
+#define AO_SIG_WITH_TIME              -40 // (51+var) Signature: Generic signature with AO_TIME_OF_SIG time of signature, but not necessaraily an AO_INDEX or PubKey
 #define AO_AUTH_SIG                    45 // (5a+var) Signature: Authorization signature, includes a AO_TIME_OF_SIG time and AO_INDEX index of the participant doing the signing
-#define AO_SIG_WITH_TIME               47 // (5e+var) Signature: Generic signature with AO_TIME_OF_SIG time of signature, but not necessaraily an AO_INDEX or PubKey
 #define GB_GENESIS_BLOCK               80 // (a001+var) GenericCollection: A full Genesis block, including superfluous identifiers (text, images) to help brand/identify it
 #define GB_PROTOCOL                   144 // (a002+var) DataVbc64: Basic level of protocol, identifies functionality
 #define GB_PROTOCOL_REV               208 // (a003+var) DataVbc64: Revision of the protocol, may indicate additional types supported

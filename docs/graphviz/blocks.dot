@@ -19,7 +19,8 @@ digraph G
         node [style=filled,color=white,shape=rectangle];
         c3s [label="Signature\nof CB_CONTENTS +\nAO_TIME_OF_SIG"];
         c3t [label="AO_TIME_OF_SIG"];
-        label = "AO_SIG_WITH_TIME";
+        c3k [label="PubKey used to sign"];
+        label = "CB_SIGNATURE";
       }
 
       subgraph cluster_4

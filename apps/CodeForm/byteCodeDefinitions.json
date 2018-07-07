@@ -71,14 +71,14 @@
     },
     {
         "acry": "CB_FIRST_ID_SEQ_NUM",
-        "code": -40,
+        "code": -2085,
         "desc": "First sequential ID number (of public keys) recorded in this block.",
         "size": -2,
         "type": "DataVbc64"
     },
     {
         "acry": "CB_N_ID_SEQ_NUM",
-        "code": 41,
+        "code": -2149,
         "desc": "Number of sequential ID numbers (of public keys) recorded in this block, redundant check.",
         "size": -2,
         "type": "DataVbc64"
@@ -290,23 +290,23 @@
         "size": -1,
         "type": "Assets"
     },
-{
-    "acry": "AO_KEY_ASSET",
-    "code": -3984,
-    "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_KEYPAIR,AO_SHARES_REF,AO_INDEX",
-    "desc": "Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.",
-    "sepr": true,
-    "size": -1,
-    "type": "KeyAsset"
-},
-{
-    "acry": "AO_KEYPAIR",
-    "code": 3985,
-    "desc": "A (hopefully matching) public-private key pair",
-    "sepr": true,
-    "size": -1,
-    "type": "KeyPair"
-},
+    {
+        "acry": "AO_KEY_ASSET",
+        "code": -3984,
+        "cont": "AO_ECDSA_PRI_KEY,AO_RSA3072_PRI_KEY,AO_KEYPAIR,AO_SHARES_REF,AO_INDEX",
+        "desc": "Key pair reference coupled with the sharesRef they are associated with, if any.  Intended for use by Asset Organizers.",
+        "sepr": true,
+        "size": -1,
+        "type": "KeyAsset"
+    },
+    {
+        "acry": "AO_KEYPAIR",
+        "code": 3985,
+        "desc": "A (hopefully matching) public-private key pair",
+        "sepr": true,
+        "size": -1,
+        "type": "KeyPair"
+    },
     {
         "acry": "AO_ECDSA_PRI_KEY",
         "code": -3985,
@@ -371,7 +371,7 @@
     },
     {
         "acry": "PG_CONTENTS",
-        "code": -93,
+        "code": -61,
         "cont": "AO_AUTHORIZATION,AO_INDEX,PG_ID_SEQ_DIFF",
         "desc": "One authorized assignment, plus chain block housekeeping.  CB_CONTENTS is a list of these",
         "size": -1,
@@ -379,15 +379,22 @@
     },
     {
         "acry": "CB_BLOCKMAKER",
-        "code": -21,
+        "code": -5157,
         "desc": "ID (public key) of the blockmaker, which holds claim on the residual shares in the block",
         "size": -1,
         "type": "PubKey"
     },
     {
         "acry": "CB_SIGNATURE",
-        "code": -45,
+        "code": -5221,
         "desc": "Blockmaker's signature, includes a AO_TIME_OF_SIG time and CB_BLOCKMAKER PubKey",
+        "size": -1,
+        "type": "Signature"
+    },
+    {
+        "acry": "AO_SIG_WITH_TIME",
+        "code": -40,
+        "desc": "Generic signature with AO_TIME_OF_SIG time of signature, but not necessaraily an AO_INDEX or PubKey",
         "size": -1,
         "type": "Signature"
     },
@@ -395,13 +402,6 @@
         "acry": "AO_AUTH_SIG",
         "code": 45,
         "desc": "Authorization signature, includes a AO_TIME_OF_SIG time and AO_INDEX index of the participant doing the signing",
-        "size": -1,
-        "type": "Signature"
-    },
-    {
-        "acry": "AO_SIG_WITH_TIME",
-        "code": 47,
-        "desc": "Generic signature with AO_TIME_OF_SIG time of signature, but not necessaraily an AO_INDEX or PubKey",
         "size": -1,
         "type": "Signature"
     },
