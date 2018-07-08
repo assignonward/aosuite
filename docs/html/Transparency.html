@@ -84,7 +84,7 @@
 </style>
 
 <meta charset="UTF-8"/>
-<title>Proof Of Work</title>
+<title>Transparency</title>
 </head>
 
 <body>
@@ -92,28 +92,25 @@
 <div class="zoom">
 <img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
 
-<h1>Proof Of Work</h1>
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Transparency</h1><span itemprop="articleBody">
 
-Short story: Assign Onward does not depend on proof of work to function.
+A <a href="CorePrinciples.html">core principle</a> of Assign Onward is transparency:
 
-<h2>Trust</h2>
+<ul><li>The protocols are open source<div class="tooltip"><sup>1</sup><span class="tooltiptext"><a href="https://github.com/assignonward/aosuite">readily</a> <a href="https://gitlab.com/AssignOnward/AssignOnward">available</a>, hopefully well documented source code which can be used to put the protocols into practice</span></div>, open license<div class="tooltip"><sup>2</sup><span class="tooltiptext">meaning: anyone is free to practice, operate their own implementation of Assign Onward blockchain protocols.</span></div></li>
+    <li>Complete blockchain contents<div class="tooltip"><sup>3</sup><span class="tooltiptext">potentially excluding <a href="SeparableItems.html">separable items</a>.</span></div> are readily available to anyone<div class="tooltip"><sup>4</sup><span class="tooltiptext">There is a practical balance to strike between openness and vulnerability to <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack">DoS</a> and/or <a href="https://en.wikipedia.org/wiki/Spamming">spam</a> attack.<br/><br/>Nominal transaction fees and/or identity confirmation may become necessary, especially for larger implementations with high monetary or political value.</span></div></li>
+</ul>
 
-If you are not going to trust the largest consensus of transaction processors to record your transaction, who will you trust?  That all depends on what you are trusting them with... If you are pre-purchasing coffees from a particular coffee shop, you are already implicitly trusting that coffee shop to honor those pre-purchases in the future.  You might also trust an established coupon processor to provide reliable recording and exchange services.
+Protocols and systems designed to layer on top of Assign Onward protocols can assume that they have free access to all information in any Assign Onward blockchains they are working with.  Likewise they should take into consideration the fact that anyone else may immediately, or at any time in the future, also access all information stored in any Assign Onward blockchain.
 
-<h2>Bridges</h2>
+<h2>Permanency</h2>
 
-Although Assign Onward as implemented does not use Proof Of Work, it makes sense to build automated exchanges with existing blockchains that do use Proof Of Work (such as Bitcoin...)
+Transparency presents the possibility, but not the guarantee, of permanency.  Generally speaking, as long as a <a href="AssignmentRecorder.html">recorder</a> node operates, it should keep a permanent record of all blockchains it supports.  However, this is only guaranteed as long as the recorder(s) continue to operate and support a blockchain.  If an entity values the information stored in a blockchain, it would be in their best interest to at least keep a copy<div class="tooltip"><sup>5</sup><span class="tooltiptext">bits are cheap: hard drives now cost less than $50/TB and SSDs have fallen below $200/TB and continue to drop.  At $200/TB, a 1MB block costs 0.02 cents to store.</span></div> of it for themselves, or perhaps operate an open <a href="AssignmentRecorder.html">recording node</a> of their own.
 
-<h2>Open Source</h2>
-
-Of course, being open source, modular, and simple, it would not be difficult to add a Bitcoin-like Proof Of Work requirement into the Assign Onward protocol, but would it make any sense to do so?  I think not... Bitcoin is established, and small-time Proof Of Work based blockchains have already been proven vulnerable to double-spend attack.  Unless a Proof Of Work blockchain enters the market with substantial miner share, competitive with Bitcoin and Ethereum, it will be vulnerable in the way the Bitcoin Gold and many other smaller cryptocurrencies were demonstrated to be vulnerable to 51% attacks in mid 2018.<br/><br/>
-
-Bottom line, Assign Onward protocols could be extended/modified to use Proof Of Work as the chain extending block selection mechanism, but then they wouldn't be compliant with the Assign Onward <a href="CorePrinciples.html">core principles</a> anymore.
-
+</span></span>
 </div>
 <br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
 <span itemprop="name">Assign Onward</span></a></span><br/>
-<span itemprop="datePublished" content="2018-07-02"><div class="tooltip">2 July 2018<span class="tooltiptext">
+<span itemprop="datePublished" content="2018-07-08"><div class="tooltip">8 July 2018<span class="tooltiptext">
 MIT License
 <br/>
 Copyright (c) 2018 Assign Onward
