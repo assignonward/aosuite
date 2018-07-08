@@ -59,26 +59,36 @@ Participant::Participant( DataItemBA di, QObject *p )
                 { DataItemBA item = items.left( sz );
                   switch ( typeCodeOf( item ) ) // read valid items from the byte array, in any order
                     { case AO_AMT:
-                        amount = item;
+                        if ( !amount ) amount = new Shares( item );
+                         else qDebug( "Participant doesn't expect to contain more than one AO_AMT" );
                         break;
 
                       case AO_ECDSA_PUB_KEY2:
                       case AO_ECDSA_PUB_KEY3:
                       case AO_RSA3072_PUB_KEY:
                       case AO_ID_SEQ_NUM:
-                        key = item;
+                        if ( !key ) insert( key = new PubKey( item ) );
+                         else qDebug( "Participant doesn't expect to contain more than one public key" );
                         break;
 
                       case AO_PAGE_REF:
-                        page = item;
+                        if ( !page ) insert( page = new PageRef( item ) );
+                         else qDebug( "Participant doesn't expect to contain more than one AO_PAGE_REF" );
+                        break;
 
                       case AO_NOTE:
-                        note = item;
+                        if ( !note ) insert( note = new Note( item ) );
+                         else qDebug( "Participant doesn't expect to contain more than one AO_NOTE" );
+                        break;
+
 
                       case AO_INDEX:
-                        *index = item;
+                        if ( !index ) insert( index = new DataVbc64( item ) );
+                         else qDebug( "Participant doesn't expect to contain more than one AO_INDEX" );
+                        break;
 
                       default:
+                        qDebug( "Unrecognized data type %lld", typeCodeOf( item ) );
                         // TODO: log anomaly - unrecognized data type
                         break;
                     }
@@ -95,11 +105,15 @@ Participant::Participant( DataItemBA di, QObject *p )
  */
 void Participant::operator = ( const DataItemBA &di )
 { Participant temp( di );
+  deleteItemsLater();
   amount   = temp.amount;
   key      = temp.key;
   page     = temp.page;
   note     = temp.note;
   index    = temp.index;
+  DataItemMap tmap = temp.mmap();
+  foreach ( DataItem *di, tmap )
+    insert( di );
   typeCode = temp.typeCode;
 }
 
@@ -117,27 +131,18 @@ DataItemBA Participant::toDataItem( bool cf )
     cf = true;
   switch ( typeCode )
     { case AO_PARTICIPANT:
-        if ( amount != 0 )
-          dil.append( amount.toDataItem(false) );
-        if ( key.isValid() )
-          dil.append( key.toDataItem(false) );
-        if ( amount < 0 )
-          dil.append( page.toDataItem(false) );
-        if ( note.size() > 0 )
-          dil.append( note.toDataItem(false) );
-        if ( *index > -1 )
-          dil.append( index->toDataItem(false) );
+        if ( amount )                       dil.append( amount->toDataItem(false) );
+        if ( key ) if ( key->isValid() )    dil.append( key->   toDataItem(false) );
+        if ( page )                         dil.append( page->  toDataItem(false) );
+        if ( note ) if ( note->size() > 0 ) dil.append( note->  toDataItem(false) );
+        if ( index ) if ( *index > -1 )     dil.append( index-> toDataItem(false) );
         break;
 
       case AO_PARTICIPANT_CF:
-        if ( amount != 0 )
-          dil.append( amount.toDataItem(true) );
-        if ( key.isValid() )
-          dil.append( key.getId(true) );
-        if ( note.size() > 0 )
-          dil.append( note.toDataItem(true) );
-        if ( *index > -1 )
-          dil.append( index->toDataItem(true) );
+        if ( amount ) if ( amount != 0 )    dil.append( amount->toDataItem(true) );
+        if ( key ) if ( key->isValid() )    dil.append( key->   toDataItem(true) );
+        if ( note ) if ( note->size() > 0 ) dil.append( note->  toDataItem(true) );
+        if ( index ) if ( *index > -1 )     dil.append( index-> toDataItem(true) );
         break;
 
       default:
@@ -178,5 +183,10 @@ void Participant::setIndex( qint64 v )
     insert( index );
 }
 
-
-
+void Participant::setKey( PubKey *k )
+{ if ( key )
+    { key->deleteLater();
+      qDebug( "odd, overwriting existing key" );
+    }
+  insert( key = k );
+}

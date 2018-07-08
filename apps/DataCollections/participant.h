@@ -47,23 +47,22 @@ public:
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf );
-  QByteArray  getId()     const { return key.getId(); }
-      PubKey  getKey()    const { return key;         }
-      Shares  getAmount() const { return amount;      }
-  QByteArray  getNote()   const { return note.get();  }
-        void  setId( QByteArray i )   { key.set( i ); }
-        void  setAmount( Shares v )   { amount = v;  /* TODO: log error for 0 */ }
-        void  setAmount( __int128 v ) { amount = v; }
-        void  setNote( QByteArray n ) { note.set( n ); }
-     quint64  getIndex() const { return index->value(); }
+  QByteArray  getId()     const { return key ? key->getId() : QByteArray(); }
+      PubKey *getKey()    const { return key; }
+    __int128  getAmount() const { return amount ? amount->value() : 0; }
+  QByteArray  getNote()   const { return note ? note->get() : QByteArray();  }
+        void  setId( QByteArray i )   { if ( key ) key->set( i ); }
+        void  setKey( PubKey *k );
+        void  setAmount( __int128 v ) { if ( amount ) *amount = v; }
+        void  setNote( QByteArray n ) { note->set( n ); }
+     quint64  getIndex() const { return index ? index->value() : -1; }
         void  setIndex( qint64 v );
-        void  setKey( const PubKey &pk ) { key = pk; }
 
 private:
-            Shares  amount;  // Negative for givers, positive for receivers, 0 is invalid
-            PubKey  key;     // Full public key, suitable for checking signatures
-           PageRef  page;    // Reference for givers
-              Note  note;    // Arbitrary data to record with the transaction
+   QPointer<Shares> amount;  // Negative for givers, positive for receivers, 0 is invalid
+   QPointer<PubKey> key;     // Full public key, suitable for checking signatures
+  QPointer<PageRef> page;    // Reference for givers
+     QPointer<Note> note;    // Arbitrary data to record with the transaction
 QPointer<DataVbc64> index;   // When part of a participant list, this is the index number (starting with 0)
 };
 
