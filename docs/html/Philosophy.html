@@ -1,0 +1,159 @@
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Philosophy / Motivation</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Philosophy / Motivation</h1>
+
+<font size=-1><blockquote cite="https://www.goodreads.com/quotes/1408-there-s-a-fine-line-between-genius-and-insanity-i-have">
+There's a fine line between genius and insanity.<br/>
+I have erased this line.<br/>
+-- Oscar Levant
+</blockquote></font>
+
+<span itemprop="articleBody">
+<h2>Motivations</h2>
+
+<a href="Applications.html">Who</a> <a href="Goals.html">what</a> <a href="Roadmap.html">when</a> and <a href="Architecture.html">how</a> are covered elsewhere.  Where is anywhere with internet access.  But: <i>why?</i>  <a href="https://techcrunch.com/2018/06/29/thousands-of-cryptocurrency-projects-are-already-dead/">Over</a> <a href="https://ethereumworldnews.com/more-than-1000-cryptocurrency-projects-have-failed-in-2018/">1000</a> cryptocurrency / blockchain projects have already failed; yes, but their primary focus was raising money.  <a href="https://ripple.com/">Major</a> <a href="https://ethereum.org/">blockchain</a> <a href="https://eos.io/">innovation</a> <a href="https://getmonero.org/">projects</a> with strong backing and well developed ideas abound; yes, but their goals include focusing an income stream back to the controlling investors.  <a href="https://bitcoin.org/">Bitcoin</a> made <a href="https://cointelegraph.com/news/the-chicken-and-egg-blockchain-existed-before-bitcoin">blockchain</a> popular through accessibility: anyone with a PC and internet access could participate in the early network and earn Bitcoins in exchange for their participation.  As its popularity grew, the cost to meaningfully participate increased, today <a href="https://shop.bitmain.com/">specialized</a> <a href="https://www.bitcoinmining.com/">hardware</a> using <a href="https://digiconomist.net/bitcoin-energy-consumption">significant</a> <a href="https://powercompare.co.uk/bitcoin/">amounts</a> of <a href="https://qz.com/1281850/bitcoins-energy-consumption-is-as-much-a-year-as-all-of-ireland-says-the-first-peer-reviewed-study-on-the-subject/">electricity</a> is required to profitably participate, and the <a href="https://arstechnica.com/tech-policy/2017/12/bitcoin-fees-are-skyrocketing/">transaction</a> <a href="http://moneyandstate.com/the-true-cost-of-bitcoin-transactions/">fees</a> are growing.  <a href="https://www.bitcoincash.org/">Many</a> <a href="https://litecoin.org/">projects</a> <a href="https://www.dash.org/">aim</a> to <a href="https://www.iota.org/">reduce</a> transaction costs, but they are still being developed by investors with profit as a primary motive.  Assign Onward is conceived for grassroots development, aiming to be useful and grow without requiring significant financial backing,<div class="tooltip"><sup>1</sup><span class="tooltiptext">Assign Onward is <a href="Transparency.html">open source, open license</a>, so, if an investment firm wants to use all or part of the Assign Onward concepts and code in a project of their direction, they are free to do so.</span></div> hopefully recapturing some of the early Bitcoin enthusiasm for a project that individuals can profit in by participating.
+
+<h3>Save the planet</h3>
+
+A large part of what took Bitcoin out of the hands of individuals was the <a href="ProofOfWork.html">Proof Of Work</a> component and the costs that it eventually created.  Proof of work provides decentralized trust based on the expense of computation.  Assign Onward replaces this decentralized trust with the established <a href="https://www.linux.com/learn/pgp-web-trust-core-concepts-behind-trusted-communication">Web Of Trust</a> used by <a href="https://www.openpgp.org/">PGP</a> and in so doing it tremendously reduces the infrastructure and power requirements to securely process transactions, thereby removing the capital-intensive barriers to entry that Bitcoin and other highly developed projects have grown, and incidentally processing transactions for a tiny fraction of the power demands of a secure Proof Of Work based blockchain.
+
+<h3>Simplicity of implementation</h3>
+
+Rather than building ever more complex<div class="tooltip"><sup>2</sup><span class="tooltiptext">and buggy</span></div> layers of application interfaces, security protocols, etc. Assign Onward <a href="Roadmap.html">focuses</a> on simple concepts and <a href="Goals.html">attempts</a> to describe their functionality as simply, securely, and flexibly as possible.  The hope is that a simple implementation can be more readily understood and adopted by a wide variety of users and developers.
+
+<h3>The power of participation</h3>
+
+If Assign Onward enables small business owners and individuals to set up their own blockchain systems that they control and derive value from as DIY projects, then it has succeeded.<div class="tooltip"><sup>3</sup><span class="tooltiptext">and if it is scaled up and also used by large transaction processors, so much the better.</span></div>  Interoperability between these DIY blockchains<div class="tooltip"><sup>4</sup><span class="tooltiptext">including practical trust and security models</span></div> is where I can see Assign Onward becoming a significant part in the future of trusted exchange of contracts and records.  No single blockchain system can, nor should even <a href="https://cointelegraph.com/news/china-as-a-prime-example-of-blockchain-before-bitcoin-policy">try</a>, to rule the world.  Millions, perhaps billions, of individually controlled blockchain systems voluntarily cooperating, that's the exciting vision.
+
+<font size=-1><blockquote cite="https://www.goodreads.com/work/quotes/43973648-killosophy">
+Persistence. Perfection. Patience. Power.<br/>
+Prioritize your passion. It keeps you sane.<br/>
+-- Criss Jami, Killosophy
+</blockquote></font>
+
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-07-09"><div class="tooltip">9 July 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
+

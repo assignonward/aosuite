@@ -68,13 +68,6 @@ void MainWindow::saveConfig()
  * Jack Sparrow: It’s remarkable how often those two traits coincide. *
  * Pirates of the Caribbean: The Curse of the Black Pearl             *
  *                                                                    *
- * Oscar Levant: There's a fine line between genius and insanity.     *
- *   I have erased this line.                                         *
- *                                                                    *
- * Criss Jami: Persistence. Perfection. Patience. Power.              *
- *   Prioritize your passion. It keeps you sane.                      *
- *   Killosophy                                                       *
- *                                                                    *
  **********************************************************************
  *
  * For Intra or Inter-ledger transfers:

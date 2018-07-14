@@ -108,6 +108,10 @@ In addition to the shares used in recording on the blockchain, contracts on the 
 
 How shares expire can be controlled as a <a href="Parameters.html">parameter</a> of the blockchain.
 
+<h3>Per contract expiration</h3>
+
+When contracts are recorded (not as shares on the chain, but as their own entities recorded on the chain), there can be various forms of expiration decided on a per-contract basis.<div class="tooltip"><sup>3</sup><span class="tooltiptext">though, there is value in standardization - if a form of expiration is unfamiliar it can be difficult to asses its impact on value</span></div>  This expiration can also be used as a security mechanism - when a contract expires quickly, if someone manages to obtain rights under the contract through coersion or stealth they will also have to exploit the value of those rights before they expire, reducing their value to the nefarious party.  Expiration can be a strong reassurance of limits of liability: when rights issued under a contract expire, then liability is no longer a consideration.  For example: a contract can state that value must be redeemed (transfered) through recording on the primary blockchain record before a specific time.  Once that blockchain has passed that specific time, the value in the contract can no longer be redeemed and the contract presents no more liability.<div class="tooltip"><sup>4</sup><span class="tooltiptext">Fancy expiration schemes might have soft expiration limits where liability reduces over time, eventually reaching zero.  The simpler approach is 100% value until the cutoff time, then zero afterwards - this is the scheme proposed for share assignment authorizations: if recorded on the blockchain before a certain time, the authorization takes effect - if the blockchain moves past the agreement expiration time before inclusion of it, then the authorization is null and void.</span></div>
+
 
 </span>
 

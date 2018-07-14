@@ -94,11 +94,11 @@
 
 <h1>Core Principles</h1>
 
-Assertions<div class="tooltip"><sup>1</sup><span class="tooltiptext">More concrete than <a href="Goals.html">goals</a>, core principles apply to all Assign Onward blockchain implementations.</span></div> for a secure, efficient and future-ready implementation:
+Assertions<div class="tooltip"><sup>1</sup><span class="tooltiptext">More concrete than <a href="Goals.html">goals</a>, if any one of these things is not true then it is not an Assign Onward implementation.</span></div> for a secure, efficient and future-ready implementation:
 
 <ul><li><a href="Transparency.html">Transparency</a>: information<div class="tooltip"><sup>2</sup><span class="tooltiptext">at least all information which is stored in <a href="SeparableItems.html">non-separable</a> items.</span></div> stored on a blockchain is readily available to anyone.</li>
     <li><a href="Signatures.html">Signatures</a> always include time of signing.</li>
-    <li><a href="KeyReuse.html">Public/Private Key Pairs</a> are never reused.<div class="tooltip"><sup>3</sup><span class="tooltiptext">Keys are never reused for share transfers.  Other keys used to establish personal identity of course get reused until they are expired and replaced with new ones signed by the expiring ones.</span></div></li>
+    <li><a href="KeyReuse.html">Public/Private Key Pairs</a> used in share transfers are never reused.<div class="tooltip"><sup>3</sup><span class="tooltiptext">Keys are never reused for share transfers.  Other keys used to establish personal identity of course get reused until they are expired and replaced with new ones signed by the expiring ones.</span></div></li>
     <ul><li>Share transfers only occur with offer and acceptance by all parties.<div class="tooltip"><sup>4</sup><span class="tooltiptext">The requirement for acceptance of share assignments means that noone can lock up a public key by placing shares to it without the owner of the corresponding private key authorizing the transaction.</span></div></li>
     </ul>
     <li><a href="CryptographicPrimitives.html">Cryptographic Algorithms</a> may expand to include new ones in the future.</li>
