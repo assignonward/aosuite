@@ -1,0 +1,200 @@
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Island Life</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Island Life</h1>
+
+
+<span itemprop="articleBody">
+(picture of yellow house, dark green tree, light green grass and a goat)<br/><br/>
+
+Bob and Rita live in a small house with a big mango tree and a patch of grass just outside the Valley.  Rita works in the supermarket and Bob has a grill cart that he keeps mostly down around Sandy Ground and George Hill.  Bob has two grown daughters: Sharon and Karen who live in the Valley.  When the big cruise ship is in the harbor, Bob will take his cart down to Eddie's bar and cook up a mess of curry goat to sell to the guests.  Sharon has a car that she drives as a taxi, so she'll usually give Bob a ride and pick up folks from the dock who want to tour the island or get a quick ride up to the Reggae Shack.  Eddie's bar is pretty far up the beach from the dock, but Charlie the launch captain tells the guests that it's worth the walk for Bob's curry goat, and Eddie has a great place with tables in the shade and a good breeze.<br/><br/>
+
+In the summer when Rita's mangoes get ripe, they all get ripe within about 2 weeks.  The tree is probably 80 years old and there are so many mangoes - she takes some to work, but mostly locals shop in the Valley supermarket, mangoes aren't anything special to them.  Karen works in the hospital and she takes a couple of bags to share with her co-workers, but again they're mostly locals.  Some of Rita's mangoes make it into local restaurants, and of course Bob offers sides of mango with his curry goat, and the guests rave about Rita's tree ripened mangoes when they get them, but the season for fresh tree ripened mango is very short.<br/><br/>
+
+<h4>Conversions:</h4>
+
+EC$2.70 = US$1.00<br/>
+guest = tourist
+
+
+<h2>Genesis</h2>
+
+One slow October day Eddie, Bob and Gene were hanging out and Eddie was talking about the bankers trying to make their next billion using blockchain.  Bob said: "I wish I had their problems, I just want EC$2700 so I can pay Dave to put an electric motor on my grill cart - if I could get up and down the hill easier, I'd sell a lot more curry goat."  Gene is an old computer geek and he said: "you know, Bitcoin didn't start out as a billionaire's game, it got going as a grassroots project and grew up into what it is today - there are some styles of blockchain that still work well for smaller situations."  Bob: "Yeah, how's that going to help me?"  Gene: "Well, if you had your own blockchain and sold shares as promises for plates of curry goat, you could raise the money for your electric motor now, and deliver the goat later."  Bob: "That sounds like too much contract and obligation for me, man.  I sell my curry goat when it's ready, not on some schedule."  Eddie: "Hey, I see how this could work.  Bob doesn't need to promise the goat on any particular day, just that when somebody shows up at his grill cart and he's got curry goat ready, they can trade a pre-purchased promise for a plate of curry goat.  Bob, I know you're almost always here when the Odyssey is in harbor, I'd front you EC$2000 against 100 plates - you move like 150 plates a month just at my place, right?"  Bob: "yeah mon, you know I get EC$25 per plate at your place, too."  Eddie: "I know, and I don't even ask for a cut because you help me sell drinks, but I also know when you roll that cart up to the top of George Hill, you're getting more like EC$10 per plate up there.  Plus, I am fronting this money, there's some risk here even though I know you're good for it." Bob was still skeptical, but the more he thought about it the more sense it made.<br/><br/>
+
+Bob talked it over with Rita, and she was very excited about the idea.  She invited Gene over and asked him how she might use blockchain to help her get her mangoes out to the resort restaurants when they are ripe, but not yet rotten.  Gene thought for a minute and decided that Rita might make a conditional option the basis of her blockchain, so whoever holds mango credits in Rita's chain has the right to buy that amount of her available mangoes at a fixed price when they're ripe.  Since the whole blockchain is open record, Rita can find people who are willing to pre-pay a little now to get her mangoes when they are ripe, and people considering purchasing mango options can easily assess whether or not Rita has over-subscribed her tree's likely crop for the year.  The option price can be EC$1 for a small mango, EC$2 for a large, the supermarket charges a little more for mangoes, and the resorts will pay much more for good quality fruit.  Each credit on Rita's blockchain is worth either one large or two small "mango options."  It's all a little foreign to Bob and Rita, but Rita was enthused enough that she took a class at the community college in contracts and finance to learn more and maybe help her explain to people who might purchase mango options from her.  For Rita, even if people pay almost nothing for her options, it gives her a way to find mango lovers when the fruit is ready.<br/><br/>
+
+So, Gene and his friend Faythe set up a pair of recording servers.<div class="tooltip"><sup>*</sup><span class="tooltiptext">both for redundancy, and because more people know and trust Faythe than Gene, but Gene will be better at keeping the servers running smootholy.</span></div>  They set up Bob's blockchain for 1000 plates of curry goat.  Again Bob was skeptical, he didn't want to ever be owing anybody 1000 plates of goat, but Rita explained how having too few shares avaialble would hurt market liquidity.  Gene explained that Bob doesn't have to sell any plates of goat he doesn't want to, and when plates do change hands<div class="tooltip"><sup>*</sup><span class="tooltiptext">in the standard Assign Onward protocol</span></div> there is a small transaction fee that is shared equally among all shareholders, so if Bob holds the majority of the shares he also gets the majority of the benefit from trading fees.  Also, those trading fees will help to cover the costs of running the blockchain servers.  Now Bob is really skeptical, but Gene tells him not to worry: for the first year he'll take one plate of curry goat a month to cover the server costs for him and Faythe, and after a year they can look at the real costs and see what makes sense.  Bob says: "oh, now I get it, you want your curry goat for free!  O.K. - I'll play this game for a year and we'll see what happens."  Rita offers Faythe some mango options for her trouble, Faythe graciously accepts two mango option-credits per month even though she's allergic to mangoes.<br/><br/>
+
+<h2>ICO: Initial Curry Offering</h2>
+
+Eddie makes good on his word and purchases 100 plates of Bob's curry goat for EC$2000.  Eddie has a deal with Charlie already set up and he sells Charlie 50 plates for US$500.  All that Bob and Gene know is that Eddie has split off 50 of his plates to someone else, since Charlie didn't identify himself in the transaction and he paid Eddie in cash.  Charlie is happy because he has a similar system setup on other islands where guests going ashore give him some money up front and he gives them credits in an app in their phone.  Then, when they are at participating places like Bob's grill cart, they can exchange their credits for services and goods like a plate of curry goat.  Charlie is charging guests US$12 (EC$32.40) per plate of curry goat, but they're still happy with the system because they don't have to carry a lot of cash, and they can learn something about the places they are going to before they get there.  For instance, Bob isn't 100% reliably available every time the Odyessy comes into harbor, but with the phone-app guests can check to see not only if he's there, but also how many plates of curry goat he has ready and his best guess of when he'll be closing up shop for the day.  Bob has also completed some food safety and guest relations classes at the community college with great grades, and Gene linked evidence of these in Bob's blockchain which the guests' apps can verify against the college's open records, which include photos of a much younger Bob...  So, now when they hit the dock and see Oscar's rusty grill right there, they can have more confidence spending their time walking up to Eddie's place to get the preferred curry goat plate from Bob, when he's around.<br/><br/>
+
+<h2>Alice, Charlie and Bob</h2>
+
+Alice is a regular cruiser, she knows Charlie from previous cruises and this time she installed the <b>A</b>ssign <b>O</b>nward <b>E</b>xplorer app on her phone.  When she came aboard ship in Barbados, she bought US$200 in credits from Charlie that, through using AOE, she can trade for goods and services throughout the islands.  These credits can be traded on-site with market makers (like Charlie) in various blockchains who recognize Charlie's credits as a reliable source of reimbursement, and especially with Charlie himself for the various goods and services that Charlie makes a market in<div class="tooltip"><sup>*</sup><span class="tooltiptext">Charlie makes a market in Bob's curry goat plates by pre-purchasing plates from Bob and making them readily available to people in exchange for other forms of value, usually cash or cash equivalents, but possibly also other commodities.  Charlie usually sells directly to Bob's customers at the time they are purchasing a plate, but he can also sell to other investors if their bid price is high enough for him.</span></div>  like Bob's curry goat plates.<br/><br/>
+
+While Alice was in Dominica, her AOE discovered that Ted and Charlie have an exchange agreement and showed Alice all the services that Ted's credits offer, including a rainforest tour with a stopover in a hot spring for US$35 (standard cash price EC$100.)  When Alice arrived at the tour operator's office and confirmed her spot on the next jeep out, she traded Ted US$35 worth of Charlie's credits for one rainforest tour credit that Ted was holding.<div class="tooltip"><sup>*</sup><span class="tooltiptext">and Ted shared some of his margin on the tour price with Charlie, since Ted knows that Charlie has a strong influence on where guests go during their time onshore</span></div>  Alice didn't want to make long term reservations<div class="tooltip"><sup>*</sup><span class="tooltiptext">weather in Dominica can be very unpredictable</span></div> and she didn't have to, she was able to confirm and hold space available through AOE before venturing from the dock over to the tour operator's office.<br/><br/>
+
+Similarly, when Alice arrived at Sandy Ground, she could see on AOE that Bob's grill cart was open for business at Eddie's bar, so she walked up the beach and when she arrived she traded US$12 credits back to Charlie for a plate of Bob's curry goat, which she immediately assigned back to Bob in his blockchain.  All Bob sees is a valid plate credit coming back to his blockchain, he doesn't need to question where it came from, the fact that it is validly signed<div class="tooltip"><sup>*</sup><span class="tooltiptext">and confirmed with Gene and/or Faith as not double-spent</span></div> is enough for him to know he's already been paid for this particular plate in the past.  Alice trusted Charlie with $200 at the start of the cruise, but Charlie will gladly refund any credits Alice doesn't spend whenever she wants,<div class="tooltip"><sup>*</sup><span class="tooltiptext">and maybe, if Charlie trusts Alice enough, he might even extend Alice additional credits through AOE while she is ashore, assuming that Alice will pay him for the credit soon enough in the future</span></div> and the cruise line vouches for Charlie's fair dealings up to a certain limit of liability.<div class="tooltip"><sup>*</sup><span class="tooltiptext">to make their customers feel trusted and welcome, the cruise line might also protect Charlie from customers skipping out on credit paybacks up to a certain limit.  If the customers are paying US$5500 for their cruise, they might protect Charlie for up to $500 per passenger, assuming most passengers will not default and that the benefit of treating them like royalty will outweigh the cost of any defaulters.  Of course, the cruise line can also initiate collection proceedings starting with the method of payment used for the cruise tickets.</span></div>  Even if Alice didn't know or trust Bob from previous trips, she only purchases a plate from Bob's blockchain moments before she's getting her goat directly from Bob.  Alice only has to trust Charlie, Charlie is the one who is trusting Bob,<div class="tooltip"><sup>*</sup><span class="tooltiptext">at first, Charlie is making such a fat margin on Bob's plates that he quickly reduces his overall risk level.  He got the first 50 plates for US$10 each and sold them for US$12, so after he sold 42 plates the next 8 are all profit.</span></div> and Bob has basically nothing to lose: he is paid up-front.
+
+<h2>Free Market Forces</h2>
+
+It isn't long before Bob gets word that his curry goat plates are selling for EC$32.40 through Charlie, so Bob raises his cash price to EC$35 while he's at Eddie's and the new guests all feel good about the "discount" that they are getting through Charlie and their phone-app.<div class="tooltip"><sup>*</sup><span class="tooltiptext">and besides, back home they might pay US$12 to US$16 for a similar entree in an ordinary restaurant</span></div>  Bob doesn't notice any dropoff in sales with the higher prices, so he's already starting to like this blockchain thing.  Charlie goes through his first 50 plates in a couple of stopovers, so he buys the other 50 from Eddie.  Bob has the money for his electric motor now, so he goes to Dave to get it installed.  Dave has heard about Bob's blockchain and wants to talk about it, and also buy some plates if Bob will sell them to him.  So, Bob pays Dave EC$1500 cash, and gives him 60 plates for the EC$1200 balance, keeping the EC$1200 he thought he was going to be spending that day.  Bob's not crazy about owing so much goat-debt, but so far it's not cramping his style.<br/><br/>
+
+Dave has got a friend Ziggy who works down at Blowing Point just outside customs, he is familiar with the AOE app Charlie uses with his guests from the ship and trades similar credits with tourists coming in on the ferry.  Ziggy bought 30 plates from Dave for EC$750.  There's not much that guests can do with the credits here yet, but on the other side of the Ferry they use them many more places.  Now, when AOE shows Bob's grill cart, Charlie's plates are listed as available for US$12 (in Charlie credits) each, and Ziggy has listed his plates for US$11.50 (in Ziggy credits).<div class="tooltip"><sup>*</sup><span class="tooltiptext">Charlie and Ziggy don't see eye-to-eye on guest service, so Charlie refuses to set up a referral arrangement like he has with Ted with Ziggy.</span></div>  It isn't long before Dave figures out how to advertise his remaining 30 plates<div class="tooltip"><sup>*</sup><span class="tooltiptext">by setting up a referral arrangement with a cash-exchange agent like Charlie or Ted, or both.</span></div> and he puts them out there for EC$30 each, cheaper than Ziggy by just a little.  Bob's cart is out of commission for a week while Dave sorts out the electric motor attachment, but the guests who use AOE aren't too upset because Bob's not advertising any curry goat available, so most of them just don't know what they are missing, and Bob's not too upset because he's got the EC$1200 from Dave to get him through until the cart is rolling right again.<br/><br/>
+
+Meanwhile, Rita's mango options are not popular with the guests at all, since there aren't any mangoes to be eaten until after they will be leaving.  Through Karen's friends at work she does hook up with a couple of resort restaurants and sells a few dozen credits, but it's a slow business and the price the options are bringing is really low, just EC$1 apiece this year, since most of the resort chefs have never tasted Rita's mangoes.  Still, it's something, and enough for her to at least pay Sharon for the gas to drive her around.<br/><br/>
+
+<h2>Advertising through coupons</h2>
+
+Bob's cart is back, motorized and he is feeling fine.  Getting up the hill is no problem now and he can even drive the cart home every night and out again in the morning, no more fooling around with Eddie's storage shed.  His curry goat is still only fetching EC$10 at the top of George Hill, but once in awhile a guest in a rental car will find him with AOE and GPS and offer him credits on his blockchain.  Bob recognizes that he was paid EC$20 per plate for these credits, and pretty quickly he starts offering his curry goat plate at "standard" EC$35 with a little fruit garnish and a bottle of water, while the locals still know to offer him EC$10 for a plain serving of curry goat.  Competition between Charlie, Dave, Ziggy and a couple of smaller market makers in Bob's plates has settled around US$10 per plate ask price, and EC$25 bid<div class="tooltip"><sup>*</sup><span class="tooltiptext">Bob is always free to sell for lower than ask prices like he does for his more abundant, but less wealthy local clientle.  If the bid prices get too low, Bob has the option to bid higher and buy back any plates that investors are ready to get rid of for cheap.</span></div> - it's a relatively thin ~8% margin, but the traders don't really have to do anything to make EC$1.98 per plate besides invest their money against the risk that Bob quits selling goat (or honoring his blockchain promises) someday, and most of the investors know Bob so they feel o.k. with trusting a couple hundred dollars each to his future business.  Bob is sharing EC$2 per plate with his investors, but in return his investors are fronting money to Bob, helping Bob to get more business through advertising and possibly promotion,<div class="tooltip"><sup>*</sup><span class="tooltiptext">When someone like Charlie invests in Bob's plates, it gives Charlie an incentive to help Bob's business grow.</span></div> and maybe helping Bob to find a better price for his product.  Investors are not going to make millions this way, they're only getting EC$2 per plate of curry goat that Bob sells, but with an 8% per month ROI,<div class="tooltip"><sup>*</sup><span class="tooltiptext">Of course that 8% per month ROI is just a guess at what the market might settle at.  The actual return should be higher than more traditional investments due to the higher risk, and also to cover the overhead costs of evaluating and dealing with such small entities.</span></div> if investors can support enough businesses like Bob's, they should do very well compared to more traditional investment strategies.<br/><br/>
+
+Meanwhile Oscar down at the dock is feeling left out, as usual.  Oscar shouldn't be too surprised with that round of food poisioning he caused last year, and his grill leaves visible rust in the food a lot of the time, but he's still got a great location and when he shows up he always sells some goat.  Charlie knows that Oscar is bad news and he manages to warn a lot of people on their way in from the ship, but not everybody listens.  Faythe and Gene won't set up a blockchain for Oscar, but Ziggy is not so discriminating and he's helped Oscar out with a blockchain much like Bob's.  Still, Oscar hasn't taken the time to complete any food safety or guest relations classes, so he can't provide authenticated links to those, and his guest reviews don't look great at all compared to Bob's, so he really only gets blockchain business from the guests who arrive at Blowing Point and drive down to his rusty drum at Sandy Ground when Bob isn't working.  Ziggy makes a small market in Oscar's goat plates, but he only asks US$8 per plate and bids EC$10.  Since nobody else wants to touch Oscar's business, Ziggy makes this huge margin and Oscar is still happy for the extra business that comes his way through Ziggy.  Ziggy is taking a risk that Oscar will be shut down by the health department, maybe permanently, so he only holds a few plates of Oscar's goat at any given time and just buys more from Oscar as they are sold.<br/><br/>
+
+After his experience with Bob's plates of curry goat, Dave gets together with Faith and Gene and sets up his own blockchain for his electric bike rental service and pre-sells a few ride credits to Charlie, Ziggy, and even Ted.  Dave does a pretty reliable business of about 100 e-bike rentals a month.  Dave took that finance class with Rita and it helped him to decide to limit his "market float" to around 100 credits out so that people who invest in his bike rentals can get a cash return on their investment in a short time.<div class="tooltip"><sup>*</sup><span class="tooltiptext">if they ask competitive prices for their shares.</span></div>  Some of his investors will automatically re-buy up to a certain number of Dave's bike rental shares at a particular price when Dave offers them for sale, so many times Dave still gets paid immediately by the investors when a customer redeems a rental credit from the blockchain.  Exposure through the AOE app gives Dave's bike business a boost, both because more guests learn about his bikes through the app and because they can conveniently and confidently reserve them when they want to.  When Dave has plenty of bikes available he allows 30 minute holds.<div class="tooltip"><sup>*</sup><span class="tooltiptext">low risk for Dave: if additional customers without reservations show up he has bikes for them too, and if the unknown reservers are no-shows, their bikes return to available status within a short time.</span></div>  When he's getting down to the last few bikes available, his reservation system switches to first come first served.
+
+<h2>Seasonal variation</h2>
+
+In April the big cruise ship heads back to Europe and Bob's lucrative business slows down.  Thanks to AOE (and Ziggy) he's getting more guests out of Blowing Point now, but instead of selling 200 plates a month at guest prices, now he's selling more like 100.  Rita warned him about this and told him to reduce his shares outstanding, but Bob didn't listen, so now his investors aren't getting return for almost twice as long as they were in-season.  Some take it well and just wait, but others drop their ask prices down to what they paid or even lower after they don't get paid off in a couple of months.  It's a learning process, next year will be better, and meanwhile Bob still has his cash business.<br/><br/>
+
+For Rita, mango season is coming up soon.  Rita estimates that she harvests about 250 large mangoes a year, and she's only sold about 100 options so far, a lot of work for not much return, but what it's really about for Rita is opening a market that didn't exist before.  In June the fruit starts falling, and Rita sets out with Sharon to go calling on their mango option holders.  Some people politely purchase the mangoes they have options for (after all, EC$2 is a really good price for one of Rita's tree ripe Hayden mangoes), others decline for whatever reasons, but a couple of the resort restaurants start absolutely raving about how much better Rita's mangoes are than the ones they get from the grocery.  They exercise all their options and purchase the rest of Rita's stock for the summer at EC$6 per large mango.<div class="tooltip"><sup>*</sup><span class="tooltiptext">There's a small conundrum here: Rita has a few option contracts outstanding which she was not able to verify with the option holders whether they wanted to exercise at this time or not.  The language of the contract is clear: when available, so after Rita's stock for the year is sold, option holders will have to wait until the following year to potentially exercise their options, until the options <a href="Expiration.html">expire</a>.  If Rita over-subscribes her tree, it could create a severe devaluation of the options as people realize that they may potentially never be able to exercise them.  Rita is careful to disclose this problem, yet another thing that keeps mango options cooler in the market than curry goat plates.</span></div>  A few of Rita's mango options<div class="tooltip"><sup>*</sup><span class="tooltiptext">mostly the ones she gave to Faythe.</span></div> were actively traded and found their way onto guests' AOE app.  A couple of guests actually showed up at Rita's house and bought mangoes from her on-the-spot for the ask price<div class="tooltip"><sup>*</sup><span class="tooltiptext">generally speaking, no sane guest would buy and hold something like a mango option, but a hustler like Ziggy might pick up a couple for cheap and try to turn them for a big margin.</span></div> of the option plus the EC$2 exercise price.  While the direct guest trade was mildly entertaining, it clearly wasn't going to replace Rita's day job.  Anyway, having found restaurants who want all of her mangoes, Rita winds down her mango blockchain, mission accomplished.<br/><br/>
+
+<h2>Ongoing trading</h2>
+
+After a few years of operations, it becomes clear which businesses are stable ongoing concerns and which ones should be treated as high risk investments.  The stable ones like Bob, Dave and the Rainforest tours develop relatively stable trading prices, a degree of confidence<div class="tooltip"><sup>*</sup><span class="tooltiptext">Of course risk always exists.  Something tragic could happen to Bob, or he could just up and decide to retire, making his plate-shares worthless.  People who know Bob have confidence that he would wind down his investment debt in a controlled fashion, after all he's never let it get above 250 plates, or about US$2500, so nobody should be too devastated by a collapse in Bob's curry goat market anyway.</span></div> in future returns, even for tiny concerns like Bob.  Stable shares can start to be traded in a "similar to cash" fashion.  Ziggy may be short on cash and cash equivalents, but he's got EC$2000 plus he's holding 20 curry goat plates from Bob another 10 from Oscar and 6 Rainforest tours, and Ziggy might be wanting to buy an e-bike from Dave for EC$3000.  Well, Dave might accept Bob's plates in lieu of EC$540, and the Rainforest tours for another EC$560, but Dave would have to be a little crazy to accept Oscar's plates at face value or anything close.  So, Ziggy might get his bike for Dave for EC$1900 cash plus his Bob and Rainforest shares, and within a month or two Dave should be able to recover the other EC$1100 plus some margin from the shares he received.<br/><br/>
+
+One reason that everyone should be wary of Oscar's shares is that he has over-subscribed, consistently selling 20 more plates per month to unsuspecting investors than he redeems, so after a few years his float is up over 500 plates, and if you're an unfortunate investor left holding one of Oscar's plates, first you're going to have a hard time finding a cash exchange agent like Charlie or Ted who will even touch Oscar's shares.  Ziggy might do a quick exchange of cash for an Oscar share, when he's sold all that he's holding already, and when Oscar is in a mood to accept plate-shares instead of cash, but knowing Ziggy you'll be getting far below market rate for the share.  So, those 500 plates sit advertised on Oscar's blockchain with an ask price around EC$9 per plate, a bid near zero, and still nobody with any sense will touch them.  Luckily when an issue is this distressed, it's easy for the AOE software to recognize and simply filter it off of normal listings, saving the guests from having to think about such things while they enjoy the island life.  Oscar might try a re-issue of a fresh blockchain, abandoning his previous investors, but this is where some identity and history is worth publishing as a business, and checking as a potential investor.
+
+<h2>A Web of Trust</h2>
+
+Trust starts between people who know each other well in real day to day life.  When these people do open business on a blockchain for a number of years, the patterns shown on their blockchain can start to develop some implicit trust by people who may not know them as well.  Of course, histories can be manufactured and faked - to a point, which is why the Web of Trust becomes important - genuine should not be endorsing fakes or frauds, and if they do they seriously diminish their own "trust value" in the web.  Part of Bob's published identity on his blockchain includes links to his completed courses at the community college.  The community college is a well established and trusted entity<div class="tooltip"><sup>*</sup><span class="tooltiptext">Of course an entity like a college can be subject to some records faking and fraud by people within the organization, but the organization should be policing itself to keep its records clean and trustable.</span></div> and through it's publicly exposed records, it vouches for the fact that Bob completed those classes and provides some additional identity confirmation like Bob's student ID photo.  Although some share transfer transactions can be obscured by cryptographic keys without attached identities, others can be confirmed with trusted identities.  Cash traders like Charlie, Ted and even Ziggy include their identity on many transactions, enabling their clients to establish increased trust with the vendors that they vouch for.  Like when Alice trusted the Rainforest tour company because Ted vouched for them, Alice didn't know Ted, but Alice knew Charlie and she knew that Charlie trusted Ted and that Ted trusted the Rainforest people, so Alice took a very small risk in trusting the Rainforest people with her afternoon's entertainment.  Multiple degrees of separation is not the kind of trust you want when investing your life's savings, but for small low risk things it can be much better than simply trusting that the local government hasn't shut an operation down, yet, or online reviews of dubious origins.<br/><br/>
+
+As hundreds or thousands of small participants start to keep open and (at least somewhat) reliable records on blockchains, the Web of Trust that develops can support a wide variety of low risk interactions that would have previously been inadvisable due to the almost complete lack of information available about strangers in unregulated businesses.
+
+
+
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-07-13"><div class="tooltip">13 July 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
+
