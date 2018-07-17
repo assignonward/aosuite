@@ -1,0 +1,161 @@
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Assign Onward Investor</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Assign Onward Investor</h1>
+
+
+<span itemprop="articleBody">
+<h2>Automatic trading</h2>
+
+AOI (sometimes called AO-Eye) software enables investors to make automated trades in small issues based on various criteria, such as: number of shares outstanding, number of shares held and current bid/ask prices.  Ted (from <a href="IslandLife.html">Island Life</a>) lives in Dominica, but makes a small market in Bob's curry goat (BCG) plates.  Ted's valuation formula for BCG goes like this: when Bob has 100 or less plates "out" with investors, Ted sets his maximum bid price at EC$27, and asks a +5% margin at EC$28.35.  As Ted's holdings of BCG increase he reduces his bid price by EC$0.50 per plate held and also discounts his ask price to keep the same EC$1.35 per plate margin.  Ted has also set a maximum holding level for Bob's curry goat of 12 plates.  So, if Ted is currently holding 10 BCG and someone wants to buy two BCG, Ted's AOI app advertises that he will sell those for EC$47.20 equivalent in any of the issues he currently trades.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Ted is also a cash-exchange agent, so if you're right there with Ted, he'd take US$17.50 for 2 BCG - or, if you've pre-purchased some of Ted's cash credits, his AOI app will automatically exchange US$17.50 in Ted credits for you no matter where you are.</span></div>  After selling those 2 BCG, Ted's holding 8 BCG and his bid-ask chain for BCG looks like:
+
+<ul><li>bid: 1 BCG: EC$23.00</li>
+    <li>bid: 1 BCG: EC$22.50</li>
+    <li>bid: 1 BCG: EC$22.00</li>
+    <li>bid: 1 BCG: EC$21.50</li>
+    <li>ask: 1 BCG: EC$24.85</li>
+    <li>ask: 1 BCG: EC$25.35</li>
+    <li>ask: 1 BCG: EC$25.85</li>
+    <li>ask: 1 BCG: EC$26.35</li>
+    <li>ask: 1 BCG: EC$26.85</li>
+    <li>ask: 1 BCG: EC$27.35</li>
+    <li>ask: 1 BCG: EC$27.85</li>
+    <li>ask: 1 BCG: EC$28.35</li>
+</ul>
+
+Ted has developed a diversified portfolio of over 100 blockchain issues like BCG throughout the Caribbean, mostly risking a maximum of EC$300 and average closer to EC$150 on each issue.  Ted tries to invest in the most stable issues available, but every year two or three of his investments have a serious problem usually losing all value.  Even accounting for the losses, overall he is making much better than bank interest on the US$6000 he has invested so far, and he really likes the fact that he and other investors like him are supporting local small businesses.  Investors like Ted take notes while they travel.  When they have a good experience with a vendor who offers blockchain shares, they will note the vendor's identity in their AOI, and if the fundamentals of shares outstanding, turnover rate and margin look good, they'll make a small investment, often no more than the cost of a dinner for the evening.  Even if the fundamentals aren't great at the moment, AOI can "keep an eye" on the issue, and if the fundamentals improve AOI might automatically start a small investment then.<br/><br/>
+
+Bob doesn't usually have over 100 plates "out", but when he does, Ted discounts all his bid prices by EC$0.05 per share over 100 that Bob has outstanding.  If Bob ever exceeds 200 plates "out" then Ted's AOI is programmed to halt further buying of BCG and start discounting his ask price on BCG by EC$0.02 per plate between 200 and 250 outstanding, for a maximum ask discount of EC$1.<br/><br/>
+
+Charlie is a little simpler than Ted and he makes a bigger market in BCG: holding up to 24 plates, and he simply bids EC$25 anytime Bob has less than 150 plates outstanding, and asks EC$27.<br/><br/>
+
+Ziggy has his AOI programmed to play the market.  For BCG Ziggy tries to hold 20 plates and his current strategy will bid EC$0.01 over the highest bid out there, up to a max of EC$25.10, and  asks EC$0.01 less than the lowest ask out there, as long as that's at least EC$2.00 more than he paid for his most expensive recent purchase of BCG.  Sometimes Ziggy cleans up with these strategies, sometimes he ends up sitting on the sidelines while other investors make money on BCG.<br/><br/>
+
+As for Bob, he has a flat bid of EC$10 for all outstanding plates, and he asks EC$20 when he has no plates outstanding, increasing by EC$0.07 per plate outstanding, so when he has 100 plates outstanding, his ask sits at EC$27.  Bob usually has about 70 plates outstanding, but it does bounce up and down quite a bit, especially when new players enter the market.<br/><br/>
+
+
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-07-14"><div class="tooltip">14 July 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
+
