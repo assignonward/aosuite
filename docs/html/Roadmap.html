@@ -107,30 +107,36 @@
     <li>Communication data format specifications</li>
     <li>Working application code</li>
     <ul><li>Genesis Block Creator</li>
-        <li><a href="AssetOrganizer.html">Asset Organizer</a>, basic version</li>
-        <ul><li>AOE - Assign Onward Explorer - Asset Organizer for consumers</li>
-            <li>AOS - Assign Onward Seller - Asset Organizer for vendors</li>
-            <li>AOI - Assign Onward Investor - Asset Organizer for market makers (a.k.a. AO-eye)</li>
+        <ul><li>AOG¹ - Assign Onward Genesis block creator</li>
         </ul>
-        <li>Assignment Recorder</li>
-    </ul>
+        <li><a href="AssetOrganizer.html">Asset Organizer</a>, basic version</li>
+        <ul><li>AOS¹ - Assign Onward Seller - Asset Organizer for vendors</li>
+            <li>AOE² - Assign Onward Explorer - Asset Organizer for consumers</li>
+            <li>AOI² - Assign Onward Investor - Asset Organizer for market makers (a.k.a. AO-eye)</li>
+        </ul>
+        <li>Assignment Recording</li>
+        <ul><li>AOR¹ - Assign Onward Recorder - Records new authorized assignments on their chains</li>
+            <li>AOV¹ - Assign Onward Validator - Independently validates AOR nodes<div class="tooltip"><sup>*</sup><span class="tooltiptext">can be used as a source of invalidation, but not validation</span></div></li>
+            <li>AON³ - Assign Onward Node - Distributed small world network cooperating/competing recorder</li>
+        </ul>
+   </ul>
     <li>Levels of Functionality (Test Assign Onward: the path)
     <ul><li>TⒶ¹ - Single recorder</li>
         <ul><li>Offer and acceptance <a href="Signatures.html">signed</a> <a href="AssignmentAgreement.html">share assignments</a></li>
             <li>Recording tax (but no shares incentive for recorder)</li>
             <li>All checking done by the single recorder</li>
         </ul>
-        <li>TⒶ² - Multiple recorders</li>
+        <li>TⒶ²- Multiple chain transactions</li>
+        <ul><li>Protocol to guarantee a single transaction that involves multiple chains</li>
+        </ul>
+        <li>TⒶ³ - Multiple recorders</li>
         <ul><li>Add share incentive for recorders</li>
             <li>Recorders check each other (maybe error catching rewards?)</li>
         </ul>
-        <li>TⒶ³ - Underwriters</li>
+        <li>TⒶ⁴ - Underwriters</li>
         <ul><li>Recognized share holders may provide underwriting to guarantee transaction</li>
             <li>Error checkers may claim rewards for validating the chain</li>
             <li>Error checkers may claim underwriting shares for exposing underwriting errors</li>
-        </ul>
-        <li>TⒶ⁴ - Multiple chain transactions</li>
-        <ul><li>Protocol to guarantee a single transaction that involves multiple chains</li>
         </ul>
     </ul>
 </ul>
