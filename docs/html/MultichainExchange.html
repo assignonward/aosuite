@@ -1,0 +1,199 @@
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 5px;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 120px;
+    margin-left: 120px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Multichain Exchange</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Multichain Exchange</h1>
+
+<span itemprop="articleBody">The basic assignment protocol ensures that all parties to an assignment are in agreement with the terms before the assignment can be recorded to the blockchain.  However, what protocol can assure that all parties are in agreement about a multi-chain assignment and that the assignment has been recorded in all blockchains before taking effect in any of them?  For example: <a href="IslandLifeCharacters.html">Alice</a> holds 135 CCC.  Charlie is advertising that he will exchange 12 CCC for 1 BCG.  Alice wants to give Bob 1 BCG.  What needs to happen?<br/><br/>
+
+The simplest situation would involve trust among the parties: Alice assigns 12 CCC to Charlie and Charlie assigns 1 BCG to Bob, separate assignments on separate blockchains, if they both are recorded everybody is happy.  However, if either assignment fails to be recorded<div class="tooltip"><sup>*</sup><span class="tooltiptext">failure to record could be a simple technical error, or it could be a malicious attempt to cheat.</span></div> then either Bob or Charlie will be unhappy when they discover the missing assignment in the permanent blockchain record.  The parties could all get copies of the authorized assignments which would be their proof that the transaction was authorized, but if those same shares are recorded in the blockchain as transferred to another key before this authorized assignment is recorded, then this assignment will be invalidated.<div class="tooltip"><sup>*</sup><span class="tooltiptext">the same shares cannot be assigned twice.</span></div><br/><br/>
+
+What can happen are conditional assignments in both chains.  The shares in question are escrowed for a period of time, and if proof of all required recordings is recorded<div class="tooltip"><sup>*</sup><span class="tooltiptext">Even a late proof of all required recordings can still be binding, as long as none of the source shares have been invalidated by assignment elsewhere.</span></div> then the assignment becomes binding.  It doesn't sound simple, and it's not, especially when more than 2 blockchains are involved.  First, even before starting CAA<div class="tooltip"><sup>*</sup><span class="tooltiptext">Conditional Assignment Agreement</span></div> recording, all concerned asset organizer applications should "ping" all concerned blockchain recorders to ensure they are available to record assignments.  Next, the complete exchange is described in a CAA and approved by all parties giving and receiving shares in all chains.  Then, this CAA is recorded in every concerned blockchain, Ouroboros style.  What this means is: the concerned blockchains are given a numerical order in the CAA.  When the CAA is recorded on the first blockchain<div class="tooltip"><sup>*</sup><span class="tooltiptext">For practical purposes, after initial recording of a CAA the escrow period gets extended to provide a reasonable interval for recording of the binding CAA in all chains.</span></div> the signature of that block (proof of recording) is appended to the CAA and the extended CAA is recorded on the next blockchain.  While there are additional blockchains involved, the CAA is recorded on each and the proof of recording is appended to the CAA.  Finally, when the CAA is recorded on the last blockchain with proof of recording on all other concerned blockchains, and before the escrow period has expired, that recording makes the CAA binding.  Still, this binding recording also needs to be recorded to all other concerned blockchains, and so the recording block signature of the binding CAA is appended to the CAA and that completed (binding) CAA is recorded in all other concerned blockchains, binding the transaction in each chain as it is recorded.  The process requires two recordings in all concerned blockchains, and a third recording in all but one concerned blockchains.  For a three party two chain assignment it's not too bad, it breaks down like this:<br/><br/>
+
+<ol><li>Alice tells her AOE that she wants to give 1 BCG to Bob's AOS<div class="tooltip"><sup>*</sup><span class="tooltiptext">Alice's AOE is only holding 165 CCC and 0 BCG at the moment</span></div></li>
+    <li>Alice's AOE requests recording fee and time information from both CCC and BCG AORs</li>
+    <li>Alice's AOE receives responses from both AORs indicating their current fees and recording time lag estimates</li>
+    <li>Alice's AOE finds<div class="tooltip"><sup>*</sup><span class="tooltiptext">the current best available deal for Alice</span></div> Charlie's AOI advertising an ASK of 12 CCC for 1 BCG and indicates on-screen "Give 1 BCG for US$12 / 1288 lek worth of CCC Y/N?"</li>
+    <li>Alice approves the transaction with a tap on her screen</li>
+    <li>Alice's AOE proposes a CAA to Bob's AOS and Charlie's AOI<div class="tooltip"><sup>*</sup><span class="tooltiptext">recording fees neglected for simplicity of presentation, some small fraction of the CCC and BCG would be given to the recording servers during the transaction to cover recording costs (aka SPAM reduction fees.)</span></div>:</li>
+    <ul><li>Alice gives 165 CCC</li>
+        <li>Alice receives 143 CCC</li>
+        <li>Charlie receives 12 CCC</li>
+        <li>Charlie gives 15 BCG<div class="tooltip"><sup>*</sup><span class="tooltiptext">Charlie happens to be holding a block of 15 BCG which he wants to use in this transaction for whatever reason.  AO share blocks can only be assigned <a href="AtomicAssignment.html">atomically</a> so Charlie puts in 15 BCG and then has a fresh block of 14 BCG from this assignment that he is free to assign elsewhere, once this CAA is binding.</span></div></li>
+        <li>Charlie receives 14 BCG</li>
+        <li>Bob receives 1 BCG</li>
+        <li>escrow time until some reasonable interval to record the CAA on both CCC and BCG chains</li>
+    </ul>
+    <li>Alice's AOE sends the (unsigned) CAA to Charlie's AOI and Bob's AOS for informal agreement</li>
+    <li>Charlie's AOI receives Alice's CAA, which constitutes a BID of 12 CCC for 1 BCG, from his perspective</li>
+    <li>Charlie's AOI requests a share availability check from the CCC AOR for Alice's proposed 165 CCC give shares</li>
+    <li>Charlie's AOI receives responses from the CCC AOR indicating Alice's 165 CCC shares are available for assignment</li>
+    <li>Charlie's AOI agrees to the terms of the CAA and sends notes to Alice and Bob that the CAA looks acceptable to Charlie's AOI</li>
+    <li>Bob's AOS queries the CCC AOR regarding Alice's proposed 165 CCC give</li>
+    <li>Bob's AOS queries the BCG AOR regarding Charlie's proposed 15 BCG give</li>
+    <li>Bob's AOS receives confirmation from the CCC AOR that Alice's 165 CCC is available for assignment</li>
+    <li>Bob's AOS receives confirmation from the BCG AOR that Charlie's 15 BCG is available for assignment</li>
+    <li>Bob's AOS indicates on-screen that Alice is proposing giving Bob 1 BCG (and that the transaction looks valid)</li>
+    <li>Bob tells his AOS he will accept 1 BCG from Alice with a tap on the screen</li>
+    <li>Bob's AOS, having already received informal agreement from Charlie and implicit approval from the proposer Alice, signs the CAA with the private key for the BCG he will be receiving</li>
+    <li>Bob's AOS sends the signed CAA to Alice and Charlie.</li>
+    <li>Alice's AOE, having received informal agreement from Charlie and a signed agreement from Bob, authorizes the CAA by signing it with private keys for the shares she is giving and receiving</li>
+    <li>Alice's AOE sends the signed agreement to Bob and Charlie</li>
+    <li>Charlie's AOI, having received formal agreement from Bob and implicit agreement from the proposer Alice authorizes (signs) the CAA with the private keys for the shares Charlie is giving and receiving</li>
+    <li>Charlie's AOI sends the signed CAA to Alice and Bob<div class="tooltip"><sup>*</sup><span class="tooltiptext">or, potentially, Bob's AOS could receive the signed CAA from Alice say if her communication with Bob was better than Bob's communication with Charlie - it doesn't matter who sent it (much) what matters is who signed it and that the signature is valid.</span></div></li>
+    <li>Alice's AOE, being the proposer, communicates the fully signed CAA to the CCC AOR for recording</li>
+    <li>Alice's AOE notifies Bob's AOS and Charlie's AOI that the initial CAA recordings are in progress</li>
+    <li>The CCC AOR notifies Alice's AOE that the CAA is recorded</li>
+    <li>Alice's AOE appends the CCC recording block information to the CAA and communicates it to the BCG AOR for recording</li>
+    <li>Alice's AOE notifies Bob's AOS and Charlie's AOI that the CAA recordings are progressing</li>
+    <li>The BCG AOR notifies Alice's AOE that the CAA is recorded, and now binding</li>
+    <li>Alice's AOE sends a final record to the CCC AOR to finalize the binding record in the CCC blockchain also</li>
+    <li>Alice's AOE notifies Bob's AOS and Charlie's AOI that the CAA recordings are progressing and now binding</li>
+    <li>The CCC AOR notifies Alice's AOE that the binding CAA is recorded</li>
+    <li>Alice's AOE notifies Bob's AOS and Charlie's AOI that the CAA recordings are finalized</li>
+    <li>Alice's AOE notifies her on-screen that Bob has received 1 BCG and her current CCC balance is 143</li>
+    <li>Bob's AOS notifies him on-screen that he has just received 1 BCG</li>
+    <li>Charlie's AOI indicates new balances of CCC and BCG<div class="tooltip"><sup>*</sup><span class="tooltiptext">onscreen if Charlie is looking, more often Charlie is not looking.</span></div>, potentially adjusting affected BID ASK prices and perhaps initiating some other trades</li>
+</ol>
+
+Key points: 
+
+<ul><li>Until Bob places the final signature on the CAA it has no binding effect.  Only when all givers and receivers of shares in the CAA have signed it is it ready for recording.</li>
+    <ul><li>However, when Alice and Charlie sign the CAA, it is then out of their hands whether or not Bob will sign.  They must act as if Bob will sign and the CAA will be recorded until the escrow period has expired.</li>
+    </ul>
+    <li>When the CAA is first recorded on a blockchain, it places the "give" shares in escrow for the agreed period of time on that blockchain.</li>
+    <li>The "conditional" part of a CAA is that the CAA is not binding unless and until it has been recorded on all concerned blockchains before the escrow expiration time.</li>
+    <ul><li>Considered and rejected: The CAA may have a two stage escrow period.  Stage one expires if the CAA has not been recorded on a chain, and stage two expires later if a CAA has not become binding by stage two expiration time.  This allows a party to the CAA to sign the CAA but only commit to the stage one lockup period unless all other parties also sign and start the recording process.  Stage two allows a longer period of time to execute all the AOR recordings.  Rejected because once a party has signed a CAA, they have no control over whether or not other parties will sign and record the CAA, so they are subject to the Stage two escrow period, regardless.  Should strike all references to this two stage escrow period... later.</li>
+    </ul>
+    <li>Once the last blockchain has recorded a copy of the CAA and all recordings were made before the escrow expiration, the CAA then becomes binding on all chains, however...</li>
+    <li>Chains which do not have a fully validated CAA recorded on them are still in limbo until one of two things happen:</li>
+    <ul><li>A copy of a fully validated CAA is recorded on the chain, closing the CAA as validated.</li>
+        <li>A refutation of the CAA is recorded on the chain, including a copy of a post escrow expiration from at least one other chain in the CAA which did not record the CAA before the escrow expiration deadline.  This invalidates the CAA and frees the "give" shares in it to be given in other assignments.  Note, again, that this refutation cannot be recorded until after the escrow period has expired.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Polite transaction processing software will not leave CAAs in limbo.  There is a potential hack here where a CAA might point to a defunct chain with unreachable recording servers and malicious actors can "lock up" shares on active chains by putting them under a CAA with such a chain - such shares will eventually <a href="Expiration.html">expire</a>.  As a partial mitigation this is why all participants ping all recording servers before authorizing a CAA.</span></div></li>
+    </ul>
+    <li>Once a CAA is fully validated on a blockchain, receivers of shares in that CAA (on that chain) are then free to assign those shares onward, even if the escrow period has not yet expired.</li>
+    <li>In the above example, Alice's AOE is "driving the transaction" through the blockchains' AOR servers by virtue of having proposed the transaction in the first place... it may be preferable for the more stable<div class="tooltip"><sup>*</sup><span class="tooltiptext">by virtue of being run by vendors instead of transient guests</span></div> AOS software to take charge of the AOR interface aspects.</li>
+</ul>
+
+</span>
+</span>
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-05-04"><div class="tooltip">4 May 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
