@@ -109,8 +109,7 @@ What can happen are conditional assignments in both chains.  The shares in quest
     <ul><li>Alice gives 165 CCC</li>
         <li>Alice receives 143 CCC</li>
         <li>Charlie receives 12 CCC</li>
-        <li>Charlie gives 15 BCG<div class="tooltip"><sup>*</sup><span class="tooltiptext">Charlie happens to be holding a block of 15 BCG which he wants to use in this transaction for whatever reason.  AO share blocks can only be assigned <a href="AtomicAssignment.html">atomically</a> so Charlie puts in 15 BCG and then has a fresh block of 14 BCG from this assignment that he is free to assign elsewhere, once this CAA is binding.</span></div></li>
-        <li>Charlie receives 14 BCG</li>
+        <li>Charlie gives 1 BCG</li>
         <li>Bob receives 1 BCG</li>
         <li>escrow time until some reasonable interval to record the CAA on both CCC and BCG chains</li>
     </ul>
@@ -118,14 +117,22 @@ What can happen are conditional assignments in both chains.  The shares in quest
     <li>Charlie's AOI receives Alice's CAA, which constitutes a BID of 12 CCC for 1 BCG, from his perspective</li>
     <li>Charlie's AOI requests a share availability check from the CCC AOR for Alice's proposed 165 CCC give shares</li>
     <li>Charlie's AOI receives responses from the CCC AOR indicating Alice's 165 CCC shares are available for assignment</li>
-    <li>Charlie's AOI agrees to the terms of the CAA and sends notes to Alice and Bob that the CAA looks acceptable to Charlie's AOI</li>
+    <li>Charlie's AOI revises details of the terms of the CAA, including specifying the public keys he is using to receive shares, and sends notes to Alice and Bob that the following CAA looks acceptable to Charlie's AOI</li>
+    <ul><li>Alice gives 165 CCC</li>
+        <li>Alice receives 143 CCC</li>
+        <li>Charlie receives 12 CCC</li>
+        <li>Charlie gives 15 BCG<div class="tooltip"><sup>*</sup><span class="tooltiptext">Charlie happens to be holding a block of 15 BCG which he wants to use in this transaction for whatever reason.  AO share blocks can only be assigned <a href="AtomicAssignment.html">atomically</a> so Charlie puts in 15 BCG and then has a fresh block of 14 BCG from this assignment that he is free to assign elsewhere, once this CAA is binding.</span></div></li>
+        <li>Charlie receives 14 BCG</li>
+        <li>Bob receives 1 BCG</li>
+        <li>escrow time until some reasonable interval to record the CAA on both CCC and BCG chains</li>
+    </ul>
     <li>Bob's AOS queries the CCC AOR regarding Alice's proposed 165 CCC give</li>
     <li>Bob's AOS queries the BCG AOR regarding Charlie's proposed 15 BCG give</li>
     <li>Bob's AOS receives confirmation from the CCC AOR that Alice's 165 CCC is available for assignment</li>
     <li>Bob's AOS receives confirmation from the BCG AOR that Charlie's 15 BCG is available for assignment</li>
     <li>Bob's AOS indicates on-screen that Alice is proposing giving Bob 1 BCG (and that the transaction looks valid)</li>
     <li>Bob tells his AOS he will accept 1 BCG from Alice with a tap on the screen</li>
-    <li>Bob's AOS, having already received informal agreement from Charlie and implicit approval from the proposer Alice, signs the CAA with the private key for the BCG he will be receiving</li>
+    <li>Bob's AOS, having already received informal agreement from Charlie and implicit approval from the proposer Alice, revises the CAA to insert the public key he will receive the BCG under, and signs the CAA with the private key for the BCG he will be receiving</li>
     <li>Bob's AOS sends the signed CAA to Alice and Charlie.</li>
     <li>Alice's AOE, having received informal agreement from Charlie and a signed agreement from Bob, authorizes the CAA by signing it with private keys for the shares she is giving and receiving</li>
     <li>Alice's AOE sends the signed agreement to Bob and Charlie</li>
