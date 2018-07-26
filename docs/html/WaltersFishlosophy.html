@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 5px;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 140px;
+    margin-left: 160px;
+}
+</style>
+<meta charset="UTF-8"/>
+<title>Walter's Fishlosophy</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="THG512.png" alt="Ⓐ" width="256" height="175" style="float:right">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Walter's Fishlosophy</h1>
+
+<span itemprop="articleBody">
+In August 2019, Ted had just wrapped up his TCC tour of Martinique and returned to Roseau.  He got a call from Walter, inviting him out to lunch down on Castle Street and wanting to talk with him about his TCC.  Ted didn't know Walter, and it was weird that Walter was seeking him out - all of Ted's TCC talks to-date had been him selling the concept to others.  Still should be interesting.<br/><br/>
+
+Walter introduced himself as a businessman / investor, who had participated in several good sized real estate development projects throughout the Caribbean.  He said he was more into financials these days developing new technology based ventures.  He heard about Ted's TCC from a friend in Guadeloupe and was curious to learn more.  Ted explained how the TCC blockchain servers facilitate secure transactions of shares with open records, how those shares represent ownership in TCC, and how he keeps the value of TCC pegged at US$1 by purchasing it for US$0.996 and selling it for US$1.004  As for the merchants, they each have their own blockchain similar to TCC, but representing goods or services which they provide.  Ted and his associates have been securing small business loans via these blockchains, buying a number of "coupons" for goods or services at a discount which the businesses have promised to honor when guests transfer these digital coupons to them, on their blockchains, later in the season.  Ted can sell the business coupons to the guests directly, but the route he is most excited about is selling the guests TCC which they can exchange for coupons exactly when they are about to use the service.  No need to purchase in advance sight unseen, they can decide when they are on the spot if they want to buy the service or not, and through their AOE apps they can get the coupons from Ted's AOI instantly in exchange for TCC.<br/><br/>
+
+Walter was impressed, and he told Ted so.  He asked Ted about independent verification of the blockchain records and Ted explained how the primary recording is done on an AOR server but several AOV servers provide a network of backups to the AOR and can be used by AOE apps for most assignment validation needs.  When it is available, the AOR server is the final word on new blocks in the chain, but the AOV servers duplicate all the information in the AOR server within seconds, and if the AOR server should become unavailable to a majority of trusted AOV servers, there is a fail-over order which allows trusted AOV servers to step up and take over the AOR role.  Ted has a network of 3 servers, one in his office and two in the cloud, which provide the blockchain recording services for TCC and his cooperating businesses, but anyone can set up additional untrusted AOV nodes quite easily.<br/><br/>
+
+Walter said: "Very interesting, and I think I will look into a validator for your blockchains, would you mind?"  Ted: "No, not at all.  Let me know when you do and we can configure each other for free data exchange.  The standard configuration charges a tiny fee for data lookup to keep unknown people from flooding the servers with worthless data requests."  Walter: "Sounds good, I'll let you know.  Say, Ted, do you like to fish?"  Ted: "Sometimes, I'm so busy lately I haven't out been in a while."  Walter: "I like to fish, I used to be like you, too busy, but I make time now.  You ever fish for Marlin?" Ted: "Sure, a few times."  Walter: "You ever see Marlin with a bait ball?"  Ted: "Only on the BBC, never been that lucky in real life."  Walter: "It's impressive, the Marlin know how the bait fish will behave, and they herd them all together and pick them off, just like on the BBC, but in real life it's an amazing spectacle of splashing and thrashing.  Seems to me that if the little fish would scatter, go off in all different directions, that surely more of them would survive, but that's not their nature.  The fish that do scatter, go their own way around the bigger fish, they don't get wiped out like the bait fish do.  I like this blockchain technology, it's fresh, lots of opportunity, for big fish and small.  I like what you're doing, working with the small businesses, each doing their own thing, supporting each other but still independent.  You know, my family, we're not small fish - I like to think of myself as a Marlin, fast and strong, but one thing my father taught me is: no matter how big you think you are, there's always bigger fish out there, always.  Even if I am a mighty Marlin, so fast - men like me have boats that are even faster, they know how the Marlin behaves and they can set their lures and catch me, mount me as a trophy if they want.  So, Ted, when I heard you were networking out with your blockchain projects on the islands, I was curious about your plans, ambitions, where do you think this will go for you?"<br/><br/>
+
+Ted: "I'm not sure.  It's the slow season, so offering money to businesses is pretty easy right now, I was surprised how easy when I was in Guadeloupe.  This thing won't work if there are just a few of businesses participating, but I doubt it will ever be used by all of them.  The interesting part is: I'm not really in control of it.  For now, TCC is the only cash equivalent issue around here, but anyone can start others and as long as people holding issues trust the value of what they are exchanging the issues for, TCC doesn't have to be involved at all.  Other cash issues, or coupons with agreed upon values can be exchanged.  There is the fact that I am controlling the servers, but the protocol is open - secured by the private keys of the shares being assigned - if someone else wants to run a their own servers in a cooperating network, they can host whatever blockchains they want, even the ones I just signed up can migrate to new servers whenever they want.  Would you want to run servers, or maybe invest?" Walter: "Oh no, I run with bigger fish, they like their profits in bigger chunks, but I like what you are doing.  It's an ecosystem, and we need fish of all sizes for a healthy ecosystem, right?" Ted: "Sure." Walter: "Right now, all over the world, blockchain is being painted with one big brush - very few people understand it, especially not the fools investing their last dime in it because they think they'll be rich tomorrow.  What happens to one blockchain project still affects them all, big fish and small.  I'm trying to keep the Caribbean waters clean for blockchain projects, big and small, so I want to help you succeed, but even more importantly, I want to help you succeed cleanly, without messy scandals that might muddy the waters for all of us, understand?" Ted: "I think so."<br/><br/>
+
+Walter: "Have you talked with the Ministry of Tourism, or Trade?" Ted: "Tourism, I think the minister of Trade is more interested in big fish like you." Walter: "I think you're right.  If they start giving you any trouble, let me know.  I have good relations with the ministers and I think, as long as everything is on the up and up, your blockchain business should thrive here in the islands." Ted: "That is very kind of you, sir." Walter: "Think nothing of it.  When I help you, I am helping myself, you know?" Ted: "Absolutely."  Walter: "I'm going to be back in Fort-de-France with a new boat in April, you think you'll have time to catch some tuna with me?" Ted: "That sounds like something worth making time for."  Walter: "Let's plan on that, then."
+
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-07-25"><div class="tooltip">25 July 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
+
