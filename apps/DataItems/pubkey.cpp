@@ -83,6 +83,7 @@ PubKey::PubKey( const DataItemBA &di, QObject *p )
       case AO_ID_SEQ_NUM:
         typeCode       = AO_ID_SEQ_NUM;
         publicKeyIndex = new DataVbc64( di, this );
+        break;
 
       default:
         // TODO: log error
@@ -126,6 +127,7 @@ bool  PubKey::isValid() const
 
       case AO_RSA3072_PUB_KEY:
         if ( !publicKeyRsa3072 )
+          return false;
         return publicKeyRsa3072->isValid();
 
       case AO_ID_SEQ_NUM:

@@ -91,6 +91,8 @@ void  CryptoForm::on_passphrase_textEdited( QString pp )
  */
 bool CryptoForm::getKeyInfo()
 { qint32 n = ce->getKeyInfo();
+  if ( n < 1 )
+    return false;
   ui->selectedKeyNumber->setSuffix( QString( " of %1" ).arg(n) );
   ui->selectedKeyNumber->setMinimum( 1 );
   ui->selectedKeyNumber->setMaximum( n );

@@ -65,7 +65,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 }
 
 int main(int argc, char *argv[])
-{   QFile logFile( "/home/mango/ao.log" );
+{   QFile logFile( "/home/sw/ao.log" );
     logFile.open( QIODevice::WriteOnly );
     logStream = new QTextStream( &logFile );
     qInstallMessageHandler(myMessageOutput);

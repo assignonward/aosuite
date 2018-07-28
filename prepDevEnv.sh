@@ -1,3 +1,4 @@
+#! /bin/bash
 # MIT License
 #
 # Copyright (c) 2018 Assign Onward
@@ -21,38 +22,26 @@
 # SOFTWARE.
 #
 
-QT          += core gui widgets
-TEMPLATE     = app
+sudo apt update -y
+sudo apt install -y automake make build-essential g++ bison flex gettext texinfo transfig fig2dev gnutls-bin rng-tools adns-tools nettle-dev libncurses5-dev libsqlite3-dev libldap2-dev libreadline-dev libgmp-dev libbz2-dev zlib1g-dev lib64z1-dev qt5-default qtcreator
 
-DEPTH = ../..
+# for gpg:
+pushd gpg
+./wipe.sh
+./build.sh
+popd
 
-# sudo apt-get install libgpgme11-dev libgcrypt11-dev libbz2-dev lib64z1-dev
+tar -xf gmp-6.1.2.tar.bz2
+pushd gmp-6.1.2
+./configure --enable-cxx --disable-fft
+make
+sudo make install
+make check
+popd
+rm -rf gmp-6.1.2
 
-TEMPLATE     = app
-CONFIG      += rtti
-INCLUDEPATH += $${DEPTH}/OpenPGP
-#INCLUDEPATH += /usr/local/include/gnupg
-LIBS        += -lOpenPGP -lgmp -lgmpxx -lbz2 -lz -ldl -lgcrypt -lgpgme -lgpg-error -L$$PWD/$${DEPTH}/OpenPGP -L/usr/local/lib
-DEFINES     += _FILE_OFFSET_BITS=64
+pushd OpenPGP
+make
+popd
 
-include($${DEPTH}/qamqp.pri)
-INCLUDEPATH += $${QAMQP_INCLUDEPATH}
-LIBS        += -L$${DEPTH}/src $${QAMQP_LIBS}
-macx:CONFIG -= app_bundle
-
-include(../AboutForm/AboutForm.pri)
-include(../CryptoForm/CryptoForm.pri)
-include(../DataCollections/DataCollections.pri)
-include(../DataItems/DataItems.pri)
-include(../OrganizerData/OrganizerData.pri)
-include(../Random/Random.pri)
-include(../SingleApplication/singleapplication.pri)
-DEFINES     += QAPPLICATION_CLASS=QApplication
-
-INCLUDEPATH += $${PWD}
-
-SOURCES     += $${PWD}/main.cpp          \
-               $${PWD}/MainWinCommon.cpp
-
-HEADERS     += $${PWD}/MainWinCommon.h
 
