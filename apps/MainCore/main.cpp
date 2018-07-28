@@ -33,7 +33,7 @@
 using namespace std;
 
 MainWindow *mw;
-QTextStream *logStream = NULL;
+QTextStream *logStream = nullptr;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 { QString m;
