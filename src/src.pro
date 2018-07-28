@@ -5,6 +5,7 @@ TEMPLATE = lib
 TARGET = qamqp
 build_pass:CONFIG(debug, debug|release) {
     TARGET = $$join(TARGET,,,d)
+#    TARGET = qamqpd
 }
 QT += core network
 QT -= gui
