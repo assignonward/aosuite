@@ -127,6 +127,7 @@ bool  PubKey::isValid() const
 
       case AO_RSA3072_PUB_KEY:
         if ( !publicKeyRsa3072 )
+          return false;
         return publicKeyRsa3072->isValid();
 
       case AO_ID_SEQ_NUM:
