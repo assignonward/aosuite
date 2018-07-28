@@ -83,6 +83,7 @@ PubKey::PubKey( const DataItemBA &di, QObject *p )
       case AO_ID_SEQ_NUM:
         typeCode       = AO_ID_SEQ_NUM;
         publicKeyIndex = new DataVbc64( di, this );
+        break;
 
       default:
         // TODO: log error
