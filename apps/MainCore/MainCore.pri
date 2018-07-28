@@ -38,9 +38,14 @@ DEPTH = ../..
 # cd gpg
 # ./wipe.sh
 # ./build.sh
+# cd ..
+# cd OpenPGP
+# make
 #
+TEMPLATE     = app
+CONFIG      += rtti
 INCLUDEPATH += $${DEPTH}/OpenPGP
-INCLUDEPATH += /usr/local/include
+INCLUDEPATH += /usr/local/include/gnupg
 LIBS        += -lOpenPGP -lgmp -lgmpxx -lbz2 -lz -ldl -lgcrypt -lgpgme -lgpg-error -L$$PWD/$${DEPTH}/OpenPGP -L/usr/local/lib
 DEFINES     += _FILE_OFFSET_BITS=64
 

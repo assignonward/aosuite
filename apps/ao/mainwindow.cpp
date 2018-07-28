@@ -221,15 +221,6 @@ void MainWindow::saveConfig()
  *   Any transaction processor found to be signing a double-spend or otherwise invalid proposed
  *     ledger page is marked to HOLD future transactions, thier coin is effectively burned.
  *
- * Bonus:
- *   Automatic transaction handling between multiple networks, perhaps each has its own share
- *     of coin that it is responsible for real-time trading of, but the networks can also trade
- *     coin with each other when desired?  Yes.  For scalability, when a ledger reaches ~500 transactions
- *     per day, some transaction processors may establish a new sub-ledger.  When a sub-ledger falls below
- *     ~100 transactions per day for a period of 5 days or more, it should consolidate with another low-volume
- *     ledger.  All sub-ledgers must reference the root-ledger, but sub-ledger to sub-ledger transactions are
- *     permitted, and expected...  The root-ledger's primary purpose is to establish validity of sub-ledgers.
- *
  * Division of excess commission:
  *   When a transaction's TRAN(RBID) exceeds the sum of the minimum RECP(RCRD(AMT))s specified by all recorders
  *     there is excess commission to be divided.  When there is only one recorder (RCRD list length: 1), the excess
@@ -243,185 +234,6 @@ void MainWindow::saveConfig()
  *     even proposing a new list of recorders to the participants.  If agreement cannot be reached by TRAN(TRMX), then
  *     the transaction fails and does not occur.
  *
- * Sample Transaction:
- *
- * Bob wants to give Alice some aoncoin.  Each has a wallet with multiple keys, each associated with a positive coin
- *   balance on one of several ledgers.  Bob sends a TRAN proposal to Alice:
- *
- *   <TRAN> Coin transfer transaction contents:
- *     [SALT] 256 bit random number included in all signatures
- *     [TPRO] time of proposal
- *     [TRMX] latest acceptable time of recording
- *     [RBID] maximum acceptable total recording fee
- *     <PART> List of each participant's:
- *       [KEY]  public key
- *       [AMT]  amount to be transacted (signed 128 bit integer)
- *
- * Bob runs a good wallet that makes a highly entropic SALT value, but it could as easily have been populated with
- *   any 256 bits - say instead of random bits, Bob's SALT said "Alice, please PM me your tits!" in UTF-8.  Oh dear,
- *   Bob's wallet (or poor judgement) has compromised the randomness of the SALT - this is not a problem the first
- *   time he does this, but Alice's wallet software might want to check on Bob's ledger transactions to make sure
- *   that there is at least variation in his SALT values - I mean, really Bob, can't you be more original than that?
- *   If Alice (or, more likely, her wallet software) has a problem with Bob's SALT, the transaction can be rejected
- *   and reproposed with a SALT of Alice's choosing.  Also, note that transaction recorders may refuse to approve
- *   transactions if they find a lack of randomness or repetition of SALT values in the ledger.
- *
- * Bob's wallet is also synchronized to a reasonably accurate NTP server, this is a requirement for all wallet software
- *   but the definition of "reasonably accurate" can vary.  When Alice receives TPRO, she should expect it to be within
- *   +/- 64 seconds of what time her wallet thinks it is, unless the proposal is travelling by e-mail or USB stick
- *   instead of a direct network connection.  In any event, TPRO must never be from Alice's concept of the future,
- *   while TRMX must be far enough in the future to reasonably allow the transaction to process and record using
- *   whatever communications method Alice, Bob and their Transaction Recorders have chosen.
- *
- * Bob is sort of a high roller in aoncoin, he presently holds 1/2^30 (about a millionth) of the total coin.  Consider
- *   that DogeCoin currently has a market cap of ~$613 million, assuming aoncoin has the same market valuation, Bob's
- *   aoncoin would be worth ~$613.  Bob is really horny, so he's going to send Alice 20% of his coin in a misguided
- *   attempt to impress her.  His wallet software uses an assumed value of $600M for the whole aoncoin and tells him
- *   that his transaction has an approximate market value of $120.  Maybe the world settles on the idea that there are
- *   8 billion aoncoin in total, since nobody has a very good grasp of what 2^127 means... in which case Bob's wallet
- *   might also note that he is transferring 1600 of the 8000 aoncoin he's holding.  Anyway... the wallet calculates
- *   an exact fraction of aoncoin which Bob is proposing to transfer and fills in the RBID and AMT fields, in human
- *   terms -8008 from Bob, +8000 to Alice, and an RBID of 8.  Transaction recorders are currently expecting about
- *   0.1% commission on transactions, so Bob's wallet is more or less on-target with the RBID of 8.
- *
- * Bob's wallet already knew one of Alice's public keys, by whatever method.  One of his keys with a current ledger
- *   balance of at least 8000 coin is populated in the transaction, and Alice's public key that Bob knows is populated
- *   in the slot that is receiving 7992 coin.  The proposed transaction is ready, Bob sends it to Alice, along with a
- *   plain-text note identifying himself and what this transfer is about; see, Bob, this - not the transaction SALT -
- *   is the right place to chat up your girl.
- *
- * Alice thinks Bob is more than a little crazy, that's too much money, but she does like aoncoin and could use a little
- *   more to buy a latte at the Geek Cafe next week, so she rejects his transaction and proposes a new one, this time
- *   with Bob's AMT -800 coin, Alice's AMT 799.2, the RBID at 0.8 and incidentally a random SALT from her wallet software.
- *   Alice's wallet also decides that it prefers to receive the coin from Bob under a newer KEY than the one he proposed,
- *   so it populates the receiver field with one of Alice's newer public KEYs.  Alice writes a short personal note to Bob
- *   describing her revision of the proposal and sends it to him.
- *
- * Bob is a little disappointed that he won't be able to go back in the ledger and show his grandkids how he did something
- *   clever with open source software hacking "back in the day," but... he accepts Alice's proposed transaction as is, which
- *   will prevent further back and forth for this step.  Bob's wallet now starts the AUTH block:
- *
- *   <AUTH> Authorization of transaction by the participants:
- *     <PART> List of each participant's:
- *       [TSIG] time of signing (approving) the propose transaction <TRAN>
- *       [SIG]  signature on: TRAN+AUTH(PART(TSIG))
- *       [PBAL] post transaction balance
- *       <PAGE> of participant's previous (most recent) ledger entry
- *         [TREC] recording time of AUTH(PART(PAGE))
- *         [HASH] hash of AUTH(PART(PAGE))
- *         <ROOT> root page of the ledger AUTH(PART(PAGE)) is found in
- *           [TREC] recording time of AUTH(PART(PAGE(ROOT)))
- *           [HASH] hash of AUTH(PART(PAGE(ROOT)))
- *
- *   by filling in the current time in TSIG, using his private key that corresponds to the public key in TRAN signing
- *   the TRAN & TSIG, and populating the most recent ledger page associated with that key (his key, so nobody else should
- *   be able to record transactions using it.)  This partial AUTH block is sent to Alice's wallet for completion.
- *
- * Alice can be a little snoopy at times, so she's using a wallet that shows the juicy details of the transaction.  All it
- *   has to tell her is whether or not there are enough funds in Bob's ledger entry for the transaction to proceed, but
- *   her wallet also shows her that Bob's most recent ledger entry shows a balance of 43276.284 aoncoin.  This isn't all
- *   the aoncoin that Bob is holding, he's got other keys on this same ledger, and a couple on other ledgers too, but this
- *   is his big account and now Alice has seen it.  If Bob wanted to be circumspect about it, he could have created a
- *   "throwaway" key with just enough coin in it to cover this transaction, and only given that key to Alice.  Alice's wallet
- *   could still have easily looked back in the ledger to see that that 800 coin came from an account with over 40000, and
- *   when that happened, but it would be more difficult (for a simple wallet program) to be sure that the bigger account was
- *   Bob's - all it would show was the time of the transaction, and a trace of previous transactions' amounts and times with
- *   related accounts.
- *   In any event, Alice gladly approves the transaction, signing it, and incidentally giving away to Bob that her balance
- *   in this account, after receiving Bob's 799.2 will be 819.2 aoncoin, and he can look back in the ledger and see regular
- *   transfers of ~250 aoncoin to the same account every Thursday night for the past 6 weeks - that would be the Geek Cafe,
- *   and from that he can deduce the public keys of the 3 other aoncoin using patrons who frequent the Geek Cafe on Thursday
- *   nights.  If the Geek Cafe wanted to make this harder, they, too, could use throwaway keys to collect aoncoin and be
- *   more circumspect about when they transfer those coins to use them for other things, but... why bother?  Their customers
- *   are Geeks, not drug dealers.
- *
- * So, the AUTH block is done, all signed.  Now, the transaction needs to be recorded, before the TRAN(TRMX) limit expires.
- *   Bob's wallet could have included a suggestion of recorder(s) it would prefer to use, but it didn't, and since the
- *   ball was in Alice's wallet's court when it came time to choose recorder agents, it's going to make its own decisions
- *   about which ones to try first.
- *
- *   <RECP> Recording proposal:
- *     <RCRD> List of each recorder's:
- *       [ADDR] current IP address (v4 or v6 with port)
- *       [KEY]  public key
- *       [AMT]  minimum amount to be taken as recording fee, sum of all RECP(RCRD(AMT)) <= TRAN(RBID)
- *       <PAGE> previous (most recent) ledger entry for RECP(RCRD(KEY))
- *         [TREC] time of RECP(RCRD(PAGE))
- *         [HASH] hash of RECP(RCRD(PAGE))
- *         <ROOT> the root page of the ledger this recorder is recording in, must be the root of RECP(RCRD(PAGE))'s ledger
- *           [TREC] time of RECP(RCRD(PAGE(ROOT)))
- *           [HASH] hash of RECP(RCRD(PAGE(ROOT)))
- *       [TSIG] time of signing [TSIG]
- *       [SIG]  signature on: TRAN+AUTH+RECP(RCRD(AMT))+TSIG indicating acceptance of proposal
- *     <PART> List of each participant's
- *       [TSIG] time of signing the recorder list
- *       [SIG]  signature on: TRAN+AUTH+RECP(RCRD)+TSIG indicating acceptance of the recorder list
- *
- * First, Alice and Bob's KEYs are from different ledger ROOTs, so they will need at least two recorders, one that works
- *   in each ledger.  Alice's wallet queries the ledger that Bob's key is in for the most recent 100 transactions, then
- *   looks through those to find the three most active recorder agents.  It also could have looked at Bob's last transaction
- *   and tried to use the same recorder again.  Anyway, it tries to contact the first, but that recorder signalled that it was
- *   currently busy with another transaction and suggested a different recorder key to try.  Alice's wallet has a contrary
- *   streak, so it tries the next recorder from it's analysis and this time gets a positive response, her wallet sends the TRAN
- *   and AUTH blocks to the recorder and it responds with a signed entry for the RCRD list, including a commission AMT of 0.2
- *   coin.  For Alice's ledger, her wallet contacts her usual recorder and gets lucky this time, again receiving a signed
- *   entry for the RCRD list.  Alice's wallet is satisfied with this recording arrangement, signs off on it in the RECP(PART)
- *   list, and sends the nearly filled out RECP to Bob's wallet for completion.
- *
- * Bob's wallet is a little more paranoid than Alice's - your coin is only as good as your ledger entry, and Bob has quite a
- *   bit more coin exposed in this transaction than Alice does, so... his wallet also selects different recording agents
- *   for each ledger for a total of four.  Each recording agent was demanding 0.2 coin, so this transaction with an RBID of
- *   0.8 will come in with zero excess commission for the recorders.  Bob's wallet signs this list and sends it back to Alice's
- *   wallet for confirmation.  Alice's wallet, seeing that the recorders it had selected are still present, has nothing to
- *   object to, so it resigns the new list of recorders and the transaction is released to all four recorders for validation and
- *   recording.
- *
- *   <RECA> Recorders' acceptance:
- *     <RCRD> List of each recorder's:
- *       [AMT]  final commission amount
- *       [PBAL] post transaction balance after recording fee is transferred
- *       [TSIG] time of acceptance
- *       [SIG]  self-signature on: TRAN+AUTH+RECP+RECA(RCRD(AMT))+RECA(RCRD(PBAL))+RECA(RCRD(TSIG))
- *
- * Each recorder verifies the transaction to its satisfaction.  While a recorder might try to cut corners and get sloppy
- *   with validations, there are a few factors to keep in mind about recorder selection:
- *
- *   Recorders are public entities who develop a reputation over time.  When a ledger entry is invalid, it is easily
- *   found by other recorders and even ordinary wallet users - a sloppy recorder's signature on an invalid ledger page
- *   is irrefutable. Recorders with long histories of timely and accurate dealings will be the first chosen for future
- *   business.
- *
- *   The absolute minimum number of recorders for an inter-ledger transaction is two, so unless both recorders
- *   are controlled by the same sloppy entity, there's a good chance that a sloppy recorder will get called out right away.
- *   As mentioned already, if wallet software is careful at all, it will double-check a recorder's work, and again
- *   discover an invalid ledger entry almost immediately.
- *
- *   Another factor that wallet software can use to select recorders is the amount of coin they show in the ledger, so
- *   recorders with more "skin in the game" will also get more business.  If a recorder approves and somehow manages to
- *   record an invalid ledger entry they will lose the coin that they are currently showing in the ledger.
- *
- *   This doesn't mean that new recorders with no coin can't find work.  Since all recorders on a transaction validate
- *   the transaction, adding a new recorder as the 3rd or 4th is no more risky than not using them.  New recorders are
- *   typically less busy and may be much faster to respond to validation requests.
- *
- * The last recorder to accept a transaction determines the page recording time, which is incorporated into the page hash.
- *
- *   [TREC] Time of recording, recorders' last acceptance time
- *   [HASH] Hash of TRAN+AUTH+RECP+RECA+TREC performed by last recorder to accept
- *
- * If a recorder messes up this very basic operation, first they and their IP address are blacklisted, and second another
- *  recorder on the transaction can easily fix it before recording the page to the shared ledger.
- *
- * A new page for the shared ledger is first committed for checking by the recording community, and then merged into the
- *   official ledger when sufficient cooldown time has passed to discourage double-spend attacks.  More analysis on this later.
- *
- * Meanwhile, Alice has received Bob's gift of coin, the transaction is propagating through both ledgers, and next Thursday
- *   night at Geek Cafe, when the barrista transacts 250 aoncoin away from Alice for her latte, that transaction will follow
- *   this one in the ledger.  For speedier processing of all four aoncoin users who sit at the same table and order their
- *   lattes at the same time, the Geek Cafe's wallet maintains multiple keys and each transaction goes to a different one,
- *   so no one transaction is "locked, waiting" for another to cooldown and complete.  Then, at close of business, the Geek
- *   Cafe consolidates the days receipts into a different single account to pay bigger bills with.  Note that the protocol
- *   allows many givers (up to 1023) to give some or all of their coin to a single receiver with a single transaction.
  *
  *****************************************************************************************************************************
  *
@@ -517,13 +329,6 @@ void MainWindow::saveConfig()
  *   value, and processors hope for an increase in volume.  Still, processing 1000 transactions should be a relatively trivial
  *   amount of CPU invested and $3 per day should cover server/electricity costs.
  *
- * Incentive to use the system:
- *   A missing piece of the puzzle is: why would people exchange aoncoins?  If nobody is trading them, then the processors have
- *   no income - with no income the processors will shut down and then aoncoins will be less convenient to use and further lose
- *   value.  Who is going to accept aoncoin for valuable goods or services?  That's one that bitcoin is still struggling to
- *   answer definitively nearly 10 years after launch.  Some people do take it for some things - mostly speculation, but it's
- *   still very scattered for acceptance.
- *
  *************************************************************************************************************************
  *
  * Processing cost based tax:
@@ -579,13 +384,6 @@ void MainWindow::saveConfig()
  *   Lightweight wallet software, preferably mobile capable - possibly desktop based, which contracts with:
  *     Transaction processors - running servers, for example on AWS or Azure or a RaspberryPi on home internet, who use:
  *       Consensus processors who work out the content of the blocks in the block-chain.
- *
- *********************************************************************************************************************;'
- *
- * Name selection, some name confusion might be unavoidable?
- *
- * Assign Onward - like pay it forward, but different, and apparently unique - all the domain names were open.
- *
  *
  *********************************************************************************************************************;'
  *
@@ -1487,35 +1285,6 @@ void MainWindow::saveConfig()
  *
  *****************************************************************************************************************************
  *
- *  Chain validation (and coin inflation reduction) by "free" lottery consensus:
- *    To play the lottery a holder of a valid page-key countersigns a recent (3-5 cycles old?) chain-end and registers
- *    this signature with a lottery processor.  The page-key holder dare not play the lottery on two different chain-ends
- *    for the same cycle because doing so would put the entire value of their page-key at risk to vigilantes who could
- *    present the double signature as a cheat-claim and take their value.  A lottery play only has value in the chain
- *    which contains the block (recent chain-end) which was countersigned.  Periodically (weekly?) a lottery drawing is
- *    held in which the hash of the lottery drawing chain-end is partially matched to all the countersignatures registered
- *    with lottery processors.  Lottery processors register the hash of all their entries in the chain some interval before
- *    the drawing, and make all the entries available for public inspection (by vigilantes who can look for cheat-claims)
- *    at least by drawing time, and preferably all the time.  The lottery drawing is performed by a computationally intense
- *    hash of the drawing chain-end, and a sufficiently long match to the hash generated as the entry counter-signature will
- *    result in a payout reward to be shared between the entrant and the lottery processors.  Payouts may be linearly or
- *    logarithmically proportional to the amount of the page-key used to enter.  Winners are not guaranteed every drawing,
- *    but, the payouts come from the collected tax pool.  1/6 of the tax collected might be at 33% risk of claim in the linear
- *    pool and 1/6 of the tax collected might be 33% at risk of claim in the logarithmic pool, and 1/6 of the tax collected
- *    might be at risk in the claim per entry pool, meaning, on average, there is one winner in one of the 3 pools - though
- *    multiple winners in every pool are possible.  Note that players need-not hold their page-key value until the drawing,
- *    possession of the secret key from that page-key is enough to claim the prize.  Lottery processors countersign players'
- *    entries to assure recording of the players' entry ticket and later publication.  If a lottery processor's registered
- *    publication of entries not contain a player's entry, any players who register a cheat-claim against the lottery processor
- *    may collect their share of the prize winnings (further assurance of accurate reporting by lottery processors.)
- *
- *    The primary purpose of the lottery is to obtain additional endorsements of the true chain, incentivising all players
- *    to indicate which chain they believe in via a signed public record.  Lottery processor's big list of entries need not
- *    be stored long term, after perhaps 90 days it is of little or no future value, and only tiny hash-evidence of it gets
- *    recorded in the block-chain.
- *
- ******************************************************************************************************************************
- *
  * Rewarding error-checking:
  *   Errors can happen, whether malicious or accidental, and erroneous pages in the block-chain can devalue future
  *   transactions based on those pages.  Part of the reasoning behind requiring underwriting is to provide valid value
@@ -1663,37 +1432,6 @@ void MainWindow::saveConfig()
  *   problems raised by the otherwise seemingly good "single signature per timeslice" idea.
  *
  **************************************************************************************************************************
- *
- *  Applications beyond value transfer:
- *    The blockchain is a public record, and anything can be recorded in it with payment of the recording fee.  Interesting?
- *    note: if the item proposed for recording ends up forked out of the long-term adopted blockchain, the recording
- *    fee payment is also forked out of the chain and effectively refunded in the new chain branch.
- *
- *    By explicitly charging a per-byte recording fee for both transfer of value and arbitrary data recording (incidentally
- *    paid for by a traditional, underwritten, value transfer with no recipients other than the recording agents), this
- *    makes a "fair" way for entities to get their data permanently, publically, irrefutably recorded and distributed for
- *    as long as that blockchain is updated and distributed, which it must be for shareholders to conduct transactions.
- *
- *    Smart Contracts, public records, and all manner of other applications can be executed in this public record.  It may
- *    make sense for counties to duplicate their official public record books in such a blockchain, incidentally providing
- *    a locally maintained and trusted blockchain for businesses and residents to transact value exchanges on, both locally
- *    and with the world.  There would come a question: how much daily trading volume is required to make a blockchain
- *    sustainable, economically?  That might be answered by: cost to run the server (just guess $200 per month for leased
- *    AWS or Azure isntances) divided by the transaction overhead, call that 2%, so if $10,000 per month is transacted through
- *    the system, transaction recording fees from that could pay for server costs.  In a county with population 25,000 or more
- *    it is not too unrealistic to think that >1% of them might transact >$40 per month through the system.  Could the county
- *    level systems "peg the value" of shares?  Only if they are willing to back that value by buying shares at that value
- *    when any holder of shares wants to sell them.  They could, of course, also sell shares to anybody willing to buy them
- *    at that price.  The whole state could organize with a state level exchange, conducting open, trusted and verifiable
- *    transactions with the county exchanges, and, similarly, a national level exchange could conduct transfers between the
- *    states.  As transaction volume increases, the cost per transaction could come down, considerably.  A holder of local county
- *    shares could transfer that holding to state shares for the recording fees (state level recording fees might be set
- *    intentionally higher than county level to encourage distribution of transactions to the lower levels), and similarly to
- *    the national level.  Counties might support direct county to county transfers of value, establishing some level of trust
- *    through the state and national connections, but avoiding having to step up and down the pyramid net over 4 transactions
- *    for every transfer of value.
- *
- ********************************************************************************************************************************
  *
  * Smart Contracts:
  *   So, I thought Smart Contracts were this complicated thing like: https://ciyam.org/at/at.html and many are, but...

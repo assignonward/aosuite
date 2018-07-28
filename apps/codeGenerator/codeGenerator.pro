@@ -26,7 +26,6 @@ include(../MainCore/MainCore.pri)
 
 QT        += core gui widgets
 TARGET     = codeGenerator
-TEMPLATE   = app
 DEFINES   += QT_DEPRECATED_WARNINGS
 DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 

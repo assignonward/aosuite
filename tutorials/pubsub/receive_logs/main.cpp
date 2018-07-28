@@ -15,9 +15,7 @@ public:
 public Q_SLOTS:
     void start() {
         connect(&m_client, SIGNAL(connected()), this, SLOT(clientConnected()));
-        m_client.setUsername( "nim4" );
-        m_client.setPassword( "nim4" );
-        m_client.connectToHost( QHostAddress( "10.74.113.178" ), 5672 );
+        m_client.connectToHost();
     }
 
 private Q_SLOTS:

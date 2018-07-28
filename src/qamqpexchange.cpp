@@ -31,10 +31,10 @@ QAmqpExchangePrivate::QAmqpExchangePrivate(QAmqpExchange *q)
 
 void QAmqpExchangePrivate::resetInternalState()
 {
-  QAmqpChannelPrivate::resetInternalState();
-  delayedDeclare = false;
-  declared = false;
-  nextDeliveryTag = 0;
+    QAmqpChannelPrivate::resetInternalState();
+    delayedDeclare = false;
+    declared = false;
+    nextDeliveryTag = 0;
 }
 
 void QAmqpExchangePrivate::declare()
@@ -61,6 +61,11 @@ void QAmqpExchangePrivate::declare()
 
     stream << qint8(options);
     QAmqpFrame::writeAmqpField(stream, QAmqpMetaType::Hash, arguments);
+
+    qAmqpDebug("<- exchange#declare( name=%s, type=%s, passive=%d, durable=%d, no-wait=%d )",
+               qPrintable(name), qPrintable(type),
+               options.testFlag(QAmqpExchange::Passive), options.testFlag(QAmqpExchange::Durable),
+               options.testFlag(QAmqpExchange::NoWait));
 
     frame.setArguments(args);
     sendFrame(frame);
@@ -113,9 +118,8 @@ bool QAmqpExchangePrivate::_q_method(const QAmqpMethodFrame &frame)
 void QAmqpExchangePrivate::declareOk(const QAmqpMethodFrame &frame)
 {
     Q_UNUSED(frame)
-
     Q_Q(QAmqpExchange);
-    qAmqpDebug() << "declared exchange: " << name;
+    qAmqpDebug("-> exchange[ %s ]#declareOk()", qPrintable(name));
     declared = true;
     Q_EMIT q->declared();
 }
@@ -123,9 +127,8 @@ void QAmqpExchangePrivate::declareOk(const QAmqpMethodFrame &frame)
 void QAmqpExchangePrivate::deleteOk(const QAmqpMethodFrame &frame)
 {
     Q_UNUSED(frame)
-
     Q_Q(QAmqpExchange);
-    qAmqpDebug() << "deleted exchange: " << name;
+    qAmqpDebug("-> exchange#deleteOk[ %s ]()", qPrintable(name));
     declared = false;
     Q_EMIT q->removed();
 }
@@ -133,9 +136,10 @@ void QAmqpExchangePrivate::deleteOk(const QAmqpMethodFrame &frame)
 void QAmqpExchangePrivate::_q_disconnected()
 {
     QAmqpChannelPrivate::_q_disconnected();
-    qAmqpDebug() << "exchange " << name << " disconnected";
+    qAmqpDebug() << "exchange disconnected: " << name;
     delayedDeclare = false;
     declared = false;
+    unconfirmedDeliveryTags.clear();
 }
 
 void QAmqpExchangePrivate::basicReturn(const QAmqpMethodFrame &frame)
@@ -157,10 +161,8 @@ void QAmqpExchangePrivate::basicReturn(const QAmqpMethodFrame &frame)
         Q_EMIT q->error(error);
     }
 
-    qAmqpDebug(">> replyCode: %d", replyCode);
-    qAmqpDebug(">> replyText: %s", qPrintable(replyText));
-    qAmqpDebug(">> exchangeName: %s", qPrintable(exchangeName));
-    qAmqpDebug(">> routingKey: %s", qPrintable(routingKey));
+    qAmqpDebug("-> basic#return( reply-code=%d, reply-text=%s, exchange=%s, routing-key=%s )",
+               replyCode, qPrintable(replyText), qPrintable(exchangeName), qPrintable(routingKey));
 }
 
 void QAmqpExchangePrivate::handleAckOrNack(const QAmqpMethodFrame &frame)
@@ -265,6 +267,9 @@ void QAmqpExchange::remove(int options)
     QAmqpFrame::writeAmqpField(stream, QAmqpMetaType::ShortString, d->name);
     stream << qint8(options);
 
+    qAmqpDebug("<- exchange#delete( exchange=%s, if-unused=%d, no-wait=%d )",
+               qPrintable(d->name), options & QAmqpExchange::roIfUnused, options & QAmqpExchange::roNoWait);
+
     frame.setArguments(arguments);
     d->sendFrame(frame);
 }
@@ -286,7 +291,8 @@ void QAmqpExchange::publish(const QByteArray &message, const QString &routingKey
 void QAmqpExchange::publish(const QByteArray &message, const QString &routingKey,
                             const QString &mimeType, const QAmqpTable &headers,
                             const QAmqpMessage::PropertyHash &properties, int publishOptions)
-{ Q_D(QAmqpExchange);
+{
+    Q_D(QAmqpExchange);
     if (d->nextDeliveryTag > 0) {
         d->unconfirmedDeliveryTags.append(d->nextDeliveryTag);
         d->nextDeliveryTag++;
@@ -302,6 +308,10 @@ void QAmqpExchange::publish(const QByteArray &message, const QString &routingKey
     QAmqpFrame::writeAmqpField(out, QAmqpMetaType::ShortString, d->name);
     QAmqpFrame::writeAmqpField(out, QAmqpMetaType::ShortString, routingKey);
     out << qint8(publishOptions);
+
+    qAmqpDebug("<- basic#publish( exchange=%s, routing-key=%s, mandatory=%d, immediate=%d )",
+               qPrintable(d->name), qPrintable(routingKey),
+               publishOptions & QAmqpExchange::poMandatory, publishOptions & QAmqpExchange::poImmediate);
 
     frame.setArguments(arguments);
     d->sendFrame(frame);

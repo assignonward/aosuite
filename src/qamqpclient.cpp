@@ -171,10 +171,9 @@ void QAmqpClientPrivate::_q_socketDisconnected()
     Q_Q(QAmqpClient);
     buffer.clear();
     resetChannelState();
-    if (connected) {
+    if (connected)
         connected = false;
-        Q_EMIT q->disconnected();
-    }
+    Q_EMIT q->disconnected();
 }
 
 void QAmqpClientPrivate::_q_heartbeat()
@@ -327,7 +326,6 @@ void QAmqpClientPrivate::sendFrame(const QAmqpFrame &frame)
     }
 
     QDataStream stream(socket);
-
     stream << frame;
 }
 
@@ -337,7 +335,6 @@ bool QAmqpClientPrivate::_q_method(const QAmqpMethodFrame &frame)
     if (frame.methodClass() != QAmqpFrame::Connection)
         return false;
 
-    qAmqpDebug() << "Connection:";
     if (closed) {
         if (frame.id() == QAmqpClientPrivate::miCloseOk)
             closeOk(frame);
@@ -372,8 +369,6 @@ bool QAmqpClientPrivate::_q_method(const QAmqpMethodFrame &frame)
 
 void QAmqpClientPrivate::start(const QAmqpMethodFrame &frame)
 {
-    Q_Q(QAmqpClient);
-    qAmqpDebug(">> Start");
     QByteArray data = frame.arguments();
     QDataStream stream(&data, QIODevice::ReadOnly);
 
@@ -388,18 +383,11 @@ void QAmqpClientPrivate::start(const QAmqpMethodFrame &frame)
         QAmqpFrame::readAmqpField(stream, QAmqpMetaType::LongString).toString().split(' ');
     QString locales = QAmqpFrame::readAmqpField(stream, QAmqpMetaType::LongString).toString();
 
-    qAmqpDebug(">> version_major: %d", version_major);
-    qAmqpDebug(">> version_minor: %d", version_minor);
-
-    // NOTE: replace with qDebug overload
-    // QAmqpFrame::print(table);
-
-    qAmqpDebug() << ">> mechanisms: " << mechanisms;
-    qAmqpDebug(">> locales: %s", qPrintable(locales));
+    qAmqpDebug("-> connection#start( version_major=%d, version_minor=%d, mechanisms=(%s), locales=%s )",
+           version_major, version_minor, qPrintable(mechanisms.join(",")), qPrintable(locales));
 
     if (!mechanisms.contains(authenticator->type())) {
         socket->disconnectFromHost();
-        Q_EMIT q->disconnected();
         return;
     }
 
@@ -409,12 +397,11 @@ void QAmqpClientPrivate::start(const QAmqpMethodFrame &frame)
 void QAmqpClientPrivate::secure(const QAmqpMethodFrame &frame)
 {
     Q_UNUSED(frame)
-    qAmqpDebug() << Q_FUNC_INFO << "called!";
+    qAmqpDebug("-> connection#secure()");
 }
 
 void QAmqpClientPrivate::tune(const QAmqpMethodFrame &frame)
 {
-    qAmqpDebug(">> Tune");
     QByteArray data = frame.arguments();
     QDataStream stream(&data, QIODevice::ReadOnly);
 
@@ -431,9 +418,8 @@ void QAmqpClientPrivate::tune(const QAmqpMethodFrame &frame)
     channelMax = !channelMax ? channel_max : qMax(channel_max, channelMax);
     heartbeatDelay = !heartbeatDelay ? heartbeat_delay: heartbeatDelay;
 
-    qAmqpDebug(">> channel_max: %d", channelMax);
-    qAmqpDebug(">> frame_max: %d", frameMax);
-    qAmqpDebug(">> heartbeat: %d", heartbeatDelay);
+    qAmqpDebug("-> connection#tune( channel_max=%d, frame_max=%d, heartbeat=%d )",
+               channelMax, frameMax, heartbeatDelay);
 
     if (heartbeatTimer) {
         heartbeatTimer->setInterval(heartbeatDelay * 1000);
@@ -451,27 +437,25 @@ void QAmqpClientPrivate::openOk(const QAmqpMethodFrame &frame)
 {
     Q_Q(QAmqpClient);
     Q_UNUSED(frame)
-    qAmqpDebug(">> OpenOK");
+    qAmqpDebug("-> connection#openOk()");
     connected = true;
     Q_EMIT q->connected();
 }
 
 void QAmqpClientPrivate::closeOk(const QAmqpMethodFrame &frame)
 {
-    Q_Q(QAmqpClient);
     Q_UNUSED(frame)
-    qAmqpDebug() << Q_FUNC_INFO << "received";
+    qAmqpDebug("-> connection#closeOk()");
+
     connected = false;
     if (heartbeatTimer)
         heartbeatTimer->stop();
     socket->disconnectFromHost();
-    Q_EMIT q->disconnected();
 }
 
 void QAmqpClientPrivate::close(const QAmqpMethodFrame &frame)
 {
     Q_Q(QAmqpClient);
-    qAmqpDebug(">> CLOSE");
     QByteArray data = frame.arguments();
     QDataStream stream(&data, QIODevice::ReadOnly);
     qint16 code = 0, classId, methodId;
@@ -480,10 +464,8 @@ void QAmqpClientPrivate::close(const QAmqpMethodFrame &frame)
     stream >> classId;
     stream >> methodId;
 
-    qAmqpDebug(">> code: %d", code);
-    qAmqpDebug(">> text: %s", qPrintable(text));
-    qAmqpDebug(">> class-id: %d", classId);
-    qAmqpDebug(">> method-id: %d", methodId);
+    qAmqpDebug("-> connection#close( reply-code=%d, reply-text=%s, class-id=%d, method-id:%d )",
+               code, qPrintable(text), classId, methodId);
 
     QAMQP::Error checkError = static_cast<QAMQP::Error>(code);
     if (checkError != QAMQP::NoError) {
@@ -508,6 +490,7 @@ void QAmqpClientPrivate::close(const QAmqpMethodFrame &frame)
 
     // complete handshake
     QAmqpMethodFrame closeOkFrame(QAmqpFrame::Connection, QAmqpClientPrivate::miCloseOk);
+    qAmqpDebug("<- connection#closeOk()");
     sendFrame(closeOkFrame);
 }
 
@@ -526,14 +509,15 @@ void QAmqpClientPrivate::startOk()
 
     authenticator->write(stream);
     QAmqpFrame::writeAmqpField(stream, QAmqpMetaType::ShortString, QLatin1String("en_US"));
-
     frame.setArguments(arguments);
+
+    qAmqpDebug("<- connection#startOk()");  // @todo: fill this out
     sendFrame(frame);
 }
 
 void QAmqpClientPrivate::secureOk()
 {
-    qAmqpDebug() << Q_FUNC_INFO;
+    qAmqpDebug("-> connection#secureOk()");
 }
 
 void QAmqpClientPrivate::tuneOk()
@@ -545,6 +529,9 @@ void QAmqpClientPrivate::tuneOk()
     stream << qint16(channelMax);
     stream << qint32(frameMax);
     stream << qint16(heartbeatDelay);
+
+    qAmqpDebug("<- connection#tuneOk( channelMax=%d, frameMax=%d, heartbeatDelay=%d )",
+               channelMax, frameMax, heartbeatDelay);
 
     frame.setArguments(arguments);
     sendFrame(frame);
@@ -561,6 +548,9 @@ void QAmqpClientPrivate::open()
     stream << qint8(0);
     stream << qint8(0);
 
+    qAmqpDebug("<- connection#open( virtualHost=%s, reserved-1=%d, reserved-2=%d )",
+               qPrintable(virtualHost), 0, 0);
+
     frame.setArguments(arguments);
     sendFrame(frame);
 }
@@ -573,6 +563,9 @@ void QAmqpClientPrivate::close(int code, const QString &text, int classId, int m
     QAmqpFrame::writeAmqpField(stream, QAmqpMetaType::ShortString, text);
     stream << qint16(classId);
     stream << qint16(methodId);
+
+    qAmqpDebug("<- connection#close( reply-code=%d, reply-text=%s, class-id=%d, method-id:%d )",
+               code, qPrintable(text), classId, methodId);
 
     QAmqpMethodFrame frame(QAmqpFrame::Connection, QAmqpClientPrivate::miClose);
     frame.setArguments(arguments);

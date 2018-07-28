@@ -1,7 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    emg \
-    unipi \
     helloworld \
     workqueues \
     pubsub \

@@ -68,7 +68,7 @@ QString ByteCodeDef::toDefine( qint32 maxLenAcry )
            .arg( sepr ? "separable " : " " )
            .arg( desc );
 
-    return QString( "#define %1%2 %3 // (%4+%5) %6:%7%8" )
+  return QString( "#define %1%2 %3 // (%4+%5) %6:%7%8" )
            .arg( acry )
            .arg( QString( maxLenAcry - acry.size(), QChar(' ') ) )
            .arg( code, 6 )

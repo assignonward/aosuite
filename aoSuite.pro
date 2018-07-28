@@ -26,3 +26,8 @@ SUBDIRS += src \
 #           tutorials \
            apps
 CONFIG += ordered
+#
+# for gpg:
+# cd gpg
+# ./wipe.sh
+# ./build.sh

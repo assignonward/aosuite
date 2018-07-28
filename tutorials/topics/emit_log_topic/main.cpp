@@ -6,11 +6,11 @@
 #include "qamqpexchange.h"
 #include "qamqpqueue.h"
 
-class EmgEmitter : public QObject
+class TopicLogEmitter : public QObject
 {
     Q_OBJECT
 public:
-    EmgEmitter(QObject *parent = 0) : QObject(parent) {}
+    TopicLogEmitter(QObject *parent = 0) : QObject(parent) {}
 
 public Q_SLOTS:
     void start() {
@@ -56,7 +56,7 @@ private:
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
-    EmgEmitter logEmitter;
+    TopicLogEmitter logEmitter;
     logEmitter.start();
     return app.exec();
 }

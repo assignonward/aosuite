@@ -42,20 +42,20 @@ public:
     inline bool operator!=(const QAmqpMessage &message) const { return !(operator==(message)); }
 
     enum Property {
-        ContentType     = AMQP_BASIC_CONTENT_TYPE_FLAG,
+        ContentType = AMQP_BASIC_CONTENT_TYPE_FLAG,
         ContentEncoding = AMQP_BASIC_CONTENT_ENCODING_FLAG,
-        Headers         = AMQP_BASIC_HEADERS_FLAG,
-        DeliveryMode    = AMQP_BASIC_DELIVERY_MODE_FLAG,
-        Priority        = AMQP_BASIC_PRIORITY_FLAG,
-        CorrelationId   = AMQP_BASIC_CORRELATION_ID_FLAG,
-        ReplyTo         = AMQP_BASIC_REPLY_TO_FLAG,
-        Expiration      = AMQP_BASIC_EXPIRATION_FLAG,
-        MessageId       = AMQP_BASIC_MESSAGE_ID_FLAG,
-        Timestamp       = AMQP_BASIC_TIMESTAMP_FLAG,
-        Type            = AMQP_BASIC_TYPE_FLAG,
-        UserId          = AMQP_BASIC_USER_ID_FLAG,
-        AppId           = AMQP_BASIC_APP_ID_FLAG,
-        ClusterID       = AMQP_BASIC_CLUSTER_ID_FLAG
+        Headers = AMQP_BASIC_HEADERS_FLAG,
+        DeliveryMode = AMQP_BASIC_DELIVERY_MODE_FLAG,
+        Priority = AMQP_BASIC_PRIORITY_FLAG,
+        CorrelationId = AMQP_BASIC_CORRELATION_ID_FLAG,
+        ReplyTo = AMQP_BASIC_REPLY_TO_FLAG,
+        Expiration = AMQP_BASIC_EXPIRATION_FLAG,
+        MessageId = AMQP_BASIC_MESSAGE_ID_FLAG,
+        Timestamp = AMQP_BASIC_TIMESTAMP_FLAG,
+        Type = AMQP_BASIC_TYPE_FLAG,
+        UserId = AMQP_BASIC_USER_ID_FLAG,
+        AppId = AMQP_BASIC_APP_ID_FLAG,
+        ClusterID = AMQP_BASIC_CLUSTER_ID_FLAG
     };
     Q_DECLARE_FLAGS(Properties, Property)
     typedef QHash<Property, QVariant> PropertyHash;

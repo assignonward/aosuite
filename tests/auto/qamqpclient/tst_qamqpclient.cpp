@@ -4,6 +4,8 @@
 
 #include "qamqptestcase.h"
 #include "qamqpauthenticator.h"
+#include "qamqpexchange.h"
+#include "qamqpqueue.h"
 #include "qamqpclient_p.h"
 #include "qamqpclient.h"
 
@@ -20,6 +22,8 @@ private Q_SLOTS:
     void socketError();
     void validateUri_data();
     void validateUri();
+    void issue38();
+    void issue38_take2();
 
 public Q_SLOTS:     // temporarily disabled
     void autoReconnect();
@@ -27,6 +31,7 @@ public Q_SLOTS:     // temporarily disabled
 
 private:
     QSslConfiguration createSslConfiguration();
+    void issue38_helper(QAmqpClient *client);
 
 };
 
@@ -221,6 +226,85 @@ void tst_QAMQPClient::validateUri()
     QCOMPARE(clientPrivate.port, expectedPort);
     QCOMPARE(clientPrivate.virtualHost, expectedVirtualHost);
 }
+
+void tst_QAMQPClient::issue38_helper(QAmqpClient *client)
+{
+    // connect
+    client->connectToHost();
+    QVERIFY(waitForSignal(client, SIGNAL(connected())));
+
+    // create then declare, remove and close queue
+    QAmqpQueue *queue = client->createQueue();
+    QVERIFY(waitForSignal(queue, SIGNAL(opened())));
+    queue->declare();
+    QVERIFY(waitForSignal(queue, SIGNAL(declared())));
+    queue->remove(QAmqpExchange::roForce);
+    QVERIFY(waitForSignal(queue, SIGNAL(removed())));
+    queue->close();
+    QVERIFY(waitForSignal(queue, SIGNAL(closed())));
+    queue->deleteLater();
+
+    // disconnect
+    client->disconnectFromHost();
+    QVERIFY(waitForSignal(client, SIGNAL(disconnected())));
+}
+
+void tst_QAMQPClient::issue38()
+{
+    QAmqpClient client;
+    issue38_helper(&client);
+    issue38_helper(&client);
+}
+
+void tst_QAMQPClient::issue38_take2()
+{
+    QAmqpClient client;
+    client.connectToHost();
+    QVERIFY(waitForSignal(&client, SIGNAL(connected())));
+    QAmqpExchange *exchange = client.createExchange("myexchange");
+    exchange->declare(QAmqpExchange::Topic);
+    QVERIFY(waitForSignal(exchange, SIGNAL(declared())));
+    QAmqpQueue *queue = client.createQueue();
+    queue->declare();
+    QVERIFY(waitForSignal(queue, SIGNAL(declared())));
+    queue->bind(exchange, "routingKeyin");
+    QVERIFY(waitForSignal(queue, SIGNAL(bound())));
+    queue->consume(QAmqpQueue::coNoAck);
+    QVERIFY(waitForSignal(queue, SIGNAL(consuming(QString))));
+    exchange->publish("test message", "routingKeyout");
+
+    // delete everything
+    queue->unbind(exchange, "routingKeyin");
+    QVERIFY(waitForSignal(queue, SIGNAL(unbound())));
+    queue->close();
+    QVERIFY(waitForSignal(queue, SIGNAL(closed())));
+    queue->deleteLater();
+
+    exchange->close();
+    QVERIFY(waitForSignal(exchange, SIGNAL(closed())));
+    exchange->deleteLater();
+
+    client.disconnectFromHost();
+    QVERIFY(waitForSignal(&client,SIGNAL(disconnected())));
+
+    // repeat the connection and create again here
+    client.connectToHost();
+    QVERIFY(waitForSignal(&client, SIGNAL(connected())));
+    exchange = client.createExchange("myexchange");
+    exchange->declare(QAmqpExchange::Topic);
+    QVERIFY(waitForSignal(exchange, SIGNAL(declared())));
+    queue = client.createQueue();
+    queue->declare();
+    QVERIFY(waitForSignal(queue, SIGNAL(declared())));
+    queue->bind(exchange, "routingKeyin");
+    QVERIFY(waitForSignal(queue, SIGNAL(bound())));
+    queue->consume(QAmqpQueue::coNoAck);
+    QVERIFY(waitForSignal(queue, SIGNAL(consuming(QString))));
+    exchange->publish("test message", "routingKeyout");
+    client.disconnectFromHost();
+    QVERIFY(waitForSignal(&client,SIGNAL(disconnected())));
+}
+
 
 QTEST_MAIN(tst_QAMQPClient)
 #include "tst_qamqpclient.moc"

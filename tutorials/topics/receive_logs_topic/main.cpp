@@ -6,11 +6,11 @@
 #include "qamqpexchange.h"
 #include "qamqpqueue.h"
 
-class EmgReceiver : public QObject
+class TopicLogReceiver : public QObject
 {
     Q_OBJECT
 public:
-    EmgReceiver(QObject *parent = 0) : QObject(parent) {}
+    TopicLogReceiver(QObject *parent = 0) : QObject(parent) {}
 
 public Q_SLOTS:
     void start(const QStringList &bindingKeys) {
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    EmgReceiver logReceiver;
+    TopicLogReceiver logReceiver;
     logReceiver.start(bindingKeys);
     return app.exec();
 }

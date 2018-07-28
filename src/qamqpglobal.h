@@ -47,7 +47,7 @@
 #define AMQP_BASIC_APP_ID_FLAG (1 << 3)
 #define AMQP_BASIC_CLUSTER_ID_FLAG (1 << 2)
 
-#define QAMQP_VERSION "0.4.0"
+#define QAMQP_VERSION "0.5.0"
 
 #define AMQP_CONNECTION_FORCED 320
 
@@ -61,8 +61,7 @@
 #   define QAMQP_EXPORT
 #endif
 
-// #define qAmqpDebug if (qgetenv("QAMQP_DEBUG").isEmpty()); else qDebug
-#define qAmqpDebug qDebug
+#define qAmqpDebug if (qgetenv("QAMQP_DEBUG").isEmpty()); else qDebug
 
 namespace QAmqpMetaType {
 

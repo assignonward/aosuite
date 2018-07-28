@@ -21,8 +21,6 @@
 # SOFTWARE.
 #
 
-CONFIG      += rtti
-
 INCLUDEPATH += $${PWD}
 
 SOURCES     += $${PWD}/assignment.cpp        \
@@ -47,5 +45,5 @@ HEADERS     += $${PWD}/assignment.h        \
                $${PWD}/pageref.h           \
                $${PWD}/participant.h       \
                $${PWD}/sharesref.h         \
-               $${PWD}/signature.h \
-    $$PWD/keyasset.h
+               $${PWD}/signature.h         \
+               $$PWD/keyasset.h

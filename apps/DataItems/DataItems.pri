@@ -21,10 +21,8 @@
 # SOFTWARE.
 #
 
-CONFIG      += rtti
-
 INCLUDEPATH += $${PWD}
-INCLUDEPATH += /usr/include
+# INCLUDEPATH += /usr/include
 
 SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/aotime.cpp            \
