@@ -25,7 +25,7 @@
 #include "random.h"
 
 CryptoEngine::CryptoEngine( QObject *p ) : QObject( p )
-{ gpgKeys[0] = NULL;
+{ gpgKeys[0] = nullptr;
 }
 
 CryptoEngine::~CryptoEngine()
@@ -43,14 +43,14 @@ CryptoEngine::~CryptoEngine()
  *   set to NULL. The return code is 0 for success or an error code otherwise.
  */
 KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
-{ KeyPair *kpp = NULL;
+{ KeyPair *kpp = nullptr;
   gpgme_error_t err;
-  gcry_sexp_t parms;
+  gcry_sexp_t parms = nullptr;
 
   if ( tc == AO_ECDSA_PRI_KEY )
-    { SHOW_IF_GPGERR( gcry_sexp_build(&parms, NULL, "(genkey (ecc (curve brainpoolP256r1)))") ) }
+    { SHOW_IF_GPGERR( gcry_sexp_build(&parms, nullptr, "(genkey (ecc (curve brainpoolP256r1)))") ) }
    else if ( tc == AO_RSA3072_PRI_KEY )
-    { SHOW_IF_GPGERR( gcry_sexp_build(&parms, NULL, "(genkey (rsa (nbits 4:3072)))") ) }
+    { SHOW_IF_GPGERR( gcry_sexp_build(&parms, nullptr, "(genkey (rsa (nbits 4:3072)))") ) }
    else
     { qDebug( "CryptoEngine::makeNewGCryPair(%lld) invalid type", tc );
       gcry_sexp_release(parms);
@@ -79,8 +79,8 @@ KeyPair *CryptoEngine::makeNewGCryPair( typeCode_t tc, QObject *p )
   // in buffer of length bytes. On success the result is stored at the address given by r_sexp. With
   // autodetect set to 0, the data in buffer is expected to be in canonized format
 
-  PriKey *priKp = NULL;
-  PubKey *pubKp = NULL;
+  PriKey *priKp = nullptr;
+  PubKey *pubKp = nullptr;
   if ( tc == AO_ECDSA_PRI_KEY )
     { PrivateKeyEcdsa *eccPriKp = new PrivateKeyEcdsa( ba, p ); // storing the whole S expression in canonical form
       priKp = new PriKey( eccPriKp, p ); // priKp tookover ownership of eccPriKp
@@ -130,10 +130,10 @@ gpgme_error_t CryptoEngine::initGpgme()
 { if ( !gpgme_check_version( "1.8.1" ) )
     { qDebug( "libpgme version fails to meet 1.8.1 expectation" ); }
   setlocale( LC_ALL, "" );
-  gpgme_set_locale( NULL, LC_CTYPE   , setlocale( LC_CTYPE   , NULL ) );
-  gpgme_set_locale( NULL, LC_MESSAGES, setlocale( LC_MESSAGES, NULL ) );
+  gpgme_set_locale( nullptr, LC_CTYPE   , setlocale( LC_CTYPE   , nullptr ) );
+  gpgme_set_locale( nullptr, LC_MESSAGES, setlocale( LC_MESSAGES, nullptr ) );
   gpgme_error_t err;
-  SHOW_IF_GPGERR( gpgme_set_engine_info( GPGME_PROTOCOL_OpenPGP, "/usr/local/gpgbin/gpg", NULL ) )
+  SHOW_IF_GPGERR( gpgme_set_engine_info( GPGME_PROTOCOL_OpenPGP, "/usr/local/bin/gpg2", nullptr ) )
   return gpgme_engine_check_version( GPGME_PROTOCOL_OpenPGP );
 }
 
@@ -156,21 +156,21 @@ QByteArray CryptoEngine::makeNewGpgPair( typeCode_t tc )
   const char * CONFIG_DIR = cfs.data();
 
   // Initializes gpgme
-  gpgme_check_version(NULL);
+  gpgme_check_version(nullptr);
 
   // Initialize the locale environment.
   setlocale(LC_ALL, "");
-  gpgme_set_locale(NULL, LC_CTYPE, setlocale(LC_CTYPE, NULL));
+  gpgme_set_locale(nullptr, LC_CTYPE, setlocale(LC_CTYPE, nullptr));
   #ifdef LC_MESSAGES
-    gpgme_set_locale(NULL, LC_MESSAGES, setlocale(LC_MESSAGES, NULL));
+    gpgme_set_locale(nullptr, LC_MESSAGES, setlocale(LC_MESSAGES, nullptr));
   #endif
-  BAFAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );
+  BAFAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, nullptr, CONFIG_DIR) );
   BAFAIL_IF_GPGERR( gpgme_new(&ctx) );
   BAFAIL_IF_GPGERR( gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP) ); // Check OpenPGP
   BAFAIL_IF_GPGERR( gpgme_get_engine_info(&info) );                      // load engine info
   while ( info && info->protocol != gpgme_get_protocol(ctx) )
     info = info->next;
-  BAFAIL_IF_GPGERR( gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
+  BAFAIL_IF_GPGERR( gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, nullptr, CONFIG_DIR) );  // set path to our config file
 
   QStringList ne = rng.rnd_nameAndEmail();
   QString keyType = ( tc == AO_ECDSA_PRI_KEY ) ?
@@ -197,7 +197,7 @@ QByteArray CryptoEngine::makeNewGpgPair( typeCode_t tc )
                                                .arg( keyType )
                                                .arg( passphrase );
 
-  BAFAIL_IF_GPGERR( gpgme_op_genkey(ctx, def.toStdString().c_str(), NULL, NULL ) );
+  BAFAIL_IF_GPGERR( gpgme_op_genkey(ctx, def.toStdString().c_str(), nullptr, nullptr ) );
   if (err == gpgme_err_code(GPG_ERR_NO_ERROR) )
     { gpgme_genkey_result_t res = gpgme_op_genkey_result(ctx);
       qDebug( "KeyPair::makeNewPair(%lld) primary:%d sub:%d uid:%d fpr:%s"
@@ -227,7 +227,7 @@ qint32 CryptoEngine::getKeyInfo()
   IFAIL_IF_GPGERR( gpgme_new( &ctx ) )
 
   // Count the keys:
-  IFAIL_IF_GPGERR( gpgme_op_keylist_start( ctx, NULL, 0 ) )
+  IFAIL_IF_GPGERR( gpgme_op_keylist_start( ctx, nullptr, 0 ) )
   qint32 n = 0;
   bool done = false;
   while ( !done )
@@ -262,21 +262,21 @@ QByteArray  CryptoEngine::exportKey( QByteArray fingerprint )
   const char * pattern = fingerprint.data();
 
   // Initializes gpgme
-  gpgme_check_version(NULL);
+  gpgme_check_version(nullptr);
 
   // Initialize the locale environment.
   setlocale(LC_ALL, "");
-  gpgme_set_locale(NULL, LC_CTYPE, setlocale(LC_CTYPE, NULL));
+  gpgme_set_locale(nullptr, LC_CTYPE, setlocale(LC_CTYPE, nullptr));
   #ifdef LC_MESSAGES
-    gpgme_set_locale(NULL, LC_MESSAGES, setlocale(LC_MESSAGES, NULL));
+    gpgme_set_locale(nullptr, LC_MESSAGES, setlocale(LC_MESSAGES, nullptr));
   #endif
-  BAFAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );
+  BAFAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, nullptr, CONFIG_DIR) );
   BAFAIL_IF_GPGERR( gpgme_new(&ctx) );
   BAFAIL_IF_GPGERR( gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP) ); // Check OpenPGP
   BAFAIL_IF_GPGERR( gpgme_get_engine_info(&info) );                      // load engine info
   while ( info && info->protocol != gpgme_get_protocol(ctx) )
     info = info->next;
-  BAFAIL_IF_GPGERR( gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
+  BAFAIL_IF_GPGERR( gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, nullptr, CONFIG_DIR) );  // set path to our config file
 
   gpgme_data_t keydata;
   BAFAIL_IF_GPGERR( gpgme_data_new(&keydata) )
@@ -319,21 +319,21 @@ bool CryptoEngine::importKey( QByteArray priKeyData )
   const char * CONFIG_DIR = cfs.data();
 
   // Initializes gpgme
-  gpgme_check_version(NULL);
+  gpgme_check_version(nullptr);
 
   // Initialize the locale environment.
   setlocale(LC_ALL, "");
-  gpgme_set_locale(NULL, LC_CTYPE, setlocale(LC_CTYPE, NULL));
+  gpgme_set_locale(nullptr, LC_CTYPE, setlocale(LC_CTYPE, nullptr));
   #ifdef LC_MESSAGES
-    gpgme_set_locale(NULL, LC_MESSAGES, setlocale(LC_MESSAGES, NULL));
+    gpgme_set_locale(nullptr, LC_MESSAGES, setlocale(LC_MESSAGES, nullptr));
   #endif
-  FAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );
+  FAIL_IF_GPGERR( gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, nullptr, CONFIG_DIR) );
   FAIL_IF_GPGERR( gpgme_new(&ctx) );
   FAIL_IF_GPGERR( gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP) ); // Check OpenPGP
   FAIL_IF_GPGERR( gpgme_get_engine_info(&info) );                      // load engine info
   while ( info && info->protocol != gpgme_get_protocol(ctx) )
     info = info->next;
-  FAIL_IF_GPGERR( gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, NULL, CONFIG_DIR) );  // set path to our config file
+  FAIL_IF_GPGERR( gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, nullptr, CONFIG_DIR) );  // set path to our config file
 
   gpgme_data_t keydata;
   FAIL_IF_GPGERR( gpgme_data_new_from_mem(&keydata,priKeyData.data(),priKeyData.size(),0) )

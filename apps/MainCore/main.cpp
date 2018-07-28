@@ -32,13 +32,13 @@
 
 using namespace std;
 
-MainWindow *mw;
-QTextStream *logStream = nullptr;
+static MainWindow *mw;
+static QTextStream *logStream = nullptr;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 { QString m;
   switch (type)
-    { default:            m = "Def"; break;
+    { // default:            m = "Def"; break;
       case QtDebugMsg:    m = "Dbg"; break;
       case QtInfoMsg:     m = "Inf"; break;
       case QtWarningMsg:  m = "Wrn"; break;
@@ -65,8 +65,8 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 }
 
 int main(int argc, char *argv[])
-{   QFile logFile( "/home/sw/ao.log" );
-    logFile.open( QIODevice::WriteOnly );
+{   QFile logFile( "/tmp/ao.log" );
+    if ( !logFile.open( QIODevice::WriteOnly ) ) qDebug( "failed to open log file." );
     logStream = new QTextStream( &logFile );
     qInstallMessageHandler(myMessageOutput);
 
