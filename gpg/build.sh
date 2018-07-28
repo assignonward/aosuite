@@ -48,7 +48,7 @@ popd
 
 pushd gnupg
 ./autogen.sh --force
-./configure --enable-maintainer-mode --enable-all-tests
+./configure --enable-maintainer-mode --enable-all-tests --enable-gpg-is-gpg2
 make -j
 make check
 sudo make install
@@ -62,3 +62,4 @@ make check
 sudo make install
 popd
 
+sudo ldconfig

@@ -23,7 +23,7 @@
 #
 
 sudo apt update -y
-sudo apt install -y automake build-essential bison flex texinfo transfig fig2dev libbz2-dev zlib1g-dev lib64z1-dev qt5-default qtcreator
+sudo apt install -y automake make build-essential g++ bison flex gettext texinfo transfig fig2dev gnutls-bin rng-tools adns-tools nettle-dev libncurses5-dev libsqlite3-dev libldap2-dev libreadline-dev libgmp-dev libbz2-dev zlib1g-dev lib64z1-dev qt5-default qtcreator
 
 # for gpg:
 pushd gpg
