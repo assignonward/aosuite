@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 5px;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 140px;
+    margin-left: 160px;
+}
+
+</style>
+
+<meta charset="UTF-8"/>
+<title>Attacks</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Attacks</h1>
+
+A few attack ideas, by no means an exhaustive list.
+
+<span itemprop="articleBody">
+
+<h2><a name="Accumulation">Accumulation</a></h2>
+
+In Accumulation attack, a bad actor slowly collects copies of valuable secret keys.  By collecting the copies slowly, in small increments, potentially spread out in different locations, suspicion is harder to place.  Nobody knows that their secrets have been copied, so they don't know that they are at risk of losing those secrets' value.<br/><br/>
+
+Short <a href="Expiration.html">expiration</a> periods, and/or frequent trading for new shares can be effective deterrents against an accumulation attack.  High recording and assignment costs run counter to this defense, but a good balance should be possible.
+
+<h2><a name="Replacement">Replacement</a></h2>
+
+When an attacker has managed to compromise a server and replace AOR or AOV software with a malicious copy, then can't actually record invalid transactions, because invalid transactions are invalid on their face, the servers don't know the secret keys and therefore cannot manufacture fraudulent assignment records unless they also possess the secret keys, which are never sent to the server.  They can communicate with AOE/AOS software and pretend to record a transaction which they will later drop from the blockchain record, but that will quickly be discovered by alternate AOV servers and anyone who checks for the presence of the promised page in a block.<br/><br/>
+
+Only software which handles secret keys has the potential to "steal" value, and while this does include AOE and AOS applications, AOI is probably the most vulnerable because it is usually setup to trade automatically.  A compromised AOI could behave normally until triggered remotely to suddenly sell low and/or buy high, depleting the owner's value by giving it away to other traders.<br/><br/>
+
+Use of complete certified server images is one of the better defenses for all server operators, any vulnerabilities discovered can be quickly shared throughout the community.  Attempting to "dual purpose" a server to handle other duties like serving websites is inviting creative attackers like <a href="IslandLifeCharacters.html#Mal">Mal</a> to teach you an expensive lesson in network security.
+
+
+
+
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-07-29"><div class="tooltip">29 July 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
+
