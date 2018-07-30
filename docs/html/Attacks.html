@@ -106,6 +106,12 @@ In Accumulation attack, a bad actor slowly collects copies of valuable secret ke
 
 Short <a href="Expiration.html">expiration</a> periods, and/or frequent trading for new shares can be effective deterrents against an accumulation attack.  High recording and assignment costs run counter to this defense, but a good balance should be possible.
 
+<h2><a name="DoS">Denial of Service</a></h2>
+
+Simple, brute force overloading of a server with meaningless traffic, effectively blocking legitimate server operations.  The more creative uses of DoS attacks attempt to enable double-spend by creating "islands of processing" where two recording servers operate independently and the attacker records the same key on the same blockchain on both servers before they reconnect.  Server fail-over configurations are designed to prevent this sort of thing, but there are compromises between security and availability that might sufficiently compromise security to allow an double spend to be recorded.<br/><br/>
+
+One of the best defenses that small blockchains have against DoS attacks is their small total value.  Just like people rarely bother to DoS individuals' home servers, millions of small blockchain servers each with small value makes a diffuse attack surface with little value at any point.  Attackers might try a "roving eye" in an attempt to pick off a little value from each of a large number of little servers in rapid succession, but if the servers are configured for security over availability, then they should resist the DoS attack and the DoS attack should quickly move on to other blockchains looking for a vulnerable one, hopefully resulting in a minimal or even un-noticable disruption of normal operations.
+
 <h2><a name="Replacement">Replacement</a></h2>
 
 When an attacker has managed to compromise a server and replace AOR or AOV software with a malicious copy, then can't actually record invalid transactions, because invalid transactions are invalid on their face, the servers don't know the secret keys and therefore cannot manufacture fraudulent assignment records unless they also possess the secret keys, which are never sent to the server.  They can communicate with AOE/AOS software and pretend to record a transaction which they will later drop from the blockchain record, but that will quickly be discovered by alternate AOV servers and anyone who checks for the presence of the promised page in a block.<br/><br/>
