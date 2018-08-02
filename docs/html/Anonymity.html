@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 5px;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 140px;
+    margin-left: 160px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Anonymity</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
+
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Anonymity</h1>
+
+<span itemprop="articleBody">
+
+<a href="BlockchainBasics.html">Blockchains</a> are strongly anti-anonymity in their basic conception.  A permanent record, publicly shared<div class="tooltip"><sup>*</sup><span class="tooltiptext">Perhaps not coincidentally, the old film <a href="https://en.wikipedia.org/wiki/Bob_%26_Carol_%26_Ted_%26_Alice">Bob & Carol & Ted & Alice</a> had unusual openness as a central theme.</span></div> is not the best basis for covering your tracks.  Associations by assignment of shares are easily and automatically mappable.  Shares on the blockchain themselves have no intrinsic value, so while they may be carefully masked behind random cryptographic keys, sooner or later the blockchain contracts are exchanged for something of real-world value, and those exchange points will very often unmask real-world identities.  To build trust, traders in a blockchain may voluntarily securely identify themselves.  Nonetheless, certain transactions can be anonymous, at least for a while.  When Eddie sold Charlie his first 50 BCG, Charlie handed over cash and didn't provide any identity in the assignment contract beyond his public key.  However, when that public key started exchanging BCG for CCC a couple of plates at a time, it quickly became apparent that Charlie bought the 50 plates and was selling them off.<br/><br/>
+
+Anonymity is also an opponent of the Web of Trust, and much of the value in a Web of Trust lies in its size and reliability.  In <a href="IslandLife.html">Island Life</a> when the only thing that Ziggy Credits would buy was BCG, they were a very hard sell.  But, when a guest can pull up ZIC on their AOE and see a list of dozens of interesting vendors on this island, and hundreds more on their remaining vacation itinerary, all with prices listed in ZIC, that makes ZIC much more valuable to them.  Referral agreements don't work well between anonymous partners, and anonymous players don't accrue trustworthiness as they play.<br/><br/>
+
+Guests and other buyers of goods and services might purchase credits for cash without revealing their identity, and even use an "untraceable burner phone" to spend them with, but that's still much more traceable than cash - all their transactions are easily linked and timestamped, if one of those transactions unmasks their identity it is readily linked to all other transactions they made from that initial cash exchange.<br/><br/>
+
+Bottom line: honest, long term traders on blockchains have much more to gain than they do to lose by freely publishing their<div class="tooltip"><sup>*</sup><span class="tooltiptext">secure and verifiable.  Just because a transaction has a name or other identity on it does not in any way mean that that identity is accurate.  Identities confirmed through use of well managed secret keys start to become trustable.</span></div> identity along with their transactions.  Like a phone book when most people are listed, unlisted numbers stand out: begging for attention.  Short term users of blockchains may choose to not share their identity in their recorded transactions, but they shouldn't delude themselves into thinking that they are invisible, un-traceable, or otherwise hiding their identity nearly as well as an all cash transaction would.
+
+</span>
+
+</div>
+
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></span></a><br/>
+<span itemprop="datePublished" content="2018-07-13"><div class="tooltip">13 July 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+
+</div>
+
+</body></html>
+
