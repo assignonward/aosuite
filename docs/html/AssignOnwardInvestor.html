@@ -38,7 +38,7 @@
     color: #000;
 
     text-align: center;
-    padding: 5px 0;
+    padding: 5px 5px;
     border-radius: 6px;
 
     /* Position the tooltip text */
@@ -78,8 +78,8 @@
 .page {
     margin-top: 60px;
     margin-bottom: 60px;
-    margin-right: 120px;
-    margin-left: 120px;
+    margin-right: 140px;
+    margin-left: 160px;
 }
 </style>
 
@@ -122,8 +122,11 @@ Charlie is a little simpler than Ted and he makes a bigger market in BCG: holdin
 
 Ziggy has his AOI programmed to play the market.  For BCG Ziggy tries to hold 20 plates and his current strategy will bid EC$0.01 over the highest bid out there, up to a max of EC$25.10, and  asks EC$0.01 less than the lowest ask out there, as long as that's at least EC$2.00 more than he paid for his most expensive recent purchase of BCG.  Sometimes Ziggy cleans up with these strategies, sometimes he ends up sitting on the sidelines while other investors make money on BCG.<br/><br/>
 
-As for Bob, he has a flat bid of EC$10 for all outstanding plates, and he asks EC$20 when he has no plates outstanding, increasing by EC$0.07 per plate outstanding, so when he has 100 plates outstanding, his ask sits at EC$27.  Bob usually has about 70 plates outstanding, but it does bounce up and down quite a bit, especially when new players enter the market.<br/><br/>
+As for Bob, he has a flat bid of EC$10 for all outstanding plates, and he asks EC$20 when he has no plates outstanding, increasing by EC$0.07 per plate outstanding, so when he has 100 plates outstanding, his ask sits at EC$27.  Bob usually has about 70 plates outstanding, but it does bounce up and down quite a bit, especially when new players enter the market.  While Bob's blockchain has a total of 1000 BCG available, anytime more than 200 BCG are out, Bob's AOI puts a hold on further trading - the price is already up to EC$34 per plate then, so Bob doesn't want somebody to come along and give him $10,000 by mistake thinking they're getting something they are not.  Oscar, on the other hand, doesn't have the trading stop in place, hoping for a big windfall, he's still hoping.<br/><br/>
 
+<h2>Security Alert</h2>
+
+Like AOE and AOS, AOI is an application with valuable concerns - it manages and uses secret keys.  Unlike AOE and AOS which can always prompt a user for authorization of each transaction and identification in the form of passphrases, fingerprints, etc. AOI is meant to operate automatically, without user intervention, and potentially handling large amounts of value as well.  AOI implementations will require care not only at the application level but also in the systems which they run in and how they safeguard the secret keys they handle, both from exposure and loss.
 
 </span>
 

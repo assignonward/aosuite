@@ -84,7 +84,7 @@
 </style>
 
 <meta charset="UTF-8"/>
-<title>Protocols</title>
+<title>Share Owner Tracking</title>
 </head>
 
 <body>
@@ -92,33 +92,18 @@
 <div class="zoom">
 <img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
 
-<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Protocols</h1>
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Share Owner Tracking</h1>
 
-<h2>Note:</h2>
+<span itemprop="articleBody">
+<h2>Shares Outstanding Reporting</h2>
 
-I'm leaning toward a re-vamp of the protocol description scheme away from strict levels and more toward a bit-field support / no support for various protocol features.<br/><br/>
+In the realm of personally owned blockchains as described in <a href="IslandLife.html">Island Life</a>, the shares of the blockchain represent a form of indebetedness of the blockchain owner to the holder of the shares.  The value of those shares can be heavily impacted by the number of shares outstanding vs the number of shares held by the owner.  For instance, <a href="IslandLifeCharacters.html#Ziggy">Ziggy's</a> ZIC shares represent EC$100,000,000 worth of pledges to shareholders, but only the outstanding shares need to have backing funds from which Ziggy can repay shareholders on demand.  It is important to Victor that he be able to reliably track which shares of ZIC are outstanding and which Ziggy himself holds.  Ziggy can (and does) record periodic transactions in which he assigns all of his shares to himself under new public keys, in part to avoid <a href="Expiration.html">expiration</a> and in part to reassure Victor that he still has possession of the valuable secrets.<br/><br/>
 
-<h2>Early thoughts</h2>
+To better support <a href="AssignOnwardInvestor.html">AOI</a>, and also to make Victor's automated auditing software simpler, there is the concept of Share Owner Tracking which users, especially blockchain owners, can employ to declare their personal ownership of multiple share blocks recorded in the chain.  The <a href="BlockchainBasics.html#GenesisBlock">Genesis Block</a> starts with a single block of all shares, owned by the creator of the Genesis Block.  When those shares are <a href="AssignmentAgreement.html">assigned</a>, often the owner will assign some of the shares back to themself, under a <a href="AtomicAssignment.html">new key</a>.  To maintain a record of ownership, proving the retention of certain shares, the participant receiving shares may include, in addition to their AO_AUTH_SIG, an AO_SOT_SIG which provides Share Ownership Tracking - signing the received shares with a recent secret key of the share owner.  For blockchain owners, that secret key could always be the secret key used to sign the Genesis Block, but it would be better for it to track forward to more recent keys, either in a chain for shares retained during transactions, or jumping back to a recent set of owned shares in the event of shares being returned from old transactions, possibly passing through multiple owners before "coming home."<br/><br/>
 
+In the case of blockchain owners, each new block should include a SOR: Shares Outstanding Record which accurately describes the number of shares currently held by the blockchain owner.  Note that other share owners on the blockchain have the option to declare their cumulative position through use of AO_SOT_SIG records, or not if they have no need for such declaration.  If a blockchain is "owned" by multiple parties, perhaps like ZIC in the case of Ziggy and Peter, then they both could keep separate records of the number of shares each holds personally, updated in SOR records in each block.<br/><br/>
 
-<span itemprop="articleBody">Just as the basic Assign Onward protocol supports multiple types of cryptographic methods, demonstrating the ability to include new methods as needed<div class="tooltip"><sup>1</sup><span class="tooltiptext">For instance: to transition to quantum ready cryptography.</span></div> the protocol handler itself supports multiple protocols, demonstrating the path toward interoperability with future protocols.  Some sense of the protocol development plan is found in the <a href="Roadmap.html">roadmap</a>.
-
-<h2><a href="ProtocolAO1.html">Ⓐ¹</a></h2>
-
-The Ⓐ¹ protocol is a basic, single recorder protocol.  Many optimizations are possible in a single recorder scenario, such as assumption that the chain never forks because there is a single entity responsible for maintaining it.  This means that the block chain is guaranteed sequential, non-forking and non-merging - and that transactions recorded thereon can also be reliably sequenced, so that once recorded information like public key identities and shares received amounts can be referred to in the future by just a sequence number in a particular blockchain.<div class="tooltip"><sup>2</sup><span class="tooltiptext">as identified by the hash of the <a href="BlockchainBasics.html#GenesisBlock">genesis block</a></span></div>
-
-<h2>Ⓐ²</h2>
-
-Ⓐ² protocol expands to support multiple, possibly competing, block chain recorders.  Temporary forks and later re-merges of the blockchain are anticipated, and as such many of the optimizations in Ⓐ¹ which assume no forking become invalid.  No matter, when software supports both Ⓐ¹ and Ⓐ² protocols, all they need to do is determine which protocol applies<div class="tooltip"><sup>3</sup><span class="tooltiptext">as identified by declaration in the <a href="BlockchainBasics.html#GenesisBlock">genesis block</a></span></div> and handle accordingly.
-
-<ul><li><a href="MultichainExchange.html">Multichain Exchange</a></li>
-    <li>Share Owner Tracking</li>
-</ul>
-
-<h3>and many more</h3>
-
-On the one hand, it would be nice to develop a single protocol to serve most use cases.  On the other, it would be naïve to assume that a single protocol will set forth and optimally address all the myriad of presently unknown uses for lightweight blockchain impmementations.  While it is entirely possible<div class="tooltip"><sup>4</sup><span class="tooltiptext">as demonstrated by <a href="https://bitcoin.org/">Bitcoin</a></span></div> to develop a single blockchain and endlessly modify an develop it over the years, I believe it is also practical to develop replacement protocols which can start fresh and take over for existing protocols,<div class="tooltip"><sup>5</sup><span class="tooltiptext">takeover to happen on the merits of the new protocol, if it is a truly superior protocol then it should be able to overcome the inertia of the existing implementations and replace them.</span></div> particularly in an ecosystem where no single blockchain is attempting to rule the entire world.
-
+The value of "personal debt" might well be represented by a sliding scale, in the case of <a href="IslandLifeCharacters.html#Bob">Bob</a> his lowest ASK price for BCG might increase incrementally for each additional BCG sold out of his holdings, while investors might incrementally decrease their top BID price for each BCG which Bob has sold, so the market reaches eqilibrium where those opposing gradients meet.
 
 </span>
 
@@ -126,7 +111,7 @@ On the one hand, it would be nice to develop a single protocol to serve most use
 
 <br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
 <span itemprop="name">Assign Onward</span></span></a><br/>
-<span itemprop="datePublished" content="2018-07-06"><div class="tooltip">6 July 2018<span class="tooltiptext">
+<span itemprop="datePublished" content="2018-08-01"><div class="tooltip">1 August 2018<span class="tooltiptext">
 MIT License
 <br/>
 Copyright (c) 2018 Assign Onward

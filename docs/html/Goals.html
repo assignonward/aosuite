@@ -113,25 +113,25 @@ in rough order of priority:
 
 <ul>
 <li>Secure</li>
-<ul><li>Establish un-alterable records, including records of title<div class="tooltip"><sup>1</sup><span class="tooltiptext">Title meaning: ownership of a number of shares which can be divided, or merged when assigning onward.</span></div></li>
-    <li>Assignment of title<div class="tooltip"><sup>2</sup><span class="tooltiptext">Assignment of title means recording a change of ownership of shares from the holder of one secret to the holder of a different secret.</span></div> can only be accomplished with a secret that need never be revealed</li>
+<ul><li>Establish un-alterable records, including records of title<div class="tooltip"><sup>*</sup><span class="tooltiptext">Title meaning: ownership of a number of shares which can be divided, or merged when assigning onward.</span></div></li>
+    <li>Assignment of title<div class="tooltip"><sup>*</sup><span class="tooltiptext">Assignment of title means recording a change of ownership of shares from the holder of one secret to the holder of a different secret.</span></div> can only be accomplished with <b>a secret that need never be revealed</b></li>
     <li>Resistant to malicious confusion of records</li>
 </ul>
 <li>Open (shared), anyone can:</li>
 <ul><li>receive or assign title</li>
     <ul><li>receive title under a secret that only they know</li>
-        <li>propose assignment of title to any secret known/controlled by another<div class="tooltip"><sup>3</sup><span class="tooltiptext">Assignment of title requires offer and acceptance, each identity (<a href="BlockchainBasics.html#KeyPairs">public key</a>) can only receive title once, therefore it is required that the holder of the private key accept assignment of title under their public key.</span></div></li>
+        <li>propose assignment of title to any secret known/controlled by another<div class="tooltip"><sup>*</sup><span class="tooltiptext">Assignment of title requires offer and acceptance, each identity (<a href="BlockchainBasics.html#KeyPairs">public key</a>) can only receive title once, therefore it is required that the holder of the private key accept assignment of title under their public key.</span></div></li>
     </ul>
     <li>obtain all records</li>
     <li>verify validity of all records</li>
     <ul><li>title</li>
-        <ul><li>chain of title<div class="tooltip"><sup>4</sup><span class="tooltiptext">For any given title to shares, anyone can trace the source(s) of the shares back to the <a href="BlockchainBasics.html#GenesisBlock">genesis block</a>.</span></div></li>
-            <li>absence of double spend<div class="tooltip"><sup>5</sup><span class="tooltiptext">confirm that title has not been assigned from the record of initial receipt of title through to the recording of assignment of title.</span></div></li>
+        <ul><li>chain of title<div class="tooltip"><sup>*</sup><span class="tooltiptext">For any given title to shares, anyone can trace the source(s) of the shares back to the <a href="BlockchainBasics.html#GenesisBlock">genesis block</a>.</span></div></li>
+            <li>absence of double spend<div class="tooltip"><sup>*</sup><span class="tooltiptext">confirm that title has not been assigned from the record of initial receipt of title through to the recording of assignment of title.</span></div></li>
         </ul>
         <li>recording process</li>
     </ul>
-    <li>participate in the recording process<div class="tooltip"><sup>6</sup><span class="tooltiptext">by running software that creates, validates, and proposes pages and blocks for inclusion in the <a href="BlockchainBasics.html">blockchain</a>.  This goal will not be addressed for single chains until the Ⓐ² <a href="Protocols.html">protocol</a>, although anyone who wants to can start their own independent Ⓐ¹ blockchain.</span></div></li>
-    <li>examine<div class="tooltip"><sup>7</sup><span class="tooltiptext">also copy and modify if desired.  Essentially, no dependence on protections like trade secrets, copyright, patent or legislation to secure functionality of the system.</span></div> the computer code that implements the system</li>
+    <li>participate in the recording process<div class="tooltip"><sup>*</sup><span class="tooltiptext">by running software that creates, validates, and proposes pages and blocks for inclusion in the <a href="BlockchainBasics.html">blockchain</a>.  This goal will not be addressed for single chains until the Ⓐ² <a href="Protocols.html">protocol</a>, although anyone who wants to can start their own independent Ⓐ¹ blockchain.</span></div></li>
+    <li>examine<div class="tooltip"><sup>*</sup><span class="tooltiptext">also copy and modify if desired.  Essentially, no dependence on protections like trade secrets, copyright, patent or legislation to secure functionality of the system.</span></div> the computer code that implements the system</li>
 </ul>
 <li>Accessible</li>
 <ul><li>simple, (small) clearly expressed processes, not un-necessarily baffling</li>
