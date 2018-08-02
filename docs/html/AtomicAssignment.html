@@ -38,7 +38,7 @@
     color: #000;
 
     text-align: center;
-    padding: 5px 0;
+    padding: 5px 5px;
     border-radius: 6px;
 
     /* Position the tooltip text */
@@ -78,8 +78,8 @@
 .page {
     margin-top: 60px;
     margin-bottom: 60px;
-    margin-right: 120px;
-    margin-left: 120px;
+    margin-right: 140px;
+    margin-left: 160px;
 }
 </style>
 
@@ -95,7 +95,7 @@
 <span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Atomic Assignment</h1>
 
 
-<span itemprop="articleBody">Atomic Assignment refers to a rule: when title to shares is assigned, all the shares are assigned at one time.  This is not actually restrictive at all, because any assignment contract may have as many assigners and receivers as desired.<div class="tooltip"><sup>1</sup><span class="tooltiptext">up to a reasonable limit, perhaps about 1000, to prevent transaction spam from overtaxing the underwriters.</span></div> So, if (usually when) an assigner's source of shares has more shares than are needed for the transaction, the assigner provides a new public key to receive the excess shares in.</br>
+<span itemprop="articleBody">Atomic Assignment refers to a rule: when title to shares is assigned, all the shares are assigned at one time.  This is not actually restrictive at all, because any assignment contract may have as many assigners and receivers as desired.<div class="tooltip"><sup>*</sup><span class="tooltiptext">up to a reasonable limit, perhaps about 1000, to prevent transaction spam from overtaxing the underwriters.</span></div> So, if (usually when) an assigner's source of shares has more shares than are needed for the transaction, the assigner provides a new public key to receive the excess shares in.</br>
 Among other things, this makes it simpler to verify no double spends: if an underwriter keeps a list of the private keys of all shares assigned in a range of blocks, then the absence of the source shares' public key in that range confirms that they have not been previously assigned.
 </span>
 
