@@ -38,7 +38,7 @@
     color: #000;
 
     text-align: center;
-    padding: 5px 0;
+    padding: 5px 5px;
     border-radius: 6px;
 
     /* Position the tooltip text */
@@ -78,8 +78,8 @@
 .page {
     margin-top: 60px;
     margin-bottom: 60px;
-    margin-right: 120px;
-    margin-left: 120px;
+    margin-right: 140px;
+    margin-left: 160px;
 }
 </style>
 
@@ -100,13 +100,13 @@
 
 Within the AO protocol, all counted things are represented by integers and rational fractions aka the ratio of two integers.  Internally, these integers are represented by 64 bit signed integers, or when that's not big enough, by arbitrarily large integers handled by the <a href="https://en.wikipedia.org/wiki/GNU_Multiple_Precision_Arithmetic_Library">GMP</a> library.<br/><br/>
 
-Floating point numbers may be used in user interface representations of rational fractions, but the actual internal calculations are done to obtain exact results which can be exactly duplicated on a wide variety of hardware and software which may be checking the calculations.  Originally, 128 bit integers were considered for the larger numbers, but even those are too small for some reasonable calculations, and they are also problematic when porting to various computer architectures - the GMP library, while cumbersome, is much more portable than __int128.
+Floating point numbers may be used in user interface representations of rational fractions, but the actual internal calculations are done to obtain exact results which can be exactly duplicated on a wide variety of hardware and software which may be checking the calculations.  Originally, 128 bit integers were considered for the larger numbers, but even those are too small for some reasonable calculations, and they are also problematic when porting to various computer architectures - the GMP library, while cumbersome, is more portable than __int128.
 
 <h2>Storage</h2>
 
-When 64 bit integers are stored, they are always stored as signed variable length byte code.  Small numbers between -64 and 64 are stored in a single byte, two bytes increases the range to +/-8192 and the range continues increasing by 7 bits per byte in the code, with the 8th bit in each byte indicating whether or not this byte is the last in the code.  Extremely large numbers take 9 or sometimes 10 bytes to store, but on average the storage space is greatly decreased, especially for trivially small numbers.<br/><br/>
+When 64 bit integers are stored, they are always stored as signed variable length byte code.  Small numbers between -64 and 64 are stored in a single byte, two bytes increases the range to +/-8192 and the range continues increasing by 7 bits per byte in the code, with the 8th bit in each byte indicating whether or not this byte is the last in the code.  Extremely large numbers take 9 or sometimes 10 bytes to store, but on average the storage space is greatly decreased, especially for small numbers.<br/><br/>
 
-When GMP integers are stored, they are written and read in <a href="https://gmplib.org/manual/I_002fO-of-Integers.html">raw</a><div class="tooltip"><sup>*</sup><span class="tooltiptext">The GMP format uses a 4 byte integer to store the size of the following data structure... it would not be too difficult to substitute a variable byte code for that 4 byte number, but I'm not sure the gains are worth the extra layer...</span></div> form.<br/><br/>
+When GMP integers are stored, they are written and read in <a href="https://gmplib.org/manual/I_002fO-of-Integers.html">raw</a><div class="tooltip"><sup>*</sup><span class="tooltiptext">The GMP format uses a 4 byte integer to store the size of the following data structure... it would not be too difficult to substitute a variable byte code for that 4 byte number, but I'm not sure the space gains are worth the extra layer...</span></div> form.<br/><br/>
 
 Both 64 bit integers and GMP integers are stored in key-value form where a 64 bit key (stored in variable length byte code) preceeds the data, data format indicated by the key number: variable length byte code of a 64 bit integer, the raw form of a GMP integer, or a variable length byte code which tells the number of bytes which follow for this key's value (a variable data sized key, which may include a collection of key-value pairs.)
 

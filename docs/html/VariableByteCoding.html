@@ -38,7 +38,7 @@
     color: #000;
 
     text-align: center;
-    padding: 5px 0;
+    padding: 5px 5px;
     border-radius: 6px;
 
     /* Position the tooltip text */
@@ -78,8 +78,8 @@
 .page {
     margin-top: 60px;
     margin-bottom: 60px;
-    margin-right: 120px;
-    margin-left: 120px;
+    margin-right: 140px;
+    margin-left: 160px;
 }
 </style>
 
@@ -94,7 +94,7 @@
 
 <span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Variable Byte Coding</h1>
 
-<span itemprop="articleBody">Assign Onward uses a variable byte encoding scheme<div class="tooltip"><sup>1</sup><span class="tooltiptext">vaguely related to <a href="https://en.wikipedia.org/wiki/Golomb_coding#Rice_coding">Rice Coding</a></span></div> to represent data type codes and sizes of variable length data.  The scheme represents 64 bit signed integers using one to 10 bytes.  The least significant bit of the first byte is the sign bit, set indicates negative.  In the range 0-63, the coding scheme is the same as a single unsigned byte multiplied by 2.  When a byte has the most significant bit set, that indicates that the following byte is also included in the code.<div class="tooltip"><sup>2</sup><span class="tooltiptext">Currently, Assign Onward only recognizes variable byte codes up to 10 bytes in length, so a 1 in the most significant bit of the 10th byte is an error, unrecognized code.  Also, 64 bit signed integers are used to hold the VBC values, so most of the bits in a 10th byte (if present) are ignored.</span></div>  Each byte encodes 7 bits in little-endian form.<br/><br/>
+<span itemprop="articleBody">Assign Onward uses a variable byte encoding scheme<div class="tooltip"><sup>*</sup><span class="tooltiptext">vaguely related to <a href="https://en.wikipedia.org/wiki/Golomb_coding#Rice_coding">Rice Coding</a></span></div> to represent data type codes and sizes of variable length data.  The scheme represents 64 bit signed integers using one to 10 bytes.  The least significant bit of the first byte is the sign bit, set indicates negative.  In the range 0-63, the coding scheme is the same as a single unsigned byte multiplied by 2.  When a byte has the most significant bit set, that indicates that the following byte is also included in the code.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Currently, Assign Onward only recognizes variable byte codes up to 10 bytes in length, so a 1 in the most significant bit of the 10th byte is an error, unrecognized code.  Also, 64 bit signed integers are used to hold the VBC values, so most of the bits in a 10th byte (if present) are ignored.</span></div>  Each byte encodes 7 bits in little-endian form.<br/><br/>
 
 </span>
 </div>
