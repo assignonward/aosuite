@@ -31,7 +31,7 @@ Data64::Data64( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATA
 { v = 0;
   union _64_as_8
     { qint64 i;
-      unsigned char d[8];
+      char d[8];
     } u;
   qint32 tcSz = 0;
   typeCode = bytesToCode( di, tcSz );
@@ -69,8 +69,8 @@ void Data64::operator = ( const DataItemBA &di )
 DataItemBA Data64::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   union _64_in_8s
-    {        qint64 i;
-      unsigned char d[8];
+    { qint64 i;
+      char d[8];
     } u;
   u.i = v;
   di.append( codeToBytes( typeCode ) );

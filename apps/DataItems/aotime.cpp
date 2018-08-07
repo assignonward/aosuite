@@ -23,8 +23,8 @@
 #include "aotime.h"
 #include <QDateTime>
 
-AOTime::AOTime( __int128 tm, typeCode_t typ, QObject *p )
-  : Data128( tm, typ, p )
+AOTime::AOTime( qint64 tm, typeCode_t typ, QObject *p )
+  : Data64( tm, typ, p )
 { if ( tm == 0 )
     set( now() );
 }
@@ -33,15 +33,12 @@ AOTime::AOTime( __int128 tm, typeCode_t typ, QObject *p )
  * @brief AOTime::now
  * @return seconds since epoch * 2^64, at millisecond resolution
  */
-__int128 AOTime::now()
+qint64 AOTime::now()
 { QDateTime now  = QDateTime::currentDateTime();
-   __int128 sec  = now.toSecsSinceEpoch();
-   __int128 ms   = now.time().msec();
-  return (sec << 64) + ((ms << 64)/1000);
+     qint64 sec  = now.toSecsSinceEpoch();
+     qint64 ms   = now.time().msec();
+  return ((sec * 1000) + ms) * AO_MILLISECOND;
 }
-
-__int128 AOTime::shiftUp64( __int128 m )
-{ return m << 64; }
 
 /**
  * @brief AOTime::future

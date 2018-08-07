@@ -106,6 +106,8 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
   return new DataItem( AO_UNDEFINED_DATAITEM, p );
 }
 
+// https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used
+
 DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
 { switch ( ditm->typeCode )
   { 
@@ -204,12 +206,12 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
       case PG_ID_SEQ_DIFF:             return -2;
       case AO_ID_SEQ_NUM:              return -2;
       case AO_SHARE_STATE:             return -2;
-      case AO_TIME_OF_SIG:             return 16;
-      case AO_PROPOSAL_TIME:           return 16;
-      case AO_RECORDING_DEADLINE:      return 16;
-      case AO_TIME_RECORDED:           return 16;
-      case AO_TIME_DIFF:               return 16;
-      case AO_UNDERWRITING_EXPIRATION: return 16;
+      case AO_TIME_OF_SIG:             return 8;
+      case AO_PROPOSAL_TIME:           return 8;
+      case AO_RECORDING_DEADLINE:      return 8;
+      case AO_TIME_RECORDED:           return 8;
+      case AO_TIME_DIFF:               return 8;
+      case AO_UNDERWRITING_EXPIRATION: return 8;
       case AO_AMT:                     return 16;
       case AO_UNDERWRITING_AMT:        return 16;
       case AO_RECORDING_BID:           return 16;
@@ -220,7 +222,7 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
       case GB_PROTOCOL:                return -2;
       case GB_PROTOCOL_REV:            return -2;
       case GB_STARTING_SHARES:         return 16;
-      case GB_MIN_BLOCK_INT:           return 16;
+      case GB_MIN_BLOCK_INT:           return 8;
       case GB_N_COINS_TOTAL:           return 16;
       case GB_RECORDING_TAX:           return 16;
       case AO_UNDEFINED_DATAITEM:      return 0;

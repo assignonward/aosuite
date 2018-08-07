@@ -13,12 +13,12 @@
 #define PG_ID_SEQ_DIFF                -41 // (53+var) DataVbc64: Add this number to the CB_FIRST_ID_SEQ_NUM in the block to get the AO_ID_SEQ_NUM value of the first ID on the page.
 #define AO_ID_SEQ_NUM                 -42 // (55+var) DataVbc64: integer that identifies a particular public key in the chain, unique per blockchain.
 #define AO_SHARE_STATE                 42 // (54+var) DataVbc64: integer declares the state of shares (available, under contract, contract executed (assigned away), committed as underwriting)
-#define AO_TIME_OF_SIG                -34 // (45+16) AOTime: UTC time (secs since epoch << 64) when a signature was made
-#define AO_PROPOSAL_TIME               32 // (40+16) AOTime: UTC time (secs since epoch << 64) when a transaction was proposed (fixes coin-shares representations)
-#define AO_RECORDING_DEADLINE         -39 // (4f+16) AOTime: UTC time (secs since epoch << 64) when a record is contracted to be recorded
-#define AO_TIME_RECORDED              -37 // (4b+16) AOTime: UTC time (secs since epoch << 64) when a record was made
-#define AO_TIME_DIFF                   35 // (46+16) AOTime: UTC time (secs since epoch << 64) defining a time interval, or difference
-#define AO_UNDERWRITING_EXPIRATION     36 // (48+16) AOTime: UTC time (secs since epoch << 64) when underwriting shares are bound until
+#define AO_TIME_OF_SIG                -34 // (45+8) AOTime: UTC time (secs since epoch << 64) when a signature was made
+#define AO_PROPOSAL_TIME               32 // (40+8) AOTime: UTC time (secs since epoch << 64) when a transaction was proposed (fixes coin-shares representations)
+#define AO_RECORDING_DEADLINE         -39 // (4f+8) AOTime: UTC time (secs since epoch << 64) when a record is contracted to be recorded
+#define AO_TIME_RECORDED              -37 // (4b+8) AOTime: UTC time (secs since epoch << 64) when a record was made
+#define AO_TIME_DIFF                   35 // (46+8) AOTime: UTC time (secs since epoch << 64) defining a time interval, or difference
+#define AO_UNDERWRITING_EXPIRATION     36 // (48+8) AOTime: UTC time (secs since epoch << 64) when underwriting shares are bound until
 #define AO_AMT                         37 // (4a+16) Shares: 128 bit signed integer number of shares assigned
 #define AO_UNDERWRITING_AMT            38 // (4c+16) Shares: 128 bit signed integer number of shares committed as underwriting
 #define AO_RECORDING_BID              -43 // (57+16) Shares: 128 bit signed integer number of shares bid for recording
@@ -62,7 +62,7 @@
 #define GB_ICON                      1104 // <a011+var> DataByteArray:separable Image suitable for icon use to represent the chain
 #define GB_IMAGE                     1168 // <a012+var> DataByteArray:separable Large format image to represent the chain
 #define GB_STARTING_SHARES            336 // (a005+16) Shares: Starting number of shares
-#define GB_MIN_BLOCK_INT              400 // (a006+16) AOTime: Minimuim block interval time
+#define GB_MIN_BLOCK_INT              400 // (a006+8) AOTime: Minimuim block interval time
 #define GB_N_COINS_TOTAL              464 // (a007+16) AOCoins: Number of coins that the sum of all shares outstanding represents
 #define GB_RECORDING_TAX              528 // (a008+16) AOCoins: Recording Tax in coins per byte (usually a very small number)
 #define AO_UNDEFINED_DATAITEM      977775 // (dead77+0) DataItem: An undefined data item, usually an error

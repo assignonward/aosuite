@@ -22,38 +22,35 @@
  */
 // Assign Onward
 //
-// The universal clock - Unix time in seconds since epoch, multiplied by 2^64
-//   - future plans include adding 32 bits of trivial quasi-random dither to break most ties
+// The universal clock - Unix time in seconds since epoch, multiplied by 189,000,000
+//   - future plans include adding 16 bits of trivial quasi-random dither to break most ties
 
 #ifndef AOTIME_H
 #define AOTIME_H
 
-#include "data128.h"
+#include "data64.h"
 
-// These AO constants need to be multiplied
-// by 2^64 after being loaded due to compiler
-// challenges handling 128 bit constants
-#define AO_SECOND  1
-#define AO_MINUTE (60 * AO_SECOND)
-#define AO_HOUR   (60 * AO_MINUTE)
-#define AO_DAY    (24 * AO_HOUR  )
-#define AO_WEEK   ( 7 * AO_DAY   )
+#define AO_MILLISECOND 189000
+#define AO_SECOND (1000 * AO_MILLISECOND)
+#define AO_MINUTE (  60 * AO_SECOND     )
+#define AO_HOUR   (  60 * AO_MINUTE     )
+#define AO_DAY    (  24 * AO_HOUR       )
+#define AO_WEEK   (   7 * AO_DAY        )
 
-class AOTime : public Data128
+class AOTime : public Data64
 {
     Q_OBJECT
 public:
-       explicit  AOTime( __int128 tm = 0, typeCode_t typ = AO_TIME_RECORDED, QObject *p = NULL );
-                 AOTime( const DataItemBA &di, QObject *p = NULL )
-                   : Data128( di, p ) {}
-                 AOTime( const AOTime &tm, QObject *p = NULL )
-                   : Data128( tm.get(), tm.typeCode, p ? p : tm.parent() ) {}
-           void  operator = ( const DataItemBA &di ) { Data128::operator = ( di ); }
+       explicit  AOTime( qint64 tm = 0, typeCode_t typ = AO_TIME_RECORDED, QObject *p = nullptr );
+                 AOTime( const DataItemBA &di, QObject *p = nullptr )
+                   : Data64( di, p ) {}
+                 AOTime( const AOTime &tm, QObject *p = nullptr )
+                   : Data64( tm.get(), tm.typeCode, p ? p : tm.parent() ) {}
+           void  operator = ( const DataItemBA &di ) { Data64::operator = ( di ); }
 
-static __int128  now();
-static __int128  shiftUp64( __int128 m );
-       __int128  get() const { return v; }
-           void  set( __int128 m ) { v = m; }
+static   qint64  now();
+         qint64  get() const { return v; }
+           void  set( qint64 m ) { v = m; }
            bool  future();
            bool  past();
 };

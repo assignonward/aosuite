@@ -33,11 +33,11 @@ class Data64 : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  Data64( qint64 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
+    explicit  Data64( qint64 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
                 : DataItem( tc, p ), v( d ) {}
-              Data64( const Data64 &d, QObject *p = NULL )
+              Data64( const Data64 &d, QObject *p = nullptr )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
-              Data64( const DataItemBA &di, QObject *p = NULL );
+              Data64( const DataItemBA &di, QObject *p = nullptr );
       qint64  value() { return v; }
         void  set( qint64 nv ) { v = nv; }
   DataItemBA  toDataItem( bool cf = false ) const;

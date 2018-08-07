@@ -108,42 +108,42 @@
         "acry": "AO_TIME_OF_SIG",
         "code": -34,
         "desc": "UTC time (secs since epoch << 64) when a signature was made",
-        "size": 16,
+        "size": 8,
         "type": "AOTime"
     },
     {
         "acry": "AO_PROPOSAL_TIME",
         "code": 32,
         "desc": "UTC time (secs since epoch << 64) when a transaction was proposed (fixes coin-shares representations)",
-        "size": 16,
+        "size": 8,
         "type": "AOTime"
     },
     {
         "acry": "AO_RECORDING_DEADLINE",
         "code": -39,
         "desc": "UTC time (secs since epoch << 64) when a record is contracted to be recorded",
-        "size": 16,
+        "size": 8,
         "type": "AOTime"
     },
     {
         "acry": "AO_TIME_RECORDED",
         "code": -37,
         "desc": "UTC time (secs since epoch << 64) when a record was made",
-        "size": 16,
+        "size": 8,
         "type": "AOTime"
     },
     {
         "acry": "AO_TIME_DIFF",
         "code": 35,
         "desc": "UTC time (secs since epoch << 64) defining a time interval, or difference",
-        "size": 16,
+        "size": 8,
         "type": "AOTime"
     },
     {
         "acry": "AO_UNDERWRITING_EXPIRATION",
         "code": 36,
         "desc": "UTC time (secs since epoch << 64) when underwriting shares are bound until",
-        "size": 16,
+        "size": 8,
         "type": "AOTime"
     },
     {
@@ -476,7 +476,7 @@
         "code": 400,
         "desc": "Minimuim block interval time",
         "gbcr": "f64.64",
-        "size": 16,
+        "size": 8,
         "type": "AOTime"
     },
     {
