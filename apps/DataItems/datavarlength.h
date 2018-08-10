@@ -29,13 +29,13 @@ class DataVarLength : public DataItem
 {
     Q_OBJECT
 public:
-          explicit  DataVarLength( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
+          explicit  DataVarLength( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
                       : DataItem( tc, p ) {}
-                    DataVarLength( const QByteArray &iba, typeCode_t tc, QObject *p = NULL )
+                    DataVarLength( const QByteArray &iba, typeCode_t tc, QObject *p = nullptr )
                       : DataItem( tc, p ), ba( iba ) {}
-                    DataVarLength( const DataVarLength &d, QObject *p = NULL )
+                    DataVarLength( const DataVarLength &d, QObject *p = nullptr )
                       : DataItem( d.typeCode, p ? p : d.parent() ), ba( d.ba ) {}
-                    DataVarLength( const DataItemBA &di, QObject *p = NULL );
+                    DataVarLength( const DataItemBA &di, QObject *p = nullptr );
 virtual DataItemBA  toDataItem( bool cf = false ) const;
       virtual void  operator =  ( const DataItemBA &di );
               void  operator =  ( const DataVarLength &d ) { ba = d.ba; typeCode = d.typeCode; }

@@ -10,11 +10,11 @@ class KeyAsset : public GenericCollection
 {
     Q_OBJECT
 public:
-                KeyAsset( QObject *p = NULL )
+                KeyAsset( QObject *p = nullptr )
                   : GenericCollection( AO_KEY_ASSET, p ) {}
-                KeyAsset( const DataItemBA &di, QObject *p = NULL )
+                KeyAsset( const DataItemBA &di, QObject *p = nullptr )
                   : GenericCollection( di, p ) {}
-                KeyAsset( const KeyAsset &ka, QObject *p = NULL )
+                KeyAsset( const KeyAsset &ka, QObject *p = nullptr )
                   : GenericCollection( ka, p ? p : ka.parent() ) {}
           void  operator = ( const DataItemBA &di )
                   { GenericCollection::operator = ( di ); }

@@ -35,18 +35,18 @@ class PubKey : public DataItem
 {
     Q_OBJECT
 public:
-              PubKey( QObject *p = NULL )
+              PubKey( QObject *p = nullptr )
                 : DataItem( AO_UNDEFINED_DATAITEM, p ) {}
-              PubKey( typeCode_t tc, QObject *p = NULL );
-              PubKey( const DataItemBA &di, QObject *p = NULL );
-              PubKey( const PubKey &pk, QObject *p = NULL );
-              PubKey( PublicKeyEcdsa *pkp, QObject *p = NULL )
+              PubKey( typeCode_t tc, QObject *p = nullptr );
+              PubKey( const DataItemBA &di, QObject *p = nullptr );
+              PubKey( const PubKey &pk, QObject *p = nullptr );
+              PubKey( PublicKeyEcdsa *pkp, QObject *p = nullptr )
                 : DataItem( AO_ECDSA_PUB_KEY4 , p ? p : pkp->parent() )
                 { publicKeyEcdsa   = pkp; publicKeyEcdsa  ->setParent( this ); }
-              PubKey( PublicKeyRsa3072 *pkp, QObject *p = NULL )
+              PubKey( PublicKeyRsa3072 *pkp, QObject *p = nullptr )
                 : DataItem( AO_RSA3072_PUB_KEY, p ? p : pkp->parent() )
                 { publicKeyRsa3072 = pkp; publicKeyRsa3072->setParent( this ); }
-              PubKey( DataVbc64 *pkp, QObject *p = NULL )
+              PubKey( DataVbc64 *pkp, QObject *p = nullptr )
                 : DataItem( AO_ID_SEQ_NUM     , p ? p : pkp->parent() )
                 { publicKeyIndex   = pkp; publicKeyIndex  ->setParent( this ); }
         void  operator = ( const PubKey &k )
@@ -67,9 +67,9 @@ QPointer<       DataVbc64> publicKeyIndex;  // AO_ID_SEQ_NUM index number of a p
 QPointer<  PublicKeyEcdsa> publicKeyEcdsa;
 QPointer<PublicKeyRsa3072> publicKeyRsa3072;
 
-//       DataVbc64 *publicKeyIndex = NULL;  // AO_ID_SEQ_NUM index number of a public key on the blockchain
-//  PublicKeyEcdsa *publicKeyEcdsa = NULL;
-//PublicKeyRsa3072 *publicKeyRsa3072 = NULL;
+//       DataVbc64 *publicKeyIndex = nullptr;  // AO_ID_SEQ_NUM index number of a public key on the blockchain
+//  PublicKeyEcdsa *publicKeyEcdsa = nullptr;
+//PublicKeyRsa3072 *publicKeyRsa3072 = nullptr;
 };
 
 #endif // PUBKEY_H

@@ -35,17 +35,17 @@ class PriKey : public DataItem
 {
     Q_OBJECT
 public:
-              PriKey( QObject *p = NULL )
+              PriKey( QObject *p = nullptr )
                 : DataItem( AO_UNDEFINED_DATAITEM, p ) {}
-              PriKey( typeCode_t tc, QObject *p = NULL );
-              PriKey( typeCode_t tc, const QByteArray &kd, QObject *p = NULL )
+              PriKey( typeCode_t tc, QObject *p = nullptr );
+              PriKey( typeCode_t tc, const QByteArray &kd, QObject *p = nullptr )
                 : DataItem( tc, p ) { set(kd); }
-              PriKey( const DataItemBA &di, QObject *p = NULL );
-              PriKey( const PriKey &pk, QObject *p = NULL );
-              PriKey( PrivateKeyEcdsa *pkp, QObject *p = NULL )
+              PriKey( const DataItemBA &di, QObject *p = nullptr );
+              PriKey( const PriKey &pk, QObject *p = nullptr );
+              PriKey( PrivateKeyEcdsa *pkp, QObject *p = nullptr )
                 : DataItem( AO_ECDSA_PRI_KEY, p ? p : pkp->parent() )
                 { priKeyEcdsa = pkp; if ( priKeyEcdsa ) priKeyEcdsa->setParent( this ); }
-              PriKey( PrivateKeyRsa3072 *pkp, QObject *p = NULL )
+              PriKey( PrivateKeyRsa3072 *pkp, QObject *p = nullptr )
                 : DataItem( AO_RSA3072_PRI_KEY, p ? p : pkp->parent() )
                 { priKeyRsa3072 = pkp; if ( priKeyRsa3072 ) priKeyRsa3072->setParent( this ); }
         void  operator = ( const PriKey &k )

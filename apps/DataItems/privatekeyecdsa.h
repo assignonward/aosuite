@@ -29,13 +29,13 @@ class PrivateKeyEcdsa : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  PrivateKeyEcdsa( QObject *p = NULL )
+    explicit  PrivateKeyEcdsa( QObject *p = nullptr )
                 : DataVarLength( AO_ECDSA_PRI_KEY, p ) {}
-              PrivateKeyEcdsa( const PrivateKeyEcdsa &k, QObject *p = NULL )
+              PrivateKeyEcdsa( const PrivateKeyEcdsa &k, QObject *p = nullptr )
                 : DataVarLength( k.ba, AO_ECDSA_PRI_KEY, p ? p : k.parent() ) {}
-              PrivateKeyEcdsa( const DataItemBA &di, QObject *p = NULL )
+              PrivateKeyEcdsa( const DataItemBA &di, QObject *p = nullptr )
                 : DataVarLength( di, p ) {}
-              PrivateKeyEcdsa( const QByteArray &iba, QObject *p = NULL )
+              PrivateKeyEcdsa( const QByteArray &iba, QObject *p = nullptr )
                 : DataVarLength( iba, AO_ECDSA_PRI_KEY, p ) {}
         void  clear() { ba.clear(); }
         bool  isValid() const { return true; } // TODO: really check

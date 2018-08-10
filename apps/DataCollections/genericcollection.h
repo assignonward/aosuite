@@ -37,14 +37,14 @@ class GenericCollection : public DataItem
 {
     Q_OBJECT
 public:
-                GenericCollection( QObject *p = NULL )
+                GenericCollection( QObject *p = nullptr )
                   : DataItem( AO_UNDEFINED_DATAITEM, p ) {}
-                GenericCollection( typeCode_t tc, QObject *p = NULL )
+                GenericCollection( typeCode_t tc, QObject *p = nullptr )
                   : DataItem( tc, p ) {} // Empty collection, of a specified type
                 GenericCollection( const GenericCollection &r, QObject *p )
                   : DataItem( r.typeCode, p ? p : r.parent() ),
                     itemMM( r.itemMM ) {} // Copy constructor, with optional parent change
-                GenericCollection( const DataItemBA &di, QObject *p = NULL );
+                GenericCollection( const DataItemBA &di, QObject *p = nullptr );
           void  deleteItemsLater();
    DataItemMap  mmap() { return itemMM; }
            int  size() { return itemMM.size(); }

@@ -137,7 +137,7 @@ bool Hash::verify( QByteArray text )
  * @brief Hash::isValid
  * @return true if the hash has the correct length of data
  */
-bool Hash::isValid()
+bool Hash::isValid() const
 { switch ( typeCode )
     { case AO_HASH256:
         return hash256.isValid();

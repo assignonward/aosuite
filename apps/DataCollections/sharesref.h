@@ -47,8 +47,8 @@ class SharesRef : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  SharesRef( const DataItemBA &di = QByteArray(), QObject *p = NULL );
-              SharesRef( const SharesRef &r, QObject *p = NULL )
+    explicit  SharesRef( const DataItemBA &di = QByteArray(), QObject *p = nullptr );
+              SharesRef( const SharesRef &r, QObject *p = nullptr )
                 : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), seqNum( r.seqNum ),
                   shareState( r.shareState ), lockExp( r.lockExp ), assignRef( r.assignRef ) {}

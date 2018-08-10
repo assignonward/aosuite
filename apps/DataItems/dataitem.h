@@ -38,17 +38,17 @@ class DataItem : public QObject, public VarSizeCode
 {
     Q_OBJECT
 public:
-           explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
+           explicit  DataItem( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
                        : QObject(p), typeCode( tc ) {}
-                     DataItem( const DataItem &i, QObject *p = NULL )
+                     DataItem( const DataItem &i, QObject *p = nullptr )
                        : QObject(p ? p : i.parent()), typeCode( i.typeCode ) {}
                void  operator = ( const DataItem &i )
                        { typeCode = i.typeCode; }
        virtual void  operator = ( const DataItemBA &di ) { typeCode = typeCodeOf(di); }
              qint32  typeSize( typeCode_t tc = AO_UNDEFINED_DATAITEM ) const;
              qint32  typeSize( const DataItemBA &di ) const;
-  static   DataItem *fromDataItem( const DataItemBA &di, QObject *p = NULL );
-  static   DataItem *fromDataItem( const DataItem   *di, QObject *p = NULL );
+  static   DataItem *fromDataItem( const DataItemBA &di, QObject *p = nullptr );
+  static   DataItem *fromDataItem( const DataItem   *di, QObject *p = nullptr );
   static     qint32  typeSizeTable( typeCode_t tc );
   static typeCode_t  typeCodeOf( const DataItemBA &di );
   static       bool  typeCodeIsSeparable( typeCode_t tc );

@@ -29,9 +29,9 @@ class NetAddress : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  NetAddress( QByteArray ba = QByteArray(), QObject *p = NULL )
+    explicit  NetAddress( QByteArray ba = QByteArray(), QObject *p = nullptr )
                 : DataVarLength( ba, AO_NETADDRESS, p ) {}
-              NetAddress( const NetAddress &n, QObject *p = NULL )
+              NetAddress( const NetAddress &n, QObject *p = nullptr )
                 : DataVarLength( n.ba, AO_NETADDRESS, p ? p : n.parent() ) {}
       qint32  size() { return ba.size(); }
         void  operator = ( const QByteArray &di ) { DataVarLength::operator = ( di ); }

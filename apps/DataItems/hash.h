@@ -37,9 +37,9 @@ class Hash : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  Hash( typeCode_t tc = AO_HASH256, QObject *p = NULL );
-              Hash( const DataItemBA &di, QObject *p = NULL );
-              Hash( const Hash &d, QObject *p = NULL )
+    explicit  Hash( typeCode_t tc = AO_HASH256, QObject *p = nullptr );
+              Hash( const DataItemBA &di, QObject *p = nullptr );
+              Hash( const Hash &d, QObject *p = nullptr )
                 : DataItem( d.typeCode, p ? p : d.parent() ),
                   hash256( d.hash256 ),
                   hash512( d.hash512 ),
@@ -52,7 +52,7 @@ public:
   DataItemBA  toDataItem( bool cf = false ) const;
         Hash &calculate( QByteArray text );
         bool  verify( QByteArray text );
-        bool  isValid();
+        bool  isValid() const;
         bool  isVerified();
 
 private:

@@ -33,14 +33,14 @@ class AOCoins : public Data128
 {
     Q_OBJECT
 public:
-       explicit  AOCoins( __int128 c = 0, typeCode_t typ = AO_N_COINS, QObject *p = NULL )
+       explicit  AOCoins( __int128 c = 0, typeCode_t typ = AO_N_COINS, QObject *p = nullptr )
                    : Data128( c, typ, p ) {}
-                 AOCoins( __int128 c, QObject *p = NULL )
+                 AOCoins( __int128 c, QObject *p = nullptr )
                    : Data128( c, AO_N_COINS, p ) {}
-                 AOCoins( const DataItemBA &di, QObject *p = NULL )
+                 AOCoins( const DataItemBA &di, QObject *p = nullptr )
                    : Data128( di, p ) {}
-                 AOCoins( const AOCoins &c, QObject *p = NULL )
-                   : Data128( c.typeCode, c.get(), p ? p : c.parent() ) {}
+                 AOCoins( const AOCoins &c, QObject *p = nullptr )
+                   : Data128( c.get(), c.typeCode, p ? p : c.parent() ) {}
            void  operator = ( const DataItemBA &di ) { Data128::operator = ( di ); }
 
 static __int128  shiftUp64( __int128 m ) { return m << 64; }

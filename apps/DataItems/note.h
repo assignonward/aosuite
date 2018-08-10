@@ -32,9 +32,9 @@ class Note : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  Note( QByteArray ba = QByteArray(), QObject *p = NULL )
+    explicit  Note( QByteArray ba = QByteArray(), QObject *p = nullptr )
                 : DataVarLength( ba, AO_NOTE, p ) {}
-              Note( const Note &n, QObject *p = NULL )
+              Note( const Note &n, QObject *p = nullptr )
                 : DataVarLength( n.ba, AO_NOTE, p ? p : n.parent() ) {}
         void  setNote( const QString &s ) { ba = s.toUtf8(); }
      QString  getNote() { return QString::fromUtf8( ba ); }

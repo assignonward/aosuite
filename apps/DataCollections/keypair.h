@@ -36,16 +36,16 @@ class KeyPair : public GenericCollection
 {
     Q_OBJECT
 public:
-                KeyPair( QObject *p = NULL )
+                KeyPair( QObject *p = nullptr )
                   : GenericCollection( AO_KEYPAIR, p ) {}
-                KeyPair( const DataItemBA &di, QObject *p = NULL );
-                KeyPair( const KeyPair &k, QObject *p = NULL )
+                KeyPair( const DataItemBA &di, QObject *p = nullptr );
+                KeyPair( const KeyPair &k, QObject *p = nullptr )
                   : GenericCollection( AO_KEYPAIR, p ? p : k.parent() ),
                     pubKey( k.pubKey ), priKey( k.priKey )
                     { insert( pubKey );
                       insert( priKey );
                     }
-                KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p = NULL );
+                KeyPair( PriKey *priKp, PubKey *pubKp, QObject *p = nullptr );
           void  operator = ( const DataItemBA &di );
           bool  isValid() { return pubKey->isValid() && priKey->isValid(); } // TODO: ensure they match
         PubKey *getPubKey() { return pubKey; }

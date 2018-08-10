@@ -36,11 +36,11 @@ class BlockRef : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  BlockRef( DataItemBA di = DataItemBA(), QObject *p = NULL );
-              BlockRef( const BlockRef &r, QObject *p = NULL )
+    explicit  BlockRef( DataItemBA di = DataItemBA(), QObject *p = nullptr );
+              BlockRef( const BlockRef &r, QObject *p = nullptr )
                 : DataVarLength( QByteArray(), AO_BLOCK_REF, p ? p : r.parent() ),
                   propTime( r.propTime ), shOut( r.shOut ), blkHash( r.blkHash ), genesis( r.genesis ) {}
-              BlockRef( const Hash &h, const AOTime t, const Shares &s, const GenesisRef &r, QObject *p = NULL )
+              BlockRef( const Hash &h, const AOTime t, const Shares &s, const GenesisRef &r, QObject *p = nullptr )
                 : DataVarLength( QByteArray(), AO_BLOCK_REF, p ),
                   propTime( t ), shOut( s ), blkHash( h ), genesis( r ) {}
         void  operator = ( const DataItemBA &di );
@@ -53,7 +53,7 @@ public:
         void  setShOut( const Shares &s )       {    shOut = s; typeCode = AO_SHARES_OUT; }
         void  setGenesis( const GenesisRef &r ) {  genesis = r; }
   DataItemBA  toDataItem( bool cf = false );
-        bool  isValid() { return propTime.past() && blkHash.isValid() && genesis.isValid(); }
+        bool  isValid() const { return propTime.past() && blkHash.isValid() && genesis.isValid(); }
 
 private:
       AOTime  propTime;  // time this block was proposed (should fit it into a specific time-layer)

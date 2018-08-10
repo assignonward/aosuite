@@ -37,8 +37,8 @@ class AssignRef : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  AssignRef( const DataItemBA &di = DataItemBA(), QObject *p = NULL );
-              AssignRef( const AssignRef &r, QObject *p = NULL )
+    explicit  AssignRef( const DataItemBA &di = DataItemBA(), QObject *p = nullptr );
+              AssignRef( const AssignRef &r, QObject *p = nullptr )
                 : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ),
                   page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
         void  operator = ( const DataItemBA &di );
@@ -47,7 +47,7 @@ public:
 
 private:
      PageRef  page;    // page these shares are recorded on
-DataVbc64  seqNum;  // share assignment sequence number in the page
+   DataVbc64  seqNum;  // share assignment sequence number in the page
       PubKey  key;     // Id (public key) of shares
         Hash  keyHash; // Id (hashed public key) of shares
       Shares  amount;  // amount of shares assigned

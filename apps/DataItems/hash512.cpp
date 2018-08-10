@@ -65,5 +65,5 @@ bool Hash512::verify( QByteArray text )
  * @brief Hash512::isValid
  * @return true if the data is the correct size
  */
-bool Hash512::isValid()
+bool Hash512::isValid() const
 { return ((ba.size() == 64) && ( typeCode == AO_HASH512 )); }

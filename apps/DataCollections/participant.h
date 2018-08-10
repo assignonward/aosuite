@@ -39,10 +39,10 @@ class Participant : public GenericCollection
 {
     Q_OBJECT
 public:
-              Participant( QObject *p = NULL )
+              Participant( QObject *p = nullptr )
                 : GenericCollection( AO_PARTICIPANT, p ) {}
-              Participant( DataItemBA di, QObject *p = NULL );
-              Participant( const Participant &r, QObject *p = NULL )
+              Participant( DataItemBA di, QObject *p = nullptr );
+              Participant( const Participant &r, QObject *p = nullptr )
                 : GenericCollection( AO_PARTICIPANT, p ? p : r.parent() ),
                   amount( r.amount ), key( r.key ), page( r.page ), note( r.note ), index( r.index ) {}
         void  operator = ( const DataItemBA &di );

@@ -69,5 +69,5 @@ bool Hash256::verify( QByteArray text )
  * @brief Hash256::isValid
  * @return true if the data is the correct size
  */
-bool Hash256::isValid()
+bool Hash256::isValid() const
 { return ((ba.size() == 32) && ( typeCode == AO_HASH256 )); }

@@ -66,5 +66,5 @@ bool Hash224Salt32::verify( QByteArray text )
  * @brief Hash224Salt32::isValid
  * @return true if the data is the correct size
  */
-bool Hash224Salt32::isValid()
+bool Hash224Salt32::isValid() const
 { return (( ba.size() == 32 ) && ( typeCode == AO_HASH224SALT32 )); }

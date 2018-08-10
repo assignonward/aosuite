@@ -51,8 +51,8 @@ public:
 static   qint64  now();
          qint64  get() const { return v; }
            void  set( qint64 m ) { v = m; }
-           bool  future();
-           bool  past();
+           bool  future() const;
+           bool  past() const;
 };
 
 #endif // AOTIME_H

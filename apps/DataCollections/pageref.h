@@ -37,15 +37,15 @@ class PageRef : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  PageRef( QObject *p = NULL )
+    explicit  PageRef( QObject *p = nullptr )
                 : DataVarLength( QByteArray(), AO_PAGE_REF, p ), sequenceNumber( -1 ) {}
-              PageRef( const PageRef &r, QObject *p = NULL )
+              PageRef( const PageRef &r, QObject *p = nullptr )
                 : DataVarLength( r.ba, r.typeCode, p ? p : r.parent() ), block( r.block ), sequenceNumber( r.sequenceNumber ), hash( r.hash ) {}
-              PageRef( const DataItemBA &di, QObject *p = NULL );
+              PageRef( const DataItemBA &di, QObject *p = nullptr );
         void  operator = ( const DataItemBA &di );
       AOTime  publicationTime() { return block.getTime(); }
   DataItemBA  toDataItem( bool cf = false );
-        bool  isValid() { return block.isValid(); }
+        bool  isValid() const { return block.isValid(); }
 
 private:
     BlockRef block;           // block this page is recorded in

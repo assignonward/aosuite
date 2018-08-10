@@ -79,7 +79,7 @@ void PageRef::operator = ( const DataItemBA &di )
 
 DataItemBA  PageRef::toDataItem( bool cf )
 { QByteArrayList dil;
-  dil.append(            block.toDataItem(cf) );
+  dil.append( block.toDataItem(cf) );
   if ( sequenceNumber >= 0 )
     { sequenceNumber.setTypeCode( AO_INDEX );
       dil.append( sequenceNumber.toDataItem(cf) );

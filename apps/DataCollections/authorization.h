@@ -42,10 +42,10 @@ class Authorization : public DataVarLength
 {
     Q_OBJECT
 public:
-             Authorization( QObject *p = NULL )
+             Authorization( QObject *p = nullptr )
                : DataVarLength( AO_AUTHORIZATION, p ) {}
-             Authorization( const DataItemBA &di, QObject *p = NULL );
-             Authorization( const Authorization &a, QObject *p = NULL )
+             Authorization( const DataItemBA &di, QObject *p = nullptr );
+             Authorization( const Authorization &a, QObject *p = nullptr )
                : DataVarLength( AO_AUTHORIZATION, p ? p : a.parent() ),
                  assignment( a.assignment ), sigs( a.sigs ) {}
        void  operator = ( const DataItemBA &di );

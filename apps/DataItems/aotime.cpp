@@ -44,12 +44,12 @@ qint64 AOTime::now()
  * @brief AOTime::future
  * @return true if t is in the future
  */
-bool AOTime::future()
+bool AOTime::future() const
 { return ( v > now() ); }
 
 /**
  * @brief AOTime::past
  * @return true if t is in the past
  */
-bool AOTime::past()
+bool AOTime::past() const
 { return ( v < now() ); }

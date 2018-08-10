@@ -29,13 +29,13 @@ class PrivateKeyRsa3072 : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  PrivateKeyRsa3072( QObject *p = NULL )
+    explicit  PrivateKeyRsa3072( QObject *p = nullptr )
                 : DataVarLength( AO_RSA3072_PRI_KEY, p ) {}
-              PrivateKeyRsa3072( const PrivateKeyRsa3072 &k, QObject *p = NULL )
+              PrivateKeyRsa3072( const PrivateKeyRsa3072 &k, QObject *p = nullptr )
                 : DataVarLength( k.ba, AO_RSA3072_PRI_KEY, p ? p : k.parent() ) {}
-              PrivateKeyRsa3072( const DataItemBA &di, QObject *p = NULL )
+              PrivateKeyRsa3072( const DataItemBA &di, QObject *p = nullptr )
                 : DataVarLength( di, p ) {}
-              PrivateKeyRsa3072( const QByteArray &iba, QObject *p = NULL )
+              PrivateKeyRsa3072( const QByteArray &iba, QObject *p = nullptr )
                 : DataVarLength( iba, AO_RSA3072_PRI_KEY, p ) {}
         void  clear() { ba.clear(); }
         bool  isValid() const { return true; }  // TODO: really check

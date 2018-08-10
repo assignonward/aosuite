@@ -44,10 +44,10 @@ class Assignment : public DataVarLength
 {
     Q_OBJECT
 public:
-              Assignment( QObject *p = NULL )
+              Assignment( QObject *p = nullptr )
                   : DataVarLength( AO_ASSIGNMENT, p ) {}
-              Assignment( const DataItemBA &di, QObject *p = NULL );
-              Assignment( const Assignment &a, QObject *p = NULL )
+              Assignment( const DataItemBA &di, QObject *p = nullptr );
+              Assignment( const Assignment &a, QObject *p = nullptr )
                 : DataVarLength( AO_ASSIGNMENT, p ? p : a.parent() ), proposedChain( a.proposedChain ),
                   recordingDeadline( a.recordingDeadline ), recordingBid( a.recordingBid ), note( a.note ),
                   participants( a.participants ) {}

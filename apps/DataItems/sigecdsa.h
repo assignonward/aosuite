@@ -29,11 +29,11 @@ class SigEcdsa : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  SigEcdsa( QObject *p = NULL )
+    explicit  SigEcdsa( QObject *p = nullptr )
                 : DataVarLength( AO_ECDSA_SIG, p ) {}
-              SigEcdsa( const SigEcdsa &s, QObject *p = NULL )
+              SigEcdsa( const SigEcdsa &s, QObject *p = nullptr )
                 : DataVarLength( s.ba, AO_ECDSA_SIG, p ? p : s.parent() ) {}
-              SigEcdsa( const DataItemBA &di, QObject *p = NULL )
+              SigEcdsa( const DataItemBA &di, QObject *p = nullptr )
                 : DataVarLength( di, p ) {}
   QByteArray  get() const { return ba; }
         void  set( QByteArray s ) { ba = s; }

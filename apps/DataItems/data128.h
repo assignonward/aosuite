@@ -33,11 +33,11 @@ class Data128 : public DataItem
 {
     Q_OBJECT
 public:
-    explicit  Data128( __int128 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL )
+    explicit  Data128( __int128 d = 0, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
                 : DataItem( tc, p ), v( d ) {}
-              Data128( const Data128 &d, QObject *p = NULL )
+              Data128( const Data128 &d, QObject *p = nullptr )
                 : DataItem( d.typeCode, p ? p : d.parent() ), v( d.v ) {}
-              Data128( const DataItemBA &di, QObject *p = NULL );
+              Data128( const DataItemBA &di, QObject *p = nullptr );
     __int128  value() { return v; }
   DataItemBA  toDataItem( bool cf = false ) const;
 virtual void  operator = ( const DataItemBA &di );

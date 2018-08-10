@@ -50,9 +50,9 @@ class Signature : public DataVarLength
 {
     Q_OBJECT
 public:
-    explicit  Signature( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = NULL );
-              Signature( const DataItemBA &di, QObject *p = NULL );
-              Signature( const Signature &s, QObject *p = NULL );
+    explicit  Signature( typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr );
+              Signature( const DataItemBA &di, QObject *p = nullptr );
+              Signature( const Signature &s, QObject *p = nullptr );
         void  operator = ( const Signature &s )
                 { sigType    = s.sigType;
                   sigEcdsa   = s.sigEcdsa;

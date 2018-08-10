@@ -29,14 +29,14 @@ class Hash512 : public DataFixedLength
 {
     Q_OBJECT
 public:
-    explicit  Hash512( QByteArray text = QByteArray(), QObject *p = NULL );
+    explicit  Hash512( QByteArray text = QByteArray(), QObject *p = nullptr );
               Hash512( const DataItemBA &di, QObject *p )
                 : DataFixedLength( di, p ), verified( false ) {}
-              Hash512( const Hash512 &h, QObject *p = NULL )
+              Hash512( const Hash512 &h, QObject *p = nullptr )
                 : DataFixedLength( AO_HASH512, h.ba, p ? p : h.parent() ), verified( false ) { /* if ( h.typeCode != AO_HASH512 ) TODO: log error */ }
      Hash512 &calculate( QByteArray text );
         bool  verify( QByteArray text );
-        bool  isValid();
+        bool  isValid() const;
         bool  isVerified() { return verified; }
 
 private:
