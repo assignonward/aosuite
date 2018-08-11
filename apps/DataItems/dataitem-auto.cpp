@@ -106,8 +106,6 @@ DataItem *DataItem::fromDataItem( const DataItemBA &di, QObject *p )
   return new DataItem( AO_UNDEFINED_DATAITEM, p );
 }
 
-// https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used
-
 DataItem *DataItem::fromDataItem( const DataItem *ditm, QObject *p )
 { switch ( ditm->typeCode )
   { 
@@ -216,7 +214,6 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
       case AO_UNDERWRITING_AMT:        return 16;
       case AO_RECORDING_BID:           return 16;
       case AO_SHARES_OUT:              return 16;
-      case AO_N_COINS:                 return 16;
       case AO_RSA3072_PUB_KEY:         return 384;
       case AO_RSA3072_SIG:             return 384;
       case GB_PROTOCOL:                return -2;

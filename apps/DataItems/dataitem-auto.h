@@ -23,7 +23,7 @@
 #define AO_UNDERWRITING_AMT            38 // (4c+16) Shares: 128 bit signed integer number of shares committed as underwriting
 #define AO_RECORDING_BID              -43 // (57+16) Shares: 128 bit signed integer number of shares bid for recording
 #define AO_SHARES_OUT                  40 // (50+16) Shares: 128 bit signed integer number of shares outstanding (recorded on blocks)
-#define AO_N_COINS                     44 // (58+16) AOCoins: Number of coins, as a fixed point 64.64 bit number
+#define AO_N_COINS                     44 // (58+var) AOCoins: Number of coins, as a precise rational fraction
 #define AO_RSA3072_PUB_KEY             61 // (7a+384) PublicKeyRsa3072: an RSA3072 public key
 #define AO_RSA3072_SIG                 62 // (7c+384) SigRsa3072: an RSA3072 signature
 #define AO_ECDSA_SIG                   63 // (7e+var) SigEcdsa: An ECDSA signature

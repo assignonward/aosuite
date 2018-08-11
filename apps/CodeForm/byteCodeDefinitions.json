@@ -177,8 +177,8 @@
     {
         "acry": "AO_N_COINS",
         "code": 44,
-        "desc": "Number of coins, as a fixed point 64.64 bit number",
-        "size": 16,
+        "desc": "Number of coins, as a precise rational fraction",
+        "size": -1,
         "type": "AOCoins"
     },
     {
