@@ -484,7 +484,7 @@
         "code": 464,
         "desc": "Number of coins that the sum of all shares outstanding represents",
         "gbcr": "Pow2",
-        "size": 16,
+        "size": -1,
         "type": "AOCoins"
     },
     {
@@ -492,7 +492,7 @@
         "code": 528,
         "desc": "Recording Tax in coins per byte (usually a very small number)",
         "gbcr": "Pow2",
-        "size": 16,
+        "size": -1,
         "type": "AOCoins"
     },
     {

@@ -220,8 +220,6 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
       case GB_PROTOCOL_REV:            return -2;
       case GB_STARTING_SHARES:         return 16;
       case GB_MIN_BLOCK_INT:           return 8;
-      case GB_N_COINS_TOTAL:           return 16;
-      case GB_RECORDING_TAX:           return 16;
       case AO_UNDEFINED_DATAITEM:      return 0;
   }
   return -1;

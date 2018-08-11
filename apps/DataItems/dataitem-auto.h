@@ -63,6 +63,6 @@
 #define GB_IMAGE                     1168 // <a012+var> DataByteArray:separable Large format image to represent the chain
 #define GB_STARTING_SHARES            336 // (a005+16) Shares: Starting number of shares
 #define GB_MIN_BLOCK_INT              400 // (a006+8) AOTime: Minimuim block interval time
-#define GB_N_COINS_TOTAL              464 // (a007+16) AOCoins: Number of coins that the sum of all shares outstanding represents
-#define GB_RECORDING_TAX              528 // (a008+16) AOCoins: Recording Tax in coins per byte (usually a very small number)
+#define GB_N_COINS_TOTAL              464 // (a007+var) AOCoins: Number of coins that the sum of all shares outstanding represents
+#define GB_RECORDING_TAX              528 // (a008+var) AOCoins: Recording Tax in coins per byte (usually a very small number)
 #define AO_UNDEFINED_DATAITEM      977775 // (dead77+0) DataItem: An undefined data item, usually an error
