@@ -22,29 +22,25 @@
  */
 // Assign Onward
 //
-// A quantity of coins, as a rational number
+// DataMpq is the base class for objects which are basically a rational number
+//
+#ifndef DATAMPQ_H
+#define DATAMPQ_H
 
-#ifndef AOCOINS_H
-#define AOCOINS_H
+#include "dataitem.h"
+#include <gmpxx.h>
 
-#include "datampq.h"
-
-class AOCoins : public DataMpq
+class DataMpq : public DataItem
 {
-    Q_OBJECT
 public:
-       explicit  AOCoins( const mpq_class &c, typeCode_t typ = AO_N_COINS, QObject *p = nullptr )
-                   : DataMpq( c, typ, p ) {}
-                 AOCoins( const mpq_class &c, QObject *p = nullptr )
-                   : DataMpq( c, AO_N_COINS, p ) {}
-                 AOCoins( const DataItemBA &di, QObject *p = nullptr )
-                   : DataMpq( di, p ) {}
-                 AOCoins( const AOCoins &c, QObject *p = nullptr )
-                   : DataMpq( c.get(), c.typeCode, p ? p : c.parent() ) {}
-           void  operator = ( const DataItemBA &di ) { DataMpq::operator = ( di ); }
+    explicit  DataMpq( const mpq_class &d, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
+                : DataItem( tc, p ), v( d ) {}
+              DataMpq( const DataItemBA &di, QObject *p = nullptr );
+   mpq_class &value() { return v; }
+  DataItemBA  toDataItem( bool cf = false ) const;
 
-      mpq_class  get() const { return v; }
-           void  set( const mpq_class &c ) { v = c; }
+protected:
+  mpq_class v;
 };
 
-#endif // AOCOINS_H
+#endif // DATAMPQ_H

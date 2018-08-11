@@ -51,7 +51,8 @@ SOURCES     += $${PWD}/aocoins.cpp           \
                $${PWD}/sigecdsa.cpp          \
                $${PWD}/sigrsa3072.cpp        \
                $${PWD}/varsizecode.cpp       \
-               $${PWD}/dataitemba.cpp
+               $${PWD}/dataitemba.cpp \
+    $$PWD/datampq.cpp
 
 HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/aotime.h            \
@@ -80,4 +81,5 @@ HEADERS     += $${PWD}/aocoins.h           \
                $${PWD}/sigecdsa.h          \
                $${PWD}/sigrsa3072.h        \
                $${PWD}/varsizecode.h       \
-               $${PWD}/dataitemba.h
+               $${PWD}/dataitemba.h \
+    $$PWD/datampq.h

@@ -20,31 +20,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-// Assign Onward
-//
-// A quantity of coins, as a rational number
-
-#ifndef AOCOINS_H
-#define AOCOINS_H
-
 #include "datampq.h"
+#include <QByteArray>
 
-class AOCoins : public DataMpq
+#define MPQ_SERBASE 10
+/**
+ * @brief DataMpq::DataMpq
+ * @param di - data item byte array to construct this value from
+ * @param p - parent, if any
+ */
+DataMpq::DataMpq( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 {
-    Q_OBJECT
-public:
-       explicit  AOCoins( const mpq_class &c, typeCode_t typ = AO_N_COINS, QObject *p = nullptr )
-                   : DataMpq( c, typ, p ) {}
-                 AOCoins( const mpq_class &c, QObject *p = nullptr )
-                   : DataMpq( c, AO_N_COINS, p ) {}
-                 AOCoins( const DataItemBA &di, QObject *p = nullptr )
-                   : DataMpq( di, p ) {}
-                 AOCoins( const AOCoins &c, QObject *p = nullptr )
-                   : DataMpq( c.get(), c.typeCode, p ? p : c.parent() ) {}
-           void  operator = ( const DataItemBA &di ) { DataMpq::operator = ( di ); }
+  qint32 tcSz = 0;
+  typeCode = bytesToCode( di, tcSz );
+  if ( di.size() < tcSz+4 )
+    { // TODO: log an exception
+      return;
+    }
+  qint32 lenSz = 0;
+  qint64 len = bytesToCode( di.mid( tcSz ), lenSz );
+  if ( di.size() < tcSz+lenSz+len )
+    { // TODO: log an exception
+      return;
+    }
+  std::string str(di.mid( tcSz+lenSz ).constData(), static_cast<unsigned long>(len) );
+  v.set_str( str, MPQ_SERBASE );
+}
 
-      mpq_class  get() const { return v; }
-           void  set( const mpq_class &c ) { v = c; }
-};
-
-#endif // AOCOINS_H
+/**
+ * @brief DataMpq::toDataItem
+ * @param cf - chain/compact form?  ignored.
+ * @return serialized rational number
+ */
+DataItemBA DataMpq::toDataItem( bool cf ) const
+{ QByteArray di; (void)cf;
+  di.append( codeToBytes( typeCode ) );
+  std::string txt = v.get_str( MPQ_SERBASE );
+  int len = static_cast<int>(txt.length());
+  di.append( codeToBytes( len ) );
+  di.append( QByteArray(txt.c_str(), len) );
+  return di;
+}

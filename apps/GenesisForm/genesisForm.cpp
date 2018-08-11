@@ -141,10 +141,12 @@ GenericCollection *GenesisForm::calculateGenesisBlock()
   gb->insert( new Shares   ( tv, GB_STARTING_SHARES, gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
   gb->insert( new AOTime   ( tv, GB_MIN_BLOCK_INT  , gb ) );
-  tv = 1; tv = tv << (ui->totalCoins->value() + 64);
-  gb->insert( new AOCoins  ( tv, GB_N_COINS_TOTAL  , gb ) );
-  tv = 1; tv = tv << (ui->recordingTax->value() + 64);
-  gb->insert( new AOCoins  ( tv, GB_RECORDING_TAX  , gb ) );
+  mpq_class tc( pow( 2, ui->totalCoins->value() ) );
+  // qDebug( "Total Coins %s", tc.get_str().c_str() );
+  gb->insert( new AOCoins  ( tc, GB_N_COINS_TOTAL  , gb ) );
+  mpq_class rt( pow( 2, ui->recordingTax->value() ) );
+  // qDebug( "Recording Tax %s", rt.get_str().c_str() );
+  gb->insert( new AOCoins  ( rt, GB_RECORDING_TAX  , gb ) );
   gb->insert( new DataVbc64( 0, CB_FIRST_ID_SEQ_NUM, gb ) );
   gb->insert( new DataVbc64( 1, CB_N_ID_SEQ_NUM    , gb ) );
 
