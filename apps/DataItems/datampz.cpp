@@ -20,16 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "datampq.h"
+#include "datampz.h"
 #include <QByteArray>
 // TODO: store as bytes (base 256) instead of base 10 strings
-#define MPQ_SERBASE 10
+#define MPZ_SERBASE 10
 /**
- * @brief DataMpq::DataMpq
+ * @brief DataMpz::DataMpz
  * @param di - data item byte array to construct this value from
  * @param p - parent, if any
  */
-DataMpq::DataMpq( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
+DataMpz::DataMpz( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DATAITEM, p )
 {
   qint32 tcSz = 0;
   typeCode = bytesToCode( di, tcSz );
@@ -44,18 +44,18 @@ DataMpq::DataMpq( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DA
       return;
     }
   std::string str(di.mid( tcSz+lenSz ).constData(), static_cast<unsigned long>(len) );
-  v.set_str( str, MPQ_SERBASE );
+  v.set_str( str, MPZ_SERBASE );
 }
 
 /**
- * @brief DataMpq::toDataItem
+ * @brief DataMpz::toDataItem
  * @param cf - chain/compact form?  ignored.
  * @return serialized rational number
  */
-DataItemBA DataMpq::toDataItem( bool cf ) const
+DataItemBA DataMpz::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   di.append( codeToBytes( typeCode ) );
-  std::string txt = v.get_str( MPQ_SERBASE );
+  std::string txt = v.get_str( MPZ_SERBASE );
   int len = static_cast<int>(txt.length());
   di.append( codeToBytes( len ) );
   di.append( QByteArray(txt.c_str(), len) );
