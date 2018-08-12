@@ -84,7 +84,7 @@
 </style>
 
 <meta charset="UTF-8"/>
-<title>Numbers</title>
+<title>GMP Integer Storage</title>
 </head>
 
 <body>
@@ -92,32 +92,19 @@
 <div class="zoom">
 <img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
 
-<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Numbers</h1>
+<span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">GMP Integer Storage</h1>
 
+GMP integers are stored in compact form, starting with a <a href="VariableByteCoding.html">variable byte code</a><div class="tooltip"><sup>*</sup><span class="tooltiptext" style="zoom:0.9">Reality check: a single byte VBC represents numbers up to 63, 63 bytes of storage represents over 500 bits, or numbers ranging up to ±10<sup style="zoom:0.6">150</sup>, aka sufficient.</span></div> indicating the number of bytes used to represent the integer, followed by the value with most significant byte first.  The most significant bit<div class="tooltip"><sup>*</sup><span class="tooltiptext">of the first, most significant, byte</span></div> indicates the sign of the stored integer: set is negative.  The sign bit is not included in the value of the integer.  When necessary, a zero value most significant byte is prepended to achieve the required sign bit.<br/><br/>
 
-<span itemprop="articleBody">
-<h2>Big and Bigger</h2>
-
-Within the AO protocol, all counted things are represented by integers or rational fractions aka the ratio of two integers.  Internally, these integers are represented by 64 bit signed integers, or when that's not big enough, by arbitrarily large integers handled by the <a href="https://en.wikipedia.org/wiki/GNU_Multiple_Precision_Arithmetic_Library">GMP</a> library.<br/><br/>
-
-Floating point numbers may be used in user interface representations of rational fractions, but calculations are performed to obtain exact results which can be duplicated on a wide variety of hardware and software which may be cross checking the calculations.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Originally, 128 bit integers were considered for the larger numbers, but even those are too small for some reasonable applications, and they are also problematic when porting to various computer architectures - the GMP library, while cumbersome, is more portable than __int128.</span></div>
-
-<h2>Storage</h2>
-
-Both 64 bit integers and GMP integers are stored in key-value form where a 64 bit key<div class="tooltip"><sup>*</sup><span class="tooltiptext">stored as variable byte code</span></div> preceeds the data, with the data format indicated by the key value: variable length byte code for 64 bit integers, or the byte encoded form of a GMP integer or rational fraction.  64 bit integers are stored as <a href="VariableByteCoding.html">variable byte code</a>, GMP integers and fractions use <a href="GmpIntegerStorage.html">a different</a><div class="tooltip"><sup>*</sup><span class="tooltiptext">more compact for larger numbers</span></div> encoding.<br/><br/>
-
-<h1>Time</h1>
-
-Time is expressed in <a href="https://en.wikipedia.org/wiki/Unix_time#Encoding_time_as_a_number">Unix Time</a> encoded in a signed 64 bit integer, with the seconds multiplied by 189,000,000.<div class="tooltip"><sup>*</sup><span class="tooltiptext">this encoding places the storage value rollover event approximately 1,500 years in the future.</span></div>  The 189,000,000<div class="tooltip"><sup>*</sup><span class="tooltiptext">Why 189?  189 is 3x3x3x7, enabling even division by any number up to 10, and many more common larger numbers.</span></div> divisions are used to ensure that events generated on a single server are given a strictly increasing sequence in time - while events coming from multiple sources may be recorded as simultaneous, no two events recorded by a single actor may be marked as simultaneous.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Regarding <a href="https://en.wikipedia.org/wiki/Network_Time_Protocol#Leap_seconds">leap second concerns</a> the only rule for AO protocol is that events must be sequential in represented time.  One might condsider a leap second to be a brief trading halt, or if one must trade during the leap second, the software must simply assure monotonically increasing time numbers for all time records.</span></div>  It is expected that actual clock times accurate to the millisecond will be used, and for events which are generated in the same millisecond of clock time, their timestamps will be adjusted to place them in proper sequence when considering the smaller divisions of time.  When time values are stored, they are stored as straight 8 byte big endian storage of the integer.
+Rational fractions are stored as two integers, with two variable length byte encoded sizes: the first telling the size of the remaining size code plus the size of both integers<div class="tooltip"><sup>*</sup><span class="tooltiptext">aka total bytes remaining in the object, as is standard for all variable sized data items</span></div> followed by a variable byte encoded size of the numerator storage, followed by the numerator and denominator.
 
 
 </span>
-
 </div>
 
 <br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
 <span itemprop="name">Assign Onward</span></span></a><br/>
-<span itemprop="datePublished" content="2018-07-28"><div class="tooltip">28 July 2018<span class="tooltiptext">
+<span itemprop="datePublished" content="2018-08-12"><div class="tooltip">12 August 2018<span class="tooltiptext">
 MIT License
 <br/>
 Copyright (c) 2018 Assign Onward
