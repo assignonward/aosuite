@@ -61,7 +61,7 @@ DataItemBA DataMpq::toDataItem( bool cf ) const
   QByteArray di; (void)cf;
   di.append( codeToBytes( typeCode ) );
   di.append( codeToBytes( lns.size()+nba.size()+dba.size() ) );
-  di.append( codeToBytes( lns.size() ) );
+  di.append( lns );
   di.append( nba );
   di.append( dba );
   return di;
