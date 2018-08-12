@@ -33,32 +33,34 @@
 class DataMpz : public DataItem
 {
 public:
-    explicit  DataMpz( const mpz_class &d, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
-                : DataItem( tc, p ), v( d ) {}
-              DataMpz( const DataItemBA &di, QObject *p = nullptr );
-   mpz_class &value() { return v; }
-  DataItemBA  toDataItem( bool cf = false ) const;
-  DataMpz  operator += ( const mpz_class &d ) { v += d;   return *this; }
-  DataMpz  operator += ( const   DataMpz &d ) { v += d.v; return *this; }
-  DataMpz  operator += ( const       int &d ) { v += d;   return *this; }
-  DataMpz  operator -= ( const mpz_class &d ) { v -= d;   return *this; }
-  DataMpz  operator -= ( const   DataMpz &d ) { v -= d.v; return *this; }
-  DataMpz  operator -= ( const       int &d ) { v -= d;   return *this; }
-     bool  operator <  ( const mpz_class &d ) { return (v <  d  ); }
-     bool  operator <  ( const   DataMpz &d ) { return (v <  d.v); }
-     bool  operator <  ( const       int &d ) { return (v <  d  ); }
-     bool  operator >  ( const mpz_class &d ) { return (v >  d  ); }
-     bool  operator >  ( const   DataMpz &d ) { return (v >  d.v); }
-     bool  operator >  ( const       int &d ) { return (v >  d  ); }
-     bool  operator <= ( const mpz_class &d ) { return (v <= d  ); }
-     bool  operator <= ( const   DataMpz &d ) { return (v <= d.v); }
-     bool  operator <= ( const       int &d ) { return (v <= d  ); }
-     bool  operator >= ( const mpz_class &d ) { return (v >= d  ); }
-     bool  operator >= ( const   DataMpz &d ) { return (v >= d.v); }
-     bool  operator >= ( const       int &d ) { return (v >= d  ); }
-     bool  operator == ( const mpz_class &d ) { return (v == d  ); }
-     bool  operator == ( const   DataMpz &d ) { return (v == d.v); }
-     bool  operator == ( const       int &d ) { return (v == d  ); }
+         explicit  DataMpz( const mpz_class &d, typeCode_t tc = AO_UNDEFINED_DATAITEM, QObject *p = nullptr )
+                     : DataItem( tc, p ), v( d ) {}
+                   DataMpz( const DataItemBA &di, QObject *p = nullptr );
+        mpz_class &value() { return v; }
+       DataItemBA  toDataItem( bool cf = false ) const;
+static QByteArray  mpzToByteArray( const mpz_class &n );
+static  mpz_class  byteArrayToMpz( const QByteArray &ba );
+          DataMpz  operator += ( const mpz_class &d ) { v += d;   return *this; }
+          DataMpz  operator += ( const   DataMpz &d ) { v += d.v; return *this; }
+          DataMpz  operator += ( const       int &d ) { v += d;   return *this; }
+          DataMpz  operator -= ( const mpz_class &d ) { v -= d;   return *this; }
+          DataMpz  operator -= ( const   DataMpz &d ) { v -= d.v; return *this; }
+          DataMpz  operator -= ( const       int &d ) { v -= d;   return *this; }
+             bool  operator <  ( const mpz_class &d ) { return (v <  d  ); }
+             bool  operator <  ( const   DataMpz &d ) { return (v <  d.v); }
+             bool  operator <  ( const       int &d ) { return (v <  d  ); }
+             bool  operator >  ( const mpz_class &d ) { return (v >  d  ); }
+             bool  operator >  ( const   DataMpz &d ) { return (v >  d.v); }
+             bool  operator >  ( const       int &d ) { return (v >  d  ); }
+             bool  operator <= ( const mpz_class &d ) { return (v <= d  ); }
+             bool  operator <= ( const   DataMpz &d ) { return (v <= d.v); }
+             bool  operator <= ( const       int &d ) { return (v <= d  ); }
+             bool  operator >= ( const mpz_class &d ) { return (v >= d  ); }
+             bool  operator >= ( const   DataMpz &d ) { return (v >= d.v); }
+             bool  operator >= ( const       int &d ) { return (v >= d  ); }
+             bool  operator == ( const mpz_class &d ) { return (v == d  ); }
+             bool  operator == ( const   DataMpz &d ) { return (v == d.v); }
+             bool  operator == ( const       int &d ) { return (v == d  ); }
 
 protected:
   mpz_class v;

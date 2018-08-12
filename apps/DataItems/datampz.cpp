@@ -22,8 +22,7 @@
  */
 #include "datampz.h"
 #include <QByteArray>
-// TODO: store as bytes (base 256) instead of base 10 strings
-#define MPZ_SERBASE 10
+
 /**
  * @brief DataMpz::DataMpz
  * @param di - data item byte array to construct this value from
@@ -39,12 +38,12 @@ DataMpz::DataMpz( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DA
     }
   qint32 lenSz = 0;
   qint64 len = bytesToCode( di.mid( tcSz ), lenSz );
-  if ( di.size() < tcSz+lenSz+len )
-    { // TODO: log an exception
+  if ( di.size() != tcSz+lenSz+len )
+    { qDebug( "size mismatch %d != %d + %d + %lld", di.size(), tcSz, lenSz, len );
+      // TODO: log an exception
       return;
     }
-  std::string str(di.mid( tcSz+lenSz ).constData(), static_cast<unsigned long>(len) );
-  v.set_str( str, MPZ_SERBASE );
+  v = byteArrayToMpz( di.mid( tcSz+lenSz ) );
 }
 
 /**
@@ -55,9 +54,64 @@ DataMpz::DataMpz( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DA
 DataItemBA DataMpz::toDataItem( bool cf ) const
 { QByteArray di; (void)cf;
   di.append( codeToBytes( typeCode ) );
-  std::string txt = v.get_str( MPZ_SERBASE );
-  int len = static_cast<int>(txt.length());
-  di.append( codeToBytes( len ) );
-  di.append( QByteArray(txt.c_str(), len) );
+  QByteArray ba = mpzToByteArray( v );
+  di.append( codeToBytes( ba.size() ) );
+  di.append( ba );
   return di;
+}
+
+/**
+ * @brief DataMpz::mpzToByteArray - apologies for the inefficiency
+ *   spend time optimizing for speed later.
+ * @param n - GMP integer to store in a byte array
+ * @return QByteArray encoding n, sign bit encoded in MSb
+ */
+QByteArray DataMpz::mpzToByteArray( const mpz_class &n )
+{ if ( n == 0 )
+    { QByteArray z;
+      z.append( '\0' );
+      return z;
+    }
+  std::string txt = n.get_str( 16 );
+  if ( txt.at(0) == '-' )
+    txt.replace(0,1,"");
+  int len = static_cast<int>(txt.length());
+  // Ensure an even number of hex characters
+  if ( len % 2 )
+    { txt.insert(0, 1, '0'); // prepend a 0 to make an even number of characters
+      len++;
+    }
+  // Negative numbers expressed by most significant bit == 1
+  // When the most signficant bit == 1, it is ignored in the value
+  if ( n >= 0 )
+    { if ( txt.at(0) >= '8' )
+        txt.insert(0, 2, '0'); // Prepend a 0x00 to get the correct sign bit
+      return QByteArray::fromHex( QString::fromStdString( txt ).toLatin1() );
+    }
+  if ( txt.at(0) >= '8' )
+    { txt.insert(0, 0, '0'); // Prepend a 0x80 to get the correct sign bit
+      txt.insert(0, 0, '8'); // Because when the MSb is 1, it is ignored in the value.
+    }
+   else
+    { txt.at(0) += 8; // Set the hexadecimal MSb
+    }
+  return QByteArray::fromHex( QString::fromStdString( txt ).toLatin1() );
+}
+
+/**
+ * @brief DataMpz::byteArrayToMpz - reverse of mpzToByteArray
+ * @param ba - byte array to recover into mpz_class
+ * @return mpz integer representation of the byte array
+ */
+mpz_class DataMpz::byteArrayToMpz( const QByteArray &ba )
+{ std::string txt = QString( ba.toHex() ).toStdString();
+  mpz_class n;
+  if ( txt.at(0) < '8' )
+    n.set_str( txt, 16 );
+   else
+    { txt.at(0) -= 8;
+      n.set_str( txt, 16 );
+      n = -n;
+    }
+  return n;
 }

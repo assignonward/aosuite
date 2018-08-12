@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 #include "datampq.h"
-#include <QByteArray>
+#include "datampz.h"
 // TODO: store as bytes (base 256) instead of base 10 strings
 #define MPQ_SERBASE 10
 /**
@@ -40,11 +40,15 @@ DataMpq::DataMpq( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DA
   qint32 lenSz = 0;
   qint64 len = bytesToCode( di.mid( tcSz ), lenSz );
   if ( di.size() < tcSz+lenSz+len )
-    { // TODO: log an exception
+    { qDebug( "size mismatch %d != %d + %d + %lld", di.size(), tcSz, lenSz, len );
+      // TODO: log an exception
       return;
     }
-  std::string str(di.mid( tcSz+lenSz ).constData(), static_cast<unsigned long>(len) );
-  v.set_str( str, MPQ_SERBASE );
+  qint32 lenNumSz = 0;
+  qint64 lenNum = bytesToCode( di.mid( tcSz+lenSz ), lenNumSz );
+  mpz_class num = DataMpz::byteArrayToMpz( di.mid( tcSz+lenSz+lenNumSz, static_cast<int>(lenNum) ) );
+  mpz_class den = DataMpz::byteArrayToMpz( di.mid( tcSz+lenSz+lenNumSz+static_cast<int>(lenNum) ) );
+  v = mpq_class( num, den );
 }
 
 /**
@@ -53,11 +57,14 @@ DataMpq::DataMpq( const DataItemBA &di, QObject *p ) : DataItem( AO_UNDEFINED_DA
  * @return serialized rational number
  */
 DataItemBA DataMpq::toDataItem( bool cf ) const
-{ QByteArray di; (void)cf;
+{ QByteArray nba = DataMpz::mpzToByteArray( v.get_num() );
+  QByteArray dba = DataMpz::mpzToByteArray( v.get_den() );
+  QByteArray lns = codeToBytes( nba.size() );
+  QByteArray di; (void)cf;
   di.append( codeToBytes( typeCode ) );
-  std::string txt = v.get_str( MPQ_SERBASE );
-  int len = static_cast<int>(txt.length());
-  di.append( codeToBytes( len ) );
-  di.append( QByteArray(txt.c_str(), len) );
+  di.append( codeToBytes( lns.size()+nba.size()+dba.size() ) );
+  di.append( codeToBytes( lns.size() ) );
+  di.append( nba );
+  di.append( dba );
   return di;
 }
