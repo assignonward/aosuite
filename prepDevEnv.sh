@@ -23,9 +23,10 @@
 #
 
 sudo apt update -y
-sudo apt install -y g++
+sudo apt install -y g++ gcc
 sudo apt install -y automake make build-essential bison flex gettext texinfo transfig fig2dev gnutls-bin rng-tools adns-tools nettle-dev libncurses5-dev libsqlite3-dev libldap2-dev libreadline-dev libgmp-dev libbz2-dev zlib1g-dev qt5-default qtcreator
 sudo apt install -y lib64c-dev lib64z1 lib64z1-dev
+sudo apt install -y g++ gcc
 
 # for gpg:
 pushd gpg
