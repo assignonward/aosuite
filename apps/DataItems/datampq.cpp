@@ -22,8 +22,6 @@
  */
 #include "datampq.h"
 #include "datampz.h"
-// TODO: store as bytes (base 256) instead of base 10 strings
-#define MPQ_SERBASE 10
 /**
  * @brief DataMpq::DataMpq
  * @param di - data item byte array to construct this value from
