@@ -43,7 +43,7 @@ public:
                   page( r.page ), seqNum( r.seqNum ), key( r.key ), keyHash( r.keyHash ), amount( r.amount ) {}
         void  operator = ( const DataItemBA &di );
   DataItemBA  toDataItem( bool cf = false );
-        bool  isValid() { return page.isValid() && (seqNum >= 0) && (amount > 0); }
+        bool  isValid() { return page.isValid() && (seqNum >= 0) /*&& (amount > 0)*/; }
 
 private:
      PageRef  page;    // page these shares are recorded on

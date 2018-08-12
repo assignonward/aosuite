@@ -27,19 +27,19 @@
 #ifndef SHARES_H
 #define SHARES_H
 
-#include "data128.h"
+#include "datampz.h"
 
-class Shares : public Data128
+class Shares : public DataMpz
 {
 public:
-    explicit  Shares( __int128 val = 0, typeCode_t tc = AO_AMT, QObject *p = nullptr )
-                : Data128( val, tc, p ) {}
+    explicit  Shares( mpz_class val = 0, typeCode_t tc = AO_AMT, QObject *p = nullptr )
+                : DataMpz( val, tc, p ) {}
               Shares( const DataItemBA &di, QObject *p = nullptr )
-                : Data128( di, p ) {}
+                : DataMpz( di, p ) {}
               Shares( const Shares &f, QObject *p = nullptr )
-                : Data128( f.v, f.typeCode, p ? p : f.parent() ) {}
-        void  operator = ( const DataItemBA &di ) { Data128::operator = ( di ); }
-        void  operator = ( const __int128 &val ) { v = val; }
+                : DataMpz( f.v, f.typeCode, p ? p : f.parent() ) {}
+        void  operator = ( const DataItemBA &di ) { DataMpz::operator = ( di ); }
+        void  operator = ( const mpz_class &val ) { v = val; }
 };
 
 #endif // SHARES_H

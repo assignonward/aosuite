@@ -19,10 +19,10 @@
 #define AO_TIME_RECORDED              -37 // (4b+8) AOTime: UTC time (secs since epoch << 64) when a record was made
 #define AO_TIME_DIFF                   35 // (46+8) AOTime: UTC time (secs since epoch << 64) defining a time interval, or difference
 #define AO_UNDERWRITING_EXPIRATION     36 // (48+8) AOTime: UTC time (secs since epoch << 64) when underwriting shares are bound until
-#define AO_AMT                         37 // (4a+16) Shares: 128 bit signed integer number of shares assigned
-#define AO_UNDERWRITING_AMT            38 // (4c+16) Shares: 128 bit signed integer number of shares committed as underwriting
-#define AO_RECORDING_BID              -43 // (57+16) Shares: 128 bit signed integer number of shares bid for recording
-#define AO_SHARES_OUT                  40 // (50+16) Shares: 128 bit signed integer number of shares outstanding (recorded on blocks)
+#define AO_AMT                         37 // (4a+var) Shares: 128 bit signed integer number of shares assigned
+#define AO_UNDERWRITING_AMT            38 // (4c+var) Shares: 128 bit signed integer number of shares committed as underwriting
+#define AO_RECORDING_BID              -43 // (57+var) Shares: 128 bit signed integer number of shares bid for recording
+#define AO_SHARES_OUT                  40 // (50+var) Shares: 128 bit signed integer number of shares outstanding (recorded on blocks)
 #define AO_N_COINS                     44 // (58+var) AOCoins: Number of coins, as a precise rational fraction
 #define AO_RSA3072_PUB_KEY             61 // (7a+384) PublicKeyRsa3072: an RSA3072 public key
 #define AO_RSA3072_SIG                 62 // (7c+384) SigRsa3072: an RSA3072 signature
@@ -61,7 +61,7 @@
 #define GB_DESCRIPTION               1040 // <a010+var> Note:separable Text description of the chain
 #define GB_ICON                      1104 // <a011+var> DataByteArray:separable Image suitable for icon use to represent the chain
 #define GB_IMAGE                     1168 // <a012+var> DataByteArray:separable Large format image to represent the chain
-#define GB_STARTING_SHARES            336 // (a005+16) Shares: Starting number of shares
+#define GB_STARTING_SHARES            336 // (a005+var) Shares: Starting number of shares
 #define GB_MIN_BLOCK_INT              400 // (a006+8) AOTime: Minimuim block interval time
 #define GB_N_COINS_TOTAL              464 // (a007+var) AOCoins: Number of coins that the sum of all shares outstanding represents
 #define GB_RECORDING_TAX              528 // (a008+var) AOCoins: Recording Tax in coins per byte (usually a very small number)

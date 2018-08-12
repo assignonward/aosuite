@@ -137,8 +137,8 @@ GenericCollection *GenesisForm::calculateGenesisBlock()
   gb->insert( new DataVarLength( ui->description->toPlainText().toUtf8(), GB_DESCRIPTION,  gb ) );
   //  gb->add( GB_ICON           , DataByteArray( ) ) // TODO: file reader
   //  gb->add( GB_IMAGE          , DataByteArray( ) ) // TODO: file reader
-  tv = 1; tv = tv << ui->startingShares->value();
-  gb->insert( new Shares   ( tv, GB_STARTING_SHARES, gb ) );
+  mpz_class ss( pow( 2, ui->startingShares->value() ) );
+  gb->insert( new Shares( ss, GB_STARTING_SHARES, gb ) );
   tv = 1; tv = tv << 64; tv = tv * ui->minBlockTime->value();
   gb->insert( new AOTime   ( tv, GB_MIN_BLOCK_INT  , gb ) );
   mpq_class tc( pow( 2, ui->totalCoins->value() ) );
@@ -172,8 +172,7 @@ GenericCollection *GenesisForm::calculateGenesisBlock()
               }
           }
     }
-  tv = 1; tv = tv << ui->startingShares->value();
-  part->setAmount( tv );
+  part->setAmount( ss );
   asgn->append( *part );
   auth->setAssignment( asgn );
   auth->setNSigs( asgn->getNParticipants() );

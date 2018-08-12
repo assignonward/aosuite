@@ -150,28 +150,28 @@
         "acry": "AO_AMT",
         "code": 37,
         "desc": "128 bit signed integer number of shares assigned",
-        "size": 16,
+        "size": -1,
         "type": "Shares"
     },
     {
         "acry": "AO_UNDERWRITING_AMT",
         "code": 38,
         "desc": "128 bit signed integer number of shares committed as underwriting",
-        "size": 16,
+        "size": -1,
         "type": "Shares"
     },
     {
         "acry": "AO_RECORDING_BID",
         "code": -43,
         "desc": "128 bit signed integer number of shares bid for recording",
-        "size": 16,
+        "size": -1,
         "type": "Shares"
     },
     {
         "acry": "AO_SHARES_OUT",
         "code": 40,
         "desc": "128 bit signed integer number of shares outstanding (recorded on blocks)",
-        "size": 16,
+        "size": -1,
         "type": "Shares"
     },
     {
@@ -468,7 +468,7 @@
         "code": 336,
         "desc": "Starting number of shares",
         "gbcr": "Pow2",
-        "size": 16,
+        "size": -1,
         "type": "Shares"
     },
     {

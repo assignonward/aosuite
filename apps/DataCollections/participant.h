@@ -49,11 +49,11 @@ public:
   DataItemBA  toDataItem( bool cf );
   QByteArray  getId()     const { return key ? key->getId() : QByteArray(); }
       PubKey *getKey()    const { return key; }
-    __int128  getAmount() const { return amount ? amount->value() : 0; }
+   mpz_class  getAmount() const { return amount ? amount->value() : 0; }
   QByteArray  getNote()   const { return note ? note->get() : QByteArray();  }
         void  setId( QByteArray i )   { if ( key ) key->set( i ); }
         void  setKey( PubKey *k );
-        void  setAmount( __int128 v ) { if ( amount ) *amount = v; }
+        void  setAmount( mpz_class v ) { if ( amount ) *amount = v; }
         void  setNote( QByteArray n ) { note->set( n ); }
      quint64  getIndex() const { return index ? index->value() : -1; }
         void  setIndex( qint64 v );

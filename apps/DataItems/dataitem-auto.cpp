@@ -210,15 +210,10 @@ qint32 DataItem::typeSizeTable( typeCode_t tc )
       case AO_TIME_RECORDED:           return 8;
       case AO_TIME_DIFF:               return 8;
       case AO_UNDERWRITING_EXPIRATION: return 8;
-      case AO_AMT:                     return 16;
-      case AO_UNDERWRITING_AMT:        return 16;
-      case AO_RECORDING_BID:           return 16;
-      case AO_SHARES_OUT:              return 16;
       case AO_RSA3072_PUB_KEY:         return 384;
       case AO_RSA3072_SIG:             return 384;
       case GB_PROTOCOL:                return -2;
       case GB_PROTOCOL_REV:            return -2;
-      case GB_STARTING_SHARES:         return 16;
       case GB_MIN_BLOCK_INT:           return 8;
       case AO_UNDEFINED_DATAITEM:      return 0;
   }
