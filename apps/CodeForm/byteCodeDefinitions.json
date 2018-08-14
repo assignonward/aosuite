@@ -191,14 +191,14 @@
     {
         "acry": "AO_RSA3072_SIG",
         "code": 62,
-        "desc": "an RSA3072 signature",
+        "desc": "an RSA3072 signature, using AO_HASH_256 for separable items",
         "size": 384,
         "type": "SigRsa3072"
     },
     {
         "acry": "AO_ECDSA_SIG",
         "code": 63,
-        "desc": "An ECDSA signature",
+        "desc": "An ECDSA signature, using AO_HASH_256 for separable items",
         "size": -1,
         "type": "SigEcdsa"
     },

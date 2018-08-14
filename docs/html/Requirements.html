@@ -1,0 +1,170 @@
+<!--
+ MIT License
+
+ Copyright (c) 2018 Assign Onward
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+-->
+<html><head><style>
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    zoom: 0.75;
+    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #eee;
+    color: #000;
+
+    text-align: center;
+    padding: 5px 5px;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #eee transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.zoom {
+    zoom: 2;
+}
+
+.page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-right: 140px;
+    margin-left: 160px;
+}
+</style>
+
+<meta charset="UTF-8"/>
+<title>Requirements</title>
+</head>
+
+<body>
+<div class="page">
+<div class="zoom">
+<img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
+
+<h1>Requirements</h1>
+
+<p>Enumerated, small, testable descriptions of functionality, guided by the <a href="CorePrinciples.html">Core Principles</a>, and mixed with implementation decisions that, while not specifically required to fulfill the core principles, do serve to fulfill the requirements and provide a defined solution.</p>
+
+<ul>
+    <li>R1: A <a href="Signatures.html">signature</a> is a data collection which includes:</li>
+    <ul><li>R1a: The <a href="Numbers.html#Time">time</a> the signature was generated.</li>
+        <li>R1b: A recognized and identified cryptographic signature of the entire data item being signed, with any <a href="SeparableItems.html">separable items</a> replaced by recognized and identified hashes of the potentially separated items,<div class="tooltip"><sup>*</sup><span class="tooltiptext">In the event that an item is separated, it must be replaced with this same hash which was used to compute the signature.</span></div> and the time of signature from R1a appended.</li>
+        <li>R1c: A reference to what is being signed, for example: a participant index in an assignment agreement.</li>
+    </ul>
+</ul>
+
+<ul>
+    <li>R2: A signature may be computed using any<div class="tooltip"><sup>*</sup><span class="tooltiptext">As constrained by the item key type's definition, for instance the AO_ECDSA_SIG key indicates an ECDSA signature using brainpool256 curve and Sha2-256 hash replacements for separable items.</span></div> cryptographic signature algorithm recognized by the protocol implementation.</li>
+    <ul><li>R2a: Ⓐ1 protocol recognizes ECDSA brainpool-256 and RSA3072 signature types.</li>
+        <li>R2b: Ⓐ1 protocol expects all signature types to use Sha2-256 hash for separable items.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Future protocols may identify different signature keys which still use the same ECDSA and RSA signature computations but use a different hash for separable items.</span></div></li>
+    </ul>
+</ul>
+
+<ul>
+    <li>R3: A hash may be computed using any<div class="tooltip"><sup>*</sup><span class="tooltiptext">As constrained by the item key type's definition, for instance the AO_ECDSA_SIG key indicates an ECDSA signature using brainpool256 curve and Sha2-256 hash replacements for separable items.</span></div> cryptographic algorithm recognized by the protocol implementation.</li>
+    <ul><li>R3a: Ⓐ1 protocol recognizes Sha2-256 and Sha3-512 hash types.</li>
+    </ul>
+</ul>
+
+<ul>
+    <li>R4: <a href="AssignmentAgreement.html">Assignment agreements</a> are structured into AO_AUTHORIZATION collections as described in the linked document, including:</li>
+    <ul><li>R4a: Valid AO_AUTH_SIG signature data collections as described in R1 for every participant in the R4b1 AO_ASSIGNMENT, signing the AO_ASGN_HASH from R4b2 plus the time of signing.</li>
+        <li>R4b: An AO_ASSIGN_COMPLETE data collection, including:</li>
+        <ul><li>R4b1: an AO_ASSIGNMENT containing:
+            <ul><li>R4b1a: All Giver participants, which include:</li>
+                <ul><li>R4b1a1: AO_ID_SEQ_NUM of the giver<div class="tooltip"><sup>*</sup><span class="tooltiptext">A reference to the public ID of the giver, as well as the AO_AMT of shares that ID controls, and the current UTXO database should indicate if those shares are still available for assignment onward.</span></div></li>
+                    <li>R5b1a2: AO_INDEX unique identifier of the participant within this transaction<div class="tooltip"><sup>*</sup><span class="tooltiptext">for later matching with their signature in the authorization.</span></div></li>
+                </ul>
+                <li>R4b1b: All Receiver participants, which include:</li>
+                <ul><li>R4b1b1: A <a href="AtomicAssignment.html">unique</a><div class="tooltip"><sup>*</sup><span class="tooltiptext">unique meaning not used before in this blockchain, definitely not appearing in the existing list of keys indexed by AO_ID_SEQ_NUM</span></div> public key identifying the receiver</li> 
+                    <li>R4b1b2: AO_AMT number of shares being received in this assignment.</li>
+                    <li>R4b1b3: AO_INDEX unique identifier of the participant within this transaction<div class="tooltip"><sup>*</sup><span class="tooltiptext">for later matching with their signature in the authorization.</span></div></li>
+                </ul>
+                <li>R4b1c: AO_RECORDING_BID - all receiver AO_AMTs plus the AO_RECORDING_BID must match the amount of shares referred to by the Givers' AO_ID_SEQ_NUM.</li>
+                <li>R4b1d: AO_RECORDING_DEADLINE - time by which this assignment must be recorded to be binding.</li>
+                <li>R4b1e: AO_LISTSIZE - number of givers and receivers in the assignment (redundant, check info).</li>
+            </ul>
+            <li>R4b2: an AO_ASGN_HASH hash of the AO_ASSIGNMENT in R4b1:
+        </ul>
+    </ul>
+</ul>
+
+</div>
+<br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+<span itemprop="name">Assign Onward</span></a></span><br/>
+<span itemprop="datePublished" content="2018-08-13"><div class="tooltip">13 August 2018<span class="tooltiptext">
+MIT License
+<br/>
+Copyright (c) 2018 Assign Onward
+<br/><br/>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+<br/><br/>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+<br/><br/>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</span></div></span>
+</div>
+</body></html>

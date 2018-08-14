@@ -58,6 +58,7 @@ digraph G
           label = "AO_PARTICIPANT";
         }
         c4r [label="AO_RECORDING_BID"];
+        c4d [label="AO_RECORDING_DEADLINE"];
         c4t [label="AO_LISTSIZE"];
         label = "AO_ASSIGNMENT";
       }
