@@ -62,7 +62,7 @@ digraph G
         c4t [label="AO_LISTSIZE"];
         label = "AO_ASSIGNMENT";
       }
-      c7h [label="AO_ASGN_HASH\nseperable hash of\nAO_ASSIGNMENT"];
+      c7h [label="AO_ASGN_HASH\nhash of\nAO_ASSIGNMENT"];
       label = "AO_ASGN_COMPLETE";
     }
   }

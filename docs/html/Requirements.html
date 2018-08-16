@@ -92,20 +92,26 @@
 <div class="zoom">
 <img src="AO.png" alt="Ⓐ" width="64" height="64" style="float:right">
 
-<h1>Requirements</h1>
+<h1>Requirements / Definitions</h1>
 
-<p>Enumerated, small, testable descriptions of functionality, guided by the <a href="CorePrinciples.html">Core Principles</a>, and mixed with implementation decisions that, while not specifically required to fulfill the core principles, do serve to fulfill the requirements and provide a defined solution.</p>
+<p>Enumerated, small, testable descriptions of data structures and functionality, guided by the <a href="CorePrinciples.html">Core Principles</a>, and mixed with implementation decisions that, while not specifically required to fulfill the core principles, do serve to fulfill the requirements and provide a defined solution.</p>
 
 <ul>
     <li>R1: A <a href="Signatures.html">signature</a> is a data collection which includes:</li>
-    <ul><li>R1a: The <a href="Numbers.html#Time">time</a> the signature was generated.</li>
-        <li>R1b: A recognized and identified cryptographic signature of the entire data item being signed, with any <a href="SeparableItems.html">separable items</a> replaced by recognized and identified hashes of the potentially separated items,<div class="tooltip"><sup>*</sup><span class="tooltiptext">In the event that an item is separated, it must be replaced with this same hash which was used to compute the signature.</span></div> and the time of signature from R1a appended.</li>
-        <li>R1c: A reference to what is being signed, for example: a participant index in an assignment agreement.</li>
+    <ul><li>R1a: A key identifying the type of signature.</li>
+        <li>R1b: The cryptographic signature<div class="tooltip"><sup>*</sup><span class="tooltiptext">Signature to be computed according the the algorithm identified in the R1a key.</span></div> of the entire data item or collection being signed plus time of signature as follows:
+        <ul><li>R1b1: Key of the data item/collection being signed</li>
+            <li>R1b2: Data items in a collection being signed appear in the same order as the collection which the signature references with R1d.</li>
+            <li>R1b3: All <a href="SeparableItems.html">separable items</a> are replaced by R3 hashes of the potentially separated items prior to computation of the signature.<div class="tooltip"><sup>*</sup><span class="tooltiptext">In the event that an item is separated, it must be replaced with this same hash which was used to compute the signature.  Hashing algorithm to be used is specified by the R1a key.</span></div></li>
+            <li>R1b4: The R1c AO_TIME_OF_SIG <a href="Numbers.html#Time">time</a> the signature was generated, appended.</li>
+        </ul>
+        <li>R1c: The R1b4 AO_TIME_OF_SIG <a href="Numbers.html#Time">time</a> the signature was generated.</li>
+        <li>R1d: A reference to what is being signed, for example: a participant index in an assignment agreement.</li>
     </ul>
 </ul>
 
 <ul>
-    <li>R2: A signature may be computed using any<div class="tooltip"><sup>*</sup><span class="tooltiptext">As constrained by the item key type's definition, for instance the AO_ECDSA_SIG key indicates an ECDSA signature using brainpool256 curve and Sha2-256 hash replacements for separable items.</span></div> cryptographic signature algorithm recognized by the protocol implementation.</li>
+    <li>R2: An R1 signature may be computed using any cryptographic signature algorithm<div class="tooltip"><sup>*</sup><span class="tooltiptext">As specified by the signature's key type definition, for instance the AO_ECDSA_SIG key indicates an ECDSA signature using brainpool256 curve and Sha2-256 hash replacements for separable items.</span></div> recognized by the protocol implementation.</li>
     <ul><li>R2a: Ⓐ1 protocol recognizes ECDSA brainpool-256 and RSA3072 signature types.</li>
         <li>R2b: Ⓐ1 protocol expects all signature types to use Sha2-256 hash for separable items.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Future protocols may identify different signature keys which still use the same ECDSA and RSA signature computations but use a different hash for separable items.</span></div></li>
     </ul>
@@ -113,7 +119,11 @@
 
 <ul>
     <li>R3: A hash may be computed using any<div class="tooltip"><sup>*</sup><span class="tooltiptext">As constrained by the item key type's definition, for instance the AO_ECDSA_SIG key indicates an ECDSA signature using brainpool256 curve and Sha2-256 hash replacements for separable items.</span></div> cryptographic algorithm recognized by the protocol implementation.</li>
-    <ul><li>R3a: Ⓐ1 protocol recognizes Sha2-256 and Sha3-512 hash types.</li>
+    <ul><li>R3a: A hash of a data item<div class="tooltip"><sup>*</sup><span class="tooltiptext">or data collection</span></div> consists of:</li>
+        <ul><li>R3a1: A key identifying the hashing algorithm used.</li>
+            <li>R3a2: The computed hash value of the entire data item, including its key.</li>
+        </ul>
+        <li>R3a: Ⓐ1 protocol recognizes Sha2-256 and Sha3-512 hash types.</li>
     </ul>
 </ul>
 
@@ -134,11 +144,54 @@
                 <li>R4b1c: AO_RECORDING_BID - all receiver AO_AMTs plus the AO_RECORDING_BID must match the amount of shares referred to by the Givers' AO_ID_SEQ_NUM.</li>
                 <li>R4b1d: AO_RECORDING_DEADLINE - time by which this assignment must be recorded to be binding.</li>
                 <li>R4b1e: AO_LISTSIZE - number of givers and receivers in the assignment (redundant, check info).</li>
+                <li>R4b1f: AO_INDEX values in R4b1a2 and R4b1b3 range from 0 to R4b1e AO_LISTSIZE-1, with no gaps.  R4b1b receivers of shares all have lower AO_INDEX values than givers of shares.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Starting the AO_INDEX of receivers of shares at 0 makes it easier to translate the AO_INDEX values into AO_ID_SEQ_NUM values when the AO_AUTHORIZATION is recorded on the blockchain.</span></div></li>
             </ul>
-            <li>R4b2: an AO_ASGN_HASH hash of the AO_ASSIGNMENT in R4b1:
+            <li>R4b2: AO_ASGN_HASH contains an R3 hash of the AO_ASSIGNMENT in R4b1:
         </ul>
     </ul>
 </ul>
+
+<ul>
+    <li>R5: A data item consists of a key, plus data:</li>
+    <ul><li>R5a: A data item key is a 63 bit integer, stored as a <a href="VariableByteCoding.html">variable byte code</a>.</li>
+        <ul><li>R5a1: The data item key identifies what the data item data represents</li>
+            <li>R5a2: The data item key also identifies the size of the following data in one of the following ways:</li>
+            <ul><li>R5a2a: Fixed size.  Keys which represent fixed size data are always followed by the same number of bytes, defined by the key in R7d.</li>
+                <li>R5a2b: Variable size data.  Other key types are followed by a variable byte code which specifies the size of the following data.<div class="tooltip"><sup>*</sup><span class="tooltiptext">following data which is all the data contained in the data item, meaning of the data defined by the key.</span></div></li>
+                <li>R5a2c: Variable byte code.  Some key types are followed by a single variable byte code which is the data.</lI>
+            </ul>
+        </ul>
+        <li>R5b: data item data, meaning and size as described by the R5a key.</li>
+    </ul>
+</ul> 
+
+<ul>
+    <li>R6: A data collection is an R5a2b variable size data item which contains zero or more data items.</li>
+    <ul><li>R6a: When avoidable, the order of data items in a collection is not important.</li>
+        <li>R6b: When being cryptographically R3 hashed or R1 signed, the order of items in a collection must not be changed.</li>
+    </ul>
+</ul>
+
+<ul>
+    <li>R7: A single byteCodeDefinitions.json file describes all R5a data item key definitions for an Ⓐ protocol, including:
+    <ul><li>R7a: key code value</li>
+        <ul><li>R7a1: a bitmask in the key code value identifies whether or not an item is separable</li>
+        </ul>
+        <li>R7b: acronym - used in programatic #defines</li>
+        <li>R7c: plain text description</li>
+        <li>R7d: R5a2 size</li>
+        <li>R7e: object type plus any other convenient implementation definitions.</li>
+    </ul>
+</ul>
+
+<ul>
+    <li>R8: All timestamps must represent valid sequencing</li>
+    <ul><li>R8a: A block must not contain signature timestamps after the block's creation time.</li>
+        <li>R8b: A block's creation time must not preceed the creation time of any block in the chain it is appending to.</li>
+        <li>R8c: An assignment giver's signature timestamp must not preceed the creation time of the block which recorded receipt of the shares being given.</li>
+    </ul>
+</ul>
+
 
 </div>
 <br/><a href="index.html"><span itemprop="author" itemscope itemtype="http://schema.org/Person">

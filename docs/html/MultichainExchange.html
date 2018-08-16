@@ -94,7 +94,7 @@
 
 <span itemscope itemtype="http://schema.org/Article"><h1 id="_name1" itemprop="name">Multichain Exchange</h1>
 
-<span itemprop="articleBody">The basic assignment <a href="Protocols.html">protocol</a> ensures that all parties to an assignment are in agreement with the terms before the assignment can be recorded to the blockchain.  However, what protocol can assure that all parties are in agreement about a multi-chain assignment and that the assignment has been recorded in all blockchains before taking effect in any of them?  For example: <a href="IslandLifeCharacters.html">Alice</a> holds 135 CCC.  Charlie is advertising that he will exchange 12 CCC for 1 BCG.  Alice wants to give Bob 1 BCG.  What needs to happen?<br/><br/>
+<span itemprop="articleBody">The basic <a href="AssignmentAgreement.html">assignment</a> <a href="Protocols.html">protocol</a> ensures that all parties to an assignment are in agreement with the terms before the assignment can be recorded to the blockchain.  However, what protocol can assure that all parties are in agreement about a multi-chain assignment and that the assignment has been recorded in all blockchains before taking effect in any of them?  For example: <a href="IslandLifeCharacters.html">Alice</a> holds 135 CCC.  Charlie is advertising that he will exchange 12 CCC for 1 BCG.  Alice wants to give Bob 1 BCG.  What needs to happen?<br/><br/>
 
 The simplest situation would involve trust among the parties: Alice assigns 12 CCC to Charlie and Charlie assigns 1 BCG to Bob, separate assignments on separate blockchains, if they both are recorded everybody is happy.  However, if either assignment fails to be recorded<div class="tooltip"><sup>*</sup><span class="tooltiptext">failure to record could be a simple technical error, or it could be a malicious attempt to cheat.</span></div> then either Bob or Charlie will be unhappy when they discover the missing assignment in the permanent blockchain record.  The parties could all get copies of the authorized assignments which would be their proof that the transaction was authorized, but if those same shares are recorded in the blockchain as transferred to another key before this authorized assignment is recorded, then this assignment will be invalidated.<div class="tooltip"><sup>*</sup><span class="tooltiptext">the same shares cannot be assigned twice.</span></div><br/><br/>
 
@@ -106,8 +106,8 @@ What can happen are conditional assignments in both chains.  The shares in quest
     <li>Alice's AOE finds<div class="tooltip"><sup>*</sup><span class="tooltiptext">the current best available deal for Alice</span></div> Charlie's AOI advertising an ASK of 12 CCC for 1 BCG and indicates on-screen "Give 1 BCG for US$12 / 1288 lek worth of CCC Y/N?"</li>
     <li>Alice approves the transaction with a tap on her screen</li>
     <li>Alice's AOE proposes a CAA to Bob's AOS and Charlie's AOI<div class="tooltip"><sup>*</sup><span class="tooltiptext">recording fees neglected for simplicity of presentation, some small fraction of the CCC and BCG would be given to the recording servers during the transaction to cover recording costs (aka SPAM reduction fees.)</span></div>:</li>
-    <ul><li>Alice gives 165 CCC</li>
-        <li>Alice receives 143 CCC</li>
+    <ul><li>Alice gives 135 CCC</li>
+        <li>Alice receives 123 CCC</li>
         <li>Charlie receives 12 CCC</li>
         <li>Charlie gives 1 BCG</li>
         <li>Bob receives 1 BCG</li>
@@ -118,8 +118,8 @@ What can happen are conditional assignments in both chains.  The shares in quest
     <li>Charlie's AOI requests a share availability check from the CCC AOR for Alice's proposed 165 CCC give shares</li>
     <li>Charlie's AOI receives responses from the CCC AOR indicating Alice's 165 CCC shares are available for assignment</li>
     <li>Charlie's AOI revises details of the terms of the CAA, including specifying the public keys he is using to receive shares, and sends notes to Alice and Bob that the following CAA looks acceptable to Charlie's AOI</li>
-    <ul><li>Alice gives 165 CCC</li>
-        <li>Alice receives 143 CCC</li>
+    <ul><li>Alice gives 135 CCC</li>
+        <li>Alice receives 123 CCC</li>
         <li>Charlie receives 12 CCC</li>
         <li>Charlie gives 15 BCG<div class="tooltip"><sup>*</sup><span class="tooltiptext">Charlie happens to be holding a block of 15 BCG which he wants to use in this transaction for whatever reason.  AO share blocks can only be assigned <a href="AtomicAssignment.html">atomically</a> so Charlie puts in 15 BCG and then has a fresh block of 14 BCG from this assignment that he is free to assign elsewhere, once this CAA is binding.</span></div></li>
         <li>Charlie receives 14 BCG</li>
@@ -170,6 +170,187 @@ Key points:
     <li>Once a CAA is fully validated on a blockchain, receivers of shares in that CAA (on that chain) are then free to assign those shares onward, even if the escrow period has not yet expired.</li>
     <li>In the above example, Alice's AOE is "driving the transaction" through the blockchains' AOR servers by virtue of having proposed the transaction in the first place... it may be preferable for the more stable<div class="tooltip"><sup>*</sup><span class="tooltiptext">by virtue of being run by vendors instead of transient guests</span></div> AOS software to take charge of the AOR interface aspects.</li>
 </ul>
+
+<h2>Second Pass</h2>
+
+Taking another logical walk-through the scenario where Alice's AOE has 135 CCC, Alice wants to give Bob's AOS 1 BCG, while Charlie's AOI is ASKing 12 CCC for 1 BCG:<br/><br/>
+
+Bob's AOS is advertising a product: Plate of Curry Goat, with prices listed as: 1 BCG, 15 ZIC, 0.5 DBR and maybe a few others.  Alice's AOE is looking at Bob's AOS menu and has selected the Plate of Curry Goat.  Alice's AOE isn't holding any of the issues that Bob's AOS is advertising prices for, so it checks with Charlie's AOI and maybe a few others it knows, to see if she can make an exchange for some of the CCC or YKK she is holding.  Charlie's AOI offers the best exchange at 12 CCC for 1 BCG, so Alice's AOE proposes this three way exchange to her as:<div class="tooltip"><sup>*</sup><span class="tooltiptext">This example shows Alice picking up all the recording fees.  As they say: everything is negotiable, Alice's AOE presents her the best price to her after all negotiated fees are paid.</span></div><br/>
+
+<ul><li>Alice gives 12.17 CCC (cost US$12.17 / 1306 lek)</li>
+    <li>Bob receives 1 BCG in exchange for one Plate of Curry Goat</li>
+    <li>Charlie gives 1 BCG in exchange for 12.12 CCC</li>
+</ul>
+
+When Alice "OK"s the transaction on her AOE, it first proposes it to Bob's AOS and Bob sees:<br/>
+
+<ul><li>Bob gives one Plate of Curry Goat in exchange for 1 BCG</li>
+    <li>Alice and Charlie to participate</li>
+</ul>
+
+Bob doesn't really need to know much about what Alice and Charlie are exchanging as long as he gets 1 BCG in the deal, but he does deserve to know that they are both participating in the exchange, because Charlie is a reliable trading partner known to Bob, whereas a proposal involving Yllka from Albania might be taken a little more cautiously by Bob since he's never dealt with Yllka before he might be more inclined to wait for the whole transaction to process and record before considering it a done deal.  Bob "OK"s the transaction on his AOS which then initiates the secure exchange.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Note that if Bob had configured his AOS to set a price in CCC it could have processed a simple CCC exchange with Alice's AOE (on a CCC recording server), but Bob's not accepting CCC directly, yet.  Even then, Alice might have some issue that Bob has never seen before like YKK, but through unforeseen connections Alice might be able to exchange YKK for BCG in a secure transaction just like she's doing with CCC in this example.</span></div><br/><br/>
+
+
+<ol><li>Bob's AOS sends a proposal to Alice's AOE and Charlie's AOI saying:</li>
+    <ul><li><b>Bob's AOS receives 1 BCG (with public key BK1 the BCG shares receipt will be recorded under)</li>
+        <li>Recording Deadline: UT1605459600 (5 minutes from now)</b></li>
+    </ul>
+    <li>Alice's AOE receives Bob's proposal, and considering her earlier approval of the exchange sends the following to Bob's AOS and Charlie's AOI:</li>
+    <ul><li>Bob's AOS receives 1 BCG (with public key BK1 the BCG shares receipt will be recorded under)</li>
+        <li><b>Alice receives 122.83 CCC (with public key AK1 the CCC shares receipt will be recorded under)</li>
+        <li>Alice gives 135 CCC (with AO_ID_SEQ_NUM of the CCC shares source AK2)</li>
+        <li></b>Recording Deadline: UT1605459600</li>
+    </ul>
+    <li>Charlie's AOI was slow to respond to Bob's proposal since it had no source funds to consider,<div class="tooltip"><sup>*</sup><span class="tooltiptext">after some delay, Charlie's AOI might have contacted Bob's AOS to complain about the lack of source funds, but since Alice's AOE proposal arrived carrying the same public key BK1 for Bob's BCG receipt, Charlie's AOI ignores the first contact and processes Alice's more compelte request.</span></div> but Alice's proposal merits faster attention, Charlie's AOI prepares these conditional assignment agreements, signs them, and transmits them to Alice's AOE and Bob's AOS:</li>
+    <ul><li><b>Conditional Assignment Agreement, BCG component:</b></li>
+        <ul><li>Bob's AOS receives 1 BCG (with public key BK1 the BCG shares receipt will be recorded under)</li>
+            <li><b>Charlie receives 14.04 BCG (with public key CK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie gives 15.05 BCG (with AO_ID_SEQ_NUM of the BCG shares source CK2)</li>
+            <li>Recording fee: 0.01 BCG</li>
+            <li></b>Recording Deadline: UT1605459600</li>
+            <li><b>BCG assignment signed by CK1 private key</li>
+            <li>BCG assignment signed by CK2 private key</li>
+        </ul>
+        <li>Conditional Assignment Agreement, CCC component:</li>
+        <ul><li></b>Alice receives 122.83 CCC (with public key AK1 the CCC shares receipt will be recorded under)</li>
+            <li><b>Charlie receives 12.12 CCC (with public key CK3 the CCC shares receipt will be recorded under)</li>
+            <li></b>Alice gives 135 CCC (with AO_ID_SEQ_NUM of the CCC shares source AK2)</li>
+            <li><b>Recording fee: 0.05 CCC</li>
+            <li></b>Recording Deadline: UT1605459600</li>
+            <li><b>CCC assignment signed by CK3 private key</li>
+        </ul>
+        <li>Overall CAA signed by CK1 private key</li>
+        <li>Overall CAA signed by CK2 private key</li>
+        <li>Overall CAA signed by CK3 private key</b></li>
+    </ul>
+    <li>Even though Bob isn't involved in the CCC exchange, he needs to approve the overall CCA which includes it.  Bob's AOS signs and sends the CAA to Alice's AOE and Charlie's AOI.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Charlie doesn't strictly need the agreements signed by Bob without Alice, but if the Alice-Charlie communication path goes bad, Charlie might be able to relay the CAA signed by Bob to Alice.  Mostly, it's just a courtesy to Charlie's AOI to keep it appraised of progress.</span></div></li>
+    <ul><li>Conditional Assignment Agreement, BCG component:</li>
+        <ul><li>Bob's AOS receives 1 BCG (with public key BK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie receives 14.04 BCG (with public key CK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie gives 15.05 BCG (with AO_ID_SEQ_NUM of the BCG shares source CK2)</li>
+            <li>Recording fee: 0.01 BCG</li>
+            <li>Recording Deadline: UT1605459600</li>
+            <li>BCG assignment signed by CK1 private key</li>
+            <li>BCG assignment signed by CK2 private key</li>
+            <li><b>BCG assignment signed by BK1 private key</b></li>
+        </ul>
+        <li>Conditional Assignment Agreement, CCC component:</li>
+        <ul><li>Alice receives 122.83 CCC (with public key AK1 the CCC shares receipt will be recorded under)</li>
+            <li>Charlie receives 12.12 CCC (with public key CK3 the CCC shares receipt will be recorded under)</li>
+            <li>Alice gives 135 CCC (with AO_ID_SEQ_NUM of the CCC shares source AK2)</li>
+            <li>Recording fee: 0.05 CCC</li>
+            <li>Recording Deadline: UT1605459600</li>
+            <li>CCC assignment signed by CK3 private key</li>
+        </ul>
+        <li>Overall CAA signed by CK1 private key</li>
+        <li>Overall CAA signed by CK2 private key</li>
+        <li>Overall CAA signed by CK3 private key</li>
+        <li><b>Overall CAA signed by BK1 private key</b></li>
+    </ul>
+    <li>Alice's AOE also recognizes the CAA as matching the previously approved transaction and so signs it and sends it back to Bob, Charlie, and the CCC recording server (AOR) since it is now ready for recording.  Alice's AOE doesn't know how to contact the BCG AOR, but either Bob or Charlie will take care of that.</li>
+    <ul><li>CAA (Conditional Assignment Agreement), BCG component:</li>
+        <ul><li>Bob's AOS receives 1 BCG (with public key BK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie receives 14.04 BCG (with public key CK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie gives 15.05 BCG (with AO_ID_SEQ_NUM of the BCG shares source CK2)</li>
+            <li>Recording fee: 0.01 BCG</li>
+            <li>Recording Deadline: UT1605459600</li>
+            <li>BCG assignment signed by CK1 private key</li>
+            <li>BCG assignment signed by CK2 private key</li>
+            <li>BCG assignment signed by BK1 private key</li>
+        </ul>
+        <li>Conditional Assignment Agreement, CCC component:</li>
+        <ul><li>Alice receives 122.83 CCC (with public key AK1 the CCC shares receipt will be recorded under)</li>
+            <li>Charlie receives 12.12 CCC (with public key CK3 the CCC shares receipt will be recorded under)</li>
+            <li>Alice gives 135 CCC (with AO_ID_SEQ_NUM of the CCC shares source AK2)</li>
+            <li>Recording fee: 0.05 CCC</li>
+            <li>Recording Deadline: UT1605459600</li>
+            <li>CCC assignment signed by CK3 private key</li>
+            <li><b>CCC assignment signed by AK1 private key</li>
+            <li>CCC assignment signed by AK2 private key</b></li>
+        </ul>
+        <li>Overall CAA signed by CK1 private key</li>
+        <li>Overall CAA signed by CK2 private key</li>
+        <li>Overall CAA signed by CK3 private key</li>
+        <li>Overall CAA signed by BK1 private key</li>
+        <li><b>Overall CAA signed by AK1 private key</li>
+        <li>Overall CAA signed by AK2 private key</b></li>
+    </ul>
+    <li>Bob's AOS receives the completely signed CAA from Alice, and the note that it has been forwarded to the CCC AOR for recording.  Bob's AOS delays for a time, waiting for the CCC AOR's response since that will be needed for recording on the BCG AOR anyway.</li>
+    <li>Charlie's AOI receives the completely signed CAA from Alice, and the note that it has been forwarded to the CCC AOR for recording.  Charlie's AOI similarly delays for a time, waiting for the CCC AOR's response since that will be needed for recording on the BCG AOR anyway.</li>
+    <li>The CCC AOR records the CAA and sends notice to Alice, Bob and Charlie including the proof of recording.</li>
+    <ul><li>CAA (Conditional Assignment Agreement), BCG component:</li>
+        <ul><li>Bob's AOS receives 1 BCG (with public key BK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie receives 14.04 BCG (with public key CK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie gives 15.05 BCG (with AO_ID_SEQ_NUM of the BCG shares source CK2)</li>
+            <li>Recording fee: 0.01 BCG</li>
+            <li>Recording Deadline: UT1605459600</li>
+            <li>BCG assignment signed by CK1 private key</li>
+            <li>BCG assignment signed by CK2 private key</li>
+            <li>BCG assignment signed by BK1 private key</li>
+        </ul>
+        <li>Conditional Assignment Agreement, CCC component:</li>
+        <ul><li>Alice receives 122.83 CCC (with public key AK1 the CCC shares receipt will be recorded under)</li>
+            <li>Charlie receives 12.12 CCC (with public key CK3 the CCC shares receipt will be recorded under)</li>
+            <li>Alice gives 135 CCC (with AO_ID_SEQ_NUM of the CCC shares source AK2)</li>
+            <li>Recording fee: 0.05 CCC</li>
+            <li>Recording Deadline: UT1605459600</li>
+            <li>CCC assignment signed by CK3 private key</li>
+            <li>CCC assignment signed by AK1 private key</li>
+            <li>CCC assignment signed by AK2 private key</li>
+        </ul>
+        <li>Overall CAA signed by CK1 private key</li>
+        <li>Overall CAA signed by CK2 private key</li>
+        <li>Overall CAA signed by CK3 private key</li>
+        <li>Overall CAA signed by BK1 private key</li>
+        <li>Overall CAA signed by AK1 private key</li>
+        <li>Overall CAA signed by AK2 private key</li>
+        <li><b>Proof of CAA recording on the CCC blockchain</b></li>
+    </ul>
+    <li>Charlie's AOI receives the notice from the CCC AOR first, and forwards it on to the BCG AOR for recording, along with notice to Alice and Bob that this has happened.</li>
+    <li>Bob's AOS has a few seconds longer delay than Charlie's AOI and so notices that the CAA has already been forwarded to the BCG AOR, so waits a few seconds longer for a response.</li>
+    <li>Alice's AOE receives the notice from the CCC AOR, but doesn't know how to communicate with the BCG AOR, so just waits.</li>
+    <li>The BCG AOR records the CAA before the recording deadline, making it official and binding.  It communicates the completely recorded CAA to all parties except Alice's AOE:</li>
+    <ul><li>CAA (Conditional Assignment Agreement), BCG component:</li>
+        <ul><li>Bob's AOS receives 1 BCG (with public key BK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie receives 14.04 BCG (with public key CK1 the BCG shares receipt will be recorded under)</li>
+            <li>Charlie gives 15.05 BCG (with AO_ID_SEQ_NUM of the BCG shares source CK2)</li>
+            <li>Recording fee: 0.01 BCG</li>
+            <li>Recording Deadline: UT1605459600</li>
+            <li>BCG assignment signed by CK1 private key</li>
+            <li>BCG assignment signed by CK2 private key</li>
+            <li>BCG assignment signed by BK1 private key</li>
+        </ul>
+        <li>Conditional Assignment Agreement, CCC component:</li>
+        <ul><li>Alice receives 122.83 CCC (with public key AK1 the CCC shares receipt will be recorded under)</li>
+            <li>Charlie receives 12.12 CCC (with public key CK3 the CCC shares receipt will be recorded under)</li>
+            <li>Alice gives 135 CCC (with AO_ID_SEQ_NUM of the CCC shares source AK2)</li>
+            <li>Recording fee: 0.05 CCC</li>
+            <li>Recording Deadline: UT1605459600</li>
+            <li>CCC assignment signed by CK3 private key</li>
+            <li>CCC assignment signed by AK1 private key</li>
+            <li>CCC assignment signed by AK2 private key</li>
+        </ul>
+        <li>Overall CAA signed by CK1 private key</li>
+        <li>Overall CAA signed by CK2 private key</li>
+        <li>Overall CAA signed by CK3 private key</li>
+        <li>Overall CAA signed by BK1 private key</li>
+        <li>Overall CAA signed by AK1 private key</li>
+        <li>Overall CAA signed by AK2 private key</li>
+        <li>Proof of CAA recording on the CCC blockchain</li>
+        <li><b>Proof of CAA recording on the BCG blockchain</b></li>
+    </ul>
+    <li>At this stage, the CAA is binding on the BCG blockchain and "in limbo" on the CCC blockchain.  In order to be validated, proof of the completed CAA having been recorded on the BCG blockchain must be added to the CCC blockchain.  In order to be refuted, proof of a recording of refutation on the BCG blockchain must be recorded.  Neither of these are on a deadline, but if a refutation is to be filed, it must be filed after the recording deadline.  While the CAA is in limbo, shares within it are locked up.</li>
+    <li>Once confirmed, the received shares become free to assign onward, once refuted the given shares become free to assign onward.</li>
+</ol>
+
+Note that more complex transactions involving more trading parties and/or more blockchains are possible, but that the overall CAA must be signed by all participants in all transactions, and that proof of the CAA's recording on all blockchains must be recorded on all blockchains, meaning a minimum of two recordings on all blockchains but one.<br/><br/>
+
+<h3>What is proof of recording on another blockchain?</h3>
+
+On a given blockchain, proof of recording can be a reference to the block in which the recording was made.  One of the stipulations of a blockchain is that all previous blocks are available for inspection and unchangeable.  However, when "crossing over" to other blockchains, how should a cross-chain transaction be "proven as recorded" on another blockchain?  The identification (hash & recording time) of the block it is recorded in is a start, but what happens when a blockchain becomes inaccessible to users of a Conditional Assignment Agreement on another chain?  At least for purposes of Conditonal Assignment Agreements, signatures of the proof of recording (identification) by all participants in the CAA component recorded in that chain should be sufficient to satisfy "proof" that participants in that CAA component were satisfied that their interests were adequately recorded.  If a participant should fail to acknowledge recording, blocking proof of recording on one or more chains, this would effectively invalidate the CAA, allowing it to be refuted on one or more chains, then proof of that recording of refutation can be used to invalidate recordings on other chains.  Need to graph this to see how a refusnik might attempt to game the system.<br/><br/>
+
+One way to attempt to game this system would be to record a valid CAA involving an unreliable "other" blockchain, then take down the "other" blockchain and record a false proof of refutation in that blockchain.  If, once "Proof" is accepted it cannot be later refuted, I believe this blocks this attack vector.  In the example above, Proof of recording on CCC is recorded, then the binding recording is done in the BCG blockchain at which point it is too late to take back the transactions in the BCG blockchain.  If the BCG blockchain "disappears" then the CAA on the CCC blockchain can remain in limbo, resulting in a loss of all shares.  All parties might sign an agreement of refutation of the CAA and record it in CCC meaning the givers get their shares back on CCC, but this would require the parties to the CAA on BCG to all agree to signing the refutation and recording it on CCC.  The BCG blockchain might then reappear, complete with a confirmed recording of the CAA.  While this results in cross-chain disagreement about the completeness of the CAA, it is a disagreement of the parties' own making - they first recorded the CAA, then later refuted that recording on another chain.  It feels like another "islands of processing" problem where everything is fine as long as the network doesn't get fragmented and unable to communicate with part of itself.
+
 
 </span>
 </span>
