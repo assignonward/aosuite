@@ -14,14 +14,18 @@ class MainWindow : public QMainWindow
 public:
         MainWindow(QWidget *parent = nullptr);
        ~MainWindow();
+  void  restoreConfig();
+  void  saveConfig();
   void  init();
   void  firstPass();
   void  showResults();
   void  translateRicey();
   void  translateNotes();
   bool  rulesCheck( QString, QString );
+  bool  validRice( const QByteArray & );
 
 public slots:
+  void  on_save_clicked();
   void  on_update_clicked();
 
 public:

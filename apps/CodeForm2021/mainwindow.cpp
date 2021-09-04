@@ -1,17 +1,48 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    restoreConfig();
+    on_update_clicked();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+/**
+ * @brief MainWinCommon::restoreConfig - places the window at
+ *   the same location and size on the desktop as when it was
+ *   last closed.
+ */
+void MainWindow::restoreConfig()
+{ QSettings settings;
+  restoreGeometry( settings.value( "geometry" ).toByteArray() );
+  restoreState   ( settings.value( "state"    ).toByteArray() );
+  if ( settings.value( "ricey" ).toString().size() > 0 ) ui->ricey->setHtml( settings.value( "ricey" ).toString() );
+  if ( settings.value( "notes" ).toString().size() > 0 ) ui->notes->setHtml( settings.value( "notes" ).toString() );
+}
+
+/**
+ * @brief MainWinCommon::saveConfig - saves the window location
+ *   and size on the desktop to be restored on next launch.
+ */
+void MainWindow::saveConfig()
+{ QSettings settings;
+  settings.setValue( "geometry", saveGeometry()      );
+  settings.setValue( "state"   , saveState()         );
+  settings.setValue( "ricey"   , ui->ricey->toHtml() );
+  settings.setValue( "notes"   , ui->notes->toHtml() );
+}
+
+void MainWindow::on_save_clicked()
+{ saveConfig(); }
 
 void MainWindow::on_update_clicked()
 { init();
@@ -136,9 +167,37 @@ bool MainWindow::rulesCheck( QString name, QString num )
     { v.append( QString( "rulesCheck: name '%1' does not end with the expected character %2.\n" ).arg( name ).arg( notesNumChar[numlc] ) );
       return false;
     }
-  // More to come
+  QByteArray ba = QByteArray::fromHex( num.mid(2).toUtf8() );
+  if ( ba.size() < 1 )
+    { v.append( QString( "rulesCheck: '%1' does not translate as bytes of hex code.\n" ).arg( num ) );
+      return false;
+    }
+  if ( ba.size() > 7 )
+    { v.append( QString( "rulesCheck: '%1' too long for an AO Rice Code (%2 bytes, max is 7).\n" ).arg( num ).arg( ba.size() ) );
+      return false;
+    }
+  if ( !validRice( ba ) )
+    { v.append( QString( "rulesCheck: '%1' is not a valid Rice code, all bytes except the last must set the 0x80 bit.\n" ).arg( num ) );
+      return false;
+    }
   return true;
 }
+
+/**
+ * @brief MainWindow::validRice
+ * @param ba - byte array to check
+ * @return true if ba is a valid rice code
+ */
+bool  MainWindow::validRice( const QByteArray &ba )
+{ if ( ba.size() < 1 ) return false;
+  if ( ba.size() > 7 ) return false;
+  if ( (ba.at( ba.size() - 1 ) & 0x80) != 0 ) return false;
+  if ( ba.size() == 1 ) return true;
+  for ( int i = 0; i < ba.size() - 1; i++ )
+    if ( (ba.at(i) & 0x80) == 0 ) return false;
+  return true;
+}
+
 
 /**
  * @brief MainWindow::translateNotes - write the .h code defines for the notes (Ricey Data Types)
