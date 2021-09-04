@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Assign Onward
+# Copyright (c) 2021 Assign Onward
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-TEMPLATE = subdirs
-SUBDIRS +=  \
-# ao           \
-CodeForm2021  \
-codeGenerator  \
-genesisMaker    \
-gen2021          \
-# recorder          \
-# tests
+
+include(../MainCore/MainCore.pri)
+include(../GenesisForm/GenesisForm.pri)
+include(../AssetForm/AssetForm.pri)
+include(../BlockDef/BlockDef.pri)
+
+QT        += core gui widgets
+TARGET     = gen2021
+DEFINES   += QT_DEPRECATED_WARNINGS
+DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+SOURCES   += mainwindow.cpp
+
+HEADERS   += appname.h    \
+             mainwindow.h
+
+FORMS     += mainwindow.ui
+
+RESOURCES += resources.qrc
+

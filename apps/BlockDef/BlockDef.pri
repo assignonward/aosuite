@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Assign Onward
+# Copyright (c) 2021 Assign Onward
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-TEMPLATE = subdirs
-SUBDIRS +=  \
-# ao           \
-CodeForm2021  \
-codeGenerator  \
-genesisMaker    \
-gen2021          \
-# recorder          \
-# tests
+
+INCLUDEPATH += $${PWD}
+
+HEADERS += \
+    $$PWD/blockOb.h \
+    $$PWD/riceyCodes.h
+
+SOURCES += \
+    $$PWD/blockOb.cpp
+
