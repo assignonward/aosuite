@@ -23,6 +23,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QSettings>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -72,6 +74,7 @@ void MainWindow::on_update_clicked()
   translateNotes();
   t.append( "\n" );
   translateRicey();
+  translateToJson();
   showResults();
 }
 
@@ -89,13 +92,17 @@ void MainWindow::init()
 }
 
 /**
- * @brief MainWindow::showResults - update the translations window
+ * @brief MainWindow::showResults - update the translations and json windows
  */
 void MainWindow::showResults()
 { ui->translations->clear();
   if ( v.size() > 0 )
     t.append( "\n"+v );
   ui->translations->append( t );
+
+  ui->json->clear();
+  QJsonDocument jd = QJsonDocument( jo );
+  ui->json->append( QString::fromUtf8( jd.toJson() ) );
 }
 
 /**
@@ -132,7 +139,8 @@ void MainWindow::firstPass()
  * @brief MainWindow::translateRicey - also check for correctness as we go
  */
 void MainWindow::translateRicey()
-{ foreach ( QString line, riceyList )
+{ QString rPre = ui->riceyPrefix->text();
+  foreach ( QString line, riceyList )
     { qint32 ics = line.indexOf( "//" );
       if ( ics < 0 )
         v.append( "WARN: missing // in: "+line+"\n" );
@@ -152,7 +160,7 @@ void MainWindow::translateRicey()
                   QString num = lList.at(1);
                   while ( num.size() < maxNumLength )
                     num.prepend( QChar(' ') );
-                  t.append( QString( "#define KTC_%1 %2 %3\n" ).arg( name ).arg( num ).arg( line.mid(ics) ) );
+                  t.append( QString( "#define %4%1 %2 %3\n" ).arg( name ).arg( num ).arg( line.mid(ics) ).arg( rPre ) );
                 }
             }
         }
@@ -185,7 +193,7 @@ bool MainWindow::rulesCheck( QString name, QString num )
       return false;
     }
   QChar namelc = name.at( name.size() - 1 );
-  if ( notesNumChar[numlc] != namelc )
+  if ( notesNumChar[numlc] != namelc ) // A kind of post-fix Hungarian notation to make the json/bson strictly typed
     { v.append( QString( "rulesCheck: name '%1' does not end with the expected character %2.\n" ).arg( name ).arg( notesNumChar[numlc] ) );
       return false;
     }
@@ -225,7 +233,35 @@ bool  MainWindow::validRice( const QByteArray &ba )
  * @brief MainWindow::translateNotes - write the .h code defines for the notes (Ricey Data Types)
  */
 void MainWindow::translateNotes()
-{ foreach ( QString line, notesList )
-    { t.append( QString( "#define RDT_%1\n" ).arg(line) );
+{ QString nPre = ui->notesPrefix->text();
+  foreach ( QString line, notesList )
+    { t.append( QString( "#define %2%1\n" ).arg(line).arg(nPre) );
     }
+}
+
+/**
+ * @brief MainWindow::translateToJson - make a json object that contains the content of the ricey and notes windows
+ */
+void MainWindow::translateToJson()
+{ jo = QJsonObject();
+  QJsonArray ja;
+  foreach ( QString line, riceyList )
+    ja.append( riceyLineToJson( line ) );
+  jo.insert( "riceyCodes", ja );
+}
+
+QJsonValue MainWindow::riceyLineToJson( QString line )
+{ QJsonObject rlo;
+  QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+  if ( words.size() < 4 )
+    { v.append( QString( "ricey line '%1' doesn't have at least 4 words" ).arg( line ) ); }
+   else
+    { rlo.insert( "name", words.at(0) );
+      rlo.insert( "rice", words.at(1) );
+      if ( words.at(2) != "//" )
+        { v.append( QString( "ricey line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
+       else
+        { rlo.insert( "desc", line.mid( line.indexOf("//") + 3 ) ); }
+    }
+  return QJsonValue( rlo );
 }
