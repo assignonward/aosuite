@@ -109,13 +109,23 @@ void MainWindow::showResults()
  * @brief MainWindow::firstPass - pick up some easy stuff for use in the later passes
  */
 void MainWindow::firstPass()
-{ foreach ( QString line, riceyList )
+{ QStringList names,codes;
+  foreach ( QString line, riceyList )
     { QStringList words = line.split(" ",QString::SkipEmptyParts);
       if ( words.size() > 1 )
         { if ( words.at(0).size() > maxNameLength )
             maxNameLength = words.at(0).size();
+          if ( names.contains( words.at(0) ) )
+            { v.append( QString( "ERROR: name %1 used twice, second time in line '%2'\n" ).arg( words.at(0) ).arg( line ) ); }
+           else
+            names.append( words.at(0) );
+
           if ( words.at(1).size() > maxNumLength )
             maxNumLength = words.at(1).size();
+          if ( codes.contains( words.at(1) ) )
+            { v.append( QString( "ERROR: code %1 used twice, second time in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
+           else
+            codes.append( words.at(1) );
         }
        else
         { v.append( QString( "WARN: short line '%1' in Ricey Code Definitions.\n" ).arg( line ) );
