@@ -41,7 +41,9 @@ void initKeyNames()
   keyNames.insert( QByteArray::fromHex( "AEC0" ), "AOEndChainO"     );
 }
 
-BlockOb::BlockOb(QObject *parent) : QObject(parent)
-{
-
+BlockValueObjectList::~BlockValueObjectList()
+{ foreach( QPointer<BlockOb> blockOb, obList )
+    if ( blockOb )
+      delete( blockOb );
 }
+
