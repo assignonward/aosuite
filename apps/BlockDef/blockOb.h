@@ -58,11 +58,11 @@ public:
     explicit  BlockOb( const QByteArray &key, QObject *parent = nullptr ) : QObject( parent ) { setKey( key ); }
              ~BlockOb() { if ( bValue ) delete( bValue ); }
         void  setKey( const QByteArray &key ) { bKey = key; if ( bKey.size() > 0 ) type = bKey.at(bKey.size()-1) & 0x0F; else type = 0x7F; } // TODO: type checking
-  QByteArray  key() { return bKey; }
+  QByteArray  key()     { return bKey; }
         void  setValue( BlockValue &value ) { if ( bValue ) delete( bValue ); bValue = &value; if ( bValue ) bValue->setKey( bKey ); } // TODO: type checking
-BlockValue &  value() { return *bValue; }
+BlockValue &  value()   { return *bValue; }
   QByteArray  bsonish() { QByteArray b = bKey; if ( bValue ) b.append( bValue->bsonish() ); return b; }
-  QByteArray  json()    { return QByteArray(); }
+  QByteArray  json()    { return QByteArray(); } // TODO: actual json() encoding including ricey code to string key conversion
 
 public:
            QByteArray  bKey;   // Ricey code bsonish key
@@ -74,7 +74,7 @@ class BlockValueObjectList : public BlockValue
 { public:
     explicit  BlockValueObjectList( QObject *parent = nullptr ) : BlockValue( parent ) {}
              ~BlockValueObjectList();
-       qint8  type() { return RDT_OBJECT; }
+       qint8  type()    { return RDT_OBJECT; }
   QByteArray  bsonish() { return QByteArray(); }
   QByteArray  json()    { return QByteArray(); }
 
@@ -84,10 +84,12 @@ class BlockValueObjectList : public BlockValue
 class BlockValueInt64 : public BlockValue
 { public:
     explicit  BlockValueInt64( QObject *parent = nullptr ) : BlockValue( parent ) { value = 0; }
-    ~BlockValueInt64() {}
-       qint8  type() { return RDT_INT64; }
+             ~BlockValueInt64() {}
+       qint8  type()    { return RDT_INT64; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << value; return b; }
   QByteArray  json()    { return QString::number( value ).toUtf8(); }
+      qint64  valueInt64() { return value; }
+        void  setValueInt64( qint64 v ) { value = v; }
 
       qint64  value;
 };
@@ -96,9 +98,11 @@ class BlockValueInt32 : public BlockValue
 { public:
     explicit  BlockValueInt32( QObject *parent = nullptr ) : BlockValue( parent ) { value = 0; }
              ~BlockValueInt32() {}
-       qint8  type() { return RDT_INT32; }
+       qint8  type()    { return RDT_INT32; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << value; return b; }
   QByteArray  json()    { return QString::number( value ).toUtf8(); }
+      qint64  valueInt32() { return value; }
+        void  setValueInt32( qint32 v ) { value = v; }
 
       qint32  value;
 };
@@ -107,9 +111,11 @@ class BlockValueRiceyCode : public BlockValue
 { public:
     explicit  BlockValueRiceyCode( QObject *parent = nullptr ) : BlockValue( parent ) {}
              ~BlockValueRiceyCode() {}
-       qint8  type() { return RDT_RCODE; }
+       qint8  type()    { return RDT_RCODE; }
   QByteArray  bsonish() { return value; }
   QByteArray  json()    { return "\"0x"+value.toHex()+"\""; }
+  QByteArray  valueRiceyCode() { return value; }
+        void  setValueRiceyCode( QByteArray v ) { value = v; }
 
   QByteArray  value;
 };
@@ -118,20 +124,24 @@ class BlockValueString : public BlockValue
 { public:
     explicit  BlockValueString( QObject *parent = nullptr ) : BlockValue( parent ) {}
              ~BlockValueString() {}
-       qint8  type() { return RDT_STRING; }
+       qint8  type()    { return RDT_STRING; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)value.size(); b.append( value ); return b; }
   QByteArray  json()    { return "\""+value+"\""; }
+  QByteArray  valueString() { return value; }
+        void  setValueString( QByteArray v ) { value = v; }
 
-  QByteArray  value;  // Strings are encoded as UTF8
+  QByteArray  value;  // Strings are encoded as UTF8 in a QByteArray
 };
 
 class BlockValueByteArray : public BlockValue
 { public:
     explicit  BlockValueByteArray( QObject *parent = nullptr ) : BlockValue( parent ) {}
              ~BlockValueByteArray() {}
-       qint8  type() { return RDT_BYTEARRAY; }
+       qint8  type()    { return RDT_BYTEARRAY; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)value.size(); b.append( value ); return b; }
   QByteArray  json()    { return "\"0x"+value.toHex()+"\""; }
+  QByteArray  valueByteArray() { return value; }
+        void  setValueByteArray( QByteArray v ) { value = v; }
 
   QByteArray  value;
 };
