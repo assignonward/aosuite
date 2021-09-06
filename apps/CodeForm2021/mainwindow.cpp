@@ -71,10 +71,15 @@ void MainWindow::on_save_clicked()
 void MainWindow::on_update_clicked()
 { init();
   firstPass();
+
   translateNotes();
   t.append( "\n" );
   translateRicey();
+  t.append( "\n" );
+  translateKeyNames();
+
   translateToJson();
+
   showResults();
 }
 
@@ -250,6 +255,48 @@ void MainWindow::translateNotes()
 }
 
 /**
+ * @brief MainWindow::translateKeyNames - code to initialize the keyNames map
+ */
+void MainWindow::translateKeyNames()
+{ t.append( "void initKeyNames()\n{\n" );
+  foreach( QString line, riceyList )
+    t.append( keyNamesLine( line ) );
+  t.append( "}\n" );
+}
+
+/**
+ * @brief MainWindow::keyNamesLine
+ * @param line - one line of ricey code definition
+ * @return the keyNames initialization for the given line
+ */
+QString MainWindow::keyNamesLine( QString line )
+{ QString kn = "  keyNames.insert( QByteArray::fromHex( ";
+  QStringList words = line.split( " ", QString::SkipEmptyParts );
+  if ( words.size() >= 2 )
+    { kn.append( QString( maxNumLength - words.at(1).size(), QChar(' ') ) );
+      kn.append( "\"");
+      if ( words.at(1).size() > 2 )
+        kn.append( words.at(1).mid(2) );
+      kn.append( "\" ), \"");
+      kn.append( words.at(0) );
+      kn.append( "\"");
+      kn.append( QString( maxNameLength - words.at(0).size(), QChar(' ') ) );
+    }
+   else
+    return QString( "WARN: '%1' doesn't have the necessary words to make a line.\n" ).arg( line );
+  kn.append( " );\n" );
+  return kn;
+}
+
+/*
+void initKeyNames()
+{ keyNames.insert( QByteArray::fromHex(   "00" ), "ObTermO"         );
+  keyNames.insert( QByteArray::fromHex(   "10" ), "AOChainBlockO"   );
+  keyNames.insert( QByteArray::fromHex(   "60" ), "pzzzO"           );
+}
+*/
+
+/**
  * @brief MainWindow::translateToJson - make a json object that contains the content of the ricey and notes windows
  */
 void MainWindow::translateToJson()
@@ -275,3 +322,4 @@ QJsonValue MainWindow::riceyLineToJson( QString line )
     }
   return QJsonValue( rlo );
 }
+

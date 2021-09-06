@@ -44,6 +44,8 @@ public:
        void  showResults();
        void  translateRicey();
        void  translateNotes();
+       void  translateKeyNames();
+    QString  keyNamesLine( QString );
        void  translateToJson();
  QJsonValue  riceyLineToJson( QString );
        bool  rulesCheck( QString, QString );
