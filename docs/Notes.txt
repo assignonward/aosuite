@@ -1,0 +1,95 @@
+Say a "coin" represents ~$10
+
+Say a 1TB SSD costs $100 and is expected to last 10 years
+
+Say a 1TB SSD consumes 10W to keep it "online"
+
+Say this blockchain is expected to be fully replicated online for 10 years on 10 devices. (Partial replication on more devices for longer time might be more realistic.)
+
+Say the cost of electricity is $0.15/kWh
+
+100 device years is 876576 hours, or 8765.76 kWh for all 10 devices for 10 years
+
+Cost of electricity is ~$1315  
+
+Cost of hardware is ~$1000
+
+Total cost to record 1TB of data is $2315
+
+Cost to record 1 byte is $0.000 000 002 315 or 0.000 000 000 231 500 coins
+
+4319654427 bytes can be recorded per coin: 1/4319654427 coins per byte - this would be a constant (more likely 1/4000000000)
+
+Say the chain represents 100,000 coins
+
+Say the number of shares is 1 000 000 000 000 000 000  (~2^60)
+
+Starts as 10 000 000 000 000 (10^13) shares per coin
+
+So, initially, each byte recorded requires 2 500 shares.
+
+For any transaction: figure out the number of shares required to record, round up to the next share any residual fraction, and this becomes an "on chain reward" for validators/recorders.
+
+If an ordinary transaction requires ~10kB of data (maybe as little as 1kB if we squeeze hard), that's 25 000 000 shares, or 0.000 002 5 coins, or 0.0025 cents- 0.00025 cents if you squeeze to 1k.
+
+For a 40MB NFT transaction, the similarly calculated recording fee would be: $0.10
+
+I might advocate that "average" transactions include a photograph (of whatever) taken by each party at the time of offer/acceptance, maybe 1MB each, so that would be 2MB with a byte recording fee of ~$0.005
+
+Random concepts:
+
+Shares vs Coins: A coin has a nominal value, a share is a fraction of the total coin value of the chain.  Typically, the "coin value" of the chain remains constant while the number of shares can remain constant or drop.  When the number of shares drop, share owners' equivalent coin holdings inflate.  
+
+Burned shares: shares which are permanently removed from the chain, reducing the "coins/share denominator" and inflating the value of all remaining shareholders shares when computed as "coins."
+
+Inactivity tax: shares are expected to change ownership at least once a year.  Zero inactivity tax for shares moving within 365.24 days of their last movement.  Between 1 and 6 years, the tax increases linearly from 0% to 5%.  Year 6-7 the tax increases linearly from 5% to 100%, shares not traded within 7 years are completely burned.  Inactivity tax up to 5% is 100% claimed by the validators/recorders, additional (year 6-7 above 5%) inactivty tax is 100% burned.
+
+HFT tax: shares are expected to change hands 3x or less per hour.  Each additional transaction in an hour are taxed at 1% (4th movement is taxed 1%, 5th movement taxed 2%, 6th movement taxed 3%, etc.)  Similarly 6 "free trades" per 24 hours, 21 "free trades" per week and 30 "free trades" per 30 days, with a maximum HFT tax of 10%.  High volume traders would be expected to hold a significant number of shares and so could move their "settled" shares first.  Anyone receiving "hot shares" would have to wait a month, at most, to trade those shares HFT tax free, and might demand 10% additional shares to compensate.  Any HFT tax due is 100% burned.
+
+Compressed Block Data: Transactional block information is never compressed (beyond bsonish representation) in "standard" communications.  Payload information (images, etc.) are encouraged to be compressed with well known standard algorithms - saving recording fees.
+
+Multi-chain contract: A secure transfer of shares executed on two chains.
+
+  High Level: Alice wants to trade 3 coins on Chain 2 to Bob for 2 coins on Chain 1.
+
+  Down one level: Alice has 40000 shares on Chain 2 representing 20 coins, and she's proposing giving 6000 of those shares, representing 3 Chain 2 coins to Bob in exchange for 20000 of his 100000 shares he holds on Chain 1, representing 2 of his 10 Chain 1 coins.
+    Alice's 40000 Chain 2 shares are held by Actor 4's key below.  She creates a new key pair, Actor 2, that will receive the 20000 (N) Chain 1 shares from Bob's existing Actor 1 key which currently holds 100000 shares.  Bob will create a new key pair, Actor 3, to receive the 6000 (M) shares from Alice's Actor 4 key on Chain 2.  The below illustration ignores the fact that Alice is also creating an Actor 6 key pair to receive the excess 34000 shares on Chain 2 from Actor 4, and Bob will be creating an Actor 5 key pair to receive the excess 80000 shares on Chain 1 from his Actor 1 key.  We are also neglecting the transaction fees which might amount to 1% or less of the transaction, so there will be that small amount deducted from the final transferred shares numbers, which can either be handled by bumping up the amount given, or accepting a smaller amount received on each side.  The actual process will have additional steps where the transaction is proposed with maximum acceptable gives and minimum acceptable receives and if the simulated validation/recording fees work to the liking of all parties, then the transaction goes forward to recording.  Also note, the proposal might include a collection of multiple keys providing the needed shares rather than just one key holding more shares than needed for the transaction.
+
+  Simple contingency: Times always increasing
+    Time 0 Chain 1 Actor 2 proposes Actor 4 would offer M shares on Chain 2 in exchange for N shares on Chain 1 offered to Actor 2 before Time X. (Informal step, not recorded)
+    Time 1 Chain 1 Actor 1 offers  Actor 2 N shares contingent on Actor 3 receiving M shares from Actor 4 on Chain 2 before Time X (1 < X).
+    Time 2 Chain 1 Actor 2 accepts Actor 1's contingent offer from Time 1 (2 < X).
+    Time 3 Chain 2 Actor 4 offers  Actor 3 M shares contingent on Actor 2 receiving N shares from Actor 1 on Chain 1, acceptance required before Time Y (3 < Y < X).
+    Time 4 Chain 2 Actor 3 accepts Actor 4's contingent offer from Time 3 (4 < Y < X).
+    Time 5 Chain 2 Record transactions from Time 1-4 (5 < Y < X).
+    Time 6 Chain 1 Actor 2 proves  Actor 3's receipt of M shares from Actor 4 on Chain 2, validating the contingency at Time 1 (6 < X for good form) - from Time 6 forward, Actor 2 is the owner of the N shares on Chain 1
+    Time 7 Chain 2 Actor 3 proves  Actor 2's receipt of N shares from Actor 1 on Chain 1, validating the contingency at Time 3 (7 < X for good form) - from Time 7 forward, Actor 3 is the owner of the M shares on Chain 2
+
+  Recording requirements: 
+    Assuming Actor 1/3 are the same entity, similarly Actors 2/4 are are the same entity different from the 1/3 entity.
+
+    Time 0-4 transactions completed off-chain, signed by their proposer / offerer / acceptor Actors and binding until Time X, successful execution (7), or recorded valid expiration.
+
+    If the above bundle of transactions (1-4) is recorded on Chain 2 before Time Y, this ties up the M shares on Chain 2 until Time X.
+    If Time Y passes without recording the transactions on Chain 2, Actor 3 and/or 4 may record a notice of expiration in Chain 2, invalidating the transaction and freeing the M shares to Actor 3's control from the time of recording of the notice of expiration.  The recording of expiration is not necessary if no record appears on the chain, but it clears any uncertainty about the intent of the expiration recorder who had previously signed an intent to transfer shares which apparently did not get recorded.
+    If Time Y passed without recording but all parties still desire the transaction, a new transaction should be processed with later expiration times. A notice of expiration of the previous transaction(s) may be included in the new transaction to avoid any uncertainty.
+
+    If transactions 1-4 plus proof of recording in Chain 2 (blocktime and hash) is recorded in Chain 1 before Time X (the Time 6 action), this completes the transaction on Chain 1 - the N shares are now controlled by Actor 2 from the time of recording - no need to wait for Time X anymore - all necessary offers and acceptances for the release of N shares to Actor 2 are validly recorded in both chains.
+    If a valid expiration was recorded on Chain 2 after Time Y by Actors 3 or 4, Actor 1 or 2 may record proof of the expiration on Chain 1 which would free up the N shares at the time of recording without having to wait for X, and clear any uncertainty about the expired transaction.
+    If Time X passes without recording the transactions on Chain 1, Actors 1 or 2 may record a notice of expiration in Chain 1, freeing the N shares in Actor 1's control from the time of recording.  This expiration also serves as proof of expiration for the transaction on Chain 2 and Actor 3 or 4 may record proof of this recording in Chain 1 (blocktime and hash) in Chain 2 to complete and clarify the invalidation of the transaction in Chain 2.
+    If Time X passes and all parties still desire the transaction, expiration of the previous transaction should be recorded along with initiation of a new transaction with later expiration times.
+
+    Recording on Chain 2 of the proof of the Time 6 transaction on Chain 1 (the Time 7 transaction) finalizes the transaction on Chain 2 and frees the M shares for use by Actor 3 immediately.  Although the transaction was complete when recorded at Time 6 in Chain 1, there was no proof of this in Chain 2 which was uncertain if the transaction really happened in Chain 1, or expired before Time X.  The transaction can no longer be voided after the Time 6 recording in Chain 1, but remains in limbo on Chain 2 until proof of completion is recorded.
+
+    Back to a higher level look: Time 0-4 steps are signed proposal/offer/acceptance steps carried out between the parties off-chain.  In reality, the Time 0 proposal would go to a simulated recording cost estimation for both chains and result in a transaction something like: Alice gives 3.015 coins on Chain 2 and gets 1.99 coins on Chain 1, Bob gives 2.01 coins on Chain 1 and gets 2.985 coins on Chain 2.  The 0.03 Chain 2 coins and 0.02 Chain 1 coins go in part to the processors who validate/record the transactions, and part get "burned" inflating everyone's coin to Shares ratio by a tiny amount.  So, once the transaction is proposed, simulated, final priced, then it's up to Alice and Bob if they want to accept that.  If they do, then:
+
+   Alice sends a formal step 0 to Bob, 
+   Bob sends a formal step 1 to Alice, 
+   Alice sends formal steps 2 and 3 to Bob, 
+   Bob sends a formal step 4 to Alice
+     Now Alice and Bob both have steps 1-4 ready to execute, 
+   Alice records formal steps 1 through 4 on Chain 2 as step 5, and the result of that on Chain 1 as step 6 which releases the shares Alice wants on Chain 1.  
+   Bob records the result of step 6 on Chain 2, releasing the shares he wants on Chain 2.
+
+
+
