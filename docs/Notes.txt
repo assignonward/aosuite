@@ -1,6 +1,35 @@
-Say a "coin" represents ~$10
 
-Say a 1TB SSD costs $100 and is expected to last 10 years
+System Architecture:
+
+The core concept of Assign Onward is the individually owned blockchain: simple, accessible, trustable.  They can range from a low activity, 100 low value transaction per year or less personal chain upward to typically something like a small business chain doing a couple million dollars a year in transactions.  Perhaps it could scale even larger, but the concept is to keep things small, accessible, trustable, so a larger business doing hundreds of millions of dollars per year in transactions would probably want to segment their transactions onto multiple chains, linked with agreed upon two way exchange rates, but still separate.
+
+"Above" the individual chains would be a protocol suite.  Rather than complex on-chain governance, I would envision a chain that wants a change of rules to simply spin up another chain and transition the residual value from the old chain onto the new one.  This might be tweaking the parameters within an existing protocol, or transitioning to a different protocol with different rules and parameters.  While the spirit of Assign Onward is that anyone can create their own blockchain with any rules/protocols they want, in practice those who stick with readily recognized protocols will have much better software support and fungibility with other chains.
+
+Recognized, tested and accepted protocols are kept in a protocol management blockchain, and this one is probably a good place to implement some form of on-chain governance with voting to recognize new protocols, deprecate old ones, identify bugs in processing software, etc.
+
+Exchange with other forms of cryptocurrency are a part of the landscape, but outside of the specific Assign Onward specifications and protocols.  The goal within Assign Onward is to define a set of freely interoperable blockchains such that share traders can setup algorighmic bid/ask ratios between the various chains establishing market values which chain owners who provide value in exchange for their coins can leverage to access other coins which they can trade for valuable goods and services.
+
+Each blockchain should have three or more active processors which hold between them enough staked shares to "51% guarantee" live transactions even when one is unreachable.  In practice, the network of processors would recognize several, perhaps all active, Assign Onward protocols and any node should be able to process any transaction on any chain - the trick is: which ones hold enough staked shares to adequately underwrite the transaction on the given chain.  Since most chains are "closely held" the chain owner should retain at least 51% of outstanding shares (more like 76% if they are only using three processor nodes) to guarantee all transactions that pass through.  When using 5 processing nodes, any 4/5 must total more than 50% of shares, so each node must hold at leas 12.5%, for a total holding requirement greater than 62.5%, less holding required, but more underwriting nodes to contact to be sure that the transaction is properly processed by trusted nodes.
+
+In the event of a single node "gone rogue" the staked shares on that node can be immediately unstaked using the remaining trusted servers which tTotal more than 50%, and presumably another node can be established with those shares to restore redundancy.
+
+Large processors of multiple chains might make up their own rules about acceptable fee ratios, acceptable protocols, etc. but, any individual should be able to spin up their own processor instances on various cloud services or even a home PC to provide recording and reporting for their own chain(s).
+
+Staked shares might be processed on a network of multiple machines at multiple addresses - the key is: the staker of shares trusts a processor, and the processor trusts zero or more nodes to carry out transactions with the shares they have been entrusted with.
+
+--------------------
+
+Being "individual" these blockchains can also have their points of service identified in realtime via GPS.  Food trucks, ride shares, mobile pet groomers, physical businesses don't strictly require geographic addresses anymore.  Also, service providers like writers, accountants, auditors, sales representatives can provide internet addresses for their contact and exchange services for Assign Onward coins, either on their own blockchains, or just trading coins of value to them on other people's blockchains.  Running your own blockchain(s) is not at all a requirement to participate in the Assign Onward network - running your own blockchain is akin to taking a loan from the community, a loan you pay back with services - in full when you recapture control of all outstanding shares on your chain.
+ 
+Blockchain ownership might normally be individual, but in practice it is entirely fungible.  Any person or entity willing to provide value in exchange for "coins" on a chain can start accumulating shares on the chain.  If the original owner of the chain wants to retire but others are holding shares on the chain and don't want to release them for what the original owner is offering, the owner can simply abandon the chain and it may live on being exchanged by others for whatever perceived value it has, presumably conferred by some other entity that has a store of value they have committed to exchange for coin of the chain.
+
+One might envision periodic on-chain advertisements where the person(s) providing value in exchange for the coins on the chain make non-binding statements as to what holders of the coin can expect in exchange for their coin going forward.  Coin spenders can likewise informally relate their satisfaction with value delivered in exchange for coin at the time of use, and potentially afterwards as well.
+
+Tipping after the fact: in many circumstances, it is impossible to know how satisfied you are with a product or service until after the purchase and even payment of a tip.  With Assign Onward, the required payment may be made up front before delivery of the good or service, and afterwards - either immediately or minutes to days or even weeks later, a tip can easily be sent through the network, directly tied to the transaction.  The same system makes "money back guarantee" quite a bit more binding on the seller.
+
+
+
+On Recording Costs:
 
 Say a 1TB SSD consumes 10W to keep it "online"
 
