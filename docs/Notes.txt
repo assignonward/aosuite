@@ -7,6 +7,22 @@ The core concept of Assign Onward is the individually owned blockchain: simple, 
 
 Recognized, tested and accepted protocols are kept in a protocol management blockchain, and this one is probably a good place to implement some form of on-chain governance with voting to recognize new protocols, deprecate old ones, identify bugs in processing software, etc.
 
+Data Defined:
+
+The protocols and data exchanges are all in data-typed json-like structures (1:1 translatable between human readable and binary representations).
+
+All keys in the data structures are defined in a dictionary with a human readable name and type, ricey code (1 to 7 octets encoding up to 2^45 unique keys plus 16 data types) and a general description as an arbitrary length string.
+
+Protocols define valid container types, the required and optional data contained therein, context specific descriptions of the key-value fields defined in the containers, and potentially valid and recommended ranges for the values in each defined key-value.
+
+Protocol definitions also specify valid operations on defined containers, at the most basic level: what makes a new block on the chain valid, or invalid.  Also, off chain pre-recording negotiations.
+
+Test Driven:
+
+Implementations are tested against the protocols they claim to support.  They must be able to produce valid results, and recognize and report invalid inputs and complete negotiations including: advertisement, presentation of available advertisements, proposal, offer, acceptance, recording, and reporting of successful recording.
+
+Environment:
+
 Exchange with other forms of cryptocurrency are a part of the landscape, but outside of the specific Assign Onward specifications and protocols.  The goal within Assign Onward is to define a set of freely interoperable blockchains such that share traders can setup algorighmic bid/ask ratios between the various chains establishing market values which chain owners who provide value in exchange for their coins can leverage to access other coins which they can trade for valuable goods and services.
 
 Each blockchain should have three or more active processors which hold between them enough staked shares to "51% guarantee" live transactions even when one is unreachable.  In practice, the network of processors would recognize several, perhaps all active, Assign Onward protocols and any node should be able to process any transaction on any chain - the trick is: which ones hold enough staked shares to adequately underwrite the transaction on the given chain.  Since most chains are "closely held" the chain owner should retain at least 51% of outstanding shares (more like 76% if they are only using three processor nodes) to guarantee all transactions that pass through.  When using 5 processing nodes, any 4/5 must total more than 50% of shares, so each node must hold at leas 12.5%, for a total holding requirement greater than 62.5%, less holding required, but more underwriting nodes to contact to be sure that the transaction is properly processed by trusted nodes.

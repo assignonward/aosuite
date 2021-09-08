@@ -304,7 +304,7 @@ void MainWindow::translateToJson()
   QJsonArray ja;
   foreach ( QString line, riceyList )
     ja.append( riceyLineToJson( line ) );
-  jo.insert( "riceyCodes", ja );
+  jo.insert( "riceyCodes_O", ja );
 }
 
 QJsonValue MainWindow::riceyLineToJson( QString line )
@@ -313,12 +313,17 @@ QJsonValue MainWindow::riceyLineToJson( QString line )
   if ( words.size() < 4 )
     { v.append( QString( "ricey line '%1' doesn't have at least 4 words" ).arg( line ) ); }
    else
-    { rlo.insert( "name", words.at(0) );
-      rlo.insert( "rice", words.at(1) );
+    { rlo.insert( "name_s", words.at(0) );
+      if ( words.at(1).size() < 3 )
+        { v.append( QString( "ricey line '%1' code '%2' too short" ).arg( line ).arg( words.at(1) ) ); }
+       else if ( !words.at(1).startsWith( "0x" ) )
+        { v.append( QString( "ricey line '%1' code '%2' doesn't start with 0x" ).arg( line ).arg( words.at(1) ) ); }
+       else
+        rlo.insert( "type_y", words.at(1).mid(2) );
       if ( words.at(2) != "//" )
         { v.append( QString( "ricey line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
        else
-        { rlo.insert( "desc", line.mid( line.indexOf("//") + 3 ) ); }
+        { rlo.insert( "text_s", line.mid( line.indexOf("//") + 3 ) ); }
     }
   return QJsonValue( rlo );
 }

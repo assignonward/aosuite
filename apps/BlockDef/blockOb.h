@@ -147,8 +147,8 @@ class BlockValueInt64 : public BlockValue
        qint8  type()    { return RDT_INT64; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
   QByteArray  json()    { return QString::number( m_value ).toUtf8(); }
-        bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
-        bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
+        bool  setBsonish( const QByteArray &b );
+        bool  setJson   ( const QByteArray &j );
       qint64  value()   { return m_value; }
         void  setValue( qint64 v ) { m_value = v; }
 
@@ -162,8 +162,8 @@ class BlockValueInt32 : public BlockValue
        qint8  type()    { return RDT_INT32; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
   QByteArray  json()    { return QString::number( m_value ).toUtf8(); }
-        bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
-        bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
+        bool  setBsonish( const QByteArray &b );
+        bool  setJson   ( const QByteArray &j );
       qint32  value()   { return m_value; }
         void  setValue( qint32 v ) { m_value = v; }
 
@@ -176,9 +176,10 @@ class BlockValueRiceyCode : public BlockValue
              ~BlockValueRiceyCode() {}
        qint8  type()    { return RDT_RCODE; }
   QByteArray  bsonish() { return m_value; }
-  QByteArray  json()    { return "\"0x"+m_value.toHex()+"\""; }
-        bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
-        bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
+  QByteArray  json()    { return "\""+m_value.toHex()+"\""; }
+        bool  setBsonish( const QByteArray &b );
+        bool  setJson   ( const QByteArray &j );
+ static bool  validRicey( const QByteArray &b );
   QByteArray  value()   { return m_value; }
         void  setValue( QByteArray v ) { m_value = v; }
 
@@ -191,9 +192,9 @@ class BlockValueString : public BlockValue
              ~BlockValueString() {}
        qint8  type()    { return RDT_STRING; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
-  QByteArray  json()    { return "\""+m_value+"\""; } // TODO: escape codes for " and other problematic characters
-        bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
-        bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
+  QByteArray  json();
+        bool  setBsonish( const QByteArray &b );
+        bool  setJson   ( const QByteArray &j );
   QByteArray  value()   { return m_value; }
         void  setValue( QByteArray v ) { m_value = v; }
 
@@ -206,9 +207,9 @@ class BlockValueByteArray : public BlockValue
              ~BlockValueByteArray() {}
        qint8  type()    { return RDT_BYTEARRAY; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
-  QByteArray  json()    { return "\"0x"+m_value.toHex()+"\""; }
-        bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
-        bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
+  QByteArray  json()    { return "\""+m_value.toHex()+"\""; }
+        bool  setBsonish( const QByteArray &b );
+        bool  setJson   ( const QByteArray &j );
   QByteArray  value()   { return m_value; }
         void  setValue( QByteArray v ) { m_value = v; }
 
