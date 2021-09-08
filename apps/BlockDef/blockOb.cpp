@@ -289,3 +289,60 @@ QByteArray  BlockValueString::json()
     return QByteArray( "\"\"" );
   return ba.mid( fqi, lqi-fqi+1 );
 }
+
+/**
+ * @brief bsonishNull - used to prevent bson parse errors when a value is missing
+ * @param keyType - key type to make the value for
+ * @return a null bson value for the type
+ */
+QByteArray bsonishNull( qint8 keyType )
+{ QByteArray b;
+  QDataStream s(b);
+  s.setByteOrder(QDataStream::LittleEndian);
+  switch ( keyType )
+    { case RDT_OBJECT:      return b;
+      case RDT_INT64:     { s << (qint64)0; return b; }
+      case RDT_INT32:     { s << (qint32)0; return b; }
+      case RDT_MPZ:         return b;
+      case RDT_MPQ:         return b;
+      case RDT_RCODE:     { return QByteArray( 0 ); }
+      case RDT_STRING:    { s << (qint32)0; return b; }
+      case RDT_BYTEARRAY: { s << (qint32)0; return b; }
+    }
+  return b;
+}
+
+/**
+ * @brief BlockObject::bsonish
+ * @return the bsonish representation of a single key-value pair
+ */
+QByteArray  BlockObject::bsonish()
+{ QByteArray b = m_key;
+  if ( b.size() < 1 )                                // empty key, empty bson
+    return QByteArray();
+  if ( !BlockValueRiceyCode::validRicey( m_key ) )  // invalid key, empty bson
+    return QByteArray();
+  if ( m_value )
+    b.append( m_value->bsonish() );
+   else
+    b.append( bsonishNull( m_key.at( m_key.size()-1 ) & 0x07 ) );
+  return b;
+}
+
+/**
+ * @brief BlockObject::json
+ * @return the json representation of a single key-value pair
+ */
+QByteArray  BlockObject::json()
+{ QByteArray j = "{ \"";
+  if ( !keyNames.contains( m_key ) )
+    return "{<!-- unknown key -->}";
+  j.append(keyNames[m_key]);
+  j.append( "\": " );
+  if ( m_value == nullptr )
+    j.append( "0 <!-- null value -->" );
+   else
+    j.append( m_value->json() );
+  j.append( " }" );
+  return j;
+}

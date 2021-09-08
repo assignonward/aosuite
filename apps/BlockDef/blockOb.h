@@ -35,8 +35,8 @@
 #include <obstack.h>
 #include <gmp.h>
 
-void initKeyNames();
-
+      void initKeyNames();
+QByteArray bsonishNull( qint8 );
 /**
  * @brief The BlockValue class - base class for all value types found in block objects
  */
@@ -63,15 +63,16 @@ class BlockValueNull : public BlockValue
 { public:
     explicit  BlockValueNull( QObject *parent = nullptr ) : BlockValue( parent ) {}
              ~BlockValueNull() {}
-       qint8  type()    { return RDT_NULL; }
-  QByteArray  bsonish() { QByteArray b; b.append((qint8)0); return b; }
-  QByteArray  json()    { QString s = "\"\""; return s.toUtf8(); }
+       qint8  type()        { return RDT_NULL; }
+  QByteArray  bsonish()     { QByteArray b; b.append((qint8)0); return b; }
+  QByteArray  bsonishNull() { QByteArray b; b.append((qint8)0); return b; }
+  QByteArray  json()        { QString s = "\"\""; return s.toUtf8(); }
         bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
         bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
 };
 
 /**
- * @brief The BlockObject class - a block has a key and a value
+ * @brief The BlockObject class - a block has a single key and a value
  */
 class BlockObject : public QObject
 {
@@ -85,8 +86,8 @@ public:
   QByteArray  key()     { return m_key; }
         void  setValue( BlockValue &value )     { if ( m_value ) delete( m_value ); m_value = &value; if ( m_value ) m_value->setKey( m_key ); } // TODO: type checking
 BlockValue &  value()   { return *m_value; }
-  QByteArray  bsonish() { QByteArray b = m_key; if ( m_value ) b.append( m_value->bsonish() ); return b; }
-  QByteArray  json()    { return QByteArray(); } // TODO: actual json() encoding including ricey code to string key conversion
+  QByteArray  bsonish();
+  QByteArray  json();
 
 public:
                 qint8  m_type;  // Type, extracted from bKey
@@ -125,16 +126,16 @@ public:
  */
 class BlockValueObject : public BlockValue
 { public:
-    explicit  BlockValueObject( QObject *parent = nullptr ) : BlockValue( parent ) {}
-             ~BlockValueObject();
-       qint8  type()    { return RDT_OBJECT; }
-  QByteArray  bsonish() { return QByteArray(); }
-  QByteArray  json()    { return QByteArray(); }
-        bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
-        bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
-      qint32  size()    { return m_obMap.size(); }
-        bool  contains( const QByteArray &k )   { return m_obMap.contains( k ); }
-BlockValue &  value( const QByteArray &k ) { if ( !contains(k) ) return m_null; return m_obMap.value(k)->value(); }
+         explicit  BlockValueObject( QObject *parent = nullptr ) : BlockValue( parent ) {}
+                  ~BlockValueObject();
+            qint8  type()    { return RDT_OBJECT; }
+       QByteArray  bsonish() { return QByteArray(); }
+       QByteArray  json()    { return QByteArray(); }
+             bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
+             bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
+           qint32  size()    { return m_obMap.size(); }
+             bool  contains( const QByteArray &k )   { return m_obMap.contains( k ); }
+     BlockValue &  value( const QByteArray &k ) { if ( !contains(k) ) return m_null; return m_obMap.value(k)->value(); }
 
 QMap<QByteArray, QPointer<BlockObject> > m_obMap;
                          BlockValueNull  m_null;   // Returned when valueAt calls an invalid index
