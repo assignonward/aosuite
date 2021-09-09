@@ -35,7 +35,7 @@ Dictionary::Dictionary()
                        else
                         { QByteArray ricey = QByteArray::fromHex( co["type_s"].toString().toUtf8() );
                           ciByRicey.insert( ricey, i );
-                          // ciByN.insert( riceToInt(ricey), i );
+                          ciByN.insert( riceToInt(ricey), i );
                           // TODO: type checking vs the riceyTypes_O table info
                         }
                     }
