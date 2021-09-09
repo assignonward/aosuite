@@ -1,0 +1,194 @@
+{
+    "riceyCodes_O": [
+        {
+            "name_s": "ObTerm_o",
+            "text_s": "Object terminator, indicates no more items in the object in bsonish lists",
+            "type_y": "00"
+        },
+        {
+            "name_s": "int64_i",
+            "text_s": "Generic signed int64, use depends on context.",
+            "type_y": "01"
+        },
+        {
+            "name_s": "int32_l",
+            "text_s": "Generic signed int32, use depends on context.",
+            "type_y": "02"
+        },
+        {
+            "name_s": "mpz_n",
+            "text_s": "Generic MPZ large integer, use depends on context.",
+            "type_y": "03"
+        },
+        {
+            "name_s": "mpq_r",
+            "text_s": "Generic MPQ large integer fraction, use depends on context.",
+            "type_y": "04"
+        },
+        {
+            "name_s": "type_y",
+            "text_s": "Identifies an algorithm type for hash or crypto key, or other types depending on context",
+            "type_y": "05"
+        },
+        {
+            "name_s": "text_s",
+            "text_s": "Generic string, use depends on context, for instance in an image object this would be the alt text",
+            "type_y": "06"
+        },
+        {
+            "name_s": "data_b",
+            "text_s": "Generic data block, use determined by the object which contains it.",
+            "type_y": "07"
+        },
+        {
+            "name_s": "chainBlock_o",
+            "text_s": "A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O.",
+            "type_y": "10"
+        },
+        {
+            "name_s": "signedBlock_o",
+            "text_s": "A Signed Block in the chain always contains a parentSignature_O a time_i of when the block was signed, the signature_O is found in the object which contains the signedBlock_O.",
+            "type_y": "20"
+        },
+        {
+            "name_s": "parentSignature_o",
+            "text_s": "Contains a copy of the signature_O of one or more (more in the case of merging forked chains) parent blocks.",
+            "type_y": "30"
+        },
+        {
+            "name_s": "signature_o",
+            "text_s": "Hash object, only found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.",
+            "type_y": "40"
+        },
+        {
+            "name_s": "time_i",
+            "text_s": "UTC time of block creation (microseconds since epoch x 189).  May never be less than or equal to the timei of any parent block.  Serves as a unique id for AOBO blocks.",
+            "type_y": "11"
+        },
+        {
+            "name_s": "AOShares_n",
+            "text_s": "A quantity of shares - meaning depends on context",
+            "type_y": "13"
+        },
+        {
+            "name_s": "SHA256_y",
+            "text_s": "algorithm ID (algor) for SHA2 - 256",
+            "type_y": "15"
+        },
+        {
+            "name_s": "ECB256_y",
+            "text_s": "algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1",
+            "type_y": "25"
+        },
+        {
+            "name_s": "RSA3072_y",
+            "text_s": "algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes",
+            "type_y": "8025"
+        },
+        {
+            "name_s": "SHA3b512_y",
+            "text_s": "algorithm ID (algor) for SHA3 - 512",
+            "type_y": "8015"
+        },
+        {
+            "name_s": "jpg_y",
+            "text_s": "Found in image objects, tells what format the data_b is to be interpreted as",
+            "type_y": "9015"
+        },
+        {
+            "name_s": "png_y",
+            "text_s": "Found in image objects, tells what format the data_b is to be interpreted as",
+            "type_y": "9025"
+        },
+        {
+            "name_s": "PcolTAO1_y",
+            "text_s": "Test protocol symbol: TⒶ2021.9.7",
+            "type_y": "A401"
+        },
+        {
+            "name_s": "PcolTAO2_y",
+            "text_s": "Test protocol symbol: TⒶ2021.10.13",
+            "type_y": "A402"
+        },
+        {
+            "name_s": "PcolAO1_y",
+            "text_s": "Live protocol symbol: Ⓐ2021.12.15",
+            "type_y": "A501"
+        },
+        {
+            "name_s": "AOProtocolId_y",
+            "text_s": "An Assign Onward Protocol identifier",
+            "type_y": "A0A555"
+        },
+        {
+            "name_s": "AOGenesisBlock_o",
+            "text_s": "An Assign Onward Genesis Block. With a zzz0 which includes a timei, and other definitions for the chain.",
+            "type_y": "A0B000"
+        },
+        {
+            "name_s": "AOChainDesc_o",
+            "text_s": "Chain Description, generally only found in the Genesis Block - descriptive items like name, symbol, number of coins represented by all shares, etc.",
+            "type_y": "A0CD00"
+        },
+        {
+            "name_s": "AOChainFunc_o",
+            "text_s": "Chain Functional items description, generally only found in the Genesis Block - functional items like Protocol ID, creation time, founder's public key, number of shares, expiration rates, recording fees, etc.",
+            "type_y": "A0CF00"
+        },
+        {
+            "name_s": "AOEndChain_o",
+            "text_s": "Used when reporting the last blocks in a chain, this block is a signal that all known blocks are received.  Has a pzzzO and zzzO and timei of when it was reported, but contains no transaction information and will (usually) be discarded when appending new transaction blocks to its parent.",
+            "type_y": "A0EC00"
+        },
+        {
+            "name_s": "Symbol_s",
+            "text_s": "A short string like ITC representing the chain.",
+            "type_y": "A0CD06"
+        },
+        {
+            "name_s": "CdName_s",
+            "text_s": "A longer string like Itcoin representing the chain.",
+            "type_y": "A0CD16"
+        },
+        {
+            "name_s": "Tagline_s",
+            "text_s": "A brief sentence like \"The greatest blockchain ever\" describing the chain.",
+            "type_y": "A0CD26"
+        },
+        {
+            "name_s": "Description_s",
+            "text_s": "A paragraph (say 1000-ish characters) describing the chain.",
+            "type_y": "A0CD36"
+        },
+        {
+            "name_s": "Icon_o",
+            "text_s": "A square-ish image that looks good small, representing the chain.",
+            "type_y": "A0CD10"
+        },
+        {
+            "name_s": "Banner_o",
+            "text_s": "A wide image that might be displayed near the top of a page, representing the chain.",
+            "type_y": "A0CD20"
+        },
+        {
+            "name_s": "Image_o",
+            "text_s": "A more detailed image representing the chain.",
+            "type_y": "A0CD30"
+        },
+        {
+            "name_s": "CfShares_n",
+            "text_s": "The number of shares recorded in the Genesis block.",
+            "type_y": "A0CF03"
+        },
+        {
+            "name_s": "CfCoins_n",
+            "text_s": "The number of \"coins\" all the shares in this chain represent.",
+            "type_y": "A0CF13"
+        },
+        {
+            "name_s": "CfRecFee_r",
+            "text_s": "The number of coins per byte charged to record data on this chain (usually 1/a very large number).",
+            "type_y": "A0CF04"
+        }
+    ]
+}

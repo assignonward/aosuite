@@ -25,8 +25,13 @@ INCLUDEPATH += $${PWD}
 
 HEADERS += \
     $$PWD/blockOb.h \
+    $$PWD/dictionary.h \
     $$PWD/riceyCodes.h
 
 SOURCES += \
-    $$PWD/blockOb.cpp
+    $$PWD/blockOb.cpp \
+    $$PWD/dictionary.cpp
+
+RESOURCES += \
+    $$PWD/blockDef.qrc
 

@@ -28,7 +28,7 @@
 #include <QMap>
 #include <QPointer>
 #include <QDataStream>
-#include "riceyCodes.h"
+#include "dictionary.h"
 
 #include <stdio.h>
 #include <stdarg.h>
