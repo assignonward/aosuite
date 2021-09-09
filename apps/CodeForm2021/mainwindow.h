@@ -48,12 +48,16 @@ public:
     QString  keyNamesLine( QString );
        void  translateToJson();
  QJsonValue  riceyLineToJson( QString );
+ QJsonValue  notesLineToJson( QString );
+    QString  codesLineToHtml( QString );
+    QString  notesLineToHtml( QString, int );
        bool  rulesCheck( QString, QString );
        bool  validRice( const QByteArray & );
 
 public slots:
        void  on_save_clicked();
        void  on_update_clicked();
+       void  on_refresh_clicked();
 
 public:
             QString  t; // translation

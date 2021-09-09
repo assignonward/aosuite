@@ -25,6 +25,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QTextCodec>
+#include <QHash>
 
 QHash<QByteArray,QByteArray> keyNames;  // key
 
@@ -68,8 +69,11 @@ void initKeyNames()
   keyNames.insert( QByteArray::fromHex( "A0CF04" ), "CfRecFee_r"        );
 }
 
+/**
+ * @brief BlockValueObject::~BlockValueObject - cleanup the data elements on destruction
+ */
 BlockValueObject::~BlockValueObject()
-{ foreach( QPointer<BlockObject> blockOb, m_obMap )
+{ foreach( QPointer<KeyValuePair> blockOb, m_obMap )
     if ( blockOb )
       delete( blockOb );
 }
@@ -219,30 +223,37 @@ bool  BlockValueByteArray::setJson( const QByteArray &j )
 }
 
 /**
+ * @brief BlockValueString::bsonish
+ * @return rice code length (in bytes, not characters) followed by UTF-8 encoded string
+ */
+QByteArray  BlockValueString::bsonish()
+{ QByteArray b = intToRice( m_value.size() );
+  b.append( m_value );
+  return b;
+}
+
+/**
  * @brief BlockValueString::setBsonish
- * @param b - 4 byte LittleEndian length plus UTF-8 string data
+ * @param b - rice coded length in bytes followed by UTF-8 encoded string
  * @return true if conversion was successful (zero length is still valid)
  */
 bool  BlockValueString::setBsonish( const QByteArray &b )
-{ if ( b.size() < 4 )
+{ if ( b.size() < 1 )
     return false;
   qint32 sz;
-  QDataStream s(b);
-  s.setByteOrder(QDataStream::LittleEndian);
-  s >> sz;
-  if ( sz < 0 )
+  bool ok;
+  qint64 length = (qint64)riceToInt( b, &sz, &ok );
+  if ( !ok || ( b.size() < (sz + length) ) )  // TODO: add a protocol context that includes properties like max string length
     return false;
-  if ( b.size() < 4+sz )
-    return false;
-  if ( sz == 0 )
+  if ( sz == 0 )  // empty string is a valid construct
     { m_value = QByteArray();
       return true;
     }
-  QByteArray string = b.mid(4,sz);
+  QByteArray string = b.mid(sz, length);
   QTextCodec::ConverterState state;
   QTextCodec *codec = QTextCodec::codecForName("UTF-8");
   codec->toUnicode( string.constData(), string.size(), &state );
-  if (state.invalidChars > 0)
+  if (state.invalidChars > 0) // Checking if string is valid UTF-8?
     return false;
   m_value = string;
   return true;
@@ -316,7 +327,7 @@ QByteArray bsonishNull( qint8 keyType )
  * @brief BlockObject::bsonish
  * @return the bsonish representation of a single key-value pair
  */
-QByteArray  BlockObject::bsonish()
+QByteArray  KeyValuePair::bsonish()
 { QByteArray b = m_key;
   if ( b.size() < 1 )                                // empty key, empty bson
     return QByteArray();
@@ -333,7 +344,7 @@ QByteArray  BlockObject::bsonish()
  * @brief BlockObject::json
  * @return the json representation of a single key-value pair
  */
-QByteArray  BlockObject::json()
+QByteArray  KeyValuePair::json()
 { QByteArray j = "{ \"";
   if ( !keyNames.contains( m_key ) )
     return "{<!-- unknown key -->}";
@@ -346,3 +357,36 @@ QByteArray  BlockObject::json()
   j.append( " }" );
   return j;
 }
+
+QByteArray  KeyValueArray::bsonish()
+{ QByteArray b = m_key; // TODO: type checking
+  quint64 elementCount = 0;
+  foreach ( ValueBase *vp, m_values )
+    if ( vp != nullptr )
+      elementCount++;
+  b.append( intToRice( elementCount ) );
+  foreach ( ValueBase *vp, m_values )
+    if ( vp != nullptr )
+      b.append( vp->bsonish() );
+  return b;
+}
+
+QByteArray  KeyValueArray::json()
+{ QByteArray j = "{ \"";
+  if ( !keyNames.contains( m_key ) )
+    return "{<!-- unknown key -->}";
+  j.append(keyNames[m_key]);
+  j.append( "\": [ " );
+  bool wroteOne = false;
+  foreach ( ValueBase *vp, m_values )
+    { if ( vp != nullptr )
+        { j.append( vp->json() + " , \n" );
+          wroteOne = true;
+        }
+    }
+  if ( wroteOne )
+    j = j.mid( 0, j.size() - 3 );
+  j.append( "] }" );
+  return j;
+}
+

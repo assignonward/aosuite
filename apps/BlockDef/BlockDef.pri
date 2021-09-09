@@ -30,8 +30,8 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/blockOb.cpp \
-    $$PWD/dictionary.cpp
+    $$PWD/dictionary.cpp \
+    $$PWD/riceyCodes.cpp
 
 RESOURCES += \
     $$PWD/blockDef.qrc
-

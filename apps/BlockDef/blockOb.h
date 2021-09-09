@@ -24,7 +24,6 @@
 #define BLOCKOB_H
 
 #include <QObject>
-#include <QHash>
 #include <QMap>
 #include <QPointer>
 #include <QDataStream>
@@ -37,96 +36,94 @@
 
       void initKeyNames();
 QByteArray bsonishNull( qint8 );
+
 /**
- * @brief The BlockValue class - base class for all value types found in block objects
+ * @brief The ValueBase class - base class for all value types found in block objects
  */
-class BlockValue : public QObject
+class ValueBase : public QObject
 {
     Q_OBJECT
 public:
-          explicit  BlockValue(QObject *parent = nullptr) : QObject( parent ) {}
-                   ~BlockValue() {}
-              void  setKey( const QByteArray &key ) { m_key = key; }
+          explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) {}
+                   ~ValueBase() {}
 virtual      qint8  type()    = 0;
 virtual QByteArray  bsonish() = 0;
 virtual QByteArray  json()    = 0;
 virtual       bool  setBsonish( const QByteArray & ) = 0;
 virtual       bool  setJson   ( const QByteArray & ) = 0;
-
-   QByteArray  m_key;   // Ricey code bsonish key, used in sort arbitration, type checking
 };
 
 /**
- * @brief The BlockValueNull class - an empty value
+ * @brief The BlockValueNull class - an empty value with no defined type
  */
-class BlockValueNull : public BlockValue
+class BlockValueNull : public ValueBase
 { public:
-    explicit  BlockValueNull( QObject *parent = nullptr ) : BlockValue( parent ) {}
+    explicit  BlockValueNull( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueNull() {}
-       qint8  type()        { return RDT_NULL; }
-  QByteArray  bsonish()     { QByteArray b; b.append((qint8)0); return b; }
-  QByteArray  bsonishNull() { QByteArray b; b.append((qint8)0); return b; }
-  QByteArray  json()        { QString s = "\"\""; return s.toUtf8(); }
+       qint8  type()    { return RDT_NULL; }
+  QByteArray  bsonish() { QByteArray b; b.append((qint8)0); return b; }
+  QByteArray  json()    { QString s = "\"00\""; return s.toUtf8(); }
         bool  setBsonish( const QByteArray &b ) { (void)b; return true; }
         bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
 };
 
 /**
- * @brief The BlockObject class - a block has a single key and a value
+ * @brief The KeyValuePair class - a single key and a single value (of any type)
  */
-class BlockObject : public QObject
+class KeyValuePair : public QObject
 {
     Q_OBJECT
 public:
-    explicit  BlockObject( const QByteArray &key, QObject *parent = nullptr ) : QObject( parent ) { setKey( key ); }
-             ~BlockObject() { if ( m_value ) delete( m_value ); }
-        void  calcType( const QByteArray &key ) { if ( key.size() > 0 ) m_type = key.at(key.size()-1) & 0x0F; else m_type = 0x7F; }
-        void  setKey( const QByteArray &key )   { m_key = key; calcType(key); }
-       qint8  type()    { return m_type; }
-  QByteArray  key()     { return m_key; }
-        void  setValue( BlockValue &value )     { if ( m_value ) delete( m_value ); m_value = &value; if ( m_value ) m_value->setKey( m_key ); } // TODO: type checking
-BlockValue &  value()   { return *m_value; }
+    explicit  KeyValuePair( const QByteArray &key, QObject *parent = nullptr ) : QObject( parent ) { setKey( key ); }
+             ~KeyValuePair() { if ( m_value ) delete( m_value ); }
+        void  setKey( const QByteArray &key ) { m_key = key; }
+       qint8  type()  { if ( m_key.size() > 0 ) return m_key.at(m_key.size()-1) & 0x0F; return 0x7F; }
+  QByteArray  key()   { return m_key; }
+        void  setValue( ValueBase &value )    { if ( m_value ) delete( m_value ); m_value = &value; } // TODO: type checking
+ ValueBase &  value() { return *m_value; }
   QByteArray  bsonish();
   QByteArray  json();
 
 public:
-                qint8  m_type;  // Type, extracted from bKey
-           QByteArray  m_key;   // Ricey code bsonish key
-  QPointer<BlockValue> m_value; // Value of this BlockObject
+          QByteArray  m_key;   // Ricey code bsonish key
+  QPointer<ValueBase> m_value; // Value of this KeyValuePair
 };
 
 /**
- * @brief The BlockArray class - zero or more block objects of the same type
+ * @brief The KeyValueArray class - zero or more values of the same type stored under a single key
  */
-class BlockArray : public QObject
+class KeyValueArray : public QObject
 {
     Q_OBJECT
 public:
-    explicit  BlockArray( const QByteArray &key, QObject *parent = nullptr ) : QObject( parent ) { setKey( key ); }
-             ~BlockArray() { while ( m_values.size() > 0 ) { if ( m_values.last() != nullptr ) { delete( m_values.last() ); } m_values.removeLast(); } }
+    explicit  KeyValueArray( const QByteArray &key, QObject *parent = nullptr ) : QObject( parent ) { setKey( key ); }
+             ~KeyValueArray() { while ( m_values.size() > 0 ) { if ( m_values.last() != nullptr ) { delete( m_values.last() ); } m_values.removeLast(); } }
         void  calcType( const QByteArray &key ) { if ( key.size() > 0 ) m_type = key.at(key.size()-1) & 0x0F; else m_type = 0x7F; }
         void  setKey( const QByteArray &key )   { m_key = key; calcType(key); }
        qint8  type()    { return m_type; }
   QByteArray  key()     { return m_key; }
       qint32  size()    { return m_values.size(); }
-        void  appendValue( BlockValue &value ) { m_values.append( &value ); value.setKey( m_key ); } // TODO: type checking
-BlockValue &  valueAt( qint32 n ) { if (( n >= 0 ) && ( n < m_values.size() )) return *m_values.at(n); else return m_null; }
-  QByteArray  bsonish() { return QByteArray(); }
-  QByteArray  json()    { return QByteArray(); } // TODO: actual json() encoding including ricey code to string key conversion
+        void  appendValue( ValueBase &value ) { m_values.append( &value ); } // TODO: type checking
+ ValueBase &  valueAt( qint32 n ) { if (( n >= 0 ) && ( n < m_values.size() )) return *m_values.at(n); else return m_null; }
+  QByteArray  bsonish();
+  QByteArray  json();
 
 public:
-                        qint8  m_type;   // Type, extracted from bKey
-                   QByteArray  m_key;    // Ricey code bsonish key
-  QList<QPointer<BlockValue> > m_values; // Values in this BlockArray
-               BlockValueNull  m_null;   // Returned when valueAt calls an invalid index
+                       qint8  m_type;   // Type, extracted from bKey
+                  QByteArray  m_key;    // Ricey code bsonish key
+  QList<QPointer<ValueBase> > m_values; // Values in this array
+              BlockValueNull  m_null;   // Returned when valueAt calls an invalid index
 };
 
 /**
- * @brief The BlockValueObject class - zero or more BlockObjects all with unique keys
+ * @brief The BlockValueObject class - zero or more KeyValuePairs
+ *   all with unique keys, vp-> types may be mixed.
+ *
+ * Keys are type o/O
  */
-class BlockValueObject : public BlockValue
+class BlockValueObject : public ValueBase
 { public:
-         explicit  BlockValueObject( QObject *parent = nullptr ) : BlockValue( parent ) {}
+         explicit  BlockValueObject( QObject *parent = nullptr ) : ValueBase( parent ) {}
                   ~BlockValueObject();
             qint8  type()    { return RDT_OBJECT; }
        QByteArray  bsonish() { return QByteArray(); }
@@ -135,15 +132,20 @@ class BlockValueObject : public BlockValue
              bool  setJson   ( const QByteArray &j ) { (void)j; return true; }
            qint32  size()    { return m_obMap.size(); }
              bool  contains( const QByteArray &k )   { return m_obMap.contains( k ); }
-     BlockValue &  value( const QByteArray &k ) { if ( !contains(k) ) return m_null; return m_obMap.value(k)->value(); }
+      ValueBase &  value( const QByteArray &k ) { if ( !contains(k) ) return m_null; return m_obMap.value(k)->value(); }
 
-QMap<QByteArray, QPointer<BlockObject> > m_obMap;
-                         BlockValueNull  m_null;   // Returned when valueAt calls an invalid index
+QMap<QByteArray, QPointer<KeyValuePair> > m_obMap;
+                          BlockValueNull  m_null;   // Returned when valueAt calls an invalid index
 };
 
-class BlockValueInt64 : public BlockValue
+/**
+ * @brief The BlockValueInt64 class - single signed 64 bit integer
+ *
+ * Keys are type i/I
+ */
+class BlockValueInt64 : public ValueBase
 { public:
-    explicit  BlockValueInt64( QObject *parent = nullptr ) : BlockValue( parent ) { m_value = 0; }
+    explicit  BlockValueInt64( QObject *parent = nullptr ) : ValueBase( parent ) { m_value = 0; }
              ~BlockValueInt64() {}
        qint8  type()    { return RDT_INT64; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
@@ -156,9 +158,14 @@ class BlockValueInt64 : public BlockValue
       qint64  m_value;
 };
 
-class BlockValueInt32 : public BlockValue
+/**
+ * @brief The BlockValueInt32 class - single signed 32 bit integer
+ *
+ * Keys are type l/L
+ */
+class BlockValueInt32 : public ValueBase
 { public:
-    explicit  BlockValueInt32( QObject *parent = nullptr ) : BlockValue( parent ) { m_value = 0; }
+    explicit  BlockValueInt32( QObject *parent = nullptr ) : ValueBase( parent ) { m_value = 0; }
              ~BlockValueInt32() {}
        qint8  type()    { return RDT_INT32; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
@@ -171,9 +178,14 @@ class BlockValueInt32 : public BlockValue
       qint32  m_value;
 };
 
-class BlockValueRiceyCode : public BlockValue
+/**
+ * @brief The BlockValueRiceyCode class - a single Ricey Code, 1 to 7 octets in length
+ *
+ * Keys are type y/Y
+ */
+class BlockValueRiceyCode : public ValueBase
 { public:
-    explicit  BlockValueRiceyCode( QObject *parent = nullptr ) : BlockValue( parent ) {}
+    explicit  BlockValueRiceyCode( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueRiceyCode() {}
        qint8  type()    { return RDT_RCODE; }
   QByteArray  bsonish() { return m_value; }
@@ -187,12 +199,17 @@ class BlockValueRiceyCode : public BlockValue
   QByteArray  m_value;
 };
 
-class BlockValueString : public BlockValue
+/**
+ * @brief The BlockValueString class - a UTF-8 encoded string
+ *
+ * Keys are type s/S
+ */
+class BlockValueString : public ValueBase
 { public:
-    explicit  BlockValueString( QObject *parent = nullptr ) : BlockValue( parent ) {}
+    explicit  BlockValueString( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueString() {}
        qint8  type()    { return RDT_STRING; }
-  QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
+  QByteArray  bsonish();
   QByteArray  json();
         bool  setBsonish( const QByteArray &b );
         bool  setJson   ( const QByteArray &j );
@@ -202,9 +219,14 @@ class BlockValueString : public BlockValue
   QByteArray  m_value;  // Strings are encoded as UTF8 in a QByteArray
 };
 
-class BlockValueByteArray : public BlockValue
+/**
+ * @brief The BlockValueByteArray class - an array of octets
+ *
+ * Keys are type b/B
+ */
+class BlockValueByteArray : public ValueBase
 { public:
-    explicit  BlockValueByteArray( QObject *parent = nullptr ) : BlockValue( parent ) {}
+    explicit  BlockValueByteArray( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueByteArray() {}
        qint8  type()    { return RDT_BYTEARRAY; }
   QByteArray  bsonish() { QByteArray b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
@@ -217,9 +239,14 @@ class BlockValueByteArray : public BlockValue
   QByteArray  m_value;
 };
 
-class BlockValueMPZ : public BlockValue
+/**
+ * @brief The BlockValueMPZ class - an arbitrary precision integer
+ *
+ * Keys are type n/N
+ */
+class BlockValueMPZ : public ValueBase
 { public:
-    explicit  BlockValueMPZ( QObject *parent = nullptr ) : BlockValue( parent ) {}
+    explicit  BlockValueMPZ( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueMPZ() {}
        qint8  type()    { return RDT_MPZ; }
   QByteArray  bsonish() { return QByteArray(); }
@@ -232,9 +259,14 @@ class BlockValueMPZ : public BlockValue
       MP_INT  m_value;
 };
 
-class BlockValueMPQ : public BlockValue
+/**
+ * @brief The BlockValueMPQ class - a fraction of two arbitrary precision integers
+ *
+ * Keys are type r/R
+ */
+class BlockValueMPQ : public ValueBase
 { public:
-    explicit  BlockValueMPQ( QObject *parent = nullptr ) : BlockValue( parent ) {}
+    explicit  BlockValueMPQ( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueMPQ() {}
        qint8  type()    { return RDT_MPQ; }
   QByteArray  bsonish() { return QByteArray(); }
