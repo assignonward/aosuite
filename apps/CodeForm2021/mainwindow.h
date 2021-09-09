@@ -44,8 +44,6 @@ public:
        void  showResults();
        void  translateRicey();
        void  translateNotes();
-       void  translateKeyNames();
-    QString  keyNamesLine( QString );
        void  translateToJson();
  QJsonValue  riceyLineToJson( QString );
  QJsonValue  notesLineToJson( QString );
@@ -57,7 +55,8 @@ public:
 public slots:
        void  on_save_clicked();
        void  on_update_clicked();
-       void  on_refresh_clicked();
+       void  on_reformat_clicked();
+       void  on_write_clicked();
 
 public:
             QString  t; // translation

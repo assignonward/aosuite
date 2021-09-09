@@ -34,7 +34,6 @@
 #include <obstack.h>
 #include <gmp.h>
 
-      void initKeyNames();
 QByteArray bsonishNull( qint8 );
 
 /**

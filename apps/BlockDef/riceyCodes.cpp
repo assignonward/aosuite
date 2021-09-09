@@ -51,6 +51,11 @@ QByteArray intToRice( quint64 v )
  */
 quint64 riceToInt( const QByteArray &ba, qint32 *sz, bool *ok )
 { quint64 v = 0;
+  if ( ba.size() == 0 )
+    { qWarning( "Empty rice code is invalid." );
+      if ( ok ) *ok = false;
+      return v;
+    }
   if ( sz ) *sz = 0;
   foreach ( quint8 c, ba )
     { v |= (c & 0x7F);
@@ -61,7 +66,7 @@ quint64 riceToInt( const QByteArray &ba, qint32 *sz, bool *ok )
         }
       v = v << 7;
     }
-  qWarning( "Unterminated rice code %s", ba.toHex().data() );
+  qWarning( "Unterminated rice code '%s'", ba.toHex().data() );
   if ( ok ) *ok = false;
   return v;
 }

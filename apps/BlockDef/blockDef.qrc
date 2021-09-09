@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
-        <file>data/dictionary.json</file>
+    <qresource prefix="/data">
+        <file>dictionary.json</file>
     </qresource>
 </RCC>

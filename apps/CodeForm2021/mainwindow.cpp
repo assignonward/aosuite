@@ -25,6 +25,7 @@
 #include <QSettings>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -49,8 +50,9 @@ void MainWindow::restoreConfig()
 { QSettings settings;
   restoreGeometry( settings.value( "geometry" ).toByteArray() );
   restoreState   ( settings.value( "state"    ).toByteArray() );
-  if ( settings.value( "ricey" ).toString().size() > 0 ) ui->ricey->setHtml( settings.value( "ricey" ).toString() );
-  if ( settings.value( "notes" ).toString().size() > 0 ) ui->notes->setHtml( settings.value( "notes" ).toString() );
+  if ( settings.value( "ricey"    ).toString().size() > 0 ) ui->ricey   ->setHtml( settings.value( "ricey"    ).toString() );
+  if ( settings.value( "notes"    ).toString().size() > 0 ) ui->notes   ->setHtml( settings.value( "notes"    ).toString() );
+  if ( settings.value( "jsonPath" ).toString().size() > 0 ) ui->jsonPath->setText( settings.value( "jsonPath" ).toString() );
 }
 
 /**
@@ -59,10 +61,11 @@ void MainWindow::restoreConfig()
  */
 void MainWindow::saveConfig()
 { QSettings settings;
-  settings.setValue( "geometry", saveGeometry()      );
-  settings.setValue( "state"   , saveState()         );
-  settings.setValue( "ricey"   , ui->ricey->toHtml() );
-  settings.setValue( "notes"   , ui->notes->toHtml() );
+  settings.setValue( "geometry", saveGeometry()         );
+  settings.setValue( "state"   , saveState()            );
+  settings.setValue( "ricey"   , ui->ricey   ->toHtml() );
+  settings.setValue( "notes"   , ui->notes   ->toHtml() );
+  settings.setValue( "jsonPath", ui->jsonPath->text()   );
 }
 
 void MainWindow::on_save_clicked()
@@ -75,12 +78,19 @@ void MainWindow::on_update_clicked()
   translateNotes();
   t.append( "\n" );
   translateRicey();
-  t.append( "\n" );
-  translateKeyNames();
 
   translateToJson();
 
   showResults();
+}
+
+void MainWindow::on_write_clicked()
+{ QFile file( ui->jsonPath->text() );
+  if ( !file.open( QIODevice::WriteOnly ) )
+    { ui->translations->append( QString( "Could not open %1 for writing.\n" ).arg( ui->jsonPath->text() ) );
+      return;
+    }
+  file.write( ui->json->toPlainText().toUtf8() );
 }
 
 /**
@@ -255,40 +265,6 @@ void MainWindow::translateNotes()
 }
 
 /**
- * @brief MainWindow::translateKeyNames - code to initialize the keyNames map
- */
-void MainWindow::translateKeyNames()
-{ t.append( "void initKeyNames()\n{\n" );
-  foreach( QString line, riceyList )
-    t.append( keyNamesLine( line ) );
-  t.append( "}\n" );
-}
-
-/**
- * @brief MainWindow::keyNamesLine
- * @param line - one line of ricey code definition
- * @return the keyNames initialization for the given line
- */
-QString MainWindow::keyNamesLine( QString line )
-{ QString kn = "  keyNames.insert( QByteArray::fromHex( ";
-  QStringList words = line.split( " ", QString::SkipEmptyParts );
-  if ( words.size() >= 2 )
-    { kn.append( QString( maxNumLength - words.at(1).size(), QChar(' ') ) );
-      kn.append( "\"");
-      if ( words.at(1).size() > 2 )
-        kn.append( words.at(1).mid(2) );
-      kn.append( "\" ), \"");
-      kn.append( words.at(0) );
-      kn.append( "\"");
-      kn.append( QString( maxNameLength - words.at(0).size(), QChar(' ') ) );
-    }
-   else
-    return QString( "WARN: '%1' doesn't have the necessary words to make a line.\n" ).arg( line );
-  kn.append( " );\n" );
-  return kn;
-}
-
-/**
  * @brief MainWindow::translateToJson - make a json object that contains the content of the ricey and notes windows
  */
 void MainWindow::translateToJson()
@@ -347,9 +323,9 @@ QJsonValue MainWindow::notesLineToJson( QString line )
 }
 
 /**
- * @brief MainWindow::on_refresh_clicked - reconstruct the input lists in consistent alignment and color
+ * @brief MainWindow::on_reformat_clicked - reconstruct the input lists in consistent alignment and color
  */
-void MainWindow::on_refresh_clicked()
+void MainWindow::on_reformat_clicked()
 { QString html;
   int maxLen = 0;
   foreach ( QString line, notesList )

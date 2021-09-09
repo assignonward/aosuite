@@ -22,6 +22,8 @@
 #
 QT       += core gui
 
+include(../BlockDef/BlockDef.pri)
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
