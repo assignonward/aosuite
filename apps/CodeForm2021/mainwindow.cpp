@@ -288,14 +288,6 @@ QString MainWindow::keyNamesLine( QString line )
   return kn;
 }
 
-/*
-void initKeyNames()
-{ keyNames.insert( QByteArray::fromHex(   "00" ), "ObTermO"         );
-  keyNames.insert( QByteArray::fromHex(   "10" ), "AOChainBlockO"   );
-  keyNames.insert( QByteArray::fromHex(   "60" ), "pzzzO"           );
-}
-*/
-
 /**
  * @brief MainWindow::translateToJson - make a json object that contains the content of the ricey and notes windows
  */
@@ -305,6 +297,10 @@ void MainWindow::translateToJson()
   foreach ( QString line, riceyList )
     ja.append( riceyLineToJson( line ) );
   jo.insert( "riceyCodes_O", ja );
+  QJsonArray jt;
+  foreach ( QString line, notesList )
+    jt.append( notesLineToJson( line ) );
+  jo.insert( "riceyTypes_O", jt );
 }
 
 QJsonValue MainWindow::riceyLineToJson( QString line )
@@ -328,3 +324,88 @@ QJsonValue MainWindow::riceyLineToJson( QString line )
   return QJsonValue( rlo );
 }
 
+QJsonValue MainWindow::notesLineToJson( QString line )
+{ QJsonObject nlo;
+  QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+  if ( words.size() < 4 )
+    { v.append( QString( "notes line '%1' doesn't have at least 4 words" ).arg( line ) ); }
+   else
+    { nlo.insert( "name_s", words.at(0) );
+      if ( words.at(1).size() < 2 )
+        { v.append( QString( "notes line '%1' code '%2' too short" ).arg( line ).arg( words.at(1) ) ); }
+       else if ( !words.at(1).startsWith( "0x" ) )
+        { v.append( QString( "notes line '%1' code '%2' doesn't start with 0x" ).arg( line ).arg( words.at(1) ) ); }
+       else
+        nlo.insert( "type_y", words.at(1).mid(2) );
+      if ( words.at(2) != "//" )
+        { v.append( QString( "notes line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
+       else
+        { nlo.insert( "text_s", line.mid( line.indexOf("//") + 7 ) ); }
+      nlo.insert( "code_s", words.at(3) );
+    }
+  return QJsonValue( nlo );
+}
+
+/**
+ * @brief MainWindow::on_refresh_clicked - reconstruct the input lists in consistent alignment and color
+ */
+void MainWindow::on_refresh_clicked()
+{ QString html;
+  int maxLen = 0;
+  foreach ( QString line, notesList )
+    { QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+      if ( words.size() > 0 )
+        if ( words.at(0).size() > maxLen )
+          maxLen = words.at(0).size();
+    }
+  foreach ( QString line, notesList )
+    html.append( notesLineToHtml( line, maxLen ) );
+  ui->notes->clear();
+  ui->notes->setHtml( html );
+
+  html.clear();
+  foreach ( QString line, riceyList )
+    html.append( codesLineToHtml( line ) );
+  ui->ricey->clear();
+  ui->ricey->setHtml( html );
+}
+
+QString MainWindow::notesLineToHtml( QString line, int maxLen )
+{ QString html = "<font color=#000000>";
+  QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+  if ( words.size() < 4 )
+    { v.append( QString( "notes line '%1' doesn't have at least 4 words" ).arg( line ) ); }
+   else
+    { QString word = words.at(0);
+      int sz = word.size();
+      for ( int i = 0; i < maxLen - sz; i++ )
+        word.append( "&nbsp;" );
+      html.append( word+"</font><font color=#000080> "+words.at(1)+" </font><font color=#008000> // "+words.at(3) );
+      if ( words.at(2) != "//" )
+        { v.append( QString( "notes line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
+       else
+        { html.append( " - "+line.mid( line.indexOf("//") + 7 ) ); }
+    }
+  html.append( "</font><br/>" );
+  return html;
+}
+
+QString MainWindow::codesLineToHtml( QString line )
+{ QString html = "<font color=#000000>";
+  QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+  if ( words.size() < 4 )
+    { v.append( QString( "notes line '%1' doesn't have at least 4 words" ).arg( line ) ); }
+   else
+    { QString word = words.at(0);
+      int sz = word.size() + words.at(1).size() + 1;
+      for ( int i = 0; i < maxNumLength + maxNameLength - sz + 1; i++ )
+        word.append( "&nbsp;" );
+      html.append( word+"</font><font color=#000080>"+words.at(1)+" </font><font color=#008000> // " );
+      if ( words.at(2) != "//" )
+        { v.append( QString( "codes line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
+       else
+        { html.append( line.mid( line.indexOf("//") + 2 ) ); }
+    }
+  html.append( "</font><br/>" );
+  return html;
+}

@@ -28,5 +28,6 @@ HEADERS += \
     $$PWD/riceyCodes.h
 
 SOURCES += \
-    $$PWD/blockOb.cpp
+    $$PWD/blockOb.cpp \
+    $$PWD/riceyCodes.cpp
 

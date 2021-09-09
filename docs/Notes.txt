@@ -33,6 +33,34 @@ Large processors of multiple chains might make up their own rules about acceptab
 
 Staked shares might be processed on a network of multiple machines at multiple addresses - the key is: the staker of shares trusts a processor, and the processor trusts zero or more nodes to carry out transactions with the shares they have been entrusted with.
 
+Exchange negotiation:
+
+Advertisement. Non binding, however failure to follow through can impact reputation of advertiser (more like: multiple recorded follow throughs boosts reputation)0, only identifies offerer plus N coins offered on chain X in exchange for M coins on chain Y before time T.  Rejection of advertisement only by non response.
+
+Proposal. Non binding.  Identifies proposer to accept Advertisement or subset thereof.  If not a subset of an Advertisement then this is a non solicited proposal (may not be considered by some agents).  Identifies proposer to receive number of shares on chain X in exchange for specific shares on chain Y with possible (probable) receiver of excess shares on Y, by time U sooner than or same as T in advertisement.  Optionally may be signed by a long term id, multiple follow throughs of proposals boosts reputation.  If rejected, should state reason, possibly counter propose.
+
+Offer, binding on acceptance, identifies all parties in transaction and specific shares on both chains.  Should match proposal exactly but if not may still be accepted on its own merits, potentially substituting specific share sources.  Signed by all share offerers and potentially a long term id.  Similar reputation impact for follow through (when signed with long term id).  Non solicited offers generally don't work due to identification of share sources except in the rarely acceptable counter offer case.  Otherwise restart with a new proposal.
+
+Acceptance, must match offer exactly (otherwise make counter offer).  Signed by all share accepters and optionally a long term id.  Binding until expired by time.
+
+Recording, once acceptance is recorded in both chains with cross chain proof before the recording deadline, the transaction is complete.  Note that underwriting may need to reach 50% before recording is complete.
+
+Philosophy 2021:
+
+It took me awhile to settle with the idea that proof of correctness is really proof of stake and that's o.k. as long as people have the ability to control their own chains.
+
+Some personal chains might be backed by goods or services alone, others might hold a basket of various coins to support their value, often a combination of both.  In reality, it is coin held by others and offered for trade that supports value.  For instance YKK represents a $2 cup of coffee and BCG represents a $10  of goat.  Someone who holds BCG might advertise 5 BCG for 26 YKK.  This implicitly values YKK at $1.92, for people who value BCG at $10.  It is a price support that slows crashing of YKK value.  The BCG might be staked with a transaction underwriter, earning interest with each BCG transaction underwritten, but once traded for YKK then the YKK can be staked and may earn even better interest due to higher trading volume.
+
+Small chain owners should retain control of a large majority of shares to ensure they can underwrite transactions and prevent hostile activity on their chain.  If a malicious party ever gains 51% control of their chain, they can ruin its integrity.  The chain owner might try to salvage some value by identifying the bad actor and offering other share holders a minority stake in a new chain, but confidence in both chains is likely to suffer.  If additional liquidity is required it is likely better to retain control of the original chain and issue a new chain.
+
+The problem with market float of small chains is the disparity of value.  It might only take $50k or less to get control of a smaller chain, and it might be worth that to a larger actor to put the smaller actor out of business.  Smaller actors cheapest defense is to retain a super majority of their own shares, and "right size" their float to meet market demand without over or undersupply.
+
+More Rambling:
+
+Over time experience might show in certain markets that the signature of the chain owner or maybe another long term trusted i.d. is as good as or better than 50% staked underwriting.
+
+While shares are a form of debt for the chain owner,  even after the owner has retired and no longer provides goods or services in exchange for their shares, the trust they have built over the years might continue to provide value while operating their chain as a financial instrument providing liquidity between their trading partners.  They might also prove their holdings of shares on other chains by including proof of ownership in their advertising for exchange, in essence pledging those shares to owners of shares on their chain through advertisement.
+
 --------------------
 
 Being "individual" these blockchains can also have their points of service identified in realtime via GPS.  Food trucks, ride shares, mobile pet groomers, physical businesses don't strictly require geographic addresses anymore.  Also, service providers like writers, accountants, auditors, sales representatives can provide internet addresses for their contact and exchange services for Assign Onward coins, either on their own blockchains, or just trading coins of value to them on other people's blockchains.  Running your own blockchain(s) is not at all a requirement to participate in the Assign Onward network - running your own blockchain is akin to taking a loan from the community, a loan you pay back with services - in full when you recapture control of all outstanding shares on your chain.
