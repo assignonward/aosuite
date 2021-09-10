@@ -27,7 +27,8 @@
 #include <QTextCodec>
 #include <QHash>
 
-Dictionary dict;
+    Dictionary  dict;        // Single dictionary for the application
+BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
 
 /**
  * @brief BlockValueObject::~BlockValueObject - cleanup the data elements on destruction
@@ -43,7 +44,7 @@ BlockValueObject::~BlockValueObject()
  * @param b - byte array which starts with 8 bytes of LittleEndian encoded integer
  * @return true if conversion was successful
  */
-bool BlockValueInt64::setBsonish( const QByteArray &b )
+bool BlockValueInt64::setBsonish( const BsonSerial &b )
 { if ( b.size() < 8 )
     return false;
   QDataStream s(b);
@@ -57,7 +58,7 @@ bool BlockValueInt64::setBsonish( const QByteArray &b )
  * @param j - byte array which should contain a UTF8 encoded integer
  * @return true if conversion was successful
  */
-bool BlockValueInt64::setJson( const QByteArray &j )
+bool BlockValueInt64::setJson( const JsonSerial &j )
 { if ( j.size() < 1 )
     return false;
   bool ok;
@@ -72,7 +73,7 @@ bool BlockValueInt64::setJson( const QByteArray &j )
  * @param b - byte array which starts with 8 bytes of LittleEndian encoded integer
  * @return true if conversion was successful
  */
-bool BlockValueInt32::setBsonish( const QByteArray &b )
+bool BlockValueInt32::setBsonish( const BsonSerial &b )
 { if ( b.size() < 4 )
     return false;
   QDataStream s(b);
@@ -86,7 +87,7 @@ bool BlockValueInt32::setBsonish( const QByteArray &b )
  * @param j - byte array which should contain a UTF8 encoded integer
  * @return true if conversion was successful
  */
-bool BlockValueInt32::setJson( const QByteArray &j )
+bool BlockValueInt32::setJson( const JsonSerial &j )
 { if ( j.size() < 1 )
     return false;
   bool ok;
@@ -101,7 +102,7 @@ bool BlockValueInt32::setJson( const QByteArray &j )
  * @param b - ricey code in octets
  * @return true if conversion was successful
  */
-bool  BlockValueRiceyCode::setBsonish( const QByteArray &b )
+bool  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
 { if ( !validRicey( b ) )
     return false;
   m_value = b;
@@ -113,7 +114,7 @@ bool  BlockValueRiceyCode::setBsonish( const QByteArray &b )
  * @param j - ricey code in ASCII hexadecimal
  * @return true if conversion was successful
  */
-bool  BlockValueRiceyCode::setJson( const QByteArray &j )
+bool  BlockValueRiceyCode::setJson( const JsonSerial &j )
 { QByteArray b = j.fromHex( j );
   if ( !validRicey( b ) )
     return false;
@@ -123,22 +124,22 @@ bool  BlockValueRiceyCode::setJson( const QByteArray &j )
 
 /**
  * @brief BlockValueRiceyCode::validRicey
- * @param b - byte array to evaluate
- * @return true if b contains a valid ricey code
+ * @param r - byte array to evaluate
+ * @return true if r contains a valid ricey code
  */
-bool  BlockValueRiceyCode::validRicey( const QByteArray &b )
-{ if ( b.size() < 1 )
+bool  BlockValueRiceyCode::validRicey( const RiceyCode &r )
+{ if ( r.size() < 1 )
     return false;
-  if ( b.size() > 7 )
+  if ( r.size() > 7 )
     return false;
 
-  for ( int i = 0; i < b.size(); i++ )
-    { if ( i == b.size() - 1 )
-        { if (( b.at(i) & 0x80 ) != 0)
+  for ( int i = 0; i < r.size(); i++ )
+    { if ( i == r.size() - 1 )
+        { if (( r.at(i) & 0x80 ) != 0)
             return false;
         }
        else
-        { if (( b.at(i) & 0x80 ) == 0)
+        { if (( r.at(i) & 0x80 ) == 0)
             return false;
         }
     }
@@ -150,7 +151,7 @@ bool  BlockValueRiceyCode::validRicey( const QByteArray &b )
  * @param b - 4 byte LittleEndian length plus byte array data
  * @return true if conversion was successful (zero length is still valid)
  */
-bool  BlockValueByteArray::setBsonish( const QByteArray &b )
+bool  BlockValueByteArray::setBsonish( const BsonSerial &b )
 { if ( b.size() < 4 )
     return false;
   qint32 sz;
@@ -173,7 +174,7 @@ bool  BlockValueByteArray::setBsonish( const QByteArray &b )
  * @param j - ASCII hexadecimal encoded list of octets
  * @return - true always, conversion can't fail, invalid hex is skipped
  */
-bool  BlockValueByteArray::setJson( const QByteArray &j )
+bool  BlockValueByteArray::setJson( const JsonSerial &j )
 { // TODO: validate hex, or do we care?
   if ( j.size() == 0 )
     m_value = QByteArray();
@@ -186,8 +187,8 @@ bool  BlockValueByteArray::setJson( const QByteArray &j )
  * @brief BlockValueString::bsonish
  * @return rice code length (in bytes, not characters) followed by UTF-8 encoded string
  */
-QByteArray  BlockValueString::bsonish()
-{ QByteArray b = intToRice( m_value.size() );
+BsonSerial  BlockValueString::bsonish()
+{ RiceyCode b = intToRice( m_value.size() );
   b.append( m_value );
   return b;
 }
@@ -197,7 +198,7 @@ QByteArray  BlockValueString::bsonish()
  * @param b - rice coded length in bytes followed by UTF-8 encoded string
  * @return true if conversion was successful (zero length is still valid)
  */
-bool  BlockValueString::setBsonish( const QByteArray &b )
+bool  BlockValueString::setBsonish( const BsonSerial &b )
 { if ( b.size() < 1 )
     return false;
   qint32 sz;
@@ -206,7 +207,7 @@ bool  BlockValueString::setBsonish( const QByteArray &b )
   if ( !ok || ( b.size() < (sz + length) ) )  // TODO: add a protocol context that includes properties like max string length
     return false;
   if ( sz == 0 )  // empty string is a valid construct
-    { m_value = QByteArray();
+    { m_value = Utf8String();
       return true;
     }
   QByteArray string = b.mid(sz, length);
@@ -224,8 +225,8 @@ bool  BlockValueString::setBsonish( const QByteArray &b )
  * @param j - json escaped UTF-8 string in quotes
  * @return - true if conversion succeeds
  */
-bool  BlockValueString::setJson( const QByteArray &j )
-{ QByteArray d = "{ 'v':";
+bool  BlockValueString::setJson( const JsonSerial &j )
+{ JsonSerial d = "{ 'v':";
   d.append( j );
   d.append( " }" );
   QJsonDocument jd = QJsonDocument::fromJson(d);
@@ -245,20 +246,20 @@ bool  BlockValueString::setJson( const QByteArray &j )
  * @brief BlockValueString::json - m_value is assumed to be valid UTF-8
  * @return m_value UTF-8 string encoded as a json value field (escaped, in quotes)
  */
-QByteArray  BlockValueString::json()
+JsonSerial  BlockValueString::json()
 { QJsonValue v( QString::fromUtf8(m_value) );
   QJsonObject o;
   o.insert( "k", v );
   QJsonDocument d(o);
-  QByteArray ba = d.toJson(QJsonDocument::Compact);
-  if (( !ba.contains( ':' ) ) || ( !ba.contains( '"' ) ))
-    return QByteArray( "\"\"" );
-  qint32 ci = ba.indexOf( ':' );
-  qint32 fqi = ba.indexOf( '"', ci );
-  qint32 lqi = ba.lastIndexOf( '"' );
+  JsonSerial js = d.toJson(QJsonDocument::Compact);
+  if (( !js.contains( ':' ) ) || ( !js.contains( '"' ) ))
+    return "\"\"";
+  qint32 ci = js.indexOf( ':' );
+  qint32 fqi = js.indexOf( '"', ci );
+  qint32 lqi = js.lastIndexOf( '"' );
   if (( fqi >= lqi ) || ( fqi < 0 ) || ( lqi < 0 ))
-    return QByteArray( "\"\"" );
-  return ba.mid( fqi, lqi-fqi+1 );
+    return "\"\"";
+  return js.mid( fqi, lqi-fqi+1 );
 }
 
 /**
@@ -266,7 +267,7 @@ QByteArray  BlockValueString::json()
  * @param keyType - key type to make the value for
  * @return a null bson value for the type
  */
-QByteArray bsonishNull( qint8 keyType )
+BsonSerial bsonishNull( qint8 keyType )
 { QByteArray b;
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
@@ -287,12 +288,12 @@ QByteArray bsonishNull( qint8 keyType )
  * @brief BlockObject::bsonish
  * @return the bsonish representation of a single key-value pair
  */
-QByteArray  KeyValuePair::bsonish()
-{ QByteArray b = m_key;
+BsonSerial  KeyValuePair::bsonish()
+{ BsonSerial b = m_key;
   if ( b.size() < 1 )                                // empty key, empty bson
-    return QByteArray();
+    return BsonSerial();
   if ( !BlockValueRiceyCode::validRicey( m_key ) )  // invalid key, empty bson
-    return QByteArray();
+    return BsonSerial();
   if ( m_value )
     b.append( m_value->bsonish() );
    else
@@ -304,8 +305,8 @@ QByteArray  KeyValuePair::bsonish()
  * @brief BlockObject::json
  * @return the json representation of a single key-value pair
  */
-QByteArray  KeyValuePair::json()
-{ QByteArray j = "{ \"";
+JsonSerial  KeyValuePair::json()
+{ JsonSerial j = "{ \"";
   if ( !dict.codesContainCode(m_key) )
     return "{<!-- unknown key -->}";
   j.append( dict.nameFromCode(m_key) );
@@ -318,8 +319,8 @@ QByteArray  KeyValuePair::json()
   return j;
 }
 
-QByteArray  KeyValueArray::bsonish()
-{ QByteArray b = m_key; // TODO: type checking
+BsonSerial KeyValueArray::bsonish()
+{ BsonSerial b = m_key; // TODO: type checking
   quint64 elementCount = 0;
   foreach ( ValueBase *vp, m_values )
     if ( vp != nullptr )
@@ -331,8 +332,8 @@ QByteArray  KeyValueArray::bsonish()
   return b;
 }
 
-QByteArray  KeyValueArray::json()
-{ QByteArray j = "{ \"";
+JsonSerial  KeyValueArray::json()
+{ JsonSerial j = "{ \"";
   if ( !dict.codesContainCode(m_key) )
     return "{<!-- unknown key -->}";
   j.append( dict.nameFromCode(m_key) );

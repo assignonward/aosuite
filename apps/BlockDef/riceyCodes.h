@@ -29,6 +29,8 @@ list, with most significant byte first.  The zzzO comes last,
 regardless of sort order.
 */
 
+#include <QByteArray>
+typedef QByteArray RiceyCode;
 
 // Ricey data types - the 4 lsb of a Ricey key
 #define RDT_OBJECT          0x0 // o - list of zero or more key-value pairs json encased in {} items separated by commas, in bson a key of Obterm ends the current object
