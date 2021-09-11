@@ -40,6 +40,25 @@ BlockValueObject::~BlockValueObject()
 }
 
 /**
+ * @brief KeyValueBase::setKey
+ * @param key - recognized dictonary entry
+ * @return true if successful
+ */
+bool KeyValueBase::setKey( const RiceyCode &key )
+{ if ( !dict.codesContainCode( key ) )
+    return false;
+  m_key = key;
+  return true;
+}
+
+
+bool  KeyValuePair::setBsonish( const BsonSerial &b )
+{ (void)b;
+
+    return true; } // TODO: fixme
+
+
+/**
  * @brief BlockValueInt64::setBsonish
  * @param b - byte array which starts with 8 bytes of LittleEndian encoded integer
  * @return true if conversion was successful

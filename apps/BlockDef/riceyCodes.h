@@ -54,57 +54,57 @@ typedef QByteArray Utf8String;
 #define RDT_BYTEARRAY_ARRAY 0xF // B - array of ByteArrays (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
 #define RDT_NULL           0xE5 // z - A null block value type, used as an error flag
 
-// Ricey key types         bsonish key    description
-#define RCD_ObTerm_o              0x00 // Object terminator, indicates no more items in the object in bsonish lists
-#define RCD_int64_i               0x01 // Generic signed int64, use depends on context.
-#define RCD_int32_l               0x02 // Generic signed int32, use depends on context.
-#define RCD_mpz_n                 0x03 // Generic MPZ large integer, use depends on context.
-#define RCD_mpq_r                 0x04 // Generic MPQ large integer fraction, use depends on context.
-#define RCD_type_y                0x05 // Identifies an algorithm type for hash or crypto key, or other types depending on context
-#define RCD_text_s                0x06 // Generic string, use depends on context, for instance in an image object this would be the alt text
-#define RCD_name_s                0x16 // Name as a string, use depends on context, often a key name
-#define RCD_code_s                0x76 // Code as a string, use depends on context, often a key type
-#define RCD_data_b                0x07 // Generic data block, use determined by the object which contains it.
-#define RCD_chainBlock_o          0x10 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.
-#define RCD_signedBlock_o         0x20 // A Signed Block in the chain always contains a parentSignature_O a time_i of when the block was signed, the signature_O is found in the object which contains the signedBlock_O.
-#define RCD_parentSignature_o     0x30 // Contains a copy of the signature_O of one or more (more in the case of merging forked chains) parent blocks.
-#define RCD_signature_o           0x40 // Hash object, only found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
-#define RCD_time_i                0x11 // UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.
-#define RCD_AOShares_n            0x13 // A quantity of shares - meaning depends on context
-#define RCD_SHA256_y              0x15 // algorithm ID (algor) for SHA2 - 256
-#define RCD_ECB256_y              0x25 // algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1
-#define RCD_RSA3072_y           0x8025 // algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes
-#define RCD_SHA3b512_y          0x8015 // algorithm ID (algor) for SHA3 - 512
-#define RCD_jpg_y               0x9015 // Found in image objects, tells what format the data_b is to be interpreted as
-#define RCD_png_y               0x9025 // Found in image objects, tells what format the data_b is to be interpreted as
-#define RCD_riceyTypes_O        0xD008 // An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
-#define RCD_riceyCodes_O        0xD018 // An array object which contains the description, name and ricey code for each defined ricey code in the system.
-#define RCD_PcolTA01_y        0xA4D005 // Test protocol, symbol: TⒶ2021.9.7
-#define RCD_PcolTA02_y        0xA4D015 // Test protocol, symbol: TⒶ2021.10.13
-#define RCD_PcolA00_y         0xA5D005 // Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
-#define RCD_PcolA01_y         0xA5D015 // Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
-#define RCD_AOProtocolId_y    0xA0A555 // An Assign Onward Protocol identifier.
-#define RCD_AOPcolDefBlock_o  0xA0A550 // An Assign Onward Protocol Definition Block.
-#define RCD_AOGenesisBlock_o  0xA0B000 // An Assign Onward Genesis Block. With a signature_o which includes a timei, and other definitions for the chain.
-#define RCD_AOChainDesc_o     0xA0CD00 // Chain Description, generally only found in the Genesis Block - descriptive items like name, symbol, number of coins represented by all shares, etc.
-#define RCD_AOChainFunc_o     0xA0CF00 // Chain Functional items description, generally only found in the Genesis Block - functional items like number of shares, expiration rates, recording fees, etc.
-#define RCD_AOEndChain_o      0xA0EC00 // Used when reporting the last blocks in a chain, this block is a signal that all known blocks are received. Has a pzzzO and zzzO and timei of when it was reported, but contains no transaction information and will (usually) be discarded when appending new transaction blocks to its parent.
-#define RCD_Symbol_s          0xA0CD06 // A short string like ITC representing the chain.
-#define RCD_CdName_s          0xA0CD16 // A longer string like Itcoin representing the chain.
-#define RCD_Tagline_s         0xA0CD26 // A brief sentence like "The greatest blockchain ever" describing the chain.
-#define RCD_Description_s     0xA0CD36 // A paragraph (say 1000-ish characters) describing the chain.
-#define RCD_Icon_o            0xA0CD10 // A square-ish image that looks good small, representing the chain.
-#define RCD_Banner_o          0xA0CD20 // A wide image that might be displayed near the top of a page, representing the chain.
-#define RCD_Image_o           0xA0CD30 // A more detailed image representing the chain.
-#define RCD_CfShares_n        0xA0CF03 // The number of shares recorded in the Genesis block.
-#define RCD_CfCoins_n         0xA0CF13 // The number of "coins" all the shares in this chain represent.
-#define RCD_CfRecFee_r        0xA0CF04 // The number of coins per byte charged to record data on this chain (usually 1/a very large number).
-#define RCD_ExchAdvert_o      0xAAA000 // An exchange advertisement for cross chain exchange swaps
-#define RCD_Proposal_o        0xAAA010 // A share swap proposal
-#define RCD_Offer_o           0xAAA020 // A share swap offer
-#define RCD_Acceptance_o      0xAAA030 // A share swap acceptance of offer
-#define RCD_Cancellation_o    0xAAAF00 // A share swap notice of cancellation (for cause, usually time expiration)
-#define RCD_Identity_o          0xA110 // A cross chain identity, may be tied to share ownership but carries its own key pair
+// Ricey key types, bsonish key as int, description
+#define RCD_ObTerm_o               0 // Object terminator, indicates no more items in the object in bsonish lists
+#define RCD_int64_i                1 // Generic signed int64, use depends on context.
+#define RCD_int32_l                2 // Generic signed int32, use depends on context.
+#define RCD_mpz_n                  3 // Generic MPZ large integer, use depends on context.
+#define RCD_mpq_r                  4 // Generic MPQ large integer fraction, use depends on context.
+#define RCD_type_y                 5 // Identifies an algorithm type for hash or crypto key, or other types depending on context
+#define RCD_text_s                 6 // Generic string, use depends on context, for instance in an image object this would be the alt text
+#define RCD_name_s                22 // Name as a string, use depends on context, often a key name
+#define RCD_code_s               118 // Code as a string, use depends on context, often a key type
+#define RCD_data_b                 7 // Generic data block, use determined by the object which contains it.
+#define RCD_chainBlock_o          16 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.
+#define RCD_signedBlock_o         32 // A Signed Block in the chain always contains a parentSignature_O a time_i of when the block was signed, the signature_O is found in the object which contains the signedBlock_O.
+#define RCD_parentSignature_o     48 // Contains a copy of the signature_O of one or more (more in the case of merging forked chains) parent blocks.
+#define RCD_signature_o           64 // Hash object, only found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
+#define RCD_time_i                17 // UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.
+#define RCD_AOShares_n            19 // A quantity of shares - meaning depends on context
+#define RCD_SHA256_y              21 // algorithm ID (algor) for SHA2 - 256
+#define RCD_ECB256_y              37 // algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1
+#define RCD_RSA3072_y             37 // algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes
+#define RCD_SHA3b512_y            21 // algorithm ID (algor) for SHA3 - 512
+#define RCD_jpg_y               2069 // Found in image objects, tells what format the data_b is to be interpreted as
+#define RCD_png_y               2085 // Found in image objects, tells what format the data_b is to be interpreted as
+#define RCD_riceyTypes_O       10248 // An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
+#define RCD_riceyCodes_O       10264 // An array object which contains the description, name and ricey code for each defined ricey code in the system.
+#define RCD_PcolTA01_y        600069 // Test protocol, symbol: TⒶ2021.9.7
+#define RCD_PcolTA02_y        600085 // Test protocol, symbol: TⒶ2021.10.13
+#define RCD_PcolA00_y         616453 // Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
+#define RCD_PcolA01_y         616469 // Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
+#define RCD_AOProtocolId_y    529109 // An Assign Onward Protocol identifier.
+#define RCD_AOPcolDefBlock_o  529104 // An Assign Onward Protocol Definition Block.
+#define RCD_AOGenesisBlock_o  530432 // An Assign Onward Genesis Block. With a signature_o which includes a timei, and other definitions for the chain.
+#define RCD_AOChainDesc_o     534144 // Chain Description, generally only found in the Genesis Block - descriptive items like name, symbol, number of coins represented by all shares, etc.
+#define RCD_AOChainFunc_o     534400 // Chain Functional items description, generally only found in the Genesis Block - functional items like number of shares, expiration rates, recording fees, etc.
+#define RCD_AOEndChain_o      538112 // Used when reporting the last blocks in a chain, this block is a signal that all known blocks are received. Has a pzzzO and zzzO and timei of when it was reported, but contains no transaction information and will (usually) be discarded when appending new transaction blocks to its parent.
+#define RCD_Symbol_s          534150 // A short string like ITC representing the chain.
+#define RCD_CdName_s          534166 // A longer string like Itcoin representing the chain.
+#define RCD_Tagline_s         534182 // A brief sentence like "The greatest blockchain ever" describing the chain.
+#define RCD_Description_s     534198 // A paragraph (say 1000-ish characters) describing the chain.
+#define RCD_Icon_o            534160 // A square-ish image that looks good small, representing the chain.
+#define RCD_Banner_o          534176 // A wide image that might be displayed near the top of a page, representing the chain.
+#define RCD_Image_o           534192 // A more detailed image representing the chain.
+#define RCD_CfShares_n        534403 // The number of shares recorded in the Genesis block.
+#define RCD_CfCoins_n         534419 // The number of "coins" all the shares in this chain represent.
+#define RCD_CfRecFee_r        534404 // The number of coins per byte charged to record data on this chain (usually 1/a very large number).
+#define RCD_ExchAdvert_o      692224 // An exchange advertisement for cross chain exchange swaps
+#define RCD_Proposal_o        692240 // A share swap proposal
+#define RCD_Offer_o           692256 // A share swap offer
+#define RCD_Acceptance_o      692272 // A share swap acceptance of offer
+#define RCD_Cancellation_o    694144 // A share swap notice of cancellation (for cause, usually time expiration)
+#define RCD_Identity_o          4240 // A cross chain identity, may be tied to share ownership but carries its own key pair
 
 #include <QByteArray>
      bool validRicey( const RiceyCode & );

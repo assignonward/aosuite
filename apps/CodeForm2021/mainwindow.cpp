@@ -26,6 +26,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QFile>
+#include "riceyCodes.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -135,12 +136,19 @@ void MainWindow::firstPass()
            else
             names.append( words.at(0) );
 
-          if ( words.at(1).size() > maxNumLength )
-            maxNumLength = words.at(1).size();
-          if ( codes.contains( words.at(1) ) )
-            { v.append( QString( "ERROR: code %1 used twice, second time in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
+          if ( !words.at(1).startsWith( "0x" ) || (words.at(1).size() < 3) )
+            { v.append( QString( "ERROR: num '%1' must start with 0x and be followed by at least 1 digit in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
            else
-            codes.append( words.at(1) );
+            { qint64 nv = riceToInt( QByteArray::fromHex( words.at(1).mid(2).toUtf8() ) );
+              // qDebug( "words.at(1) %s -> %lld", words.at(1).toUtf8().data(), nv );
+              qint32 sz = QString::number( nv ).size();
+              if ( sz > maxNumLength )
+                maxNumLength = sz;
+              if ( codes.contains( words.at(1) ) )
+                { v.append( QString( "ERROR: code %1 used twice, second time in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
+               else
+                codes.append( words.at(1) );
+            }
         }
        else
         { v.append( QString( "WARN: short line '%1' in Ricey Code Definitions.\n" ).arg( line ) );
@@ -182,7 +190,7 @@ void MainWindow::translateRicey()
                   QString name = lList.at(0);
                   while ( name.size() < maxNameLength )
                     name.append( QChar(' ') );
-                  QString num = lList.at(1);
+                  QString num = QString::number( riceToInt( QByteArray::fromHex( lList.at(1).mid(2).toUtf8() ) ) );
                   while ( num.size() < maxNumLength )
                     num.prepend( QChar(' ') );
                   t.append( QString( "#define %4%1 %2 %3\n" ).arg( name ).arg( num ).arg( line.mid(ics) ).arg( rPre ) );
@@ -231,28 +239,12 @@ bool MainWindow::rulesCheck( QString name, QString num )
     { v.append( QString( "rulesCheck: '%1' too long for an AO Rice Code (%2 bytes, max is 7).\n" ).arg( num ).arg( ba.size() ) );
       return false;
     }
-  if ( !validRice( ba ) )
+  if ( !validRicey( ba ) )
     { v.append( QString( "rulesCheck: '%1' is not a valid Rice code, all bytes except the last must set the 0x80 bit.\n" ).arg( num ) );
       return false;
     }
   return true;
 }
-
-/**
- * @brief MainWindow::validRice
- * @param ba - byte array to check
- * @return true if ba is a valid rice code
- */
-bool  MainWindow::validRice( const QByteArray &ba )
-{ if ( ba.size() < 1 ) return false;
-  if ( ba.size() > 7 ) return false;
-  if ( (ba.at( ba.size() - 1 ) & 0x80) != 0 ) return false;
-  if ( ba.size() == 1 ) return true;
-  for ( int i = 0; i < ba.size() - 1; i++ )
-    if ( (ba.at(i) & 0x80) == 0 ) return false;
-  return true;
-}
-
 
 /**
  * @brief MainWindow::translateNotes - write the .h code defines for the notes (Ricey Data Types)

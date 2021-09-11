@@ -50,7 +50,6 @@ public:
     QString  codesLineToHtml( QString );
     QString  notesLineToHtml( QString, int );
        bool  rulesCheck( QString, QString );
-       bool  validRice( const QByteArray & );
 
 public slots:
        void  on_save_clicked();

@@ -54,9 +54,13 @@ void Dictionary::read()
     interpret( file.readAll() );
 }
 
-void  Dictionary::interpret( const QByteArray &ba )
+/**
+ * @brief Dictionary::interpret
+ * @param ba - json library description
+ */
+void  Dictionary::interpret( const JsonSerial &js )
 { qint32 sz;
-  QJsonDocument jd = QJsonDocument::fromJson( ba );
+  QJsonDocument jd = QJsonDocument::fromJson( js );
   if ( !jd.isObject() )
     qWarning( "dictionary.json does not contain a json object." );
    else
@@ -108,43 +112,63 @@ void  Dictionary::interpret( const QByteArray &ba )
     }
 }
 
-QByteArray  Dictionary::nameFromCode( QByteArray c )
+/**
+ * @brief Dictionary::nameFromCode
+ * @param c - ricey code to look up
+ * @return corresponding name, or empty string if not found
+ */
+Utf8String  Dictionary::nameFromCode( RiceyCode c )
 { if ( !codesContainCode( c ) )
-    return QByteArray();
+    return Utf8String();
   QJsonValue jv = codes.at(ciByRicey[c]);
   if ( !jv.isObject() )
-    return QByteArray();
+    return Utf8String();
   QJsonObject jo = jv.toObject();
   if ( !jo.contains("name_s" ) )
-    return QByteArray();
+    return Utf8String();
   return jo["name_s"].toString().toUtf8();
 }
 
-QByteArray  Dictionary::nameFromCode( qint64 c )
+/**
+ * @brief Dictionary::nameFromCode
+ * @param c - ricey code interpreted to an integer
+ * @return corresponding name, or empty string if not found
+ */
+Utf8String  Dictionary::nameFromCode( qint64 c )
 { if ( !codesContainCode( c ) )
-    return QByteArray();
+    return Utf8String();
   QJsonValue jv = codes.at(ciByNum[c]);
   if ( !jv.isObject() )
-    return QByteArray();
+    return Utf8String();
   QJsonObject jo = jv.toObject();
   if ( !jo.contains("name_s") )
-    return QByteArray();
+    return Utf8String();
   return jo["name_s"].toString().toUtf8();
 }
 
-QByteArray  Dictionary::riceyFromCodeName( QByteArray n )
+/**
+ * @brief Dictionary::riceyFromCodeName
+ * @param n - name to lookup
+ * @return corresponding code, or empty code if not found
+ */
+RiceyCode  Dictionary::riceyFromCodeName( Utf8String n )
 { if ( !codesContainName(n) )
-    return QByteArray();
+    return RiceyCode();
   QJsonValue jv = codes.at(ciByName[n]);
   if ( !jv.isObject() )
-    return QByteArray();
+    return RiceyCode();
   QJsonObject jo = jv.toObject();
   if ( !jo.contains("type_s") )
-    return QByteArray();
-  return QByteArray::fromHex( jo["type_s"].toString().toUtf8() );
+    return RiceyCode();
+  return RiceyCode::fromHex( jo["type_s"].toString().toUtf8() );
 }
 
-qint64  Dictionary::codeFromCodeName( QByteArray n )
+/**
+ * @brief Dictionary::codeFromCodeName
+ * @param n - name to lookup
+ * @return integer value of corresponding code, -1 if not found
+ */
+qint64  Dictionary::codeFromCodeName( Utf8String n )
 { if ( !codesContainName(n) )
     return -1;
   QJsonValue jv = codes.at(ciByName[n]);
@@ -153,6 +177,5 @@ qint64  Dictionary::codeFromCodeName( QByteArray n )
   QJsonObject jo = jv.toObject();
   if ( !jo.contains("type_s") )
     return -1;
-  return riceToInt( QByteArray::fromHex( jo["type_s"].toString().toUtf8() ) );
+  return riceToInt( RiceyCode::fromHex( jo["type_s"].toString().toUtf8() ) );
 }
-

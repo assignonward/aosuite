@@ -76,7 +76,7 @@ class KeyValueBase : public ValueBase
 public:
    explicit  KeyValueBase( const RiceyCode &key, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( key ); }
             ~KeyValueBase() {}
-       void  setKey( const RiceyCode &key ) { m_key = key; }
+       bool  setKey( const RiceyCode &key );
   RiceyCode  key()  { return m_key; }
       qint8  type() { if ( m_key.size() > 0 ) return m_key.at(m_key.size()-1) & 0x0F; return 0x7F; }
 
@@ -94,9 +94,9 @@ public:
              ~KeyValuePair() { if ( m_value ) delete( m_value ); }
         void  setValue( ValueBase &value ) { if ( value.type() != type() ) qWarning("type mismatch"); else { if ( m_value ) delete( m_value ); m_value = &value; } }
  ValueBase &  value() { return *m_value; }
- BsonSerial  bsonish();
+  BsonSerial  bsonish();
   JsonSerial  json();
-        bool  setBsonish( const BsonSerial &b ) { (void)b; return true; } // TODO: fixme
+        bool  setBsonish( const BsonSerial & );
         bool  setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
 
 public:
