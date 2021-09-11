@@ -54,8 +54,8 @@ bool KeyValueBase::setKey( const RiceyCode &key )
 
 bool  KeyValuePair::setBsonish( const BsonSerial &b )
 { (void)b;
-
-    return true; } // TODO: fixme
+  return true;
+} // TODO: fixme
 
 
 /**
@@ -342,6 +342,42 @@ BsonSerial KeyValueArray::bsonish()
 }
 
 /**
+ * @brief KeyValueArray::setBsonish
+ * @param b - bsonish code for a KeyValueArray to be set into this object
+ * @return true if successful
+ */
+bool  KeyValueArray::setBsonish( const BsonSerial &b )
+{ if ( b.size() < 1 )
+    { qWarning( "empty BsonSerial" ); return false; }
+  qint32 len = 0;
+  bool ok = false;
+  quint64 k = riceToInt( b, &len, &ok );
+  if ( !ok )
+    { qWarning( "bad ricey code key" ); return false; }
+  if ( !dict.codesContainCode( k ) )
+    { qWarning( "unrecognized key" ); return false; }
+  if ( b.size() <= len )
+    { qWarning( "no element count" ); return false; }
+  qint32 i = len;
+  quint64 elementCount = riceToInt( b.mid(i), &len, &ok );
+  if ( !ok )
+    { qWarning( "bad ricey code element count" ); return false; }
+  setKey( k ); // Now we also know our data type
+  clear();
+  if ( elementCount == 0 )
+    return true; // Empty array, valid and we're done.
+  i += len;
+  if ( b.size() <= i )
+    { qWarning( "value data missing" ); return false; }
+  while ( elementCount > 0 )
+    {
+      elementCount--;
+    }
+  return true;
+}
+
+
+/**
  * @brief KeyValueArray::json
  * @return json array object with the whole array
  */
@@ -364,3 +400,4 @@ JsonSerial  KeyValueArray::json()
   return j;
 }
 
+bool  KeyValueArray::setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme

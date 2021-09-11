@@ -46,7 +46,7 @@ class ValueBase : public QObject
 public:
           explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) {}
                    ~ValueBase() {}
-virtual      qint8  type()    = 0;
+virtual     quint8  type()    = 0;
 virtual BsonSerial  bsonish() = 0;
 virtual JsonSerial  json()    = 0;
 virtual       bool  setBsonish( const BsonSerial & ) = 0;
@@ -60,8 +60,8 @@ class BlockValueNull : public ValueBase
 { public:
     explicit  BlockValueNull( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueNull() {}
-       qint8  type()    { return RDT_NULL; }
-  BsonSerial  bsonish() { QByteArray b; b.append((qint8)0); return b; }
+      quint8  type()    { return RDT_NULL; }
+  BsonSerial  bsonish() { QByteArray b; b.append((quint8)0); return b; }
   JsonSerial  json()    { QString s = "\"00\""; return s.toUtf8(); }
         bool  setBsonish( const BsonSerial &b ) { (void)b; return true; }
         bool  setJson   ( const JsonSerial &j ) { (void)j; return true; }
@@ -77,8 +77,9 @@ public:
    explicit  KeyValueBase( const RiceyCode &key, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( key ); }
             ~KeyValueBase() {}
        bool  setKey( const RiceyCode &key );
+       bool  setKey( quint64 k ) { return setKey( intToRice( k ) ); }
   RiceyCode  key()  { return m_key; }
-      qint8  type() { if ( m_key.size() > 0 ) return m_key.at(m_key.size()-1) & 0x0F; return 0x7F; }
+     quint8  type() { if ( m_key.size() > 0 ) return m_key.at(m_key.size()-1) & 0x0F; return RDT_NULL; }
 
   RiceyCode  m_key; // Ricey code bsonish key
 };
@@ -111,14 +112,15 @@ class KeyValueArray : public KeyValueBase
     Q_OBJECT
 public:
     explicit  KeyValueArray( const QByteArray &key, QObject *parent = nullptr ) : KeyValueBase( key, parent ) {}
-             ~KeyValueArray() { while ( m_values.size() > 0 ) { if ( m_values.last() != nullptr ) { delete( m_values.last() ); } m_values.removeLast(); } }
+    ~KeyValueArray() { clear(); }
+        void  clear() { while ( m_values.size() > 0 ) { if ( m_values.last() != nullptr ) { delete( m_values.last() ); } m_values.removeLast(); } }
       qint32  size()          { return m_values.size(); }
-        void  appendValue( ValueBase &value ) { m_values.append( &value ); } // TODO: type checking
+        bool  appendValue( ValueBase &value ) { if( value.type() == type() ) { m_values.append( &value ); return true; } return false; }
  ValueBase &  valueAt( qint32 n ) { if (( n >= 0 ) && ( n < m_values.size() )) return *m_values.at(n); else return m_null; }
   BsonSerial  bsonish();
   JsonSerial  json();
-        bool  setBsonish( const BsonSerial &b ) { (void)b; return true; } // TODO: fixme
-        bool  setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
+        bool  setBsonish( const BsonSerial &b );
+        bool  setJson   ( const JsonSerial &j );
 
 public:
   QVarLengthArray<QPointer<ValueBase> > m_values; // Values in this array
@@ -137,7 +139,7 @@ class BlockValueObject : public ValueBase
 { public:
          explicit  BlockValueObject( QObject *parent = nullptr ) : ValueBase( parent ) {}
                   ~BlockValueObject();
-            qint8  type()    { return RDT_OBJECT; }
+           quint8  type()    { return RDT_OBJECT; }
        BsonSerial  bsonish() { return BsonSerial(); } // TODO: fixme
        JsonSerial  json()    { return JsonSerial(); } // TODO: fixme
              bool  setBsonish(  const BsonSerial &b ) { (void)b; return true; } // TODO: fixme
@@ -160,7 +162,7 @@ class BlockValueInt64 : public ValueBase
 { public:
     explicit  BlockValueInt64( QObject *parent = nullptr ) : ValueBase( parent ) { m_value = 0; }
              ~BlockValueInt64() {}
-       qint8  type()    { return RDT_INT64; }
+      quint8  type()    { return RDT_INT64; }
   BsonSerial  bsonish() { BsonSerial b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
   JsonSerial  json()    { return QString::number( m_value ).toUtf8(); }
         bool  setBsonish( const BsonSerial &b );
@@ -180,7 +182,7 @@ class BlockValueInt32 : public ValueBase
 { public:
     explicit  BlockValueInt32( QObject *parent = nullptr ) : ValueBase( parent ) { m_value = 0; }
              ~BlockValueInt32() {}
-       qint8  type()    { return RDT_INT32; }
+      quint8  type()    { return RDT_INT32; }
   BsonSerial  bsonish() { BsonSerial b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
   JsonSerial  json()    { return QString::number( m_value ).toUtf8(); }
         bool  setBsonish( const BsonSerial &b );
@@ -200,7 +202,7 @@ class BlockValueRiceyCode : public ValueBase
 { public:
     explicit  BlockValueRiceyCode( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueRiceyCode() {}
-       qint8  type()    { return RDT_RCODE; }
+      quint8  type()    { return RDT_RCODE; }
   BsonSerial  bsonish() { return m_value; }
   JsonSerial  json()    { return "\""+m_value.toHex()+"\""; }
         bool  setBsonish( const BsonSerial & );
@@ -220,7 +222,7 @@ class BlockValueString : public ValueBase
 { public:
     explicit  BlockValueString( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueString() {}
-       qint8  type()    { return RDT_STRING; }
+      quint8  type()    { return RDT_STRING; }
   BsonSerial  bsonish();
   JsonSerial  json();
         bool  setBsonish( const BsonSerial &b );
@@ -240,7 +242,7 @@ class BlockValueByteArray : public ValueBase
 { public:
     explicit  BlockValueByteArray( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueByteArray() {}
-       qint8  type()    { return RDT_BYTEARRAY; }
+      quint8  type()    { return RDT_BYTEARRAY; }
   BsonSerial  bsonish() { BsonSerial b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
   JsonSerial  json()    { return "\""+m_value.toHex()+"\""; }
         bool  setBsonish( const BsonSerial & );
@@ -260,7 +262,7 @@ class BlockValueMPZ : public ValueBase
 { public:
     explicit  BlockValueMPZ( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueMPZ() {}
-       qint8  type()    { return RDT_MPZ; }
+      quint8  type()    { return RDT_MPZ; }
   BsonSerial  bsonish() { return QByteArray(); } // TODO: fixme
   JsonSerial  json()    { return QByteArray(); } // TODO: fixme
         bool  setBsonish( const BsonSerial &b ) { (void)b; return true; } // TODO: fixme
@@ -280,7 +282,7 @@ class BlockValueMPQ : public ValueBase
 { public:
     explicit  BlockValueMPQ( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueMPQ() {}
-       qint8  type()    { return RDT_MPQ; }
+      quint8  type()    { return RDT_MPQ; }
   BsonSerial  bsonish() { return QByteArray(); } // TODO: fixme
   JsonSerial  json()    { return QByteArray(); } // TODO: fixme
         bool  setBsonish( const BsonSerial &b ) { (void)b; return true; } // TODO: fixme

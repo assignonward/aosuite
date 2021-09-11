@@ -37,16 +37,16 @@ public:
                      void  interpret( const JsonSerial & );
                      bool  codesContainName( Utf8String n ) { return ciByName .contains(n); }
                      bool  codesContainCode( RiceyCode c )  { return ciByRicey.contains(c); }
-                     bool  codesContainCode( qint64 c )     { return ciByNum  .contains(c); }
+                     bool  codesContainCode( quint64 c )    { return ciByNum  .contains(c); }
                Utf8String  nameFromCode( RiceyCode );
-               Utf8String  nameFromCode( qint64 );
+               Utf8String  nameFromCode( quint64 );
                 RiceyCode  riceyFromCodeName( Utf8String );
-                   qint64  codeFromCodeName( Utf8String );
+                  quint64  codeFromCodeName( Utf8String );
 
                QJsonArray  codes;
   QHash<Utf8String,qint32> ciByName;
   QHash<RiceyCode ,qint32> ciByRicey;
-  QHash<qint64    ,qint32> ciByNum;
+  QHash<quint64   ,qint32> ciByNum;
                QJsonArray  types;
 };
 
