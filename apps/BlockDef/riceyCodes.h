@@ -31,6 +31,9 @@ regardless of sort order.
 
 #include <QByteArray>
 typedef QByteArray RiceyCode;
+typedef QByteArray JsonSerial;
+typedef QByteArray BsonSerial;
+typedef QByteArray Utf8String;
 
 // Ricey data types - the 4 lsb of a Ricey key
 #define RDT_OBJECT          0x0 // o - list of zero or more key-value pairs json encased in {} items separated by commas, in bson a key of Obterm ends the current object
@@ -104,7 +107,8 @@ typedef QByteArray RiceyCode;
 #define RCD_Identity_o          0xA110 // A cross chain identity, may be tied to share ownership but carries its own key pair
 
 #include <QByteArray>
-QByteArray intToRice( quint64 );
-   quint64 riceToInt( const QByteArray &, qint32 *len = nullptr, bool *ok = nullptr );
+     bool validRicey( const RiceyCode & );
+RiceyCode intToRice( quint64 );
+  quint64 riceToInt( const RiceyCode &, qint32 *len = nullptr, bool *ok = nullptr );
 
 #endif // RICEYCODES_H

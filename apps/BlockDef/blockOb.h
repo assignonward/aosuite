@@ -34,11 +34,8 @@
 #include <obstack.h>
 #include <gmp.h>
 
+#define MAX_LENGTH 1073741824  // Nothing bigger than 1GB
 QByteArray bsonishNull( qint8 );
-
-typedef QByteArray JsonSerial;
-typedef QByteArray BsonSerial;
-typedef QByteArray Utf8String;
 
 /**
  * @brief The ValueBase class - base class for all value types found in block objects
@@ -95,9 +92,9 @@ class KeyValuePair : public KeyValueBase
 public:
     explicit  KeyValuePair( const RiceyCode &key, QObject *parent = nullptr ) : KeyValueBase( key, parent ) {}
              ~KeyValuePair() { if ( m_value ) delete( m_value ); }
-        void  setValue( ValueBase &value )    { if ( m_value ) delete( m_value ); m_value = &value; } // TODO: type checking
+        void  setValue( ValueBase &value ) { if ( value.type() != type() ) qWarning("type mismatch"); else { if ( m_value ) delete( m_value ); m_value = &value; } }
  ValueBase &  value() { return *m_value; }
-  BsonSerial  bsonish();
+ BsonSerial  bsonish();
   JsonSerial  json();
         bool  setBsonish( const BsonSerial &b ) { (void)b; return true; } // TODO: fixme
         bool  setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
@@ -115,7 +112,7 @@ class KeyValueArray : public KeyValueBase
 public:
     explicit  KeyValueArray( const QByteArray &key, QObject *parent = nullptr ) : KeyValueBase( key, parent ) {}
              ~KeyValueArray() { while ( m_values.size() > 0 ) { if ( m_values.last() != nullptr ) { delete( m_values.last() ); } m_values.removeLast(); } }
-      qint32  size()    { return m_values.size(); }
+      qint32  size()          { return m_values.size(); }
         void  appendValue( ValueBase &value ) { m_values.append( &value ); } // TODO: type checking
  ValueBase &  valueAt( qint32 n ) { if (( n >= 0 ) && ( n < m_values.size() )) return *m_values.at(n); else return m_null; }
   BsonSerial  bsonish();
@@ -124,8 +121,8 @@ public:
         bool  setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
 
 public:
-  QList<QPointer<ValueBase> > m_values; // Values in this array
-              BlockValueNull  m_null;   // Returned when valueAt calls an invalid index
+  QVarLengthArray<QPointer<ValueBase> > m_values; // Values in this array
+                        BlockValueNull  m_null;   // Returned when valueAt calls an invalid index
 };
 
 extern BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
@@ -146,10 +143,12 @@ class BlockValueObject : public ValueBase
              bool  setBsonish(  const BsonSerial &b ) { (void)b; return true; } // TODO: fixme
              bool  setJson   (  const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
            qint32  size()    { return m_obMap.size(); }
+  QList<RiceyCode> keys()    { return m_obMap.keys(); }
              bool  contains  (  const RiceyCode &k ) { return m_obMap.contains( k ); }
-      ValueBase &  value     (  const RiceyCode &k ) { if ( !contains(k) ) return glob_null; return m_obMap.value(k)->value(); }
+             void  insert    (  const RiceyCode &k, ValueBase *v ) { m_obMap.insert( k, v ); }
+        ValueBase *value     (  const RiceyCode &k ) { if ( !contains(k) ) return &glob_null; return m_obMap.value(k); }
 
-QMap<RiceyCode, QPointer<KeyValuePair> > m_obMap;
+QMap<RiceyCode, QPointer<ValueBase> > m_obMap;
 };
 
 /**
@@ -206,9 +205,8 @@ class BlockValueRiceyCode : public ValueBase
   JsonSerial  json()    { return "\""+m_value.toHex()+"\""; }
         bool  setBsonish( const BsonSerial & );
         bool  setJson   ( const JsonSerial & );
- static bool  validRicey( const  RiceyCode & );
    RiceyCode  value()   { return m_value; }
-        void  setValue( RiceyCode v ) { m_value = v; }
+        void  setValue( RiceyCode v ) { if ( !validRicey( v ) ) qWarning("invalid ricey code"); else m_value = v; }
 
    RiceyCode  m_value;
 };
@@ -228,7 +226,7 @@ class BlockValueString : public ValueBase
         bool  setBsonish( const BsonSerial &b );
         bool  setJson   ( const BsonSerial &j );
   Utf8String  value()   { return m_value; }
-        void  setValue( Utf8String v ) { m_value = v; }
+        void  setValue( Utf8String v ) { if ( m_value.size() > MAX_LENGTH ) qWarning("MAX_LENGTH exceeded"); else m_value = v; }
 
   Utf8String  m_value;  // Strings are encoded as UTF8 in a QByteArray
 };
@@ -248,7 +246,7 @@ class BlockValueByteArray : public ValueBase
         bool  setBsonish( const BsonSerial & );
         bool  setJson   ( const JsonSerial & );
   QByteArray  value()   { return m_value; }
-        void  setValue( QByteArray v ) { m_value = v; }
+        void  setValue( QByteArray v ) { if ( m_value.size() > MAX_LENGTH ) qWarning("MAX_LENGTH exceeded"); else m_value = v; }
 
   QByteArray  m_value;
 };

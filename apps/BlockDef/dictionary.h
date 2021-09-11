@@ -37,7 +37,7 @@ public:
                      void  interpret( const QByteArray & );
                      bool  codesContainName( QByteArray n ) { return ciByName .contains(n); }
                      bool  codesContainCode( QByteArray c ) { return ciByRicey.contains(c); }
-                     bool  codesContainCode( qint64 c )     { return ciByNum    .contains(c); }
+                     bool  codesContainCode( qint64 c )     { return ciByNum  .contains(c); }
                QByteArray  nameFromCode( QByteArray );
                QByteArray  nameFromCode( qint64 );
                QByteArray  riceyFromCodeName( QByteArray );

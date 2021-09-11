@@ -22,24 +22,47 @@
  */
 #include "riceyCodes.h"
 
+/**
+ * @brief validRicey
+ * @param r - byte array to evaluate
+ * @return true if r contains a valid ricey code
+ */
+bool  validRicey( const RiceyCode &r )
+{ if ( r.size() < 1 )
+    return false;
+  if ( r.size() > 7 )
+    return false;
+
+  for ( int i = 0; i < r.size(); i++ )
+    { if ( i == r.size() - 1 )
+        { if (( r.at(i) & 0x80 ) != 0)
+            return false;
+        }
+       else
+        { if (( r.at(i) & 0x80 ) == 0)
+            return false;
+        }
+    }
+  return true;
+}
 
 /**
  * @brief intToRice -
  * @param v - unsigned integer value to convert
  * @return v converted to rice code, MSB first in the byte array
  */
-QByteArray intToRice( quint64 v )
+RiceyCode intToRice( quint64 v )
 { if ( v == 0 )
-    return QByteArray( 0 );
-  QByteArray ba;
+    return RiceyCode( 0 );
+  RiceyCode r;
   while ( v > 0 )
     { quint8 c = v & 0x7F;
-      if ( ba.size() > 0 )
+      if ( r.size() > 0 )
         c |= 0x80;
-      ba.prepend( c );
+      r.prepend( c );
       v = v >> 7;
     }
-  return ba;
+  return r;
 }
 
 /**
@@ -49,7 +72,7 @@ QByteArray intToRice( quint64 v )
  * @param ok - when not nullptr, true if a valid rice code was found
  * @return integer equivalent of the rice code
  */
-quint64 riceToInt( const QByteArray &ba, qint32 *sz, bool *ok )
+quint64 riceToInt( const RiceyCode &ba, qint32 *sz, bool *ok )
 { quint64 v = 0;
   if ( ba.size() == 0 )
     { qWarning( "Empty rice code is invalid." );

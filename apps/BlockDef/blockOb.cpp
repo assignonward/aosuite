@@ -34,7 +34,7 @@ BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls 
  * @brief BlockValueObject::~BlockValueObject - cleanup the data elements on destruction
  */
 BlockValueObject::~BlockValueObject()
-{ foreach( QPointer<KeyValuePair> blockOb, m_obMap )
+{ foreach( QPointer<ValueBase> blockOb, m_obMap )
     if ( blockOb )
       delete( blockOb );
 }
@@ -123,30 +123,6 @@ bool  BlockValueRiceyCode::setJson( const JsonSerial &j )
 }
 
 /**
- * @brief BlockValueRiceyCode::validRicey
- * @param r - byte array to evaluate
- * @return true if r contains a valid ricey code
- */
-bool  BlockValueRiceyCode::validRicey( const RiceyCode &r )
-{ if ( r.size() < 1 )
-    return false;
-  if ( r.size() > 7 )
-    return false;
-
-  for ( int i = 0; i < r.size(); i++ )
-    { if ( i == r.size() - 1 )
-        { if (( r.at(i) & 0x80 ) != 0)
-            return false;
-        }
-       else
-        { if (( r.at(i) & 0x80 ) == 0)
-            return false;
-        }
-    }
-  return true;
-}
-
-/**
  * @brief BlockValueByteArray::setBsonish
  * @param b - 4 byte LittleEndian length plus byte array data
  * @return true if conversion was successful (zero length is still valid)
@@ -204,7 +180,7 @@ bool  BlockValueString::setBsonish( const BsonSerial &b )
   qint32 sz;
   bool ok;
   qint64 length = (qint64)riceToInt( b, &sz, &ok );
-  if ( !ok || ( b.size() < (sz + length) ) )  // TODO: add a protocol context that includes properties like max string length
+  if ( !ok || ( b.size() < (sz + length) ) || (length > MAX_LENGTH) )
     return false;
   if ( sz == 0 )  // empty string is a valid construct
     { m_value = Utf8String();
@@ -277,50 +253,64 @@ BsonSerial bsonishNull( qint8 keyType )
       case RDT_INT32:     { s << (qint32)0; return b; }
       case RDT_MPZ:         return b;
       case RDT_MPQ:         return b;
-      case RDT_RCODE:     { return QByteArray( 0 ); }
-      case RDT_STRING:    { s << (qint32)0; return b; }
+      case RDT_RCODE:     { return RiceyCode( 0 ); }
+      case RDT_STRING:    { return RiceyCode( 0 ); }
       case RDT_BYTEARRAY: { s << (qint32)0; return b; }
     }
   return b;
 }
 
 /**
- * @brief BlockObject::bsonish
+ * @brief KeyValuePair::bsonish
  * @return the bsonish representation of a single key-value pair
  */
 BsonSerial  KeyValuePair::bsonish()
 { BsonSerial b = m_key;
-  if ( b.size() < 1 )                                // empty key, empty bson
-    return BsonSerial();
-  if ( !BlockValueRiceyCode::validRicey( m_key ) )  // invalid key, empty bson
-    return BsonSerial();
+  if ( !dict.codesContainCode(m_key) )
+    { qWarning( "unknown key 0x%s", m_key.toHex().data() );
+      return BsonSerial();
+    }
   if ( m_value )
     b.append( m_value->bsonish() );
    else
-    b.append( bsonishNull( m_key.at( m_key.size()-1 ) & 0x07 ) );
+    { qWarning( "null value with 0x%s key", m_key.toHex().data() );
+      b.append( bsonishNull( m_key.at( m_key.size()-1 ) & 0x07 ) );
+    }
   return b;
 }
 
 /**
- * @brief BlockObject::json
+ * @brief KeyValuePair::json
  * @return the json representation of a single key-value pair
  */
 JsonSerial  KeyValuePair::json()
 { JsonSerial j = "{ \"";
   if ( !dict.codesContainCode(m_key) )
-    return "{<!-- unknown key -->}";
+    { qWarning( "unknown key 0x%s", m_key.toHex().data() );
+      return "{<!-- unknown key -->}";
+    }
   j.append( dict.nameFromCode(m_key) );
   j.append( "\": " );
-  if ( m_value == nullptr )
-    j.append( "0 <!-- null value -->" );
-   else
+  if ( m_value )
     j.append( m_value->json() );
-  j.append( " }" );
+   else
+    { qWarning( "null value with 0x%s key", m_key.toHex().data() );
+      j.append( "0 <!-- null value -->" );
+    }
+  j.append( " }\n" );
   return j;
 }
 
+/**
+ * @brief KeyValueArray::bsonish
+ * @return The entire array as a key plus list of values (matching the type of the key)
+ */
 BsonSerial KeyValueArray::bsonish()
-{ BsonSerial b = m_key; // TODO: type checking
+{ BsonSerial b = m_key;
+  if ( !dict.codesContainCode(b) )
+    { qWarning( "unknown key 0x%s", m_key.toHex().data() );
+      return BsonSerial();
+    }
   quint64 elementCount = 0;
   foreach ( ValueBase *vp, m_values )
     if ( vp != nullptr )
@@ -332,6 +322,10 @@ BsonSerial KeyValueArray::bsonish()
   return b;
 }
 
+/**
+ * @brief KeyValueArray::json
+ * @return json array object with the whole array
+ */
 JsonSerial  KeyValueArray::json()
 { JsonSerial j = "{ \"";
   if ( !dict.codesContainCode(m_key) )
@@ -347,7 +341,7 @@ JsonSerial  KeyValueArray::json()
     }
   if ( wroteOne )
     j = j.mid( 0, j.size() - 3 );
-  j.append( "] }" );
+  j.append( "] }\n" );
   return j;
 }
 
