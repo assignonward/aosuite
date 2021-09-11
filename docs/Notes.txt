@@ -15,6 +15,12 @@ All keys in the data structures are defined in a dictionary with a human readabl
 
 Protocols define valid container types, the required and optional data contained therein, context specific descriptions of the key-value fields defined in the containers, and potentially valid and recommended ranges for the values in each defined key-value.
 
+Protocols also define operations required to make valid container types.  Things like cryptographic signature validity, summation of values, equality of summed groups, non-repeat of signatures in the chain, etc.
+
+Off-chain negotiations (Advertising, proposal, offer, acceptance, recording) re-use the same json/bsonish structures, dictionary, operations and protocol definitions as are used for on-chain recording.
+
+Network communication of negotiation packets may happen by any method: message broker, http put/post, e-mail wrapped, SMS wrapped, QR codes - printed and carried by pigeons, whatever.  The necessary part is the preparation of the negotiation packet by the authorized (holders of the involved private keys) actors.  Having said all that, MQTT topic exchanges (possibly hosted on RabbitMQ or similar) seem like a good starting point for the reference implementation.  While json/bsonish representations are fully interchangeable, bsonish is the only format that should ever be used for inter-agent negotiations and chain recordings.  The json form is only for developers / debugging use - although some applications may choose to receive bsonish from the outside, translate it to json, to all manipulations in json, the translate back to bsonish for external communication - that's their business, they could translate it to other formats if they choose for internal use also.
+
 Protocol definitions also specify valid operations on defined containers, at the most basic level: what makes a new block on the chain valid, or invalid.  Also, off chain pre-recording negotiations.
 
 Test Driven:
