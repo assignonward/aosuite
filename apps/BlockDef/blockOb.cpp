@@ -31,6 +31,27 @@
 BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
 
 /**
+ * @brief ValueBase::newValue
+ * @param type - type of value object to return
+ * @param parent - optional, parent for the new value object
+ * @return pointer to the new value object
+ */
+ValueBase *ValueBase::newValue( quint8 type, QObject *parent )
+{ if (( type & RDT_ARRAY ) == RDT_ARRAY )
+    return nullptr; // new ArrayValue( parent );  // not sure if we need this, or even if it makes sense to do
+  switch ( type )
+    { case RDT_OBJECT:    return new BlockValueObject( parent );
+      case RDT_INT64:     return new BlockValueInt64( parent );
+      case RDT_INT32:     return new BlockValueInt32( parent );
+      case RDT_MPZ:       return new BlockValueMPZ( parent );
+      case RDT_MPQ:       return new BlockValueMPQ( parent );
+      case RDT_RCODE:     return new BlockValueRiceyCode( parent );
+      case RDT_STRING:    return new BlockValueString( parent );
+      case RDT_BYTEARRAY: return new BlockValueByteArray( parent );
+    }
+  return nullptr;
+}
+/**
  * @brief BlockValueObject::~BlockValueObject - cleanup the data elements on destruction
  */
 BlockValueObject::~BlockValueObject()
@@ -51,25 +72,24 @@ bool KeyValueBase::setKey( const RiceyCode &key )
   return true;
 }
 
-
-bool  KeyValuePair::setBsonish( const BsonSerial &b )
+qint32  KeyValuePair::setBsonish( const BsonSerial &b )
 { (void)b;
-  return true;
+  return -1;
 } // TODO: fixme
 
 
 /**
  * @brief BlockValueInt64::setBsonish
  * @param b - byte array which starts with 8 bytes of LittleEndian encoded integer
- * @return true if conversion was successful
+ * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
  */
-bool BlockValueInt64::setBsonish( const BsonSerial &b )
+qint32 BlockValueInt64::setBsonish( const BsonSerial &b )
 { if ( b.size() < 8 )
-    return false;
+    return -1;
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
   s >> m_value;
-  return true;
+  return 8;
 }
 
 /**
@@ -90,15 +110,15 @@ bool BlockValueInt64::setJson( const JsonSerial &j )
 /**
  * @brief BlockValueInt32::setBsonish
  * @param b - byte array which starts with 8 bytes of LittleEndian encoded integer
- * @return true if conversion was successful
+ * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
  */
-bool BlockValueInt32::setBsonish( const BsonSerial &b )
+qint32 BlockValueInt32::setBsonish( const BsonSerial &b )
 { if ( b.size() < 4 )
-    return false;
+    return -1;
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
   s >> m_value;
-  return true;
+  return 4;
 }
 
 /**
@@ -119,13 +139,16 @@ bool BlockValueInt32::setJson( const JsonSerial &j )
 /**
  * @brief BlockValueRiceyCode::setBsonish
  * @param b - ricey code in octets
- * @return true if conversion was successful
+ * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
  */
-bool  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
-{ if ( !validRicey( b ) )
-    return false;
-  m_value = b;
-  return true;
+qint32  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
+{ qint32 len = 0;
+  bool ok = false;
+  riceToInt( b, &len, &ok );
+  if ( !ok )
+    return -1;
+  m_value = b.mid(0,len);
+  return len;
 }
 
 /**
@@ -144,24 +167,24 @@ bool  BlockValueRiceyCode::setJson( const JsonSerial &j )
 /**
  * @brief BlockValueByteArray::setBsonish
  * @param b - 4 byte LittleEndian length plus byte array data
- * @return true if conversion was successful (zero length is still valid)
+ * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
  */
-bool  BlockValueByteArray::setBsonish( const BsonSerial &b )
+qint32  BlockValueByteArray::setBsonish( const BsonSerial &b )
 { if ( b.size() < 4 )
-    return false;
+    return -1;
   qint32 sz;
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
   s >> sz;
   if ( sz < 0 )
-    return false;
-  if ( b.size() < 4+sz )
-    return false;
+    return -1;
+  if (( b.size() < 4+sz ) || ( sz > MAX_LENGTH ))
+    return -1;
   if ( sz == 0 )
     m_value = QByteArray();
    else
     m_value = b.mid(4,sz);
-  return true;
+  return 4+sz;
 }
 
 /**
@@ -191,28 +214,28 @@ BsonSerial  BlockValueString::bsonish()
 /**
  * @brief BlockValueString::setBsonish
  * @param b - rice coded length in bytes followed by UTF-8 encoded string
- * @return true if conversion was successful (zero length is still valid)
+ * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
  */
-bool  BlockValueString::setBsonish( const BsonSerial &b )
+qint32  BlockValueString::setBsonish( const BsonSerial &b )
 { if ( b.size() < 1 )
-    return false;
+    return -1;
   qint32 sz;
   bool ok;
   qint64 length = (qint64)riceToInt( b, &sz, &ok );
   if ( !ok || ( b.size() < (sz + length) ) || (length > MAX_LENGTH) )
-    return false;
-  if ( sz == 0 )  // empty string is a valid construct
+    return -1;
+  if ( length == 0 )  // empty string is a valid construct
     { m_value = Utf8String();
-      return true;
+      return sz;
     }
   QByteArray string = b.mid(sz, length);
   QTextCodec::ConverterState state;
   QTextCodec *codec = QTextCodec::codecForName("UTF-8");
   codec->toUnicode( string.constData(), string.size(), &state );
   if (state.invalidChars > 0) // Checking if string is valid UTF-8?
-    return false;
+    return -1;
   m_value = string;
-  return true;
+  return sz+length;
 }
 
 /**
@@ -344,38 +367,40 @@ BsonSerial KeyValueArray::bsonish()
 /**
  * @brief KeyValueArray::setBsonish
  * @param b - bsonish code for a KeyValueArray to be set into this object
- * @return true if successful
+ * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
  */
-bool  KeyValueArray::setBsonish( const BsonSerial &b )
+qint32  KeyValueArray::setBsonish( const BsonSerial &b )
 { if ( b.size() < 1 )
-    { qWarning( "empty BsonSerial" ); return false; }
+    { qWarning( "empty BsonSerial" ); return -1; }
   qint32 len = 0;
   bool ok = false;
-  quint64 k = riceToInt( b, &len, &ok );
+  RiceyInt k = riceToInt( b, &len, &ok );
   if ( !ok )
-    { qWarning( "bad ricey code key" ); return false; }
+    { qWarning( "bad ricey code key" ); return -1; }
   if ( !dict.codesContainCode( k ) )
-    { qWarning( "unrecognized key" ); return false; }
+    { qWarning( "unrecognized key" ); return -1; }
   if ( b.size() <= len )
-    { qWarning( "no element count" ); return false; }
+    { qWarning( "no element count" ); return -1; }
   qint32 i = len;
   quint64 elementCount = riceToInt( b.mid(i), &len, &ok );
   if ( !ok )
-    { qWarning( "bad ricey code element count" ); return false; }
-  setKey( k ); // Now we also know our data type
-  clear();
-  if ( elementCount == 0 )
-    return true; // Empty array, valid and we're done.
+    { qWarning( "bad ricey code element count" ); return -1; }
   i += len;
-  if ( b.size() <= i )
-    { qWarning( "value data missing" ); return false; }
+  clear();
+  setKey( k ); // Now we also know our data type
   while ( elementCount > 0 )
-    {
+    { if ( b.size() <= i )
+        { qWarning( "value data missing" ); return -1; }
+      ValueBase *vbo = newValue( type() & RDT_TYPEMASK, this );
+      len = vbo->setBsonish( b.mid(i) );
+      if ( len < 1 )
+        { delete vbo; qWarning( "problem reading element" ); return -1; }
+      appendValue( vbo );
+      i += len;
       elementCount--;
     }
-  return true;
+  return i;
 }
-
 
 /**
  * @brief KeyValueArray::json
@@ -401,3 +426,76 @@ JsonSerial  KeyValueArray::json()
 }
 
 bool  KeyValueArray::setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
+
+/**
+ * @brief BlockValueObject::bsonish
+ * @return The entire object as a list of key-values
+ */
+BsonSerial BlockValueObject::bsonish()
+{ QList<RiceyCode> keys = m_obMap.keys();
+  BsonSerial b = intToRice( m_obMap.size() );
+  foreach ( RiceyCode key, keys )
+    { b.append( key );
+      if ( m_obMap[key] != nullptr )
+        b.append( m_obMap[key]->bsonish() );
+       else
+        b.append( bsonishNull( m_obMap[key]->type() ) );
+    }
+  return b;
+}
+
+/**
+ * @brief BlockValueObject::setBsonish
+ * @param b - bsonish code for a BlockValueObject to be set into this object
+ * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
+ */
+qint32  BlockValueObject::setBsonish( const BsonSerial &b )
+{ if ( b.size() < 1 )
+    { qWarning( "empty BsonSerial" ); return -1; }
+  qint32 len = 0;
+  bool ok = false;
+  qint32 obCount = riceToInt( b, &len, &ok );
+  if ( !ok )
+    { qWarning( "bad count rice code" ); return -1; }
+  if ( obCount == 0 )
+    return len; // empty object, we're done
+  qint32 i = len;
+  while ( obCount > 0 )
+    { if ( b.size() <= i )
+        { qWarning( "object key data missing" ); return -1; }
+      RiceyInt k = riceToInt( b.mid(i), &len, &ok );
+      if ( !ok )
+        { qWarning( "bad key rice code" ); return -1; }
+      i += len;
+      if ( b.size() <= i )
+        { qWarning( "object key data missing" ); return -1; }
+      ValueBase *vbo = newValue( k & RDT_OBTYPEMASK, this );
+      len = vbo->setBsonish( b.mid(i) );
+      if ( len < 1 )
+        { delete vbo; qWarning( "problem reading value" ); return -1; }
+      if ( !insert( intToRice(k), vbo ) )
+        { delete vbo; qWarning( "problem inserting value" ); return -1; }
+      i += len;
+      obCount--;
+    }
+  return i;
+}
+
+/**
+ * @brief BlockValueObject::insert
+ * @param k - key
+ * @param v - value
+ * @return true if insertion was successful
+ */
+bool  BlockValueObject::insert( const RiceyCode &k, ValueBase *v )
+{ if ( v == nullptr )
+    { qWarning( "will not insert null value" ); return false; }
+  if (( riceToInt( k ) & RDT_OBTYPEMASK ) != v->type() )
+    { qWarning( "will not insert mismatched type and value" ); return false; }
+  if ( !dict.codesContainCode( k ) )
+    { qWarning( "key not recognized, will not insert." ); return false; }
+  if ( m_obMap.contains( k ) )
+    { qWarning( "type collision, insertion blocked." ); return false; }
+  m_obMap.insert( k, v );
+  return true;
+}

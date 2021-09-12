@@ -34,6 +34,7 @@ typedef QByteArray RiceyCode;
 typedef QByteArray JsonSerial;
 typedef QByteArray BsonSerial;
 typedef QByteArray Utf8String;
+typedef    quint64 RiceyInt;
 
 // Ricey data types - the 4 lsb of a Ricey key
 #define RDT_OBJECT          0x0 // o - list of zero or more key-value pairs json encased in {} items separated by commas, in bson a key of Obterm ends the current object
@@ -52,10 +53,13 @@ typedef QByteArray Utf8String;
 #define RDT_RCODE_ARRAY     0xD // Y - array of Ricey codes - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
 #define RDT_STRING_ARRAY    0xE // S - array of UTF8 encoded strings - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
 #define RDT_BYTEARRAY_ARRAY 0xF // B - array of ByteArrays (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
+#define RDT_ARRAY           0x8 //     all array types have this bit set
+#define RDT_TYPEMASK        0x7 //     used to get the contained value type out of an array type
+#define RDT_OBTYPEMASK      0xF //     used to get the contained value type out of an object type
 #define RDT_NULL           0xE5 // z - A null block value type, used as an error flag
 
 // Ricey key types, bsonish key as int, description
-#define RCD_ObTerm_o               0 // Object terminator, indicates no more items in the object in bsonish lists
+#define RCD_ObTerm_o               0 // Object terminator, indicates no more items in the object in bsonish lists, or a null object
 #define RCD_int64_i                1 // Generic signed int64, use depends on context.
 #define RCD_int32_l                2 // Generic signed int32, use depends on context.
 #define RCD_mpz_n                  3 // Generic MPZ large integer, use depends on context.
@@ -108,7 +112,7 @@ typedef QByteArray Utf8String;
 
 #include <QByteArray>
      bool validRicey( const RiceyCode & );
-RiceyCode intToRice( quint64 );
-  quint64 riceToInt( const RiceyCode &, qint32 *len = nullptr, bool *ok = nullptr );
+RiceyCode intToRice( RiceyInt );
+ RiceyInt riceToInt( const RiceyCode &, qint32 *len = nullptr, bool *ok = nullptr );
 
 #endif // RICEYCODES_H

@@ -168,7 +168,7 @@ RiceyCode  Dictionary::riceyFromCodeName( Utf8String n )
  * @param n - name to lookup
  * @return integer value of corresponding code, -1 if not found
  */
-quint64  Dictionary::codeFromCodeName( Utf8String n )
+RiceyInt  Dictionary::codeFromCodeName( Utf8String n )
 { if ( !codesContainName(n) )
     return -1;
   QJsonValue jv = codes.at(ciByName[n]);
