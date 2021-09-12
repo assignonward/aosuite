@@ -285,19 +285,22 @@ JsonSerial  BlockValueString::json()
  * @param keyType - key type to make the value for
  * @return a null bson value for the type
  */
-BsonSerial bsonishNull( qint8 keyType )
+BsonSerial ValueBase::bsonishNull( qint8 keyType )
 { QByteArray b;
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
   switch ( keyType )
-    { case RDT_OBJECT:      return b;
-      case RDT_INT64:     { s << (qint64)0; return b; }
-      case RDT_INT32:     { s << (qint32)0; return b; }
-      case RDT_MPZ:         return b;
-      case RDT_MPQ:         return b;
-      case RDT_RCODE:     { return RiceyCode( 0 ); }
-      case RDT_STRING:    { return RiceyCode( 0 ); }
-      case RDT_BYTEARRAY: { s << (qint32)0; return b; }
+    { case RDT_OBJECT:    s << intToRice( 0 );            break;
+      case RDT_INT64:     s << (qint64)0;                 break;
+      case RDT_INT32:     s << (qint32)0;                 break;
+      case RDT_MPZ:                                       break;
+      case RDT_MPQ:                                       break;
+      case RDT_RCODE:     s << intToRice( RCD_ObTerm_o ); break;
+      case RDT_STRING:    s << intToRice( 0 );            break;
+      case RDT_BYTEARRAY: s << (qint32)0;                 break;
+      default:
+      if (( keyType & RDT_ARRAY ) == RDT_ARRAY )
+        { s << intToRice( RCD_ObTerm_o ) << intToRice( 0 ); }
     }
   return b;
 }

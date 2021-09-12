@@ -126,6 +126,7 @@ void MainWindow::showResults()
  */
 void MainWindow::firstPass()
 { QStringList names,codes;
+  riceyInts.clear();
   foreach ( QString line, riceyList )
     { QStringList words = line.split(" ",QString::SkipEmptyParts);
       if ( words.size() > 1 )
@@ -140,6 +141,12 @@ void MainWindow::firstPass()
             { v.append( QString( "ERROR: num '%1' must start with 0x and be followed by at least 1 digit in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
            else
             { qint64 nv = riceToInt( QByteArray::fromHex( words.at(1).mid(2).toUtf8() ) );
+              if ( riceyInts.contains( nv ) )
+                { v.append( QString( "ERROR: RiceyInt value collision, duplicate int form in line '%1'\n" ).arg( line ) ); }
+               else
+                riceyInts.append( nv );
+              if ( intToRice( nv ) != QByteArray::fromHex( words.at(1).mid(2).toUtf8() ) )
+                { v.append( QString( "ERROR: code '%1' reconstitutes as '%2' in line '%3'\n" ).arg(words.at(1).mid(2)).arg( QString::fromUtf8( intToRice(nv).toHex() ) ).arg( line ) ); }
               // qDebug( "words.at(1) %s -> %lld", words.at(1).toUtf8().data(), nv );
               qint32 sz = QString::number( nv ).size();
               if ( sz > maxNumLength )

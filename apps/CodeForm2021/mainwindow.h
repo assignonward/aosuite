@@ -25,6 +25,7 @@
 
 #include <QMainWindow>
 #include <QJsonObject>
+#include "riceyCodes.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -64,6 +65,7 @@ public:
              qint32  maxNameLength;
              qint32  maxNumLength;
         QStringList  riceyList,notesList;
+     QList<RiceyInt> riceyInts;
  QHash<QChar, QChar> notesNumChar;
 
 private:

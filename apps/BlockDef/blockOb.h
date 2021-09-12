@@ -35,7 +35,6 @@
 #include <gmp.h>
 
 #define MAX_LENGTH 1073741824  // Nothing bigger than 1GB
-QByteArray bsonishNull( qint8 );
 
 /**
  * @brief The ValueBase class - base class for all value types found in block objects
@@ -52,6 +51,7 @@ virtual BsonSerial  bsonish() = 0;
 virtual JsonSerial  json()    = 0;
 virtual     qint32  setBsonish( const BsonSerial & ) = 0;
 virtual       bool  setJson   ( const JsonSerial & ) = 0;
+        QByteArray  bsonishNull( qint8 );
 };
 
 /**

@@ -52,11 +52,12 @@ bool  validRicey( const RiceyCode &r )
  * @return v converted to rice code, MSB first in the byte array
  */
 RiceyCode intToRice( quint64 v )
-{ if ( v == 0 )
-    return RiceyCode( 0 );
-  RiceyCode r;
+{ RiceyCode r;
+     quint8 c = 0;
+  if ( v == 0 )
+    r.prepend( c );
   while ( v > 0 )
-    { quint8 c = v & 0x7F;
+    { c = v & 0x7F;
       if ( r.size() > 0 )
         c |= 0x80;
       r.prepend( c );

@@ -93,12 +93,12 @@
         {
             "name_s": "RSA3072_y",
             "text_s": "algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes",
-            "type_y": "8025"
+            "type_y": "A125"
         },
         {
             "name_s": "SHA3b512_y",
             "text_s": "algorithm ID (algor) for SHA3 - 512",
-            "type_y": "8015"
+            "type_y": "A115"
         },
         {
             "name_s": "jpg_y",

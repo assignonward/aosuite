@@ -77,8 +77,8 @@ typedef    quint64 RiceyInt;
 #define RCD_AOShares_n            19 // A quantity of shares - meaning depends on context
 #define RCD_SHA256_y              21 // algorithm ID (algor) for SHA2 - 256
 #define RCD_ECB256_y              37 // algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1
-#define RCD_RSA3072_y             37 // algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes
-#define RCD_SHA3b512_y            21 // algorithm ID (algor) for SHA3 - 512
+#define RCD_RSA3072_y           4261 // algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes
+#define RCD_SHA3b512_y          4245 // algorithm ID (algor) for SHA3 - 512
 #define RCD_jpg_y               2069 // Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_png_y               2085 // Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_riceyTypes_O       10248 // An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
