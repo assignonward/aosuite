@@ -428,7 +428,33 @@ JsonSerial  KeyValueArray::json()
   return j;
 }
 
-bool  KeyValueArray::setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
+bool  KeyValueArray::setJson   ( const JsonSerial &j )
+{ (void)j; return true; } // TODO: fixme
+
+JsonSerial BlockValueObject::json()
+{ JsonSerial j = " {";
+  QList<RiceyCode> keys = m_obMap.keys();
+  bool wroteOne = false;
+  foreach ( RiceyCode key, keys )
+    { if ( !dict.codesContainCode(key) )
+        j.append( " \""+key.toHex()+"\" <!-- unknown key --> : " ); // TODO: type extend key with _X
+       else
+        j.append( " \""+dict.nameFromCode(key)+"\": " );
+      ValueBase *vp = m_obMap[key];
+      if ( vp != nullptr )
+        j.append( vp->json() + " ,\n" );
+       else
+        j.append( "NULL ,\n" );
+      wroteOne = true;
+    }
+  if ( wroteOne )
+    j = j.mid( 0, j.size() - 2 );
+  j.append( "\n }\n" );
+  return j;
+}
+
+bool  BlockValueObject::setJson   ( const JsonSerial &j )
+{ (void)j; return true; } // TODO: fixme
 
 /**
  * @brief BlockValueObject::bsonish

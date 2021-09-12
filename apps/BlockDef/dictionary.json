@@ -141,97 +141,32 @@
             "type_y": "A5D015"
         },
         {
-            "name_s": "ProtocolId_y",
+            "name_s": "AOProtocolId_y",
             "text_s": "An Assign Onward Protocol identifier.",
             "type_y": "A0A555"
         },
         {
-            "name_s": "ProtocolDef_O",
-            "text_s": "An Assign Onward Protocol Definition - overall, defines an array of containers and contents ",
-            "type_y": "A0A558"
+            "name_s": "AOPcolDefBlock_o",
+            "text_s": "An Assign Onward Protocol Definition Block. ",
+            "type_y": "A0A550"
         },
         {
-            "name_s": "RequiredItems_Y",
-            "text_s": "Items that must appear in a container (to fulfill the protocol requirements)",
-            "type_y": "CD0D"
-        },
-        {
-            "name_s": "OptionalItems_Y",
-            "text_s": "Items that may optionally appear in a container, do not violate protocol if they are missing.",
-            "type_y": "CD1D"
-        },
-        {
-            "name_s": "RangeBounds_O",
-            "text_s": "Boundaries for valid values",
-            "type_y": "CD08"
-        },
-        {
-            "name_s": "min_i",
-            "text_s": "Used in range boundaries",
-            "type_y": "21"
-        },
-        {
-            "name_s": "min_l",
-            "text_s": "Used in range boundaries",
-            "type_y": "22"
-        },
-        {
-            "name_s": "min_n",
-            "text_s": "Used in range boundaries",
-            "type_y": "23"
-        },
-        {
-            "name_s": "min_r",
-            "text_s": "Used in range boundaries",
-            "type_y": "24"
-        },
-        {
-            "name_s": "max_i",
-            "text_s": "Used in range boundaries",
-            "type_y": "31"
-        },
-        {
-            "name_s": "max_l",
-            "text_s": "Used in range boundaries",
-            "type_y": "32"
-        },
-        {
-            "name_s": "max_n",
-            "text_s": "Used in range boundaries",
-            "type_y": "33"
-        },
-        {
-            "name_s": "max_r",
-            "text_s": "Used in range boundaries",
-            "type_y": "34"
-        },
-        {
-            "name_s": "enum_Y",
-            "text_s": "Used to define available choices",
-            "type_y": "4D"
-        },
-        {
-            "name_s": "enum_S",
-            "text_s": "Used to define available choices",
-            "type_y": "4E"
-        },
-        {
-            "name_s": "GenesisBlock_o",
+            "name_s": "AOGenesisBlock_o",
             "text_s": "An Assign Onward Genesis Block. With a signature_o which includes a timei, and other definitions for the chain.",
             "type_y": "A0B000"
         },
         {
-            "name_s": "ChainDesc_o",
+            "name_s": "AOChainDesc_o",
             "text_s": "Chain Description, generally only found in the Genesis Block - descriptive items like name, symbol, number of coins represented by all shares, etc.",
             "type_y": "A0CD00"
         },
         {
-            "name_s": "ChainFunc_o",
+            "name_s": "AOChainFunc_o",
             "text_s": "Chain Functional items description, generally only found in the Genesis Block - functional items like number of shares, expiration rates, recording fees, etc.",
             "type_y": "A0CF00"
         },
         {
-            "name_s": "EndChain_o",
+            "name_s": "AOEndChain_o",
             "text_s": "Used when reporting the last blocks in a chain, this block is a signal that all known blocks are received. Has a pzzzO and zzzO and timei of when it was reported, but contains no transaction information and will (usually) be discarded when appending new transaction blocks to its parent.",
             "type_y": "A0EC00"
         },
@@ -287,7 +222,7 @@
         },
         {
             "name_s": "ExchAdvert_o",
-            "text_s": "An exchange advertisement for cross chain exchange swaps (expressed in coins for coins)",
+            "text_s": "An exchange advertisement for cross chain exchange swaps",
             "type_y": "AAA000"
         },
         {

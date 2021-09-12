@@ -62,8 +62,8 @@ class BlockValueNull : public ValueBase
     explicit  BlockValueNull( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueNull() {}
       quint8  type()    { return RDT_NULL; }
-  BsonSerial  bsonish() { BsonSerial b; b.append((quint8)0); return b; }
-  JsonSerial  json()    { QString s = "\"00\""; return s.toUtf8(); }
+  BsonSerial  bsonish() { return intToRice(RCD_ObTerm_o); }
+  JsonSerial  json()    { QString s = "NULL"; return s.toUtf8(); }
       qint32  setBsonish( const BsonSerial &b ) { (void)b; return -1; }  // cannot set a value to a BlockValueNull
         bool  setJson   ( const JsonSerial &j ) { (void)j; return false; }
 };
@@ -78,7 +78,7 @@ public:
    explicit  KeyValueBase( const RiceyCode &key, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( key ); }
             ~KeyValueBase() {}
        bool  setKey( const RiceyCode &key );
-       bool  setKey( quint64 k ) { return setKey( intToRice( k ) ); }
+       bool  setKey( RiceyInt k ) { return setKey( intToRice( k ) ); }
   RiceyCode  key()  { return m_key; }
      quint8  type() { if ( m_key.size() > 0 ) return m_key.at(m_key.size()-1) & 0x0F; return RDT_NULL; }
 
@@ -107,6 +107,7 @@ public:
 
 /**
  * @brief The KeyValueArray class - zero or more values of the same type stored under a single key
+ *   order of items in the array is important, conserved, and determined by the creator of the array.
  */
 class KeyValueArray : public KeyValueBase
 {
@@ -141,9 +142,9 @@ class BlockValueObject : public ValueBase
                   ~BlockValueObject();
            quint8  type()    { return RDT_OBJECT; }
        BsonSerial  bsonish();
-       JsonSerial  json()    { return JsonSerial(); } // TODO: fixme
+       JsonSerial  json();
            qint32  setBsonish(  const BsonSerial &b );
-             bool  setJson   (  const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
+             bool  setJson   (  const JsonSerial &j );
              void  clear()   { QList<RiceyCode> keys = m_obMap.keys(); foreach( RiceyCode r, keys ) { if ( m_obMap[r] != nullptr ) delete( m_obMap[r] ); m_obMap.remove(r); } }
            qint32  size()    { return m_obMap.size(); }
   QList<RiceyCode> keys()    { return m_obMap.keys(); }
