@@ -51,6 +51,7 @@ ValueBase *ValueBase::newValue( quint8 type, QObject *parent )
     }
   return nullptr;
 }
+
 /**
  * @brief BlockValueObject::~BlockValueObject - cleanup the data elements on destruction
  */
@@ -63,20 +64,36 @@ BlockValueObject::~BlockValueObject()
 /**
  * @brief KeyValueBase::setKey
  * @param key - recognized dictonary entry
- * @return true if successful
+ * @return number of bytes the key occupied, or -1 if unsuccessful setting key
  */
-bool KeyValueBase::setKey( const RiceyCode &key )
-{ if ( !dict.codesContainCode( key ) )
-    return false;
-  m_key = key;
-  return true;
+qint32 KeyValueBase::setKey( const RiceyCode &key )
+{ qint32 len = 0;
+  bool ok = false;
+  RiceyInt k = riceToInt( key, &len, &ok );
+  if ( !ok )
+    return -1;
+  if ( !dict.codesContainCode( k ) )
+    return -1;
+  m_key = intToRice( k );
+  return len;
 }
 
+/**
+ * @brief KeyValuePair::setBsonish
+ * @param b - key followed by a value of type matching the key type
+ * @return length of all data read from b to get key and value, or -1 if there was a problem
+ */
 qint32  KeyValuePair::setBsonish( const BsonSerial &b )
-{ (void)b;
-  return -1;
-} // TODO: fixme
-
+{ qint32 len = setKey( b );
+  if ( len < 1 )
+    { qWarning( "problem reading key" ); return -1; }
+  qint32 i = len;
+  ValueBase *vbo = bsonishValueByKey( keyInt(), b.mid(i), &len, this );
+  if ( vbo == nullptr )
+    { qWarning( "problem reading value" ); return -1; }
+  m_value = vbo;
+  return i+len;
+}
 
 /**
  * @brief BlockValueInt64::setBsonish
@@ -157,10 +174,10 @@ qint32  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
  * @return true if conversion was successful
  */
 bool  BlockValueRiceyCode::setJson( const JsonSerial &j )
-{ QByteArray b = j.fromHex( j );
-  if ( !validRicey( b ) )
+{ RiceyCode r = j.fromHex( j );
+  if ( !validRicey( r ) )
     return false;
-  m_value = b;
+  m_value = r;
   return true;
 }
 
@@ -498,10 +515,9 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
       i += len;
       if ( b.size() <= i )
         { qWarning( "object key data missing" ); return -1; }
-      ValueBase *vbo = newValue( k & RDT_OBTYPEMASK, this );
-      len = vbo->setBsonish( b.mid(i) );
-      if ( len < 1 )
-        { delete vbo; qWarning( "problem reading value" ); return -1; }
+      ValueBase *vbo = bsonishValueByKey( k, b.mid(i), &len, this );
+      if ( vbo == nullptr )
+        { qWarning( "problem reading value" ); return -1; }
       if ( !insert( intToRice(k), vbo ) )
         { delete vbo; qWarning( "problem inserting value" ); return -1; }
       i += len;
@@ -509,6 +525,27 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
     }
   return i;
 }
+
+/**
+ * @brief ValueBase::bsonishValueByKey
+ * @param k - key as a RiceyInt which tells the type of the value to be read
+ * @param b - bytestream ready to read a value from
+ * @param l - when not null, return length of stream read here, -1 if there is a problem
+ * @param parent - parent for the value object
+ * @return length of stream read to get the value, or -1 if there was a problem
+ */
+ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32 *l, QObject *parent )
+{ if ( l != nullptr )
+    *l = -1;
+  ValueBase *vbo = newValue( k & RDT_OBTYPEMASK, parent );
+  qint32 len = vbo->setBsonish( b );
+  if ( len < 1 )
+    { delete vbo; qWarning( "problem reading value" ); return nullptr; }
+  if ( l != nullptr )
+    *l = len;
+  return vbo;
+}
+
 
 /**
  * @brief BlockValueObject::insert

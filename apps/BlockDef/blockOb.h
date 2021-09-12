@@ -50,6 +50,7 @@ virtual     quint8  type()    = 0;
 virtual BsonSerial  bsonish() = 0;
 virtual JsonSerial  json()    = 0;
 virtual     qint32  setBsonish( const BsonSerial & ) = 0;
+         ValueBase *bsonishValueByKey( RiceyInt, const BsonSerial &, qint32 *l = nullptr, QObject *parent = nullptr );
 virtual       bool  setJson   ( const JsonSerial & ) = 0;
         QByteArray  bsonishNull( qint8 );
 };
@@ -77,9 +78,10 @@ class KeyValueBase : public ValueBase
 public:
    explicit  KeyValueBase( const RiceyCode &key, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( key ); }
             ~KeyValueBase() {}
-       bool  setKey( const RiceyCode &key );
-       bool  setKey( RiceyInt k ) { return setKey( intToRice( k ) ); }
+     qint32  setKey( const RiceyCode &key );
+       bool  setKey( RiceyInt k ) { return( setKey( intToRice( k ) ) > 0); }
   RiceyCode  key()  { return m_key; }
+   RiceyInt  keyInt() { return riceToInt( m_key ); }
      quint8  type() { if ( m_key.size() > 0 ) return m_key.at(m_key.size()-1) & 0x0F; return RDT_NULL; }
 
   RiceyCode  m_key; // Ricey code bsonish key
