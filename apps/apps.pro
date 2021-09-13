@@ -24,8 +24,7 @@ TEMPLATE = subdirs
 SUBDIRS +=  \
 # ao           \
 CodeForm2021  \
-codeGenerator  \
-genesisMaker    \
-gen2021          \
-# recorder          \
+# codeGenerator  \
+# genesisMaker    \
+# recorder         \
 # tests
