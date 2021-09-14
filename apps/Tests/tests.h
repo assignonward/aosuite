@@ -37,6 +37,9 @@ public:
    explicit  Tests( QWidget *cw = nullptr );
             ~Tests();
 
+public slots:
+       void  on_start_clicked();
+
 public:
          Ui::Tests *ui;
 };

@@ -158,9 +158,9 @@ RiceyCode  Dictionary::riceyFromCodeName( Utf8String n )
   if ( !jv.isObject() )
     return RiceyCode();
   QJsonObject jo = jv.toObject();
-  if ( !jo.contains("type_s") )
+  if ( !jo.contains("type_y") )
     return RiceyCode();
-  return RiceyCode::fromHex( jo["type_s"].toString().toUtf8() );
+  return RiceyCode::fromHex( jo["type_y"].toString().toUtf8() );
 }
 
 /**
@@ -175,7 +175,7 @@ RiceyInt  Dictionary::codeFromCodeName( Utf8String n )
   if ( !jv.isObject() )
     return -1;
   QJsonObject jo = jv.toObject();
-  if ( !jo.contains("type_s") )
+  if ( !jo.contains("type_y") )
     return -1;
-  return riceToInt( RiceyCode::fromHex( jo["type_s"].toString().toUtf8() ) );
+  return riceToInt( RiceyCode::fromHex( jo["type_y"].toString().toUtf8() ) );
 }

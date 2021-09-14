@@ -50,4 +50,7 @@ public:
                QJsonArray  types;
 };
 
+// One global dictionary
+extern Dictionary dict;
+
 #endif // DICTIONARY_H

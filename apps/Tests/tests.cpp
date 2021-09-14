@@ -23,6 +23,7 @@
 #include <QtWidgets>
 #include "tests.h"
 #include "ui_tests.h"
+#include "blockOb.h"
 
 Tests::Tests( QWidget *cw ) :
     QScrollArea(cw),
@@ -37,3 +38,40 @@ Tests::Tests( QWidget *cw ) :
 Tests::~Tests()
 { delete ui; }
 
+void  Tests::on_start_clicked()
+{ ui->report->clear();
+  bool pass = true;
+
+  qint32 count = 0;
+  QList<RiceyInt> rList = dict.ciByNum.keys();
+  foreach ( RiceyInt i, rList )
+    { Utf8String name = dict.nameFromCode(i);
+        RiceyInt j    = dict.codeFromCodeName( name );
+        RiceyInt k    = dict.codeFromCodeName( name );
+       RiceyCode code = dict.riceyFromCodeName( name );
+      Utf8String cnme = dict.nameFromCode( code );
+            bool cc1  = dict.codesContainName( name );
+            bool cc2  = dict.codesContainCode( i );
+            bool cc3  = dict.codesContainCode( code );
+            bool tp   = true;
+      if (( j != i ) || ( k != i ) || !cc1 || !cc2 || !cc3 ||
+          ( riceToInt(code) != i ) || ( cnme != name ) ||
+          ( intToRice(i) != code ))
+        pass = tp = false;
+      if ( tp )
+        count++;
+       else
+        ui->report->append( QString( "FAIL i %1 j %2 k %3 cc1 %4 cc2 %5 cc3 %6 code %7 name %8 cnme %9 rti %10 itr %11" )
+                               .arg(i).arg(j).arg(k).arg(cc1).arg(cc2).arg(cc3)
+                               .arg(QString::fromUtf8(code.toHex()))
+                               .arg(QString::fromUtf8(name))
+                               .arg(QString::fromUtf8(cnme))
+                               .arg(riceToInt(code))
+                               .arg(QString::fromUtf8(intToRice(i).toHex()))
+                            );
+    }
+  if ( pass )
+    ui->report->append( QString("Pass dictionary self consistency %1 entries.").arg(count) );
+
+
+}
