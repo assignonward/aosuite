@@ -391,13 +391,17 @@ bool Tests::testInt32A( BlockArrayInt32 &v, const QList<qint32> &tv, qint32 &tc,
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
   BsonSerial b = v.bsonish();
-  v.clear(); v.append( 123 );
+  v.clear();
+  if ( v.append( 123 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
-  v.clear(); v.append( 321 );
+  v.clear();
+  if ( v.append( 321 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -456,13 +460,17 @@ bool Tests::testInt64A( BlockArrayInt64 &v, const QList<qint64> &tv, qint32 &tc,
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
   BsonSerial b = v.bsonish();
-  v.clear(); v.append( 123 );
+  v.clear();
+  if ( v.append( 123 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
-  v.clear(); v.append( 321 );
+  v.clear();
+  if ( v.append( 321 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
@@ -536,13 +544,15 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyInt> &tv, qint32 &t
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
   BsonSerial b = v.bsonish();
-  v.clear(); v.append( 123 );
+  if ( v.append( 123 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
-  v.clear(); v.append( 321 );
+  if ( v.append( 321 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -556,13 +566,17 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyCode> &tv, qint32 &
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
   BsonSerial b = v.bsonish();
-  v.clear(); v.append( 123 );
+  v.clear();
+  if ( v.append( 123 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
-  v.clear(); v.append( 321 );
+  v.clear();
+  if ( v.append( 321 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
