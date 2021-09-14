@@ -37,17 +37,25 @@ class Tests : public QScrollArea
 public:
    explicit  Tests( QWidget *cw = nullptr );
             ~Tests();
-       bool  testDict( QString & );
-       bool  testInt32( QString & );
+       void  liveDelay( int t );
+       bool  testDict( QString &, qint32 & );
+       bool  testInt32( QString &, qint32 & );
        bool  testInt32( BlockValueInt32 &, qint32, qint32 &, QString & );
-       bool  testInt64( QString & );
+       bool  testInt64( QString &, qint32 & );
        bool  testInt64( BlockValueInt64 &, qint64, qint32 &, QString & );
-       bool  testRicey( QString & );
+       bool  testRicey( QString &, qint32 & );
        bool  testRicey( BlockValueRiceyCode &, RiceyInt, qint32 &, QString & );
-       bool  testString( QString & );
+       bool  testString( QString &, qint32 & );
        bool  testString( BlockValueString &, const Utf8String &, qint32 &, QString & );
-       bool  testByteArray( QString & );
+       bool  testByteArray( QString &, qint32 & );
        bool  testByteArray( BlockValueByteArray &, const QByteArray &, qint32 &, QString & );
+       bool  testInt32A( QString &, qint32 & );
+       bool  testInt32A( BlockArrayInt32 &, const QList<qint32> &, qint32 &, QString & );
+       bool  testInt64A( QString &, qint32 & );
+       bool  testInt64A( BlockArrayInt64 &, const QList<qint64> &, qint32 &, QString & );
+       bool  testRiceyA( QString &, qint32 & );
+       bool  testRiceyA( BlockArrayRicey &, const QList<RiceyCode> &, qint32 &, QString & );
+       bool  testRiceyA( BlockArrayRicey &, const QList<RiceyInt>  &, qint32 &, QString & );
 
 public slots:
        void  on_start_clicked();

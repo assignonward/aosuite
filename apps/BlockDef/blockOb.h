@@ -76,7 +76,7 @@ class KeyValueBase : public ValueBase
 {
     Q_OBJECT
 public:
-   explicit  KeyValueBase( const RiceyCode &key, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( key ); }
+   explicit  KeyValueBase( RiceyInt k, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
             ~KeyValueBase() {}
      qint32  setKey( const RiceyCode &key );
        bool  setKey( RiceyInt k ) { return( setKey( intToRice( k ) ) > 0); }
@@ -96,9 +96,9 @@ class KeyValuePair : public KeyValueBase
 {
     Q_OBJECT
 public:
-    explicit  KeyValuePair( const RiceyCode &key, QObject *parent = nullptr ) : KeyValueBase( key, parent ) {}
+    explicit  KeyValuePair( RiceyInt k, QObject *parent = nullptr ) : KeyValueBase( k, parent ) {}
              ~KeyValuePair() { if ( m_value ) delete( m_value ); }
-        void  setValue( ValueBase &value ) { if ( value.type() != type() ) qWarning("type mismatch"); else { if ( m_value ) delete( m_value ); m_value = &value; } }
+        void  setValue( ValueBase &value ) { if ( value.type() != type() ) qWarning("kvp type mismatch"); else { if ( m_value ) delete( m_value ); m_value = &value; } }
  ValueBase &  valueRef() { return *m_value; }
   BsonSerial  bsonish();
   JsonSerial  json();
@@ -109,28 +109,6 @@ public:
   QPointer<ValueBase> m_value; // Value of this KeyValuePair
 };
 
-/**
- * @brief The KeyValueArray class - zero or more values of the same type stored under a single key
- *   order of items in the array is important, conserved, and determined by the creator of the array.
- */
-class KeyValueArray : public KeyValueBase
-{
-    Q_OBJECT
-public:
-    explicit  KeyValueArray( const QByteArray &key, QObject *parent = nullptr ) : KeyValueBase( key, parent ) {}
-             ~KeyValueArray() { clear(); }
-        void  clear() { while ( m_values.size() > 0 ) { if ( m_values.last() != nullptr ) { delete( m_values.last() ); } m_values.removeLast(); } }
-      qint32  size()  { return m_values.size(); }
-        bool  appendValue( ValueBase *value ) { if ( value == nullptr ) return false; if ( value->type() != type() ) return false; m_values.append( value ); return true; }
-   ValueBase *valueAt( qint32 n ) { if (( n >= 0 ) && ( n < m_values.size() )) return m_values.at(n); else return nullptr; }
-  BsonSerial  bsonish();
-  JsonSerial  json();
-      qint32  setBsonish( const BsonSerial &b );
-        bool  setJson   ( const JsonSerial &j );
-
-public:
-  QVarLengthArray<QPointer<ValueBase> > m_values; // Values in this array
-};
 
 extern BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
 
@@ -166,7 +144,8 @@ QMap<RiceyInt, QPointer<ValueBase> > m_obMap;
  */
 class BlockValueInt64 : public ValueBase
 { public:
-    explicit  BlockValueInt64( QObject *parent = nullptr ) : ValueBase( parent ) { m_value = 0; }
+    explicit  BlockValueInt64( QObject *parent = nullptr ) : ValueBase( parent ) { setValue( 0 ); }
+    explicit  BlockValueInt64( qint64 v, QObject *parent = nullptr ) : ValueBase( parent ) { setValue( v ); }
              ~BlockValueInt64() {}
       quint8  type()    { return RDT_INT64; }
   BsonSerial  bsonish() { BsonSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
@@ -186,7 +165,8 @@ class BlockValueInt64 : public ValueBase
  */
 class BlockValueInt32 : public ValueBase
 { public:
-    explicit  BlockValueInt32( QObject *parent = nullptr ) : ValueBase( parent ) { m_value = 0; }
+    explicit  BlockValueInt32( QObject *parent = nullptr ) : ValueBase( parent ) { setValue(0); }
+    explicit  BlockValueInt32( qint32 v, QObject *parent = nullptr ) : ValueBase( parent ) { setValue(v); }
              ~BlockValueInt32() {}
       quint8  type()    { return RDT_INT32; }
   BsonSerial  bsonish() { BsonSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
@@ -207,6 +187,8 @@ class BlockValueInt32 : public ValueBase
 class BlockValueRiceyCode : public ValueBase
 { public:
     explicit  BlockValueRiceyCode( QObject *parent = nullptr ) : ValueBase( parent ) {}
+    explicit  BlockValueRiceyCode( RiceyCode v, QObject *parent = nullptr ) : ValueBase( parent ) { setValue(v); }
+    explicit  BlockValueRiceyCode( RiceyInt r , QObject *parent = nullptr ) : ValueBase( parent ) { setValue(r); }
              ~BlockValueRiceyCode() {}
       quint8  type()     { return RDT_RCODE; }
   BsonSerial  bsonish()  { return m_value; }
@@ -229,6 +211,7 @@ class BlockValueRiceyCode : public ValueBase
 class BlockValueString : public ValueBase
 { public:
     explicit  BlockValueString( QObject *parent = nullptr ) : ValueBase( parent ) {}
+    explicit  BlockValueString( Utf8String v, QObject *parent = nullptr ) : ValueBase( parent ) { setValue(v); }
              ~BlockValueString() {}
       quint8  type()    { return RDT_STRING; }
   BsonSerial  bsonish();
@@ -249,6 +232,7 @@ class BlockValueString : public ValueBase
 class BlockValueByteArray : public ValueBase
 { public:
     explicit  BlockValueByteArray( QObject *parent = nullptr ) : ValueBase( parent ) {}
+    explicit  BlockValueByteArray( QByteArray v, QObject *parent = nullptr ) : ValueBase( parent ) { setValue(v); }
              ~BlockValueByteArray() {}
       quint8  type()    { return RDT_BYTEARRAY; }
   BsonSerial  bsonish() { BsonSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
@@ -269,6 +253,7 @@ class BlockValueByteArray : public ValueBase
 class BlockValueMPZ : public ValueBase
 { public:
     explicit  BlockValueMPZ( QObject *parent = nullptr ) : ValueBase( parent ) {}
+    explicit  BlockValueMPZ( MP_INT v, QObject *parent = nullptr ) : ValueBase( parent ) { setValue(v); }
              ~BlockValueMPZ() {}
       quint8  type()    { return RDT_MPZ; }
   BsonSerial  bsonish() { return QByteArray(); } // TODO: fixme
@@ -289,6 +274,7 @@ class BlockValueMPZ : public ValueBase
 class BlockValueMPQ : public ValueBase
 { public:
     explicit  BlockValueMPQ( QObject *parent = nullptr ) : ValueBase( parent ) {}
+    explicit  BlockValueMPQ( MP_RAT v, QObject *parent = nullptr ) : ValueBase( parent ) { setValue(v); }
              ~BlockValueMPQ() {}
       quint8  type()    { return RDT_MPQ; }
   BsonSerial  bsonish() { return QByteArray(); } // TODO: fixme
@@ -299,6 +285,73 @@ class BlockValueMPQ : public ValueBase
         void  setValue( MP_RAT v ) { m_value = v; }
 
       MP_RAT  m_value;
+};
+
+/**
+ * @brief The KeyValueArray class - zero or more values of the same type stored under a single key
+ *   order of items in the array is important, conserved, and determined by the creator of the array.
+ */
+class KeyValueArray : public KeyValueBase
+{
+    Q_OBJECT
+public:
+    explicit  KeyValueArray( RiceyInt k, QObject *parent = nullptr ) : KeyValueBase( k, parent ) {}
+             ~KeyValueArray() { clear(); }
+        void  clear() { while ( m_values.size() > 0 ) { if ( m_values.last() != nullptr ) { delete( m_values.last() ); } m_values.removeLast(); } }
+      qint32  size()  { return m_values.size(); }
+        bool  append( ValueBase *value ) { if ( value == nullptr )                           { qWarning( "will not append null" );                               return false; }
+                                           if ( value->type() != ( type() & RDT_TYPEMASK ) ) { qWarning( "type mismatch %d %d",(int)value->type(),(int)type() ); return false; }
+                                           m_values.append( value ); return true; }
+        bool  append( qint64 v )     { if ( type() == RDT_INT64_ARRAY     ) { return append( new BlockValueInt64    (v, this) ); } qWarning( "type mismatch I %d",(int)type() ); return false; }
+        bool  append( qint32 v )     { if ( type() == RDT_INT32_ARRAY     ) { return append( new BlockValueInt32    (v, this) ); } qWarning( "type mismatch L %d",(int)type() ); return false; }
+        bool  append( MP_INT v )     { if ( type() == RDT_MPZ_ARRAY       ) { return append( new BlockValueMPZ      (v, this) ); } qWarning( "type mismatch N %d",(int)type() ); return false; }
+        bool  append( MP_RAT v )     { if ( type() == RDT_MPQ_ARRAY       ) { return append( new BlockValueMPQ      (v, this) ); } qWarning( "type mismatch R %d",(int)type() ); return false; }
+        bool  append( RiceyInt v )   { if ( type() == RDT_RCODE_ARRAY     ) { return append( new BlockValueRiceyCode(v, this) ); } qWarning( "type mismatch Y %d",(int)type() ); return false; }
+        bool  append( QByteArray v ) { if ( type() == RDT_RCODE_ARRAY     ) { return append( new BlockValueRiceyCode(v, this) ); }
+                                       if ( type() == RDT_STRING_ARRAY    ) { return append( new BlockValueString   (v, this) ); }
+                                       if ( type() == RDT_BYTEARRAY_ARRAY ) { return append( new BlockValueByteArray(v, this) ); } qWarning( "type mismatch BA %d",(int)type() ); return false; }
+        // TODO: append an object...
+   ValueBase *at( qint32 n ) { if (( n >= 0 ) && ( n < size() )) return m_values.at(n); else return nullptr; }
+  BsonSerial  bsonish();
+  JsonSerial  json();
+      qint32  setBsonish( const BsonSerial &b );
+        bool  setJson   ( const JsonSerial &j );
+
+public:
+  QVarLengthArray<ValueBase *> m_values; // Values in this array
+};
+
+class BlockArrayInt64 : public KeyValueArray
+{ public:
+    explicit  BlockArrayInt64( QObject *parent = nullptr ) : KeyValueArray( RCD_int64Array_I, parent ) {}
+    explicit  BlockArrayInt64( RiceyInt k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
+             ~BlockArrayInt64() {}
+      qint64  at( qint32 n ) { if (( n >= 0 ) && ( n < size() )) return ((BlockValueInt64 *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return 0; }
+        void  set( const QList<qint64> &vl ) { clear(); foreach( qint64 v, vl ) { if ( !append( v ) ) qWarning( "append Failed" ); } }
+        bool  operator==(const QList<qint64>& l) { if (l.size() != size()) return false; for (qint32 i=0;i<size();i++) if (l.at(i)!=at(i)) return false; return true; }
+};
+
+class BlockArrayInt32 : public KeyValueArray
+{ public:
+    explicit  BlockArrayInt32( QObject *parent = nullptr ) : KeyValueArray( RCD_int32Array_L, parent ) {}
+    explicit  BlockArrayInt32( RiceyInt k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
+             ~BlockArrayInt32() {}
+      qint64  at( qint32 n ) { if (( n >= 0 ) && ( n < size() )) return ((BlockValueInt32 *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return 0; }
+        void  set( const QList<qint32> &vl ) { clear(); foreach( qint32 v, vl ) { if ( !append( v ) ) qWarning( "append Failed" ); } }
+        bool  operator==(const QList<qint32>& l) { if (l.size() != size()) return false; for (qint32 i=0;i<size();i++) if (l.at(i)!=at(i)) return false; return true; }
+};
+
+class BlockArrayRicey : public KeyValueArray
+{ public:
+    explicit  BlockArrayRicey( QObject *parent = nullptr ) : KeyValueArray( RCD_riceyArray_Y, parent ) {}
+    explicit  BlockArrayRicey( RiceyInt k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
+             ~BlockArrayRicey() {}
+   RiceyCode  at( qint32 n ) { if (( n >= 0 ) && ( n < size() )) return ((BlockValueRiceyCode *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return RiceyCode(); }
+    RiceyInt  intAt( qint32 n ) { if (( n >= 0 ) && ( n < size() )) return riceToInt( at(n) );                         qWarning( "array index %d out of bounds %d",n,size() ); return -1; }
+        void  set( const QList<RiceyCode> &vl ) { clear(); foreach( RiceyCode v, vl ) { if ( !append( v ) ) qWarning( "append Failed" ); } }
+        void  set( const QList<RiceyInt>  &vl ) { clear(); foreach( RiceyInt  v, vl ) { if ( !append( v ) ) qWarning( "append Failed" ); } }
+        bool  operator==(const QList<RiceyCode>& l) { if (l.size() != size()) return false; for (qint32 i=0;i<size();i++) if (l.at(i)!=   at(i)) return false; return true; }
+        bool  operator==(const QList<RiceyInt> & l) { if (l.size() != size()) return false; for (qint32 i=0;i<size();i++) if (l.at(i)!=intAt(i)) return false; return true; }
 };
 
 #endif // BLOCKOB_H

@@ -415,7 +415,7 @@ qint32  KeyValueArray::setBsonish( const BsonSerial &b )
       len = vbo->setBsonish( b.mid(i) );
       if ( len < 1 )
         { delete vbo; qWarning( "problem reading element" ); return -1; }
-      appendValue( vbo );
+      append( vbo );
       i += len;
       elementCount--;
     }
@@ -445,8 +445,37 @@ JsonSerial  KeyValueArray::json()
   return j;
 }
 
-bool  KeyValueArray::setJson   ( const JsonSerial &j )
-{ (void)j; return true; } // TODO: fixme
+#include <QVariant>
+
+bool  KeyValueArray::setJson( const JsonSerial &j )
+{ QJsonDocument jd = QJsonDocument::fromJson(j);
+  if ( !jd.isObject() )
+    { qWarning( "document is not a JsonObject" ); return false; }
+  QJsonObject jo = jd.object();
+  if ( !jo.contains( dict.nameFromCode( key() ) ) )
+    { qWarning( "object does not contain a "+dict.nameFromCode( key() )+" element" ); return false; }
+  QJsonValue jv = jo.value( dict.nameFromCode( key() ) );
+  if ( !jv.isArray() )
+    { qWarning( "value is not an array" ); return false; }
+  clear();
+  QJsonArray ja = jv.toArray();
+  if ( ja.size() < 1 )  // Empty?
+    return true;        // We're done.
+  QVariantList vl = ja.toVariantList();
+  foreach ( QVariant v, vl )
+    { switch ( type() )
+        { case RDT_INT64_ARRAY:     append( (qint64)v.toLongLong() ); break;
+          case RDT_INT32_ARRAY:     append( (qint32)v.toInt() ); break;
+          case RDT_RCODE_ARRAY:     append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
+          case RDT_STRING_ARRAY:    append( v.toString().toUtf8() ); break;
+          case RDT_BYTEARRAY_ARRAY: append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
+          case RDT_OBJECT_ARRAY:
+          case RDT_MPZ_ARRAY:
+          case RDT_MPQ_ARRAY: qWarning( "unhandled type" ); return false;
+        }
+    }
+  return true;
+}
 
 JsonSerial BlockValueObject::json()
 { JsonSerial j = " {";
