@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Assign Onward
+# Copyright (c) 2021 Assign Onward
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +21,12 @@
 # SOFTWARE.
 #
 
-include(../MainCore/MainCore.pri)
-include(../TestForm/TestForm.pri)
+INCLUDEPATH += $${PWD}
 
-QT        += core gui widgets
-TARGET     = aoTests
-TEMPLATE   = app
-DEFINES   += QT_DEPRECATED_WARNINGS
-DEFINES   += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+SOURCES     += $${PWD}/tests.cpp
 
-SOURCES   += mainwindow.cpp
+HEADERS     += $${PWD}/tests.h
 
-HEADERS   += appname.h    \
-             mainwindow.h
+FORMS       += $${PWD}/tests.ui
 
-FORMS     += mainwindow.ui
-
-RESOURCES += resources.qrc
-
+RESOURCES   += $${PWD}/tests.qrc

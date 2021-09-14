@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2018 Assign Onward
+ * Copyright (c) 2021 Assign Onward
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef APPNAME_H
-#define APPNAME_H
+#include <QtWidgets>
+#include "tests.h"
+#include "ui_tests.h"
 
-#define APPNAME_SHORT "TaoC"
-#define APPNAME    "Test Assign Onward Components"
-#define APPDESC    "A demonstration of functionality used in other apps in the AO suite."
-#define APPVERSION "0.1"
-#define APPSTATUS  "Pre alpha, design development mule."
-#endif // APPNAME_H
+Tests::Tests( QWidget *cw ) :
+    QScrollArea(cw),
+    ui(new Ui::Tests)
+{ ui->setupUi(this);
+  if ( cw )
+    { new QVBoxLayout( cw );
+      cw->layout()->addWidget( this );
+    }
+}
+
+Tests::~Tests()
+{ delete ui; }
+

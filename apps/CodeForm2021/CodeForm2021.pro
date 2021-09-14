@@ -23,6 +23,7 @@
 QT       += core gui
 
 include(../BlockDef/BlockDef.pri)
+include(../Tests/Tests.pri)
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

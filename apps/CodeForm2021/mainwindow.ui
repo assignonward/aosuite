@@ -249,7 +249,7 @@ p, li { white-space: pre-wrap; }
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="testsTab">
        <attribute name="title">
         <string>Tests</string>
        </attribute>

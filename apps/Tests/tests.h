@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2018 Assign Onward
+ * Copyright (c) 2021 Assign Onward
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,31 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef TESTS_H
+#define TESTS_H
 
-#include "assets.h"
-#include "testform.h"
-#include "MainWinCommon.h"
-#include "ui_mainwindow.h"
+#include <QScrollArea>
 
 namespace Ui {
-class MainWindow;
+class Tests;
 }
 
-class MainWindow : public MainWinCommon
+class Tests : public QScrollArea
 {
     Q_OBJECT
 
 public:
-    explicit  MainWindow(QWidget *parent = 0);
-             ~MainWindow();
-        void  closeEvent(QCloseEvent *event);
-        void  restoreConfig();
-        void  saveConfig();
+   explicit  Tests( QWidget *cw = nullptr );
+            ~Tests();
 
-private:
-      Ui::MainWindow *ui;
+public:
+         Ui::Tests *ui;
 };
 
-#endif // MAINWINDOW_H
+#endif // TESTS_H

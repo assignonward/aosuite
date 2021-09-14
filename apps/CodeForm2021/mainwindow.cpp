@@ -27,6 +27,7 @@
 #include <QJsonDocument>
 #include <QFile>
 #include "riceyCodes.h"
+#include "tests.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     restoreConfig();
+    new Tests( ui->testsTab );
+
     on_update_clicked();
 }
 
