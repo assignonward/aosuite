@@ -56,6 +56,8 @@ public:
        bool  testRiceyA( QString &, qint32 & );
        bool  testRiceyA( BlockArrayRicey &, const QList<RiceyCode> &, qint32 &, QString & );
        bool  testRiceyA( BlockArrayRicey &, const QList<RiceyInt>  &, qint32 &, QString & );
+       bool  testStringA( QString &, qint32 & );
+       bool  testStringA( BlockArrayString &, const QList<Utf8String> &, qint32 &, QString & );
 
 public slots:
        void  on_start_clicked();
