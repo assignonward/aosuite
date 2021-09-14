@@ -461,7 +461,7 @@ bool Tests::testInt64A( BlockArrayInt64 &v, const QList<qint64> &tv, qint32 &tc,
 
   BsonSerial b = v.bsonish();
   v.clear();
-  if ( v.append( 123 ) ) tc++; else
+  if ( v.append( (qint64)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
@@ -469,7 +469,7 @@ bool Tests::testInt64A( BlockArrayInt64 &v, const QList<qint64> &tv, qint32 &tc,
 
   JsonSerial j = v.json();
   v.clear();
-  if ( v.append( 321 ) ) tc++; else
+  if ( v.append( (qint64)321 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
@@ -544,14 +544,14 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyInt> &tv, qint32 &t
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
   BsonSerial b = v.bsonish();
-  if ( v.append( 123 ) ) tc++; else
+  if ( v.append( (RiceyInt)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
-  if ( v.append( 321 ) ) tc++; else
+  if ( v.append( (RiceyInt)321 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
@@ -567,7 +567,7 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyCode> &tv, qint32 &
 
   BsonSerial b = v.bsonish();
   v.clear();
-  if ( v.append( 123 ) ) tc++; else
+  if ( v.append( (RiceyInt)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
@@ -575,7 +575,7 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyCode> &tv, qint32 &
 
   JsonSerial j = v.json();
   v.clear();
-  if ( v.append( 321 ) ) tc++; else
+  if ( v.append( (RiceyInt)321 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
