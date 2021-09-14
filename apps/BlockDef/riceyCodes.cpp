@@ -30,7 +30,7 @@
 bool  validRicey( const RiceyCode &r )
 { if ( r.size() < 1 )
     return false;
-  if ( r.size() > 7 )
+  if ( r.size() > MAX_RICEY_LEN )
     return false;
 
   for ( int i = 0; i < r.size(); i++ )
@@ -81,9 +81,15 @@ quint64 riceToInt( const RiceyCode &ba, qint32 *sz, bool *ok )
       return v;
     }
   if ( sz ) *sz = 0;
+  qint32 cnt = 0;
   foreach ( quint8 c, ba )
     { v |= (c & 0x7F);
       if ( sz ) (*sz)++;
+      if ( ++cnt > MAX_RICEY_LEN )
+        { qWarning( "Rice code too long '%s'", ba.toHex().data() );
+          if ( ok ) *ok = false;
+          return v;
+        }
       if (( c & 0x80 ) == 0) // first zero msb terminates the code
         { if ( ok ) *ok = true;
           return v;

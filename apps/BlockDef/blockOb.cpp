@@ -74,7 +74,7 @@ qint32 KeyValueBase::setKey( const RiceyCode &key )
     return -1;
   if ( !dict.codesContainCode( k ) )
     return -1;
-  m_key = intToRice( k );
+  m_key = k;
   return len;
 }
 
@@ -88,7 +88,7 @@ qint32  KeyValuePair::setBsonish( const BsonSerial &b )
   if ( len < 1 )
     { qWarning( "problem reading key" ); return -1; }
   qint32 i = len;
-  ValueBase *vbo = bsonishValueByKey( keyInt(), b.mid(i), &len, this );
+  ValueBase *vbo = bsonishValueByKey( key(), b.mid(i), &len, this );
   if ( vbo == nullptr )
     { qWarning( "problem reading value" ); return -1; }
   m_value = vbo;
@@ -261,18 +261,18 @@ qint32  BlockValueString::setBsonish( const BsonSerial &b )
  * @return - true if conversion succeeds
  */
 bool  BlockValueString::setJson( const JsonSerial &j )
-{ JsonSerial d = "{ 'v':";
+{ JsonSerial d = "{ \"v\": ";
   d.append( j );
   d.append( " }" );
   QJsonDocument jd = QJsonDocument::fromJson(d);
   if ( !jd.isObject() )
-    return false;
+    { qWarning( "document is not a JsonObject" ); return false; }
   QJsonObject o = jd.object();
   if ( !o.contains("v") )
-    return false;
+    { qWarning( "object does not contain the v element" ); return false; }
   QJsonValue v = o.value("v");
   if ( !v.isString() )
-    return false;
+    { qWarning( "value is not a string" ); return false; }
   m_value = v.toString().toUtf8();
   return true;
 }
@@ -327,16 +327,16 @@ BsonSerial ValueBase::bsonishNull( qint8 keyType )
  * @return the bsonish representation of a single key-value pair
  */
 BsonSerial  KeyValuePair::bsonish()
-{ BsonSerial b = m_key;
+{ BsonSerial b = keyCode();
   if ( !dict.codesContainCode(m_key) )
-    { qWarning( "unknown key 0x%s", m_key.toHex().data() );
+    { qWarning( "unknown key 0x%s", keyHexd() );
       return BsonSerial();
     }
   if ( m_value )
     b.append( m_value->bsonish() );
    else
-    { qWarning( "null value with 0x%s key", m_key.toHex().data() );
-      b.append( bsonishNull( m_key.at( m_key.size()-1 ) & 0x07 ) );
+    { qWarning( "null value with 0x%s key", keyHexd() );
+      b.append( bsonishNull( type() & RDT_TYPEMASK ) );  // Mask off the array bit too
     }
   return b;
 }
@@ -348,15 +348,15 @@ BsonSerial  KeyValuePair::bsonish()
 JsonSerial  KeyValuePair::json()
 { JsonSerial j = "{ \"";
   if ( !dict.codesContainCode(m_key) )
-    { qWarning( "unknown key 0x%s", m_key.toHex().data() );
-      return "{<!-- unknown key -->}";
+    { qWarning( "unknown key 0x%s", keyHexd() );
+      return "{<!-- unknown key 0x"+keyHex()+" -->}";
     }
   j.append( dict.nameFromCode(m_key) );
   j.append( "\": " );
   if ( m_value )
     j.append( m_value->json() );
    else
-    { qWarning( "null value with 0x%s key", m_key.toHex().data() );
+    { qWarning( "null value with 0x%s key", keyHexd() );
       j.append( "0 <!-- null value -->" );
     }
   j.append( " }\n" );
@@ -368,9 +368,9 @@ JsonSerial  KeyValuePair::json()
  * @return The entire array as a key plus list of values (matching the type of the key)
  */
 BsonSerial KeyValueArray::bsonish()
-{ BsonSerial b = m_key;
+{ BsonSerial b = keyCode();
   if ( !dict.codesContainCode(b) )
-    { qWarning( "unknown key 0x%s", m_key.toHex().data() );
+    { qWarning( "unknown key 0x%s", keyHexd() );
       return BsonSerial();
     }
   quint64 elementCount = 0;
@@ -450,11 +450,11 @@ bool  KeyValueArray::setJson   ( const JsonSerial &j )
 
 JsonSerial BlockValueObject::json()
 { JsonSerial j = " {";
-  QList<RiceyCode> keys = m_obMap.keys();
+  QList<RiceyInt> keys = m_obMap.keys();
   bool wroteOne = false;
-  foreach ( RiceyCode key, keys )
+  foreach ( RiceyInt key, keys )
     { if ( !dict.codesContainCode(key) )
-        j.append( " \""+key.toHex()+"\" <!-- unknown key --> : " ); // TODO: type extend key with _X
+        j.append( " \""+intToRice(key).toHex()+"\" <!-- unknown key --> : " ); // TODO: type extend key with _X
        else
         j.append( " \""+dict.nameFromCode(key)+"\": " );
       ValueBase *vp = m_obMap[key];
@@ -478,10 +478,10 @@ bool  BlockValueObject::setJson   ( const JsonSerial &j )
  * @return The entire object as a list of key-values
  */
 BsonSerial BlockValueObject::bsonish()
-{ QList<RiceyCode> keys = m_obMap.keys();
+{ QList<RiceyInt> keys = m_obMap.keys();
   BsonSerial b = intToRice( m_obMap.size() );
-  foreach ( RiceyCode key, keys )
-    { b.append( key );
+  foreach ( RiceyInt key, keys )
+    { b.append( intToRice(key) );
       if ( m_obMap[key] != nullptr )
         b.append( m_obMap[key]->bsonish() );
        else
@@ -518,7 +518,7 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
       ValueBase *vbo = bsonishValueByKey( k, b.mid(i), &len, this );
       if ( vbo == nullptr )
         { qWarning( "problem reading value" ); return -1; }
-      if ( !insert( intToRice(k), vbo ) )
+      if ( !insert( k, vbo ) )
         { delete vbo; qWarning( "problem inserting value" ); return -1; }
       i += len;
       obCount--;
@@ -553,10 +553,10 @@ ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32
  * @param v - value
  * @return true if insertion was successful
  */
-bool  BlockValueObject::insert( const RiceyCode &k, ValueBase *v )
+bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
 { if ( v == nullptr )
     { qWarning( "will not insert null value" ); return false; }
-  if (( riceToInt( k ) & RDT_OBTYPEMASK ) != v->type() )
+  if (( k & RDT_OBTYPEMASK ) != v->type() )
     { qWarning( "will not insert mismatched type and value" ); return false; }
   if ( !dict.codesContainCode( k ) )
     { qWarning( "key not recognized, will not insert." ); return false; }

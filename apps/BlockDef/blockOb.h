@@ -80,11 +80,13 @@ public:
             ~KeyValueBase() {}
      qint32  setKey( const RiceyCode &key );
        bool  setKey( RiceyInt k ) { return( setKey( intToRice( k ) ) > 0); }
-  RiceyCode  key()  { return m_key; }
-   RiceyInt  keyInt() { return riceToInt( m_key ); }
-     quint8  type() { if ( m_key.size() > 0 ) return m_key.at(m_key.size()-1) & 0x0F; return RDT_NULL; }
+ Utf8String  keyHex()  { return keyCode().toHex(); }
+       char *keyHexd() { return keyHex().data(); }
+  RiceyCode  keyCode() { return intToRice( m_key ); }
+   RiceyInt  key()     { return m_key; }
+     quint8  type()    { return (m_key & RDT_OBTYPEMASK); }
 
-  RiceyCode  m_key; // Ricey code bsonish key
+   RiceyInt  m_key; // Ricey code bsonish key
 };
 
 /**
@@ -147,14 +149,14 @@ class BlockValueObject : public ValueBase
        JsonSerial  json();
            qint32  setBsonish(  const BsonSerial &b );
              bool  setJson   (  const JsonSerial &j );
-             void  clear()   { QList<RiceyCode> keys = m_obMap.keys(); foreach( RiceyCode r, keys ) { if ( m_obMap[r] != nullptr ) delete( m_obMap[r] ); m_obMap.remove(r); } }
+             void  clear()   { QList<RiceyInt> keys = m_obMap.keys(); foreach( RiceyInt k, keys ) { if ( m_obMap[k] != nullptr ) delete( m_obMap[k] ); m_obMap.remove(k); } }
            qint32  size()    { return m_obMap.size(); }
-  QList<RiceyCode> keys()    { return m_obMap.keys(); }
-             bool  contains  (  const RiceyCode &k ) { return m_obMap.contains( k ); }
-             bool  insert    (  const RiceyCode &k, ValueBase *v );
-        ValueBase *value     (  const RiceyCode &k ) { if ( !contains(k) ) return &glob_null; return m_obMap.value(k); }
+   QList<RiceyInt> keys()    { return m_obMap.keys(); }
+             bool  contains  ( RiceyInt k ) { return m_obMap.contains( k ); }
+             bool  insert    ( RiceyInt k, ValueBase *v );
+        ValueBase *value     ( RiceyInt k ) { if ( !contains(k) ) return &glob_null; return m_obMap.value(k); }
 
-QMap<RiceyCode, QPointer<ValueBase> > m_obMap;
+QMap<RiceyInt, QPointer<ValueBase> > m_obMap;
 };
 
 /**
@@ -167,7 +169,7 @@ class BlockValueInt64 : public ValueBase
     explicit  BlockValueInt64( QObject *parent = nullptr ) : ValueBase( parent ) { m_value = 0; }
              ~BlockValueInt64() {}
       quint8  type()    { return RDT_INT64; }
-  BsonSerial  bsonish() { BsonSerial b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
+  BsonSerial  bsonish() { BsonSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
   JsonSerial  json()    { return QString::number( m_value ).toUtf8(); }
       qint32  setBsonish( const BsonSerial &b );
         bool  setJson   ( const JsonSerial &j );
@@ -187,7 +189,7 @@ class BlockValueInt32 : public ValueBase
     explicit  BlockValueInt32( QObject *parent = nullptr ) : ValueBase( parent ) { m_value = 0; }
              ~BlockValueInt32() {}
       quint8  type()    { return RDT_INT32; }
-  BsonSerial  bsonish() { BsonSerial b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
+  BsonSerial  bsonish() { BsonSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
   JsonSerial  json()    { return QString::number( m_value ).toUtf8(); }
       qint32  setBsonish( const BsonSerial &b );
         bool  setJson   ( const JsonSerial &j );
@@ -206,13 +208,15 @@ class BlockValueRiceyCode : public ValueBase
 { public:
     explicit  BlockValueRiceyCode( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueRiceyCode() {}
-      quint8  type()    { return RDT_RCODE; }
-  BsonSerial  bsonish() { return m_value; }
-  JsonSerial  json()    { return "\""+m_value.toHex()+"\""; }
-      qint32  setBsonish( const BsonSerial & );
-        bool  setJson   ( const JsonSerial & );
-   RiceyCode  value()   { return m_value; }
+      quint8  type()     { return RDT_RCODE; }
+  BsonSerial  bsonish()  { return m_value; }
+  JsonSerial  json()     { return "\""+m_value.toHex()+"\""; }
+      qint32  setBsonish ( const BsonSerial & );
+        bool  setJson    ( const JsonSerial & );
+   RiceyCode  value()    { return m_value; }
+    RiceyInt  valueInt() { return riceToInt( m_value ); }
         void  setValue( RiceyCode v ) { if ( !validRicey( v ) ) qWarning("invalid ricey code"); else m_value = v; }
+        void  setValue( RiceyInt r ) { setValue( intToRice( r ) ); }
 
    RiceyCode  m_value;
 };
@@ -247,7 +251,7 @@ class BlockValueByteArray : public ValueBase
     explicit  BlockValueByteArray( QObject *parent = nullptr ) : ValueBase( parent ) {}
              ~BlockValueByteArray() {}
       quint8  type()    { return RDT_BYTEARRAY; }
-  BsonSerial  bsonish() { BsonSerial b; QDataStream s(b); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
+  BsonSerial  bsonish() { BsonSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
   JsonSerial  json()    { return "\""+m_value.toHex()+"\""; }
       qint32  setBsonish( const BsonSerial & );
         bool  setJson   ( const JsonSerial & );

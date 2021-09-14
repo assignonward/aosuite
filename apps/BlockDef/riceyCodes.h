@@ -36,6 +36,8 @@ typedef QByteArray BsonSerial;
 typedef QByteArray Utf8String;
 typedef    quint64 RiceyInt;
 
+#define MAX_RICEY_LEN 9 // 63 bits
+
 // Ricey data types - the 4 lsb of a Ricey key
 #define RDT_OBJECT          0x0 // o - list of zero or more key-value pairs json encased in {} items separated by commas, in bson a key of Obterm ends the current object
 #define RDT_INT64           0x1 // i - 64 bit signed integer - json in decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)

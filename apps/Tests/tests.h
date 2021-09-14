@@ -24,6 +24,7 @@
 #define TESTS_H
 
 #include <QScrollArea>
+#include "blockOb.h"
 
 namespace Ui {
 class Tests;
@@ -36,6 +37,17 @@ class Tests : public QScrollArea
 public:
    explicit  Tests( QWidget *cw = nullptr );
             ~Tests();
+       bool  testDict( QString & );
+       bool  testInt32( QString & );
+       bool  testInt32( BlockValueInt32 &, qint32, qint32 &, QString & );
+       bool  testInt64( QString & );
+       bool  testInt64( BlockValueInt64 &, qint64, qint32 &, QString & );
+       bool  testRicey( QString & );
+       bool  testRicey( BlockValueRiceyCode &, RiceyInt, qint32 &, QString & );
+       bool  testString( QString & );
+       bool  testString( BlockValueString &, const Utf8String &, qint32 &, QString & );
+       bool  testByteArray( QString & );
+       bool  testByteArray( BlockValueByteArray &, const QByteArray &, qint32 &, QString & );
 
 public slots:
        void  on_start_clicked();
