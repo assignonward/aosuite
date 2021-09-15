@@ -364,4 +364,14 @@ class BlockArrayString : public KeyValueArray
         bool  operator==(const QList<Utf8String>& l) { if (l.size() != size()) return false; for (qint32 i=0;i<size();i++) if (l.at(i)!=at(i)) return false; return true; }
 };
 
+class BlockArrayByteArray : public KeyValueArray
+{ public:
+    explicit  BlockArrayByteArray( QObject *parent = nullptr ) : KeyValueArray( RCD_byteArrayArray_B, parent ) {}
+    explicit  BlockArrayByteArray( RiceyInt k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
+             ~BlockArrayByteArray() {}
+  Utf8String  at( qint32 n ) { if (( n >= 0 ) && ( n < size() )) return ((BlockValueByteArray *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return QByteArray(); }
+        void  set( const QList<QByteArray> &vl ) { clear(); foreach( QByteArray v, vl ) { if ( !append( v ) ) qWarning( "append Failed" ); } }
+        bool  operator==(const QList<QByteArray>& l) { if (l.size() != size()) return false; for (qint32 i=0;i<size();i++) if (l.at(i)!=at(i)) return false; return true; }
+};
+
 #endif // BLOCKOB_H
