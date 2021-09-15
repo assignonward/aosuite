@@ -60,24 +60,6 @@ typedef    quint64 RiceyInt;
 #define RDT_OBTYPEMASK      0xF //     used to get the contained value type out of an object type
 #define RDT_NULL           0xE5 // z - A null block value type, used as an error flag
 
-// Ricey key types, bsonish key as int, description
-#define RTD_OBJECT          0x0 // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
-#define RTD_INT64           0x1 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
-#define RTD_INT32           0x2 // l - 32 bit signed integer - json in an unquoted ASCII decimal string, bson as 4 bytes using void qToLittleEndian(qint32 src, uchar *dest)
-#define RTD_MPZ             0x3 // n - libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values
-#define RTD_MPQ             0x4 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
-#define RTD_RCODE           0x5 // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
-#define RTD_STRING          0x6 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
-#define RTD_BYTEARRAY       0x7 // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-#define RTD_OBJECT_ARRAY    0x8 // O - array of zero or more objects encased in []
-#define RTD_INT64_ARRAY     0x9 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
-#define RTD_INT32_ARRAY     0xA // L - array of zero or more 32 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
-#define RTD_MPZ_ARRAY       0xB // N - array of zero or more libGMP signed integers stored as described above
-#define RTD_MPQ_ARRAY       0xC // R - array of zero or more libGMP rational fractions stored as described above
-#define RTD_RCODE_ARRAY     0xD // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
-#define RTD_STRING_ARRAY    0xE // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
-#define RTD_BYTEARRAY_ARRAY 0xF // B - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-
 #define RCD_ObTerm_o               0 // Object terminator, indicates no more items in the object in bsonish lists
 #define RCD_int64_i                1 // Generic signed int64, use depends on context.
 #define RCD_int32_l                2 // Generic signed int32, use depends on context.

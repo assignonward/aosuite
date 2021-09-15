@@ -60,6 +60,8 @@ public:
        bool  testStringA( BlockArrayString &, const QList<Utf8String> &, qint32 &, QString & );
        bool  testByteArrayA( QString &, qint32 & );
        bool  testByteArrayA( BlockArrayByteArray &, const QList<QByteArray> &, qint32 &, QString & );
+       bool  testObject( QString &, qint32 & );
+       bool  testObject( BlockValueObject &, const BlockObjectMap &, qint32 &, QString & );
 
 public slots:
        void  on_start_clicked();
