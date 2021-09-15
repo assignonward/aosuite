@@ -26,20 +26,21 @@
 #include <QJsonValue>
 #include <QTextCodec>
 #include <QHash>
+#include <QVariant>
 
     Dictionary  dict;        // Single dictionary for the application
 BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
 
 /**
  * @brief ValueBase::newValue
- * @param type - type of value object to return
+ * @param key - tells the type of value object to return
  * @param parent - optional, parent for the new value object
  * @return pointer to the new value object
  */
-ValueBase *ValueBase::newValue( quint8 type, QObject *parent )
-{ if (( type & RDT_ARRAY ) == RDT_ARRAY )
-    return nullptr; // new ArrayValue( parent );  // not sure if we need this, or even if it makes sense to do
-  switch ( type )
+ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent )
+{ if (( key & RDT_ARRAY ) == RDT_ARRAY )
+    return new KeyValueArray( key, parent );
+  switch ( key & RDT_TYPEMASK )
     { case RDT_OBJECT:    return new BlockValueObject( parent );
       case RDT_INT64:     return new BlockValueInt64( parent );
       case RDT_INT32:     return new BlockValueInt32( parent );
@@ -50,15 +51,6 @@ ValueBase *ValueBase::newValue( quint8 type, QObject *parent )
       case RDT_BYTEARRAY: return new BlockValueByteArray( parent );
     }
   return nullptr;
-}
-
-/**
- * @brief BlockValueObject::~BlockValueObject - cleanup the data elements on destruction
- */
-BlockValueObject::~BlockValueObject()
-{ foreach( QPointer<ValueBase> blockOb, m_obMap )
-    if ( blockOb )
-      delete( blockOb );
 }
 
 /**
@@ -411,7 +403,7 @@ qint32  KeyValueArray::setBsonish( const BsonSerial &b )
   while ( elementCount > 0 )
     { if ( b.size() <= i )
         { qWarning( "value data missing" ); return -1; }
-      ValueBase *vbo = newValue( type() & RDT_TYPEMASK, this );
+      ValueBase *vbo = newValue( key() & RDT_TYPEMASK, this );
       len = vbo->setBsonish( b.mid(i) );
       if ( len < 1 )
         { delete vbo; qWarning( "problem reading element" ); return -1; }
@@ -445,16 +437,19 @@ JsonSerial  KeyValueArray::json()
   return j;
 }
 
-#include <QVariant>
-
 bool  KeyValueArray::setJson( const JsonSerial &j )
 { QJsonDocument jd = QJsonDocument::fromJson(j);
   if ( !jd.isObject() )
     { qWarning( "document is not a JsonObject" ); return false; }
   QJsonObject jo = jd.object();
-  if ( !jo.contains( dict.nameFromCode( key() ) ) )
-    { qWarning( "object does not contain a "+dict.nameFromCode( key() )+" element" ); return false; }
-  QJsonValue jv = jo.value( dict.nameFromCode( key() ) );
+  if ( jo.keys().size() != 1 )
+    { qWarning( "object has %d keys (should be 1)", jo.keys().size() ); return false; }
+  QStringList keys = jo.keys();
+  Utf8String obKey = keys.at(0).toUtf8();
+  if ( !dict.codesContainName( obKey ) )
+    { qWarning( "dictionary does not contain a %s element", obKey.data() ); return false; }
+  setKey( dict.codeFromCodeName( obKey ) );
+  QJsonValue jv = jo.value( obKey );
   if ( !jv.isArray() )
     { qWarning( "value is not an array" ); return false; }
   clear();
@@ -477,6 +472,10 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
   return true;
 }
 
+/**
+ * @brief BlockValueObject::json
+ * @return object as a standard json string
+ */
 JsonSerial BlockValueObject::json()
 { JsonSerial j = " {";
   QList<RiceyInt> keys = m_obMap.keys();
@@ -499,8 +498,86 @@ JsonSerial BlockValueObject::json()
   return j;
 }
 
-bool  BlockValueObject::setJson   ( const JsonSerial &j )
-{ (void)j; return true; } // TODO: fixme
+/**
+ * @brief BlockValueObject::setJson
+ * @param j - json sub-string just containing the key-value pairs in the object
+ * @return true if successful
+ */
+bool  BlockValueObject::setJson( const JsonSerial &j )
+{ QJsonDocument jd = QJsonDocument::fromJson(j);
+  if ( !jd.isObject() )
+    { qWarning( "document is not a JsonObject" ); return false; }
+  QJsonObject jo = jd.object();
+  QStringList keys = jo.keys();
+  clear();
+  if ( keys.size() < 1 ) // Empty object?
+    return true;         // yes, we're done.
+  foreach ( QString kStr, keys )
+    { if ( !dict.codesContainName( kStr.toUtf8() ) )
+        { qWarning( "unknown key %s in object", kStr.toUtf8().data() ); }
+       else
+        { RiceyInt k = dict.codeFromCodeName( kStr.toUtf8() );
+          ValueBase *vbo = jsonValueByKey( k, jo.value( kStr ), this );
+          if ( vbo == nullptr )
+            { qWarning( "problem reading json value" ); return false; }
+          if ( !insert( k, vbo ) )
+            { delete vbo; qWarning( "problem inserting value" ); return false; }
+        }
+    }
+  return true;
+}
+
+#define JDT_OBJECT 1
+#define JDT_DOUBLE 2
+#define JDT_STRING 3
+#define JDT_ARRAY  4
+ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject *parent )
+{ qint32 typ = k & RDT_OBTYPEMASK;
+  qint32 jdt = 0;
+  bool typeMatch = false;
+  switch ( typ )
+    { case RDT_OBJECT:    typeMatch = jv.isObject(); jdt = JDT_OBJECT; break;
+      case RDT_INT64:
+      case RDT_INT32:     typeMatch = jv.isDouble(); jdt = JDT_DOUBLE; break;
+      case RDT_MPZ:
+      case RDT_MPQ:
+      case RDT_RCODE:
+      case RDT_STRING:
+      case RDT_BYTEARRAY: typeMatch = jv.isString(); jdt = JDT_STRING; break;
+      case RDT_OBJECT_ARRAY:
+      case RDT_INT64_ARRAY:
+      case RDT_INT32_ARRAY:
+      case RDT_MPZ_ARRAY:
+      case RDT_MPQ_ARRAY:
+      case RDT_RCODE_ARRAY:
+      case RDT_STRING_ARRAY:
+      case RDT_BYTEARRAY_ARRAY: typeMatch = jv.isArray(); jdt = JDT_ARRAY; break;
+      default: qWarning( "typefault" ); return nullptr;
+    }
+  if ( !typeMatch )
+    { qWarning( "%s value does not match type %d", dict.nameFromCode(k).data(), typ ); return nullptr; }
+  ValueBase *vbo;
+  QJsonDocument jd;
+  switch ( jdt )
+    { case JDT_OBJECT:
+        vbo = newValue( k, parent );
+        jd.setObject( jv.toObject() );
+        vbo->setJson( jd.toJson() );
+        return vbo;
+
+      case JDT_DOUBLE: // Better to cast to string, or int?
+      case JDT_STRING:
+        vbo = newValue( k, parent );
+        vbo->setJson( jv.toString().toUtf8() );
+        return vbo;
+
+      case JDT_ARRAY:
+        vbo = newValue( k, parent );
+        jd.setArray( jv.toArray() );
+        return vbo;
+    }
+  return nullptr;
+}
 
 /**
  * @brief BlockValueObject::bsonish
@@ -546,7 +623,7 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
         { qWarning( "object key data missing" ); return -1; }
       ValueBase *vbo = bsonishValueByKey( k, b.mid(i), &len, this );
       if ( vbo == nullptr )
-        { qWarning( "problem reading value" ); return -1; }
+        { qWarning( "problem reading bsonish value" ); return -1; }
       if ( !insert( k, vbo ) )
         { delete vbo; qWarning( "problem inserting value" ); return -1; }
       i += len;
@@ -566,7 +643,7 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
 ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32 *l, QObject *parent )
 { if ( l != nullptr )
     *l = -1;
-  ValueBase *vbo = newValue( k & RDT_OBTYPEMASK, parent );
+  ValueBase *vbo = newValue( k, parent );
   qint32 len = vbo->setBsonish( b );
   if ( len < 1 )
     { delete vbo; qWarning( "problem reading value" ); return nullptr; }
@@ -574,7 +651,6 @@ ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32
     *l = len;
   return vbo;
 }
-
 
 /**
  * @brief BlockValueObject::insert

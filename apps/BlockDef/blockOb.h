@@ -45,13 +45,14 @@ class ValueBase : public QObject
 public:
           explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) {}
                    ~ValueBase() {}
-static   ValueBase *newValue( quint8 type, QObject *parent = nullptr );
+static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr );
 virtual     quint8  type()    = 0;
 virtual BsonSerial  bsonish() = 0;
 virtual JsonSerial  json()    = 0;
 virtual     qint32  setBsonish( const BsonSerial & ) = 0;
          ValueBase *bsonishValueByKey( RiceyInt, const BsonSerial &, qint32 *l = nullptr, QObject *parent = nullptr );
-virtual       bool  setJson   ( const JsonSerial & ) = 0;
+         ValueBase *jsonValueByKey( RiceyInt, const QJsonValue &, QObject * );
+virtual       bool  setJson( const JsonSerial & ) = 0;
         QByteArray  bsonishNull( qint8 );
 };
 
@@ -121,7 +122,7 @@ extern BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt()
 class BlockValueObject : public ValueBase
 { public:
          explicit  BlockValueObject( QObject *parent = nullptr ) : ValueBase( parent ) {}
-                  ~BlockValueObject();
+                  ~BlockValueObject() { clear(); }
            quint8  type()    { return RDT_OBJECT; }
        BsonSerial  bsonish();
        JsonSerial  json();
@@ -290,6 +291,7 @@ class BlockValueMPQ : public ValueBase
 /**
  * @brief The KeyValueArray class - zero or more values of the same type stored under a single key
  *   order of items in the array is important, conserved, and determined by the creator of the array.
+ *   Equivalent to a JsonObject with a single key: array value inside.
  */
 class KeyValueArray : public KeyValueBase
 {
