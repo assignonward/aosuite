@@ -42,7 +42,7 @@ ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
 { if (( key & RDT_ARRAY ) == RDT_ARRAY )
     return new KeyValueArray( key, parent ); // TODO: this probably isn't this easy...
   qint32 t = key & RDT_TYPEMASK;
-//  if ( t == RDT_OBJECT    ) { BlockValueObject    *vbo = new BlockValueObject( parent );    if ( vtc ) vbo->set( ((BlockValueObject    *)vtc)->value() ); return vbo; }
+  if ( t == RDT_OBJECT    ) { BlockValueObject    *vbo = new BlockValueObject( parent );    if ( vtc ) vbo->set( ((BlockValueObject    *)vtc)->value() ); return vbo; }
   if ( t == RDT_INT64     ) { BlockValueInt64     *vbo = new BlockValueInt64( parent );     if ( vtc ) vbo->set( ((BlockValueInt64     *)vtc)->value() ); return vbo; }
   if ( t == RDT_INT32     ) { BlockValueInt32     *vbo = new BlockValueInt32( parent );     if ( vtc ) vbo->set( ((BlockValueInt32     *)vtc)->value() ); return vbo; }
   if ( t == RDT_MPZ       ) { BlockValueMPZ       *vbo = new BlockValueMPZ( parent );       if ( vtc ) vbo->set( ((BlockValueMPZ       *)vtc)->value() ); return vbo; }
@@ -475,6 +475,18 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
 }
 
 /**
+ * @brief KeyValueArray::append
+ * @param v - contents ( value() ) of a BlockValueObject
+ * @return true if successful
+ */
+bool  KeyValueArray::append( const BlockObjectMap &v )
+{ if ( type() == RDT_OBJECT_ARRAY   )
+    { return append( new BlockValueObject(v, this) ); }
+  qWarning( "type mismatch Y %d",(int)type() );
+  return false;
+}
+
+/**
  * @brief BlockValueObject::json
  * @return object as a standard json string
  */
@@ -533,6 +545,13 @@ bool  BlockValueObject::setJson( const JsonSerial &j )
 #define JDT_DOUBLE 2
 #define JDT_STRING 3
 #define JDT_ARRAY  4
+/**
+ * @brief ValueBase::jsonValueByKey
+ * @param k - key to help determine/verify value type
+ * @param jv - single json value read from larger document
+ * @param parent - object parent for the ValueBase object created
+ * @return pointer to a ValueBase object with the value of the JsonValue, nullptr if there is a problem
+ */
 ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject *parent )
 { qint32 typ = k & RDT_OBTYPEMASK;
   qint32 jdt = 0;
@@ -584,6 +603,10 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
       case JDT_ARRAY:
         vbo = newValue( k, parent );
         jd.setArray( jv.toArray() );
+        if ( !vbo->setJson( jd.toJson() ) )
+          { vbo->deleteLater();
+            return nullptr;
+          }
         return vbo;
     }
   return nullptr;

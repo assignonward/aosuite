@@ -146,6 +146,10 @@ bool Tests::testInt32( BlockValueInt32 &v, qint32 tv, qint32 &tc, QString &msg )
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( tv - 1 );
@@ -197,6 +201,10 @@ bool Tests::testInt64( BlockValueInt64 &v, qint64 tv, qint32 &tc, QString &msg )
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( tv - 1 );
@@ -252,6 +260,10 @@ bool Tests::testRicey( BlockValueRiceyCode &v, RiceyInt tv, qint32 &tc, QString 
   v.setBsonish( b );
   if ( v.valueInt() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( tv + 1 );
@@ -297,6 +309,10 @@ bool Tests::testString( BlockValueString &v, const Utf8String &tv, qint32 &tc, Q
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv)).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( "x" );
@@ -345,6 +361,10 @@ bool Tests::testByteArray( BlockValueByteArray &v, const QByteArray &tv, qint32 
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv)).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( "x" );
@@ -401,6 +421,10 @@ bool Tests::testInt32A( BlockArrayInt32 &v, const QList<qint32> &tv, qint32 &tc,
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -470,6 +494,10 @@ bool Tests::testInt64A( BlockArrayInt64 &v, const QList<qint64> &tv, qint32 &tc,
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -553,6 +581,10 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyInt> &tv, qint32 &t
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   if ( v.append( (RiceyInt)321 ) ) tc++; else
@@ -576,6 +608,10 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyCode> &tv, qint32 &
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -625,6 +661,10 @@ bool Tests::testStringA( BlockArrayString &v, const QList<Utf8String> &tv, qint3
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -686,6 +726,10 @@ bool Tests::testByteArrayA( BlockArrayByteArray &v, const QList<QByteArray> &tv,
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -721,6 +765,15 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tv.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );  pass &= testObject( v, tv, tc, msg );
 
+  BlockObjectMap tvo = tv; // Nesting test
+  tv.insert( RCD_signedBlock_o    , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+  tvo = tv;
+  tv.insert( RCD_signature_o      , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+  tvo = tv;
+  tv.insert( RCD_chainBlock_o     , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+  tvo = tv;
+  tv.insert( RCD_parentSignature_o, new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
 
@@ -743,6 +796,10 @@ bool  Tests::testObject( BlockValueObject &v, const BlockObjectMap &tv, qint32 &
     { msg.append( QString( "FAIL during setBsonish\n" ) ); pass = false; }
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -753,7 +810,7 @@ bool  Tests::testObject( BlockValueObject &v, const BlockObjectMap &tv, qint32 &
     { msg.append( QString( "FAIL json encode/decode test tv sz:%1 v sz:%2 ok:%3 %4\n" )
                      .arg(tv.size()).arg(v.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
       if ( v.size() != tv.size() )
-        msg.append( QString( "    size mismatch\n" ).arg( tv.size() ).arg( v.size() ) );
+        msg.append( QString( "    size mismatch %1 %2\n" ).arg( tv.size() ).arg( v.size() ) );
        else
         { QList<RiceyInt> keys = tv.keys();
           foreach ( RiceyInt k, keys )

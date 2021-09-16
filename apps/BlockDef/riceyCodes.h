@@ -36,6 +36,10 @@ typedef QByteArray BsonSerial;
 typedef QByteArray Utf8String;
 typedef    quint64 RiceyInt;
 
+     bool validRicey( const RiceyCode & );
+RiceyCode intToRice( const RiceyInt & );
+ RiceyInt riceToInt( const RiceyCode &, qint32 *len = nullptr, bool *ok = nullptr );
+
 #define MAX_RICEY_LEN 9 // 63 bits
 
 // Ricey data types - the 4 lsb of a Ricey key
@@ -131,9 +135,5 @@ typedef    quint64 RiceyInt;
 #define RCD_stringArray_S       9742 // A generic array of string elements
 #define RCD_byteArrayArray_B    9743 // A generic array of byte array elements
 
-#include <QByteArray>
-     bool validRicey( const RiceyCode & );
-RiceyCode intToRice( RiceyInt );
- RiceyInt riceToInt( const RiceyCode &, qint32 *len = nullptr, bool *ok = nullptr );
 
 #endif // RICEYCODES_H

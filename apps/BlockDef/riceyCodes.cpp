@@ -51,17 +51,18 @@ bool  validRicey( const RiceyCode &r )
  * @param v - unsigned integer value to convert
  * @return v converted to rice code, MSB first in the byte array
  */
-RiceyCode intToRice( quint64 v )
+RiceyCode intToRice( const RiceyInt &v )
 { RiceyCode r;
      quint8 c = 0;
   if ( v == 0 )
     r.prepend( c );
-  while ( v > 0 )
-    { c = v & 0x7F;
+  RiceyInt w = v;
+  while ( w > 0 )
+    { c = w & 0x7F;
       if ( r.size() > 0 )
         c |= 0x80;
       r.prepend( c );
-      v = v >> 7;
+      w = w >> 7;
     }
   return r;
 }
