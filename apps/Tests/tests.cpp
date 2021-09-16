@@ -709,17 +709,18 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
 { bool pass = true;
   msg = "object Test: ";
   BlockValueObject v(this);
-  if ( v.type() == RDT_OBJECT_ARRAY ) tc++; else
+  if ( v.type() == RDT_OBJECT ) tc++; else
     { msg.append( "FAIL type() test.\n" ); pass = false; }
 
   BlockObjectMap tv;
   pass &= testObject( v, tv, tc, msg ); // Empty Object test
 
-  /*
-  if ( tv.insert(RCD_int64_i, 0) ) tc++; else
+  tv.insert( RCD_int64_i, new BlockValueInt64    (         -456789, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_int32_l, new BlockValueInt32    (           70000, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_type_y , new BlockValueRiceyCode(   RCD_PcolA00_y, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );  pass &= testObject( v, tv, tc, msg );
 
-  pass &= testObject( v, tv, tc, msg );
-*/
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
 
@@ -728,15 +729,18 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
 
 bool  Tests::testObject( BlockValueObject &v, const BlockObjectMap &tv, qint32 &tc, QString &msg )
 { bool pass = true;
-  v.set( tv );
+  qint32 sz = v.set(tv);
+  if ( sz == tv.size() ) tc++; else
+    { msg.append( QString( "FAIL value set test %1 vs %2\n" ).arg(tv.size()).arg(sz) ); pass = false; }
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
   BsonSerial b = v.bsonish();
   v.clear();
   if ( v.insert( RCD_text_s, "?" ) ) tc++; else
-    { pass = false; msg.append( "FAIL during append()\n" ); }
-  v.setBsonish( b );
+    { pass = false; msg.append( "FAIL during insert()\n" ); }
+  if ( v.setBsonish( b ) > 0 ) tc++; else
+    { msg.append( QString( "FAIL during setBsonish\n" ) ); pass = false; }
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
 
@@ -746,17 +750,25 @@ bool  Tests::testObject( BlockValueObject &v, const BlockObjectMap &tv, qint32 &
     { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
-    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
+    { msg.append( QString( "FAIL json encode/decode test tv sz:%1 v sz:%2 ok:%3 %4\n" )
+                     .arg(tv.size()).arg(v.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
       if ( v.size() != tv.size() )
-        msg.append( QString( "    size mismatch original %1 read from json %2\n" ).arg( tv.size() ).arg( v.size() ) );
-      /* debug info, needs help
+        msg.append( QString( "    size mismatch\n" ).arg( tv.size() ).arg( v.size() ) );
        else
-        { QList<RiceyInt> keys = v.keys();
+        { QList<RiceyInt> keys = tv.keys();
           foreach ( RiceyInt k, keys )
-            if ( v.value(k) != tv.value(k) )
-              msg.append( QString( "     value mismatch at %1, original %2 read from json %3\n" ).arg(i).arg(QString::fromUtf8(tv.value(k))).arg(QString::fromUtf8(v.at(i))) );
+            { if ( !( v.value(k) != tv.value(k) ) )
+                msg.append( QString( "     value mismatch at %1, original %2 read from json %3\n" )
+                               .arg(QString::fromUtf8(dict.nameFromCode(k)))
+                               .arg(QString::fromUtf8(tv.value(k)->json()))
+                               .arg(QString::fromUtf8( v.value(k)->json())) );
+               else
+                msg.append( QString( "     value match at %1, original %2 read from json %3\n" )
+                               .arg(QString::fromUtf8(dict.nameFromCode(k)))
+                               .arg(tv.value(k)->type())
+                               .arg( v.value(k)->type()) );
+            }
         }
-       */
     }
 
   return pass;

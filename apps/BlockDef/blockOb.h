@@ -45,7 +45,7 @@ class ValueBase : public QObject
 public:
           explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) {}
                    ~ValueBase() {}
-static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr );
+static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
 virtual     quint8  type()    const = 0;
 virtual BsonSerial  bsonish() const = 0;
 virtual JsonSerial  json()    const = 0;
@@ -53,6 +53,7 @@ virtual     qint32  setBsonish( const BsonSerial & ) = 0;
          ValueBase *bsonishValueByKey( RiceyInt, const BsonSerial &, qint32 *l = nullptr, QObject *parent = nullptr );
          ValueBase *jsonValueByKey( RiceyInt, const QJsonValue &, QObject * );
 virtual       bool  setJson( const JsonSerial & ) = 0;
+virtual Utf8String  valueString() const = 0;
         QByteArray  bsonishNull( qint8 ) const;
 };
 
@@ -68,6 +69,7 @@ class BlockValueNull : public ValueBase
   JsonSerial  json()    const { QString s = "NULL"; return s.toUtf8(); }
       qint32  setBsonish( const BsonSerial &b ) { (void)b; return -1; }  // cannot set a value to a BlockValueNull
         bool  setJson   ( const JsonSerial &j ) { (void)j; return false; }
+  Utf8String  valueString() const { return "bvn"; }
 };
 
 extern BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
@@ -89,6 +91,7 @@ public:
   RiceyCode  keyCode() const { return intToRice( m_key ); }
    RiceyInt  key()     const { return m_key; }
      quint8  type()    const { return (m_key & RDT_OBTYPEMASK); }
+ Utf8String  valueString() const { return "kvb"; }
 
    RiceyInt  m_key; // Ricey code bsonish key
 };
@@ -108,6 +111,7 @@ public:
   JsonSerial  json()     const;
       qint32  setBsonish( const BsonSerial & );
         bool  setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
+  Utf8String  valueString() const { return "kvp"; }
 
 public:
   QPointer<ValueBase> m_value; // Value of this KeyValuePair
@@ -131,8 +135,8 @@ class BlockValueInt64 : public ValueBase
       qint64  value()   const { return m_value; }
         void  set( qint64 v ) { m_value = v; }
         bool  operator==( qint64 v )                  const { return v           == value(); }
-        bool  operator==(       BlockValueInt64 *vp ) const { return vp->value() == value(); }
         bool  operator==( const BlockValueInt64 &v  ) const { return v.  value() == value(); }
+  Utf8String  valueString() const { return QString::number( m_value ).toUtf8(); }
 
       qint64  m_value;
 };
@@ -155,8 +159,8 @@ class BlockValueInt32 : public ValueBase
       qint32  value()    const { return m_value; }
         void  set( qint32 v )  { m_value = v; }
         bool  operator==( qint32 v )                  const { return v           == value(); }
-        bool  operator==(       BlockValueInt32 *vp ) const { return vp->value() == value(); }
         bool  operator==( const BlockValueInt32 &v  ) const { return v.  value() == value(); }
+  Utf8String  valueString() const { return QString::number( m_value ).toUtf8(); }
 
       qint32  m_value;
 };
@@ -183,8 +187,8 @@ class BlockValueRiceyCode : public ValueBase
         void  set( RiceyInt r )  { set( intToRice( r ) ); }
         bool  operator==( RiceyInt  v ) const { return v == valueInt(); }
         bool  operator==( RiceyCode v ) const { return v == value(); }
-        bool  operator==(       BlockValueRiceyCode *vp ) const { return vp->value() == value(); }
-        bool  operator==( const BlockValueRiceyCode &v  ) const { return v.  value() == value(); }
+        bool  operator==( const BlockValueRiceyCode &v  ) const { return v.value() == value(); }
+  Utf8String  valueString() const { return m_value.toHex(); }
 
    RiceyCode  m_value;
 };
@@ -207,8 +211,8 @@ class BlockValueString : public ValueBase
         void  set( Utf8String v ) { if ( m_value.size() > MAX_LENGTH ) qWarning("MAX_LENGTH exceeded"); else m_value = v; }
   Utf8String  value()   const { return m_value; }
         bool  operator==( Utf8String v ) const { return v == value(); }
-        bool  operator==(       BlockValueString *vp ) const { return vp->value() == value(); }
-        bool  operator==( const BlockValueString &v  ) const { return v.  value() == value(); }
+        bool  operator==( const BlockValueString &v  ) const { return v.value() == value(); }
+  Utf8String  valueString() const { return m_value; }
 
   Utf8String  m_value;  // Strings are encoded as UTF8 in a QByteArray
 };
@@ -231,8 +235,8 @@ class BlockValueByteArray : public ValueBase
   QByteArray  value()   const { return m_value; }
         void  set( QByteArray v ) { if ( m_value.size() > MAX_LENGTH ) qWarning("MAX_LENGTH exceeded"); else m_value = v; }
         bool  operator==( QByteArray v ) const { return v == value(); }
-        bool  operator==(       BlockValueByteArray *vp ) const { return vp->value() == value(); }
-        bool  operator==( const BlockValueByteArray &v  ) const { return v.  value() == value(); }
+        bool  operator==( const BlockValueByteArray &v  ) const { return v.value() == value(); }
+  Utf8String  valueString() const { return m_value.toHex(); }
 
   QByteArray  m_value;
 };
@@ -255,8 +259,8 @@ class BlockValueMPZ : public ValueBase
       MP_INT  value()   const { return m_value; }
         void  set( MP_INT v ) { m_value = v; }
         bool  operator==( MP_INT v ) const { (void)v; return false; } // v == m_value; TODO: fixme
-        bool  operator==(       BlockValueMPZ *vp ) const { (void)vp; return false; } // vp->value() == value(); }
         bool  operator==( const BlockValueMPZ &v  ) const { (void)v;  return false; } // v.  value() == value(); }
+  Utf8String  valueString() const { return "MPZ"; }
 
       MP_INT  m_value;
 };
@@ -279,8 +283,8 @@ class BlockValueMPQ : public ValueBase
       MP_RAT  value()   const { return m_value; }
         void  set( MP_RAT v ) { m_value = v; }
         bool  operator==( MP_RAT v ) const { (void)v; return false; } // v == m_value; }  TODO: fixme
-        bool  operator==(       BlockValueMPQ *vp ) const { (void)vp; return false; } // vp->value() == value(); }
         bool  operator==( const BlockValueMPQ &v  ) const { (void)v;  return false; } // v.  value() == value(); }
+  Utf8String  valueString() const { return "MPQ"; }
 
       MP_RAT  m_value;
 };
@@ -315,6 +319,7 @@ public:
   JsonSerial  json()    const;
       qint32  setBsonish( const BsonSerial &b );
         bool  setJson   ( const JsonSerial &j );
+  Utf8String  valueString() const { return "array"; }
 
 public:
   QVarLengthArray<ValueBase *> m_values; // Values in this array
@@ -360,6 +365,7 @@ class BlockValueObject : public ValueBase
         ValueBase *value( RiceyInt k ) const { if ( !contains(k) ) return &glob_null; return m_obMap.value(k); }
              bool  operator==( const BlockObjectMap   &  ) const;
              bool  operator==( const BlockValueObject &v ) const { return ( v == m_obMap ); }
+       Utf8String  valueString() const { return "obj"; }
 
    BlockObjectMap  m_obMap;
 };

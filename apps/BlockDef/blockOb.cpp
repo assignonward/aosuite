@@ -35,21 +35,21 @@ BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls 
  * @brief ValueBase::newValue
  * @param key - tells the type of value object to return
  * @param parent - optional, parent for the new value object
+ * @param vtc - optional, value to copy - when not nullptr, copy the value from this
  * @return pointer to the new value object
  */
-ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent )
+ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
 { if (( key & RDT_ARRAY ) == RDT_ARRAY )
-    return new KeyValueArray( key, parent );
-  switch ( key & RDT_TYPEMASK )
-    { case RDT_OBJECT:    return new BlockValueObject( parent );
-      case RDT_INT64:     return new BlockValueInt64( parent );
-      case RDT_INT32:     return new BlockValueInt32( parent );
-      case RDT_MPZ:       return new BlockValueMPZ( parent );
-      case RDT_MPQ:       return new BlockValueMPQ( parent );
-      case RDT_RCODE:     return new BlockValueRiceyCode( parent );
-      case RDT_STRING:    return new BlockValueString( parent );
-      case RDT_BYTEARRAY: return new BlockValueByteArray( parent );
-    }
+    return new KeyValueArray( key, parent ); // TODO: this probably isn't this easy...
+  qint32 t = key & RDT_TYPEMASK;
+//  if ( t == RDT_OBJECT    ) { BlockValueObject    *vbo = new BlockValueObject( parent );    if ( vtc ) vbo->set( ((BlockValueObject    *)vtc)->value() ); return vbo; }
+  if ( t == RDT_INT64     ) { BlockValueInt64     *vbo = new BlockValueInt64( parent );     if ( vtc ) vbo->set( ((BlockValueInt64     *)vtc)->value() ); return vbo; }
+  if ( t == RDT_INT32     ) { BlockValueInt32     *vbo = new BlockValueInt32( parent );     if ( vtc ) vbo->set( ((BlockValueInt32     *)vtc)->value() ); return vbo; }
+  if ( t == RDT_MPZ       ) { BlockValueMPZ       *vbo = new BlockValueMPZ( parent );       if ( vtc ) vbo->set( ((BlockValueMPZ       *)vtc)->value() ); return vbo; }
+  if ( t == RDT_MPQ       ) { BlockValueMPQ       *vbo = new BlockValueMPQ( parent );       if ( vtc ) vbo->set( ((BlockValueMPQ       *)vtc)->value() ); return vbo; }
+  if ( t == RDT_RCODE     ) { BlockValueRiceyCode *vbo = new BlockValueRiceyCode( parent ); if ( vtc ) vbo->set( ((BlockValueRiceyCode *)vtc)->value() ); return vbo; }
+  if ( t == RDT_STRING    ) { BlockValueString    *vbo = new BlockValueString( parent );    if ( vtc ) vbo->set( ((BlockValueString    *)vtc)->value() ); return vbo; }
+  if ( t == RDT_BYTEARRAY ) { BlockValueByteArray *vbo = new BlockValueByteArray( parent ); if ( vtc ) vbo->set( ((BlockValueByteArray *)vtc)->value() ); return vbo; }
   return nullptr;
 }
 
@@ -108,11 +108,13 @@ qint32 BlockValueInt64::setBsonish( const BsonSerial &b )
  */
 bool BlockValueInt64::setJson( const JsonSerial &j )
 { if ( j.size() < 1 )
-    return false;
+    { qWarning( "empty json" ); return false; }
   bool ok;
   qint64 v = j.toLongLong(&ok);
   if ( ok )
     m_value = v;
+   else
+    qWarning( "problem converting '%s' to int64", j.data() );
   return ok;
 }
 
@@ -258,7 +260,7 @@ bool  BlockValueString::setJson( const JsonSerial &j )
   d.append( " }" );
   QJsonDocument jd = QJsonDocument::fromJson(d);
   if ( !jd.isObject() )
-    { qWarning( "document is not a JsonObject" ); return false; }
+    { qWarning( "BlockValueString::document is not a JsonObject '%s'",d.data() ); return false; }
   QJsonObject o = jd.object();
   if ( !o.contains("v") )
     { qWarning( "object does not contain the v element" ); return false; }
@@ -440,7 +442,7 @@ JsonSerial  KeyValueArray::json() const
 bool  KeyValueArray::setJson( const JsonSerial &j )
 { QJsonDocument jd = QJsonDocument::fromJson(j);
   if ( !jd.isObject() )
-    { qWarning( "document is not a JsonObject" ); return false; }
+    { qWarning( "KeyValueArray::document is not a JsonObject '%s'",j.data() ); return false; }
   QJsonObject jo = jd.object();
   if ( jo.keys().size() != 1 )
     { qWarning( "object has %d keys (should be 1)", jo.keys().size() ); return false; }
@@ -506,7 +508,7 @@ JsonSerial BlockValueObject::json() const
 bool  BlockValueObject::setJson( const JsonSerial &j )
 { QJsonDocument jd = QJsonDocument::fromJson(j);
   if ( !jd.isObject() )
-    { qWarning( "document is not a JsonObject" ); return false; }
+    { qWarning( "BlockValueObject::document is not a JsonObject '%s'",j.data() ); return false; }
   QJsonObject jo = jd.object();
   QStringList keys = jo.keys();
   clear();
@@ -558,6 +560,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
     { qWarning( "%s value does not match type %d", dict.nameFromCode(k).data(), typ ); return nullptr; }
   ValueBase *vbo;
   QJsonDocument jd;
+  QString str;
   switch ( jdt )
     { case JDT_OBJECT:
         vbo = newValue( k, parent );
@@ -565,10 +568,17 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
         vbo->setJson( jd.toJson() );
         return vbo;
 
-      case JDT_DOUBLE: // Better to cast to string, or int?
+      case JDT_DOUBLE:
+        if ( typ == RDT_INT32 ) { return new BlockValueInt32( jv.toInt(), this ); }
+        if ( typ == RDT_INT64 ) { return new BlockValueInt64( jv.toInt(), this ); }
+        return nullptr;
+
       case JDT_STRING:
         vbo = newValue( k, parent );
-        vbo->setJson( jv.toString().toUtf8() );
+        if ( typ == RDT_STRING )
+          vbo->setJson( "\""+jv.toString().toUtf8()+"\"" );
+         else
+          vbo->setJson(      jv.toString().toUtf8()      );
         return vbo;
 
       case JDT_ARRAY:
@@ -609,6 +619,7 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
   qint32 obCount = riceToInt( b, &len, &ok );
   if ( !ok )
     { qWarning( "bad count rice code" ); return -1; }
+  clear();
   if ( obCount == 0 )
     return len; // empty object, we're done
   qint32 i = len;
@@ -680,7 +691,7 @@ qint32  BlockValueObject::insert( const BlockObjectMap &vl )
 { qint32 count = 0;
   QList<RiceyInt> keys = vl.keys();
   foreach( RiceyInt k, keys )
-    { if ( insert( k, vl[k] ) )
+    { if ( insert( k, newValue( k, this, vl[k] ) ) )
         count++;
        else
         qWarning( "insert Failed" );
@@ -705,14 +716,14 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
       ValueBase *vv = v.value(k);
       ValueBase *vt = value(k);
       switch ( k & RDT_TYPEMASK )
-        { case RDT_OBJECT:    if ( !( *((BlockValueObject    *)vt) == *((BlockValueObject    *)vv) ) ) return false; break;
-          case RDT_INT64:     if ( !( *((BlockValueInt64     *)vt) == *((BlockValueInt64     *)vv) ) ) return false; break;
-          case RDT_INT32:     if ( !( *((BlockValueInt32     *)vt) == *((BlockValueInt32     *)vv) ) ) return false; break;
-          case RDT_MPZ:       if ( !( *((BlockValueMPZ       *)vt) == *((BlockValueMPZ       *)vv) ) ) return false; break;
-          case RDT_MPQ:       if ( !( *((BlockValueMPQ       *)vt) == *((BlockValueMPQ       *)vv) ) ) return false; break;
-          case RDT_RCODE:     if ( !( *((BlockValueRiceyCode *)vt) == *((BlockValueRiceyCode *)vv) ) ) return false; break;
-          case RDT_STRING:    if ( !( *((BlockValueString    *)vt) == *((BlockValueString    *)vv) ) ) return false; break;
-          case RDT_BYTEARRAY: if ( !( *((BlockValueByteArray *)vt) == *((BlockValueByteArray *)vv) ) ) return false; break;
+        { case RDT_OBJECT:    if ( !(*((BlockValueObject    *)vt)          == *((BlockValueObject    *)vv)          ) ) return false; break;
+          case RDT_INT64:     if (  ( ((BlockValueInt64     *)vt)->value() !=  ((BlockValueInt64     *)vv)->value() ) ) return false; break;
+          case RDT_INT32:     if (  ( ((BlockValueInt32     *)vt)->value() !=  ((BlockValueInt32     *)vv)->value() ) ) return false; break;
+//        case RDT_MPZ:       if (  ( ((BlockValueMPZ       *)vt)->value() !=  ((BlockValueMPZ       *)vv)->value() ) ) return false; break;
+//        case RDT_MPQ:       if (  ( ((BlockValueMPQ       *)vt)->value() !=  ((BlockValueMPQ       *)vv)->value() ) ) return false; break;
+          case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
+          case RDT_STRING:    if (  ( ((BlockValueString    *)vt)->value() !=  ((BlockValueString    *)vv)->value() ) ) return false; break;
+          case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;
           // TODO: array equality tests
           // case RDT_OBJECT_ARRAY:
           // case RDT_INT64_ARRAY: etc.  start with array value functions?
