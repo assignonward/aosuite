@@ -71,6 +71,13 @@ RiceyCode intToRice( const RiceyInt & );
 #define RCD_mpq_r                  4 // Generic MPQ large integer fraction, use depends on context.
 #define RCD_type_y                 5 // Identifies an algorithm type for hash or crypto key, or other types depending on context
 #define RCD_text_s                 6 // Generic string, use depends on context, for instance in an image object this would be the alt text
+#define RCD_int64Array_I        9737 // A generic array of int64 elements
+#define RCD_int32Array_L        9738 // A generic array of int32 elements
+#define RCD_mpzArray_N          9739 // A generic array of MPZ elements
+#define RCD_mpqArray_R          9740 // A generic array of MPQ elements
+#define RCD_riceyArray_Y        9741 // A generic array of Ricey elements
+#define RCD_stringArray_S       9742 // A generic array of string elements
+#define RCD_byteArrayArray_B    9743 // A generic array of byte array elements
 #define RCD_name_s                38 // Name as a string, use depends on context, often a key name
 #define RCD_code_s               102 // Code as a string, use depends on context, often a key type
 #define RCD_data_b                 7 // Generic data block, use determined by the object which contains it.
@@ -127,13 +134,6 @@ RiceyCode intToRice( const RiceyInt & );
 #define RCD_Acceptance_o      692320 // A share swap acceptance of offer
 #define RCD_Cancellation_o    694144 // A share swap notice of cancellation (for cause, usually time expiration)
 #define RCD_Identity_o          4240 // A cross chain identity, may be tied to share ownership but carries its own key pair
-#define RCD_int64Array_I        9737 // A generic array of int64 elements
-#define RCD_int32Array_L        9738 // A generic array of int32 elements
-#define RCD_mpzArray_N          9739 // A generic array of MPZ elements
-#define RCD_mpqArray_R          9740 // A generic array of MPQ elements
-#define RCD_riceyArray_Y        9741 // A generic array of Ricey elements
-#define RCD_stringArray_S       9742 // A generic array of string elements
-#define RCD_byteArrayArray_B    9743 // A generic array of byte array elements
 
 
 #endif // RICEYCODES_H

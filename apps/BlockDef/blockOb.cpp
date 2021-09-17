@@ -40,7 +40,11 @@ BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls 
  */
 ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
 { if (( key & RDT_ARRAY ) == RDT_ARRAY )
-    return new KeyValueArray( key, parent ); // TODO: this probably isn't this easy...
+    { KeyValueArray *kva = new KeyValueArray( key, parent );
+      if ( vtc )
+        kva->set( ((KeyValueArray *)vtc)->value() );
+      return kva;
+    }
   qint32 t = key & RDT_TYPEMASK;
   if ( t == RDT_OBJECT    ) { BlockValueObject    *vbo = new BlockValueObject( parent );    if ( vtc ) vbo->set( ((BlockValueObject    *)vtc)->value() ); return vbo; }
   if ( t == RDT_INT64     ) { BlockValueInt64     *vbo = new BlockValueInt64( parent );     if ( vtc ) vbo->set( ((BlockValueInt64     *)vtc)->value() ); return vbo; }
@@ -63,9 +67,9 @@ qint32 KeyValueBase::setKey( const RiceyCode &key )
   bool ok = false;
   RiceyInt k = riceToInt( key, &len, &ok );
   if ( !ok )
-    return -1;
+    { qWarning( "problem converting key rice code %s to int", key.toHex().data() ); return -1; }
   if ( !dict.codesContainCode( k ) )
-    return -1;
+    { qWarning( "dictionary does not contain key %llu", k ); return -1; }
   m_key = k;
   return len;
 }
@@ -418,10 +422,10 @@ qint32  KeyValueArray::setBsonish( const BsonSerial &b )
 
 /**
  * @brief KeyValueArray::json
- * @return json array object with the whole array
+ * @return json array object with the key and the whole array
  */
 JsonSerial  KeyValueArray::json() const
-{ JsonSerial j = "{ \"";
+{ JsonSerial j = " \"";
   if ( !dict.codesContainCode(m_key) )
     return "{<!-- unknown key -->}";
   j.append( dict.nameFromCode(m_key) );
@@ -435,23 +439,25 @@ JsonSerial  KeyValueArray::json() const
     }
   if ( wroteOne )
     j = j.mid( 0, j.size() - 3 );
-  j.append( "] }\n" );
+  j.append( "] \n" );
   return j;
 }
 
 bool  KeyValueArray::setJson( const JsonSerial &j )
-{ QJsonDocument jd = QJsonDocument::fromJson(j);
+{ QJsonDocument jd = QJsonDocument::fromJson( "{"+j+"}" );
   if ( !jd.isObject() )
     { qWarning( "KeyValueArray::document is not a JsonObject '%s'",j.data() ); return false; }
   QJsonObject jo = jd.object();
   if ( jo.keys().size() != 1 )
     { qWarning( "object has %d keys (should be 1)", jo.keys().size() ); return false; }
+
   QStringList keys = jo.keys();
   Utf8String obKey = keys.at(0).toUtf8();
   if ( !dict.codesContainName( obKey ) )
     { qWarning( "dictionary does not contain a %s element", obKey.data() ); return false; }
   setKey( dict.codeFromCodeName( obKey ) );
   QJsonValue jv = jo.value( obKey );
+
   if ( !jv.isArray() )
     { qWarning( "value is not an array" ); return false; }
   clear();
@@ -495,16 +501,22 @@ JsonSerial BlockValueObject::json() const
   QList<RiceyInt> keys = m_obMap.keys();
   bool wroteOne = false;
   foreach ( RiceyInt key, keys )
-    { if ( !dict.codesContainCode(key) )
-        j.append( " \""+intToRice(key).toHex()+"\" <!-- unknown key --> : " ); // TODO: type extend key with _X
-       else
-        j.append( " \""+dict.nameFromCode(key)+"\": " );
-      ValueBase *vp = m_obMap[key];
+    { ValueBase *vp = m_obMap[key];
       if ( vp != nullptr )
-        j.append( vp->json() + " ,\n" );
-       else
-        j.append( "NULL ,\n" );
-      wroteOne = true;
+        { if ( key & RDT_ARRAY )
+            j.append( vp->json() + " ,\n" );
+           else
+            { if ( !dict.codesContainCode(key) )
+                j.append( " \""+intToRice(key).toHex()+"\" <!-- unknown key --> : " ); // TODO: type extend key with _X
+               else
+                j.append( " \""+dict.nameFromCode(key)+"\": " );
+              if ( vp != nullptr )
+                j.append( vp->json() + " ,\n" );
+               else
+                j.append( "NULL ,\n" );
+            }
+          wroteOne = true;
+        }
     }
   if ( wroteOne )
     j = j.mid( 0, j.size() - 2 );
@@ -520,8 +532,12 @@ JsonSerial BlockValueObject::json() const
 bool  BlockValueObject::setJson( const JsonSerial &j )
 { QJsonDocument jd = QJsonDocument::fromJson(j);
   if ( !jd.isObject() )
-    { qWarning( "BlockValueObject::document is not a JsonObject '%s'",j.data() ); return false; }
-  QJsonObject jo = jd.object();
+    { if ( !jd.isArray() )
+        { qWarning( "BlockValueObject::document is not a JsonObject or JsonArray '%s'",j.data() ); return false; }
+      qWarning( "TODO: process array '%s'",j.data() );
+      return false;
+    }
+  QJsonObject jo   = jd.object();
   QStringList keys = jo.keys();
   clear();
   if ( keys.size() < 1 ) // Empty object?
@@ -533,7 +549,7 @@ bool  BlockValueObject::setJson( const JsonSerial &j )
         { RiceyInt k = dict.codeFromCodeName( kStr.toUtf8() );
           ValueBase *vbo = jsonValueByKey( k, jo.value( kStr ), this );
           if ( vbo == nullptr )
-            { qWarning( "problem reading json value" ); return false; }
+            { qWarning( "problem reading json value %s from %s", kStr.toUtf8().data(), j.data() ); return false; }
           if ( !insert( k, vbo ) )
             { delete vbo; qWarning( "problem inserting value" ); return false; }
         }
@@ -603,7 +619,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
       case JDT_ARRAY:
         vbo = newValue( k, parent );
         jd.setArray( jv.toArray() );
-        if ( !vbo->setJson( jd.toJson() ) )
+        if ( !vbo->setJson( " \""+dict.nameFromCode(k)+"\": "+jd.toJson() ) )
           { vbo->deleteLater();
             return nullptr;
           }
@@ -738,6 +754,8 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
         return false;
       ValueBase *vv = v.value(k);
       ValueBase *vt = value(k);
+      if ( vv->type() != vt->type() )
+        { qWarning( "BlockValueObject::operator== type mismatch %d %d",vv->type(),vt->type() ); return false; }
       switch ( k & RDT_TYPEMASK )
         { case RDT_OBJECT:    if ( !(*((BlockValueObject    *)vt)          == *((BlockValueObject    *)vv)          ) ) return false; break;
           case RDT_INT64:     if (  ( ((BlockValueInt64     *)vt)->value() !=  ((BlockValueInt64     *)vv)->value() ) ) return false; break;

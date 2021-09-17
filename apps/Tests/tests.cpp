@@ -152,6 +152,7 @@ bool Tests::testInt32( BlockValueInt32 &v, qint32 tv, qint32 &tc, QString &msg )
             .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
+  // msg.append( QString( "int32 json '%1'\n" ).arg( QString::fromUtf8( j ) ) );
   v.set( tv - 1 );
   bool ok = v.setJson( j );
   if ( ok && ( v.value() == tv )) tc++; else
@@ -773,6 +774,12 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tv.insert( RCD_chainBlock_o     , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   tvo = tv;
   tv.insert( RCD_parentSignature_o, new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+  QList<qint64> ta64 = { 0,1,-1,70000,-70000,-5123456789, 5123456789 };
+  tv.insert( RCD_int64Array_I, new BlockArrayInt64( RCD_int64Array_I, ta64, this ) ); pass &= testObject( v, tv, tc, msg );
+  QList<qint32> ta32 = { 0,1,-1,70000,-70000 };
+  tv.insert( RCD_int32Array_L, new BlockArrayInt32( RCD_int32Array_L, ta32, this ) ); pass &= testObject( v, tv, tc, msg );
+  QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_Y, RCD_data_b, RCD_PcolA00_y, RCD_RangeBounds_O };
+  tv.insert( RCD_riceyArray_Y, new BlockArrayRicey( RCD_riceyArray_Y, tari, this ) ); pass &= testObject( v, tv, tc, msg );
 
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
@@ -783,6 +790,8 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
 bool  Tests::testObject( BlockValueObject &v, const BlockObjectMap &tv, qint32 &tc, QString &msg )
 { bool pass = true;
   qint32 sz = v.set(tv);
+  // msg.append( QString( "object json %1" ).arg( QString::fromUtf8( v.json() ) ) );
+
   if ( sz == tv.size() ) tc++; else
     { msg.append( QString( "FAIL value set test %1 vs %2\n" ).arg(tv.size()).arg(sz) ); pass = false; }
   if ( v == tv ) tc++; else
