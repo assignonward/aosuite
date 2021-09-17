@@ -65,6 +65,7 @@ void  Tests::on_start_clicked()
   pass &= testString     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArray  ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   // TODO: MPZ & MPQ
+  pass &= testObjectA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt32A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testRiceyA     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
@@ -373,6 +374,60 @@ bool Tests::testByteArray( BlockValueByteArray &v, const QByteArray &tv, qint32 
   if ( ok && ( v.value() == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(QString::fromUtf8(tv)).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
 
+  return pass;
+}
+
+bool Tests::testObjectA( QString &msg, qint32 &tc )
+{ bool pass = true;
+  msg = "object array Test: ";
+  BlockArrayObject v(RCD_objectArray_O,this);
+  if ( v.type() == RDT_OBJECT_ARRAY ) tc++; else
+    { msg.append( "FAIL type() test.\n" ); pass = false; }
+
+        BlockObjectMap  to;
+  QList<BlockObjectMap> tv;
+  pass &= testObjectA( v, tv, tc, msg ); // Empty Array test
+  to.insert( RCD_int64_i, new BlockValueInt64    (         -456789, this) );
+  to.insert( RCD_int32_l, new BlockValueInt32    (           70000, this) );
+  to.insert( RCD_type_y , new BlockValueRiceyCode(   RCD_PcolA00_y, this) );
+  to.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );
+  to.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );
+  tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with one varied object
+  tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with two varied but identical objects
+  tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with thee varied but identical objects
+  tv.clear();
+
+  if ( pass )
+    msg.append( QString("Pass %1 tests.").arg(tc) );
+
+  return pass;
+}
+
+bool Tests::testObjectA( BlockArrayObject &v, const QList<BlockObjectMap> &tv, qint32 &tc, QString &msg )
+{ bool pass = true;
+  v.set( tv );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
+
+  BsonSerial b = v.bsonish();
+  v.clear();
+  if ( v.append( 123 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
+  v.setBsonish( b );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+
+  JsonSerial j = v.json();
+  v.clear();
+  if ( v.append( 321 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
+  bool ok = v.setJson( j );
+  if ( ok && ( v == tv )) tc++; else
+    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
   return pass;
 }
 

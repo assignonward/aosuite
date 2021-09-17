@@ -493,7 +493,7 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
 bool  KeyValueArray::append( const BlockObjectMap &v )
 { if ( type() == RDT_OBJECT_ARRAY   )
     { return append( new BlockValueObject(v, this) ); }
-  qWarning( "type mismatch Y %d",(int)type() );
+  qWarning( "type mismatch O %d",(int)type() );
   return false;
 }
 
