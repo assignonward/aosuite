@@ -21,11 +21,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-
+set -e
+set -x
 sudo apt update -y
 sudo apt install -y g++ gcc
 sudo apt install -y automake make build-essential bison flex gettext texinfo transfig fig2dev gnutls-bin rng-tools adns-tools nettle-dev libncurses5-dev libsqlite3-dev libldap2-dev libreadline-dev libgmp-dev libbz2-dev zlib1g-dev qt5-default qtcreator
-sudo apt install -y lib64c-dev lib64z1 lib64z1-dev
+sudo apt install -y lib64c-dev lib64z1 lib64z1-dev imagemagick
 # This one to fix syntax highlighting and compile warnings in qt creator in 20.04
 sudo apt install -y libclang-common-8-dev
 
@@ -47,5 +48,3 @@ rm -rf gmp-6.1.2
 pushd OpenPGP
 make
 popd
-
-
