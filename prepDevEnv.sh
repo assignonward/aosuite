@@ -48,3 +48,6 @@ rm -rf gmp-6.1.2
 pushd OpenPGP
 make
 popd
+set +x
+echo "prepDevEnv.sh complete."
+
