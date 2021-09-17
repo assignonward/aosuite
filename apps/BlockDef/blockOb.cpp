@@ -756,7 +756,7 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
       ValueBase *vt = value(k);
       if ( vv->type() != vt->type() )
         { qWarning( "BlockValueObject::operator== type mismatch %d %d",vv->type(),vt->type() ); return false; }
-      switch ( k & RDT_TYPEMASK )
+      switch ( k & RDT_OBTYPEMASK )
         { case RDT_OBJECT:    if ( !(*((BlockValueObject    *)vt)          == *((BlockValueObject    *)vv)          ) ) return false; break;
           case RDT_INT64:     if (  ( ((BlockValueInt64     *)vt)->value() !=  ((BlockValueInt64     *)vv)->value() ) ) return false; break;
           case RDT_INT32:     if (  ( ((BlockValueInt32     *)vt)->value() !=  ((BlockValueInt32     *)vv)->value() ) ) return false; break;
@@ -765,9 +765,14 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
           case RDT_STRING:    if (  ( ((BlockValueString    *)vt)->value() !=  ((BlockValueString    *)vv)->value() ) ) return false; break;
           case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;
-          // TODO: array equality tests
           // case RDT_OBJECT_ARRAY:
-          // case RDT_INT64_ARRAY: etc.  start with array value functions?
+          case RDT_INT64_ARRAY:     if (  ( ((BlockArrayInt64     *)vt)->value() !=  ((BlockArrayInt64     *)vv)->value() ) ) return false; break;
+          case RDT_INT32_ARRAY:     if (  ( ((BlockArrayInt32     *)vt)->value() !=  ((BlockArrayInt32     *)vv)->value() ) ) return false; break;
+//        case RDT_MPZ_ARRAY:       if (  ( ((BlockArrayMPZ       *)vt)->value() !=  ((BlockArrayMPZ       *)vv)->value() ) ) return false; break;
+//        case RDT_MPQ_ARRAY:       if (  ( ((BlockArrayMPQ       *)vt)->value() !=  ((BlockArrayMPQ       *)vv)->value() ) ) return false; break;
+          case RDT_RCODE_ARRAY:     if (  ( ((BlockArrayRicey     *)vt)->value() !=  ((BlockArrayRicey     *)vv)->value() ) ) return false; break;
+          case RDT_STRING_ARRAY:    if (  ( ((BlockArrayString    *)vt)->value() !=  ((BlockArrayString    *)vv)->value() ) ) return false; break;
+          case RDT_BYTEARRAY_ARRAY: if (  ( ((BlockArrayByteArray *)vt)->value() !=  ((BlockArrayByteArray *)vv)->value() ) ) return false; break;
           default: qWarning( "unhandled type" ); return false;
         }
     }

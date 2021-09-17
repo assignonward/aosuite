@@ -185,7 +185,7 @@ class BlockValueRiceyCode : public ValueBase
         bool  setJson    ( const JsonSerial & );
    RiceyCode  value()    const { return m_value; }
     RiceyInt  valueInt() const { return riceToInt( m_value ); }
-        void  set( const RiceyCode &v ) { if ( !validRicey( v ) ) qWarning("invalid ricey code"); else { m_value = v; m_value.detach(); } }
+        void  set( const RiceyCode &v ) { if ( !validRicey( v ) ) qWarning("invalid ricey code"); else m_value = v; } // to detach or not to detach...
         void  set( const RiceyInt &r )  { set( intToRice( r ) ); }
         bool  operator==( const RiceyInt  &v ) const { return v == valueInt(); }
         bool  operator==( const RiceyCode &v ) const { return v == value(); }
@@ -408,9 +408,9 @@ QList<qint32> value() const { QList<qint32> vl; qint32 n = 0; while ( n < size()
 class BlockArrayRicey : public KeyValueArray
 { public:
        explicit  BlockArrayRicey( QObject *parent = nullptr ) : KeyValueArray( RCD_riceyArray_Y, parent ) {}
-       explicit  BlockArrayRicey( RiceyInt  k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
-                 BlockArrayRicey( RiceyInt  k, const QList<RiceyInt > &v, QObject *parent = nullptr ) : KeyValueArray( k, parent ) { set(v); } // TODO: key type checking
-                 BlockArrayRicey( RiceyCode r, const QList<RiceyCode> &v, QObject *parent = nullptr ) : KeyValueArray( r, parent ) { set(v); } // TODO: key type checking
+       explicit  BlockArrayRicey( RiceyInt k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
+                 BlockArrayRicey( RiceyInt k, const QList<RiceyInt > &v, QObject *parent = nullptr ) : KeyValueArray( k, parent ) { set(v); } // TODO: key type checking
+                 BlockArrayRicey( RiceyInt k, const QList<RiceyCode> &v, QObject *parent = nullptr ) : KeyValueArray( k, parent ) { set(v); } // TODO: key type checking
                 ~BlockArrayRicey() {}
       RiceyCode  at( qint32 n )    const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueRiceyCode *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return RiceyCode(); }
        RiceyInt  intAt( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return riceToInt( at(n) );                            qWarning( "array index %d out of bounds %d",n,size() ); return -1; }
@@ -426,6 +426,7 @@ class BlockArrayString : public KeyValueArray
 { public:
         explicit  BlockArrayString( QObject *parent = nullptr ) : KeyValueArray( RCD_stringArray_S, parent ) {}
         explicit  BlockArrayString( RiceyInt k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
+                  BlockArrayString( RiceyInt k, const QList<Utf8String> &v, QObject *parent = nullptr ) : KeyValueArray( k, parent ) { set(v); } // TODO: key type checking
                  ~BlockArrayString() {}
       Utf8String  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueString *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return Utf8String(); }
 QList<Utf8String> value() const { QList<Utf8String> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
@@ -437,6 +438,7 @@ class BlockArrayByteArray : public KeyValueArray
 { public:
         explicit  BlockArrayByteArray( QObject *parent = nullptr ) : KeyValueArray( RCD_byteArrayArray_B, parent ) {}
         explicit  BlockArrayByteArray( RiceyInt k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
+                  BlockArrayByteArray( RiceyInt k, const QList<QByteArray> &v, QObject *parent = nullptr ) : KeyValueArray( k, parent ) { set(v); } // TODO: key type checking
                  ~BlockArrayByteArray() {}
       QByteArray  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueByteArray *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return QByteArray(); }
 QList<QByteArray> value() const { QList<QByteArray> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }

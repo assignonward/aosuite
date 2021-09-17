@@ -780,6 +780,9 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tv.insert( RCD_int32Array_L, new BlockArrayInt32( RCD_int32Array_L, ta32, this ) ); pass &= testObject( v, tv, tc, msg );
   QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_Y, RCD_data_b, RCD_PcolA00_y, RCD_RangeBounds_O };
   tv.insert( RCD_riceyArray_Y, new BlockArrayRicey( RCD_riceyArray_Y, tari, this ) ); pass &= testObject( v, tv, tc, msg );
+  QList<Utf8String> tau8 = { "A", "1", "Stringy" };
+  tv.insert( RCD_stringArray_S, new BlockArrayString( RCD_stringArray_S, tau8, this ) ); pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_byteArrayArray_B, new BlockArrayByteArray( RCD_byteArrayArray_B, tau8, this ) ); pass &= testObject( v, tv, tc, msg );
 
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
