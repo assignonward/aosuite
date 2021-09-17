@@ -54,6 +54,7 @@ ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
   if ( t == RDT_RCODE     ) { BlockValueRiceyCode *vbo = new BlockValueRiceyCode( parent ); if ( vtc ) vbo->set( ((BlockValueRiceyCode *)vtc)->value() ); return vbo; }
   if ( t == RDT_STRING    ) { BlockValueString    *vbo = new BlockValueString( parent );    if ( vtc ) vbo->set( ((BlockValueString    *)vtc)->value() ); return vbo; }
   if ( t == RDT_BYTEARRAY ) { BlockValueByteArray *vbo = new BlockValueByteArray( parent ); if ( vtc ) vbo->set( ((BlockValueByteArray *)vtc)->value() ); return vbo; }
+  qWarning( "unhandled type in ValueBase::newValue" );
   return nullptr;
 }
 
@@ -98,7 +99,7 @@ qint32  KeyValuePair::setBsonish( const BsonSerial &b )
  */
 qint32 BlockValueInt64::setBsonish( const BsonSerial &b )
 { if ( b.size() < 8 )
-    return -1;
+    { qWarning( "undersized array pased to BlockValueInt64::setBsonish" ); return -1; }
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
   s >> m_value;
@@ -129,7 +130,7 @@ bool BlockValueInt64::setJson( const JsonSerial &j )
  */
 qint32 BlockValueInt32::setBsonish( const BsonSerial &b )
 { if ( b.size() < 4 )
-    return -1;
+    { qWarning( "undersized array passed to BlockValueInt32::setBsonish" ); return -1; }
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
   s >> m_value;
@@ -143,11 +144,13 @@ qint32 BlockValueInt32::setBsonish( const BsonSerial &b )
  */
 bool BlockValueInt32::setJson( const JsonSerial &j )
 { if ( j.size() < 1 )
-    return false;
+    { qWarning( "empty array passed to BlockValueInt32::setJson" ); return false; }
   bool ok;
   qint32 v = j.toLong(&ok);
   if ( ok )
     m_value = v;
+   else
+    qWarning( "problem in converting json to long" );
   return ok;
 }
 
@@ -161,7 +164,7 @@ qint32  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
   bool ok = false;
   riceToInt( b, &len, &ok );
   if ( !ok )
-    return -1;
+    { qWarning( "riceToInt conversion problem." ); return -1; }
   m_value = b.mid(0,len);
   return len;
 }
@@ -174,7 +177,7 @@ qint32  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
 bool  BlockValueRiceyCode::setJson( const JsonSerial &j )
 { RiceyCode r = j.fromHex( j );
   if ( !validRicey( r ) )
-    return false;
+    { qWarning( "invalid ricey code in json" ); return false; }
   m_value = r;
   return true;
 }
@@ -186,15 +189,15 @@ bool  BlockValueRiceyCode::setJson( const JsonSerial &j )
  */
 qint32  BlockValueByteArray::setBsonish( const BsonSerial &b )
 { if ( b.size() < 4 )
-    return -1;
+    { qWarning( "undersized array passed to BlockValueByteArray::setBsonish" ); return -1; }
   qint32 sz;
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
   s >> sz;
   if ( sz < 0 )
-    return -1;
+    { qWarning( "negative size in ByteArray bson" ); return -1; }
   if (( b.size() < 4+sz ) || ( sz > MAX_LENGTH ))
-    return -1;
+    { qWarning( "invalid size %d in BlockValueByteArray::setBsonish", sz ); return -1; }
   if ( sz == 0 )
     m_value = QByteArray();
    else
@@ -233,12 +236,12 @@ BsonSerial  BlockValueString::bsonish() const
  */
 qint32  BlockValueString::setBsonish( const BsonSerial &b )
 { if ( b.size() < 1 )
-    return -1;
+    { qWarning( "empty array passed to BlockValueString::setBsonish" ); return -1; }
   qint32 sz;
   bool ok;
   qint64 length = (qint64)riceToInt( b, &sz, &ok );
   if ( !ok || ( b.size() < (sz + length) ) || (length > MAX_LENGTH) )
-    return -1;
+    { qWarning( "riceConversion %d size %d problem in BlockValueString::setBsonish",ok,sz ); return -1; }
   if ( length == 0 )  // empty string is a valid construct
     { m_value = Utf8String();
       return sz;
@@ -248,7 +251,7 @@ qint32  BlockValueString::setBsonish( const BsonSerial &b )
   QTextCodec *codec = QTextCodec::codecForName("UTF-8");
   codec->toUnicode( string.constData(), string.size(), &state );
   if (state.invalidChars > 0) // Checking if string is valid UTF-8?
-    return -1;
+    { qWarning( "invalid UTF8" ); return -1; }
   m_value = string;
   return sz+length;
 }
@@ -316,6 +319,8 @@ BsonSerial ValueBase::bsonishNull( qint8 keyType ) const
       default:
       if (( keyType & RDT_ARRAY ) == RDT_ARRAY )
         { s << intToRice( RCD_ObTerm_o ) << intToRice( 0 ); }
+       else
+        qWarning( "unrecognized keyType in ValueBase::bsonishNull" );
     }
   return b;
 }
@@ -507,13 +512,13 @@ JsonSerial BlockValueObject::json() const
             j.append( vp->json() + " ,\n" );
            else
             { if ( !dict.codesContainCode(key) )
-                j.append( " \""+intToRice(key).toHex()+"\" <!-- unknown key --> : " ); // TODO: type extend key with _X
+                { j.append( " \""+intToRice(key).toHex()+"\" <!-- unknown key --> : " ); qWarning( "json Object unknown key" ); } // TODO: type extend key with _X
                else
                 j.append( " \""+dict.nameFromCode(key)+"\": " );
               if ( vp != nullptr )
                 j.append( vp->json() + " ,\n" );
                else
-                j.append( "NULL ,\n" );
+                { j.append( "NULL ,\n" ); qWarning( "json Object conversion encountered NULL" ); }
             }
           wroteOne = true;
         }
@@ -621,10 +626,12 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
         jd.setArray( jv.toArray() );
         if ( !vbo->setJson( " \""+dict.nameFromCode(k)+"\": "+jd.toJson() ) )
           { vbo->deleteLater();
+            qWarning( "problem setting array from json" );
             return nullptr;
           }
         return vbo;
     }
+  qWarning( "unrecognized json value type" );
   return nullptr;
 }
 
