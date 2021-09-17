@@ -71,17 +71,17 @@ RiceyCode intToRice( const RiceyInt & );
 #define RCD_mpq_r                  4 // Generic MPQ large integer fraction, use depends on context.
 #define RCD_type_y                 5 // Identifies an algorithm type for hash or crypto key, or other types depending on context
 #define RCD_text_s                 6 // Generic string, use depends on context, for instance in an image object this would be the alt text
-#define RCD_int64Array_I        9737 // A generic array of int64 elements
-#define RCD_int32Array_L        9738 // A generic array of int32 elements
-#define RCD_mpzArray_N          9739 // A generic array of MPZ elements
-#define RCD_mpqArray_R          9740 // A generic array of MPQ elements
-#define RCD_riceyArray_Y        9741 // A generic array of Ricey elements
-#define RCD_stringArray_S       9742 // A generic array of string elements
-#define RCD_byteArrayArray_B    9743 // A generic array of byte array elements
 #define RCD_name_s                38 // Name as a string, use depends on context, often a key name
 #define RCD_code_s               102 // Code as a string, use depends on context, often a key type
 #define RCD_data_b                 7 // Generic data block, use determined by the object which contains it.
-#define RCD_chainBlock_o        4096 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.
+#define RCD_objectArray_O          8 // A generic array of object elements
+#define RCD_int64Array_I           9 // A generic array of int64 elements
+#define RCD_int32Array_L          10 // A generic array of int32 elements
+#define RCD_mpzArray_N            11 // A generic array of MPZ elements
+#define RCD_mpqArray_R            12 // A generic array of MPQ elements
+#define RCD_riceyArray_Y          13 // A generic array of Ricey elements
+#define RCD_stringArray_S         14 // A generic array of string elements
+#define RCD_byteArrayArray_B      15 // A generic array of byte array elementschainBlock_o 0xA000 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.
 #define RCD_signedBlock_o         96 // A Signed Block in the chain always contains a parentSignature_O a time_i of when the block was signed, the signature_O is found in the object which contains the signedBlock_O.
 #define RCD_parentSignature_o     64 // Contains a copy of the signature_O of one or more (more in the case of merging forked chains) parent blocks.
 #define RCD_signature_o           32 // Hash object, only found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
@@ -128,12 +128,12 @@ RiceyCode intToRice( const RiceyInt & );
 #define RCD_CfShares_n        534403 // The number of shares recorded in the Genesis block.
 #define RCD_CfCoins_n         534435 // The number of "coins" all the shares in this chain represent.
 #define RCD_CfRecFee_r        534404 // The number of coins per byte charged to record data on this chain (usually 1/a very large number).
+#define RCD_chainBlock_o      533888 // An Assign Onward Chain Block. With a signature_o which includes a timei, and the signature of the parent(s).
 #define RCD_ExchAdvert_o      692224 // An exchange advertisement for cross chain exchange swaps (expressed in coins for coins)
 #define RCD_Proposal_o        692256 // A share swap proposal
 #define RCD_Offer_o           692288 // A share swap offer
 #define RCD_Acceptance_o      692320 // A share swap acceptance of offer
 #define RCD_Cancellation_o    694144 // A share swap notice of cancellation (for cause, usually time expiration)
 #define RCD_Identity_o          4240 // A cross chain identity, may be tied to share ownership but carries its own key pair
-
 
 #endif // RICEYCODES_H

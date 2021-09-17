@@ -51,9 +51,44 @@
             "type_y": "07"
         },
         {
-            "name_s": "chainBlock_o",
-            "text_s": "A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.",
-            "type_y": "A000"
+            "name_s": "objectArray_O",
+            "text_s": "A generic array of object elements",
+            "type_y": "08"
+        },
+        {
+            "name_s": "int64Array_I",
+            "text_s": "A generic array of int64 elements",
+            "type_y": "09"
+        },
+        {
+            "name_s": "int32Array_L",
+            "text_s": "A generic array of int32 elements",
+            "type_y": "0A"
+        },
+        {
+            "name_s": "mpzArray_N",
+            "text_s": "A generic array of MPZ elements",
+            "type_y": "0B"
+        },
+        {
+            "name_s": "mpqArray_R",
+            "text_s": "A generic array of MPQ elements",
+            "type_y": "0C"
+        },
+        {
+            "name_s": "riceyArray_Y",
+            "text_s": "A generic array of Ricey elements",
+            "type_y": "0D"
+        },
+        {
+            "name_s": "stringArray_S",
+            "text_s": "A generic array of string elements",
+            "type_y": "0E"
+        },
+        {
+            "name_s": "byteArrayArray_B",
+            "text_s": "A generic array of byte array elementschainBlock_o 0xA000 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.",
+            "type_y": "0F"
         },
         {
             "name_s": "signedBlock_o",
@@ -286,6 +321,11 @@
             "type_y": "A0CF04"
         },
         {
+            "name_s": "chainBlock_o",
+            "text_s": "An Assign Onward Chain Block. With a signature_o which includes a timei, and the signature of the parent(s).",
+            "type_y": "A0CB00"
+        },
+        {
             "name_s": "ExchAdvert_o",
             "text_s": "An exchange advertisement for cross chain exchange swaps (expressed in coins for coins)",
             "type_y": "AAA000"
@@ -314,41 +354,6 @@
             "name_s": "Identity_o",
             "text_s": "A cross chain identity, may be tied to share ownership but carries its own key pair",
             "type_y": "A110"
-        },
-        {
-            "name_s": "int64Array_I",
-            "text_s": "A generic array of int64 elements",
-            "type_y": "CC09"
-        },
-        {
-            "name_s": "int32Array_L",
-            "text_s": "A generic array of int32 elements",
-            "type_y": "CC0A"
-        },
-        {
-            "name_s": "mpzArray_N",
-            "text_s": "A generic array of MPZ elements",
-            "type_y": "CC0B"
-        },
-        {
-            "name_s": "mpqArray_R",
-            "text_s": "A generic array of MPQ elements",
-            "type_y": "CC0C"
-        },
-        {
-            "name_s": "riceyArray_Y",
-            "text_s": "A generic array of Ricey elements",
-            "type_y": "CC0D"
-        },
-        {
-            "name_s": "stringArray_S",
-            "text_s": "A generic array of string elements",
-            "type_y": "CC0E"
-        },
-        {
-            "name_s": "byteArrayArray_B",
-            "text_s": "A generic array of byte array elements",
-            "type_y": "CC0F"
         }
     ],
     "riceyTypes_O": [

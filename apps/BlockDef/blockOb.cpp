@@ -772,7 +772,8 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
           case RDT_STRING:    if (  ( ((BlockValueString    *)vt)->value() !=  ((BlockValueString    *)vv)->value() ) ) return false; break;
           case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;
-          // case RDT_OBJECT_ARRAY:
+          case RDT_OBJECT_ARRAY:
+
           case RDT_INT64_ARRAY:     if (  ( ((BlockArrayInt64     *)vt)->value() !=  ((BlockArrayInt64     *)vv)->value() ) ) return false; break;
           case RDT_INT32_ARRAY:     if (  ( ((BlockArrayInt32     *)vt)->value() !=  ((BlockArrayInt32     *)vv)->value() ) ) return false; break;
 //        case RDT_MPZ_ARRAY:       if (  ( ((BlockArrayMPZ       *)vt)->value() !=  ((BlockArrayMPZ       *)vv)->value() ) ) return false; break;

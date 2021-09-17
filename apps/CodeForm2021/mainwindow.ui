@@ -179,6 +179,9 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QPushButton" name="readJson">
+            <property name="toolTip">
+             <string>read the resource file and populate the definition windows from it.</string>
+            </property>
             <property name="text">
              <string>Read json</string>
             </property>

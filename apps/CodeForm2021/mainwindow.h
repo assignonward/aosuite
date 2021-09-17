@@ -56,6 +56,7 @@ public slots:
        void  on_save_clicked();
        void  on_update_clicked();
        void  on_reformat_clicked();
+       void  on_readJson_clicked();
        void  on_write_clicked();
 
 public:

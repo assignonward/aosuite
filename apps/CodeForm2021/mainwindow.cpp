@@ -88,6 +88,82 @@ void MainWindow::on_update_clicked()
   showResults();
 }
 
+void MainWindow::on_readJson_clicked()
+{ QFile f(":/data/dictionary.json");
+  if ( !f.open( QIODevice::ReadOnly ) )
+    { qWarning( "cannot open resource file /data/dictionary.json" );
+      return;
+    }
+  QJsonDocument jd = QJsonDocument::fromJson( f.readAll() );
+  if ( !jd.isObject() )
+    { qWarning( "resource dictionary is not a json object" );
+      return;
+    }
+  QJsonObject jo = jd.object();
+  if ( !jo.contains( "riceyTypes_O" ) )
+    { qWarning( "resource dictionary does not contain types definition" );
+      return;
+    }
+  if ( !jo.contains( "riceyCodes_O" ) )
+    { qWarning( "resource dictionary does not contain codes definition" );
+      return;
+    }
+  if ( !jo["riceyTypes_O"].isArray() )
+    { qWarning( "resource dictionary types not in array form" );
+      return;
+    }
+  if ( !jo["riceyCodes_O"].isArray() )
+    { qWarning( "resource dictionary codes not in array form" );
+      return;
+    }
+  QJsonArray ca = jo["riceyCodes_O"].toArray();
+  qint32 sz = ca.size();
+  QString codes;
+  for ( qint32 i = 0; i < sz; i++ )
+    { QJsonValue jv = ca[i];
+      if ( !jv.isObject() )
+        qWarning( "code %d is not an object", i );
+       else
+        { QJsonObject cao = jv.toObject();
+          QString name,typ,desc;
+          if ( cao.contains( "name_s" ) )
+            name =       cao["name_s"].toString();
+          if ( cao.contains( "text_s" ) )
+            desc =       cao["text_s"].toString();
+          if ( cao.contains( "type_y" ) )
+            typ =        cao["type_y"].toString();
+          codes.append( QString( "%1 0x%2 // %3\n").arg( name ).arg( typ ).arg( desc ) );
+        }
+    }
+  if ( codes.size() > 0 )
+    ui->ricey->setPlainText( codes );
+
+  QJsonArray ta = jo["riceyTypes_O"].toArray();
+  sz = ta.size();
+  QString types;
+  for ( qint32 i = 0; i < sz; i++ )
+    { QJsonValue jv = ta[i];
+      if ( !jv.isObject() )
+        qWarning( "type %d is not an object", i );
+       else
+        { QJsonObject tao = jv.toObject();
+          QString name,typ,desc,code;
+          if ( tao.contains( "code_s" ) )
+            code =       tao["code_s"].toString();
+          if ( tao.contains( "name_s" ) )
+            name =       tao["name_s"].toString();
+          if ( tao.contains( "text_s" ) )
+            desc =       tao["text_s"].toString();
+          if ( tao.contains( "type_y" ) )
+            typ =        tao["type_y"].toString();
+          types.append( QString( "%1 0x%2 // %3 - %4\n").arg( name ).arg( typ ).arg( code ).arg( desc ) );
+        }
+    }
+  if ( types.size() > 0 )
+    ui->notes->setPlainText( types );
+
+}
+
 void MainWindow::on_write_clicked()
 { QFile file( ui->jsonPath->text() );
   if ( !file.open( QIODevice::WriteOnly ) )

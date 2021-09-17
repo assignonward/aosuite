@@ -381,6 +381,18 @@ class BlockValueObject : public ValueBase
    BlockObjectMap  m_obMap;
 };
 
+class BlockArrayObject : public KeyValueArray
+{ public:
+            explicit  BlockArrayObject( QObject *parent = nullptr ) : KeyValueArray( RCD_objectArray_O, parent ) {}
+            explicit  BlockArrayObject( RiceyInt k, QObject *parent = nullptr ) : KeyValueArray( k, parent ) {} // TODO: key type checking
+                      BlockArrayObject( RiceyInt k, const QList<BlockObjectMap> &v, QObject *parent = nullptr ) : KeyValueArray( k, parent ) { set(v); } // TODO: key type checking
+                     ~BlockArrayObject() {}
+      BlockObjectMap  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueObject *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return BlockObjectMap(); }
+QList<BlockObjectMap> value() const { QList<BlockObjectMap> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
+                void  set( const QList<BlockObjectMap> &vl ) { clear(); foreach( BlockObjectMap v, vl ) { if ( !append( v ) ) qWarning( "append Failed" ); } }
+                bool  operator==(const QList<BlockObjectMap>& l) const { if (l.size() != size()) return false; for (qint32 i=0;i<size();i++) if (!(l.at(i)==at(i))) return false; return true; }
+};
+
 class BlockArrayInt64 : public KeyValueArray
 { public:
     explicit  BlockArrayInt64( QObject *parent = nullptr ) : KeyValueArray( RCD_int64Array_I, parent ) {}
