@@ -127,7 +127,7 @@ qint32  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
   riceToInt( b, &len, &ok );
   if ( !ok )
     { qWarning( "riceToInt conversion problem." ); return -1; }
-  m_value = b.mid(0,len);
+  set( b.mid(0,len) );
   return len;
 }
 
@@ -158,9 +158,9 @@ qint32  BlockValueByteArray::setBsonish( const BsonSerial &b )
       return -1;
     }
   if ( length == 0 )
-    m_value = QByteArray();
+    set( QByteArray() );
    else
-    m_value = b.mid(sz,length);
+    set( b.mid(sz,length) );
   return length+sz;
 }
 
@@ -169,8 +169,8 @@ qint32  BlockValueByteArray::setBsonish( const BsonSerial &b )
  * @return rice code length (in bytes, not characters) followed by UTF-8 encoded string
  */
 BsonSerial  BlockValueString::bsonish() const
-{ RiceyCode b = intToRice( m_value.size() );
-  b.append( m_value );
+{ RiceyCode b = intToRice( value().size() );
+  b.append( value() );
   return b;
 }
 
@@ -188,7 +188,7 @@ qint32  BlockValueString::setBsonish( const BsonSerial &b )
   if ( !ok || ( b.size() < (sz + length) ) || (length > MAX_LENGTH) )
     { qWarning( "riceConversion %d size %d problem in BlockValueString::setBsonish",ok,sz ); return -1; }
   if ( length == 0 )  // empty string is a valid construct
-    { m_value = Utf8String();
+    { set( Utf8String() );
       return sz;
     }
   QByteArray string = b.mid(sz, length);
@@ -197,7 +197,7 @@ qint32  BlockValueString::setBsonish( const BsonSerial &b )
   codec->toUnicode( string.constData(), string.size(), &state );
   if (state.invalidChars > 0) // Checking if string is valid UTF-8?
     { qWarning( "invalid UTF8" ); return -1; }
-  m_value = string;
+  set( string );
   return sz+length;
 }
 
