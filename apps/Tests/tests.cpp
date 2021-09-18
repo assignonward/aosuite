@@ -144,6 +144,8 @@ bool Tests::testInt32( BlockValueInt32 &v, qint32 tv, qint32 &tc, QString &msg )
 
   BsonSerial b = v.bsonish();
   v.set( tv + 1 );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.value() ) ); pass = false; }
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -155,6 +157,8 @@ bool Tests::testInt32( BlockValueInt32 &v, qint32 tv, qint32 &tc, QString &msg )
   JsonSerial j = v.json();
   // msg.append( QString( "int32 json '%1'\n" ).arg( QString::fromUtf8( j ) ) );
   v.set( tv - 1 );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.value() ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v.value() == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -200,6 +204,8 @@ bool Tests::testInt64( BlockValueInt64 &v, qint64 tv, qint32 &tc, QString &msg )
 
   BsonSerial b = v.bsonish();
   v.set( tv + 1 );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.value() ) ); pass = false; }
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -210,6 +216,8 @@ bool Tests::testInt64( BlockValueInt64 &v, qint64 tv, qint32 &tc, QString &msg )
 
   JsonSerial j = v.json();
   v.set( tv - 1 );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.value() ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v.value() == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -253,6 +261,8 @@ bool Tests::testRicey( BlockValueRiceyCode &v, RiceyInt tv, qint32 &tc, QString 
 
   rc = intToRice( tv );
   v.set( tv + 1 );
+  if  ( v.valueInt() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.valueInt() ) ); pass = false; }
   v.set( rc );
   if ( v.valueInt() == tv ) tc++; else
     { msg.append( QString( "FAIL code set test %1\n" ).arg(tv) ); pass = false; }
@@ -308,6 +318,8 @@ bool Tests::testString( BlockValueString &v, const Utf8String &tv, qint32 &tc, Q
 
   BsonSerial b = v.bsonish();
   v.set( "?" );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv) ).arg( QString::fromUtf8( v.value() ) ) ); pass = false; }
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv)).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -318,6 +330,8 @@ bool Tests::testString( BlockValueString &v, const Utf8String &tv, qint32 &tc, Q
 
   JsonSerial j = v.json();
   v.set( "x" );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv) ).arg( QString::fromUtf8( v.value() ) ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v.value() == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(QString::fromUtf8(tv)).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -360,6 +374,8 @@ bool Tests::testByteArray( BlockValueByteArray &v, const QByteArray &tv, qint32 
 
   BsonSerial b = v.bsonish();
   v.set( "?" );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv.toHex()) ).arg( QString::fromUtf8( v.value().toHex() ) ) ); pass = false; }
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv)).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -370,6 +386,8 @@ bool Tests::testByteArray( BlockValueByteArray &v, const QByteArray &tv, qint32 
 
   JsonSerial j = v.json();
   v.set( "x" );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv.toHex()) ).arg( QString::fromUtf8( v.value().toHex() ) ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v.value() == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(QString::fromUtf8(tv)).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -416,6 +434,8 @@ bool Tests::testObjectA( BlockArrayObject &v, const QList<BlockObjectMap> &tv, q
   v.clear();
   if ( v.append( dob ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -425,9 +445,10 @@ bool Tests::testObjectA( BlockArrayObject &v, const QList<BlockObjectMap> &tv, q
             .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
-  v.clear();
   if ( v.append( dob ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -477,6 +498,8 @@ bool Tests::testInt32A( BlockArrayInt32 &v, const QList<qint32> &tv, qint32 &tc,
   v.clear();
   if ( v.append( 123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -489,6 +512,8 @@ bool Tests::testInt32A( BlockArrayInt32 &v, const QList<qint32> &tv, qint32 &tc,
   v.clear();
   if ( v.append( 321 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -550,6 +575,8 @@ bool Tests::testInt64A( BlockArrayInt64 &v, const QList<qint64> &tv, qint32 &tc,
   v.clear();
   if ( v.append( (qint64)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -562,6 +589,8 @@ bool Tests::testInt64A( BlockArrayInt64 &v, const QList<qint64> &tv, qint32 &tc,
   v.clear();
   if ( v.append( (qint64)321 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
@@ -637,6 +666,8 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyInt> &tv, qint32 &t
   BsonSerial b = v.bsonish();
   if ( v.append( (RiceyInt)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.valueInt() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -648,6 +679,8 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyInt> &tv, qint32 &t
   JsonSerial j = v.json();
   if ( v.append( (RiceyInt)321 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.valueInt() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -664,6 +697,8 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyCode> &tv, qint32 &
   v.clear();
   if ( v.append( (RiceyInt)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -676,6 +711,8 @@ bool Tests::testRiceyA( BlockArrayRicey &v, const QList<RiceyCode> &tv, qint32 &
   v.clear();
   if ( v.append( (RiceyInt)321 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
@@ -717,6 +754,8 @@ bool Tests::testStringA( BlockArrayString &v, const QList<Utf8String> &tv, qint3
   v.clear();
   if ( v.append( "?" ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -729,6 +768,8 @@ bool Tests::testStringA( BlockArrayString &v, const QList<Utf8String> &tv, qint3
   v.clear();
   if ( v.append( "??" ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
@@ -782,6 +823,8 @@ bool Tests::testByteArrayA( BlockArrayByteArray &v, const QList<QByteArray> &tv,
   v.clear();
   if ( v.append( "?" ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
@@ -794,6 +837,8 @@ bool Tests::testByteArrayA( BlockArrayByteArray &v, const QList<QByteArray> &tv,
   v.clear();
   if ( v.append( "??" ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
@@ -862,6 +907,8 @@ bool  Tests::testObject( BlockValueObject &v, const BlockObjectMap &tv, qint32 &
   v.clear();
   if ( v.insert( RCD_text_s, "?" ) ) tc++; else
     { pass = false; msg.append( "FAIL during insert()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   if ( v.setBsonish( b ) > 0 ) tc++; else
     { msg.append( QString( "FAIL during setBsonish\n" ) ); pass = false; }
   if ( v == tv ) tc++; else
@@ -875,6 +922,8 @@ bool  Tests::testObject( BlockValueObject &v, const BlockObjectMap &tv, qint32 &
   v.clear();
   if ( v.insert( RCD_text_s, "??" ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test tv sz:%1 v sz:%2 ok:%3 %4\n" )
