@@ -54,9 +54,10 @@ void MainWindow::restoreConfig()
 { QSettings settings;
   restoreGeometry( settings.value( "geometry" ).toByteArray() );
   restoreState   ( settings.value( "state"    ).toByteArray() );
-  if ( settings.value( "ricey"    ).toString().size() > 0 ) ui->ricey   ->setHtml( settings.value( "ricey"    ).toString() );
-  if ( settings.value( "notes"    ).toString().size() > 0 ) ui->notes   ->setHtml( settings.value( "notes"    ).toString() );
-  if ( settings.value( "jsonPath" ).toString().size() > 0 ) ui->jsonPath->setText( settings.value( "jsonPath" ).toString() );
+  if ( settings.value( "ricey"       ).toString().size() > 0 ) ui->ricey      ->setHtml( settings.value( "ricey"       ).toString() );
+  if ( settings.value( "notes"       ).toString().size() > 0 ) ui->notes      ->setHtml( settings.value( "notes"       ).toString() );
+  if ( settings.value( "jsonPath"    ).toString().size() > 0 ) ui->jsonPath   ->setText( settings.value( "jsonPath"    ).toString() );
+  if ( settings.value( "codeDefPath" ).toString().size() > 0 ) ui->codeDefPath->setText( settings.value( "codeDefPath" ).toString() );
 }
 
 /**
@@ -65,11 +66,12 @@ void MainWindow::restoreConfig()
  */
 void MainWindow::saveConfig()
 { QSettings settings;
-  settings.setValue( "geometry", saveGeometry()         );
-  settings.setValue( "state"   , saveState()            );
-  settings.setValue( "ricey"   , ui->ricey   ->toHtml() );
-  settings.setValue( "notes"   , ui->notes   ->toHtml() );
-  settings.setValue( "jsonPath", ui->jsonPath->text()   );
+  settings.setValue( "geometry"   , saveGeometry()          );
+  settings.setValue( "state"      , saveState()             );
+  settings.setValue( "ricey"      , ui->ricey   ->toHtml()  );
+  settings.setValue( "notes"      , ui->notes   ->toHtml()  );
+  settings.setValue( "jsonPath"   , ui->jsonPath->text()    );
+  settings.setValue( "codeDefPath", ui->codeDefPath->text() );
 }
 
 void MainWindow::on_save_clicked()
@@ -171,6 +173,13 @@ void MainWindow::on_write_clicked()
       return;
     }
   file.write( ui->json->toPlainText().toUtf8() );
+
+  QFile cFile( ui->codeDefPath->text() );
+  if ( !cFile.open( QIODevice::WriteOnly ) )
+    { ui->translations->append( QString( "Could not open %1 for writing.\n" ).arg( ui->codeDefPath->text() ) );
+      return;
+    }
+  cFile.write( ui->translations->toPlainText().toUtf8() );
 }
 
 /**
@@ -180,6 +189,7 @@ void MainWindow::init()
 { v.clear();
   t.clear();
   notesNumChar.clear();
+  notesExtraChar.clear();
   notesList = ui->notes->toPlainText().split("\n",QString::SkipEmptyParts);
   riceyList = ui->ricey->toPlainText().split("\n",QString::SkipEmptyParts);
   maxNameLength = 0;
@@ -191,9 +201,36 @@ void MainWindow::init()
  */
 void MainWindow::showResults()
 { ui->translations->clear();
+  ui->translations->append( "/* MIT License" );
+  ui->translations->append( " *" );
+  ui->translations->append( " * Copyright (c) 2021 Assign Onward" );
+  ui->translations->append( " *" );
+  ui->translations->append( " * Permission is hereby granted, free of charge, to any person obtaining a copy" );
+  ui->translations->append( " * of this software and associated documentation files (the \"Software\"), to deal" );
+  ui->translations->append( " * in the Software without restriction, including without limitation the rights" );
+  ui->translations->append( " * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell" );
+  ui->translations->append( " * copies of the Software, and to permit persons to whom the Software is" );
+  ui->translations->append( " * furnished to do so, subject to the following conditions:" );
+  ui->translations->append( " *" );
+  ui->translations->append( " * The above copyright notice and this permission notice shall be included in all" );
+  ui->translations->append( " * copies or substantial portions of the Software." );
+  ui->translations->append( " *" );
+  ui->translations->append( " * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR" );
+  ui->translations->append( " * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY," );
+  ui->translations->append( " * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE" );
+  ui->translations->append( " * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER" );
+  ui->translations->append( " * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM," );
+  ui->translations->append( " * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE" );
+  ui->translations->append( " * SOFTWARE.");
+  ui->translations->append( " */");
+  ui->translations->append( "#ifndef CODEDEF_H" );
+  ui->translations->append( "#define CODEDEF_H" );
+  ui->translations->append( "" );
   if ( v.size() > 0 )
     t.append( "\n"+v );
   ui->translations->append( t );
+  ui->translations->append( "" );
+  ui->translations->append( "#endif // CODEDEF_H" );
 
   ui->json->clear();
   QJsonDocument jd = QJsonDocument( jo );
@@ -244,11 +281,14 @@ void MainWindow::firstPass()
     { QStringList words = line.split(" ",QString::SkipEmptyParts);
       if ( words.size() > 3 )
         { if ( words.at(1).startsWith( "0x" ) )
-            { if ( words.at(1).size() == 3 )
+            { if (( words.at(1).size() > 2 ) && ( words.at(1).size() < 5 ))
                 { if ( words.at(3).size() == 1 )
-                    { notesNumChar.insert( words.at(1).at(2), words.at(3).at(0) );
+                    { if ( notesNumChar.contains( words.at(1).at(2) ) )
+                        notesExtraChar.insert( words.at(1).at(2), words.at(3).at(0) );
+                       else
+                        notesNumChar.insert( words.at(1).at(2), words.at(3).at(0) );
                     } else { v.append( QString( "WARN: 4th word in Code Notes '%1' isn't length 1.\n" ).arg( line ) ); }
-                } else { v.append( QString( "WARN: 2nd word in Code Notes '%1' isn't length 3.\n" ).arg( line ) ); }
+                } else { v.append( QString( "WARN: 2nd word in Code Notes '%1' isn't length 2 or 3.\n" ).arg( line ) ); }
             } else { v.append( QString( "WARN: 2nd word in Code Notes '%1' doesn't start with 0x.\n" ).arg( line ) ); }
         } else { v.append( QString( "WARN: line '%1' in Code Notes doesn't have 4 or more words.\n" ).arg( line ) ); }
     }

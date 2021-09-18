@@ -452,6 +452,30 @@
             "name_s": "BYTEARRAY_ARRAY",
             "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
             "type_y": "F"
+        },
+        {
+            "code_s": "z",
+            "name_s": "NULL",
+            "text_s": "A null block value type, used as an error flag ",
+            "type_y": "10"
+        },
+        {
+            "code_s": "*",
+            "name_s": "ARRAY",
+            "text_s": "this bit is always set in array types",
+            "type_y": "8"
+        },
+        {
+            "code_s": "*",
+            "name_s": "TYPEMASK",
+            "text_s": "used to get the contained value type out of an array type ",
+            "type_y": "7"
+        },
+        {
+            "code_s": "*",
+            "name_s": "OBTYPEMASK",
+            "text_s": "used to get the contained value type out of an object type",
+            "type_y": "1F"
         }
     ]
 }

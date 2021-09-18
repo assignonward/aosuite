@@ -25,6 +25,7 @@ INCLUDEPATH += $${PWD}
 
 HEADERS += \
     $$PWD/blockOb.h \
+    $$PWD/codeDef.h \
     $$PWD/dictionary.h \
     $$PWD/riceyCodes.h
 

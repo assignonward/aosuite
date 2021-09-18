@@ -68,6 +68,7 @@ public:
         QStringList  riceyList,notesList;
      QList<RiceyInt> riceyInts;
  QHash<QChar, QChar> notesNumChar;
+ QHash<QChar, QChar> notesExtraChar;
 
 private:
     Ui::MainWindow *ui;
