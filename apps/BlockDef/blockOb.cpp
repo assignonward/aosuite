@@ -469,19 +469,49 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
   QJsonArray ja = jv.toArray();
   if ( ja.size() < 1 )  // Empty?
     return true;        // We're done.
-  QVariantList vl = ja.toVariantList();
-  foreach ( QVariant v, vl )
-    { switch ( type() )
-        { case RDT_INT64_ARRAY:     append( (qint64)v.toLongLong() ); break;
-          case RDT_INT32_ARRAY:     append( (qint32)v.toInt() ); break;
-          case RDT_RCODE_ARRAY:     append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
-          case RDT_STRING_ARRAY:    append( v.toString().toUtf8() ); break;
-          case RDT_BYTEARRAY_ARRAY: append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
-          case RDT_OBJECT_ARRAY:
-          case RDT_MPZ_ARRAY:
-          case RDT_MPQ_ARRAY: qWarning( "unhandled type" ); return false;
+  if ( type() == RDT_OBJECT_ARRAY )
+    { foreach ( QJsonValue jv, ja )
+        { if ( !jv.isObject() )
+            qWarning( "array element is not object in KeyValueArray::setJson() type OBJECT_ARRAY" );
+           else
+            { QJsonObject jo = jv.toObject();
+              QJsonDocument ed( jo );
+              BlockValueObject *bvo = new BlockValueObject( this, ed.toJson() );
+              append( bvo->value() );
+              delete bvo;
+            }
         }
     }
+   else
+    { QVariantList vl = ja.toVariantList();
+      foreach ( QVariant v, vl )
+        { switch ( type() )
+            { case RDT_INT64_ARRAY:     append( (qint64)v.toLongLong() ); break;
+              case RDT_INT32_ARRAY:     append( (qint32)v.toInt() ); break;
+              case RDT_RCODE_ARRAY:     append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
+              case RDT_STRING_ARRAY:    append( v.toString().toUtf8() ); break;
+              case RDT_BYTEARRAY_ARRAY: append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
+              case RDT_MPZ_ARRAY:
+              case RDT_MPQ_ARRAY: qWarning( "unhandled type in KeyValueArray::setJson()" ); return false;
+    }   }   }
+  return true;
+}
+
+/**
+ * @brief KeyValueArray::append
+ * @param value - pointer to a generic value, must be type matched to the array
+ * @return true if successful
+ */
+bool  KeyValueArray::append( ValueBase *value )
+{ if ( value == nullptr )
+    { qWarning( "will not append null" );
+      return false;
+    }
+  if ( value->type() != ( type() & RDT_TYPEMASK ) )
+    { qWarning( "type mismatch in KeyValueArray::append( ValueBase *value ) %d %d",(int)value->type(),(int)type() );
+      return false;
+    }
+  m_values.append( value );
   return true;
 }
 
@@ -491,7 +521,7 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
  * @return true if successful
  */
 bool  KeyValueArray::append( const BlockObjectMap &v )
-{ if ( type() == RDT_OBJECT_ARRAY   )
+{ if ( type() == RDT_OBJECT_ARRAY )
     { return append( new BlockValueObject(v, this) ); }
   qWarning( "type mismatch O %d",(int)type() );
   return false;
@@ -781,7 +811,31 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_RCODE_ARRAY:     if (  ( ((BlockArrayRicey     *)vt)->value() !=  ((BlockArrayRicey     *)vv)->value() ) ) return false; break;
           case RDT_STRING_ARRAY:    if (  ( ((BlockArrayString    *)vt)->value() !=  ((BlockArrayString    *)vv)->value() ) ) return false; break;
           case RDT_BYTEARRAY_ARRAY: if (  ( ((BlockArrayByteArray *)vt)->value() !=  ((BlockArrayByteArray *)vv)->value() ) ) return false; break;
-          default: qWarning( "unhandled type" ); return false;
+          default: qWarning( "unhandled type %s", dict.nameFromCode( k ).data() ); return false;
+        }
+    }
+  return true;
+}
+
+/**
+ * @brief BlockArrayObject::operator ==
+ * @param l - list of object values
+ * @return true if this list of object values is the same as l's
+ */
+bool  BlockArrayObject::operator==(const QList<BlockObjectMap>& l) const
+{ if (l.size() != size())
+    return false;
+  for ( qint32 i=0; i<size(); i++ )
+    { BlockObjectMap om = l.at(i);
+      BlockObjectMap tm = at(i);
+      if ( om.size() != tm.size() )
+        return false;
+      QList<RiceyInt> keys = om.keys();
+      foreach ( RiceyInt k, keys )
+        { if ( !tm.contains(k) )
+            return false;
+          if ( !om[k]->valueEqual( *(tm[k]) ) )
+            return false;
         }
     }
   return true;

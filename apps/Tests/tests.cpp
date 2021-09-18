@@ -407,11 +407,14 @@ bool Tests::testObjectA( BlockArrayObject &v, const QList<BlockObjectMap> &tv, q
 { bool pass = true;
   v.set( tv );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
+    { msg.append( QString( "FAIL value set/get test %1 %2\n" ).arg(tv.size()).arg(v.size()) ); pass = false; }
+
+  BlockObjectMap  dob;
+  dob.insert( RCD_text_s, new BlockValueString( "Dummy Object", this) );
 
   BsonSerial b = v.bsonish();
   v.clear();
-  if ( v.append( 123 ) ) tc++; else
+  if ( v.append( dob ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   v.setBsonish( b );
   if ( v == tv ) tc++; else
@@ -423,7 +426,7 @@ bool Tests::testObjectA( BlockArrayObject &v, const QList<BlockObjectMap> &tv, q
 
   JsonSerial j = v.json();
   v.clear();
-  if ( v.append( 321 ) ) tc++; else
+  if ( v.append( dob ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
