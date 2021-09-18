@@ -132,26 +132,36 @@ qint32  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
 }
 
 /**
+ * @brief BlockValueByteArray::bsonish
+ * @return the bsonish representation of this byte array
+ */
+BsonSerial  BlockValueByteArray::bsonish() const
+{ RiceyCode b = intToRice( value().size() );
+  b.append( value() );
+  return b;
+}
+
+
+/**
  * @brief BlockValueByteArray::setBsonish
- * @param b - 4 byte LittleEndian length plus byte array data
+ * @param b - Rice Code length plus byte array data
  * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
  */
 qint32  BlockValueByteArray::setBsonish( const BsonSerial &b )
-{ if ( b.size() < 4 )
+{ if ( b.size() < 1 )
     { qWarning( "undersized array passed to BlockValueByteArray::setBsonish" ); return -1; }
   qint32 sz;
-  QDataStream s(b);
-  s.setByteOrder(QDataStream::LittleEndian);
-  s >> sz;
-  if ( sz < 0 )
-    { qWarning( "negative size in ByteArray bson" ); return -1; }
-  if (( b.size() < 4+sz ) || ( sz > MAX_LENGTH ))
-    { qWarning( "invalid size %d in BlockValueByteArray::setBsonish", sz ); return -1; }
-  if ( sz == 0 )
+  bool ok;
+  qint64 length = (qint64)riceToInt( b, &sz, &ok );
+  if ( !ok || ( b.size() < (sz + length) ) || (length > MAX_LENGTH) || ( sz < 0 ) || ( length < 0 ) )
+    { qWarning( "riceConversion %d size %d length %lld problem in BlockValueByteArray::setBsonish",ok,sz,length );
+      return -1;
+    }
+  if ( length == 0 )
     m_value = QByteArray();
    else
-    m_value = b.mid(4,sz);
-  return 4+sz;
+    m_value = b.mid(sz,length);
+  return length+sz;
 }
 
 /**

@@ -245,7 +245,7 @@ class BlockValueByteArray : public ValueBase
               BlockValueByteArray( const QByteArray &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
              ~BlockValueByteArray() {}
       quint8  type()    const { return RDT_BYTEARRAY; }
-  BsonSerial  bsonish() const { BsonSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << (qint32)m_value.size(); b.append( m_value ); return b; }
+  BsonSerial  bsonish() const;
   JsonSerial  json()    const { return "\""+m_value.toHex()+"\""; }
       qint32  setBsonish( const BsonSerial & );
         bool  setJson   ( const JsonSerial & );
