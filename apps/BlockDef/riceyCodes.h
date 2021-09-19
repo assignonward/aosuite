@@ -40,7 +40,8 @@ typedef    quint64 RiceyInt;
 RiceyCode intToRice( const RiceyInt & );
  RiceyInt riceToInt( const RiceyCode &, qint32 *len = nullptr, bool *ok = nullptr );
 
-#define MAX_RICEY_LEN 9 // 63 bits
-
+#define MAX_RICEY_LEN 9   // 63 bits
+// TODO: MAX_MPINT_LEN might be better implemented as a protocol defined constant
+#define MAX_MPINT_LEN 500 // base 10 digits, including negative sign
 
 #endif // RICEYCODES_H

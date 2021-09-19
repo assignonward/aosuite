@@ -84,20 +84,34 @@ void  Tests::on_start_clicked()
 bool Tests::testGmp( QString &msg, qint32 &tc )
 { bool pass = true;
   msg = "GMP Test: ";
+  char str[128];
 
   MP_INT i1,i2,i3;
-  mpz_init_set_si( &i1, 1 );
   mpz_init_set_str( &i2, "2", 10 );
   mpz_init_set_si( &i3, -3 );
 
+  mpz_init_set_si( &i1, 0 );
+  if ( mpz_get_si( &i1 ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get 0 test.\n" ); pass = false; }
+  mpz_get_str( str, 10, &i1 );
+  if ( strcmp( str, "0" ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get 0 str test.\n" ); pass = false; }
+
+  mpz_init_set_si( &i1, 1 );
   if ( mpz_get_si( &i1 ) == 1 ) tc++; else
     { msg.append( "FAIL set/get 1 test.\n" ); pass = false; }
+  mpz_get_str( str, 10, &i1 );
+  if ( strcmp( str, "1" ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get 1 str test.\n" ); pass = false; }
 
   if ( mpz_get_si( &i2 ) == 2 ) tc++; else
     { msg.append( "FAIL set/get 2 test.\n" ); pass = false; }
 
   if ( mpz_get_si( &i3 ) == -3 ) tc++; else
     { msg.append( "FAIL set/get -3 test.\n" ); pass = false; }
+  mpz_get_str( str, 10, &i3 );
+  if ( strcmp( str, "-3" ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get -3 str test.\n" ); pass = false; }
 
   mpz_set_str( &i3, "4", 10 );
   if ( mpz_get_si( &i3 ) == 4 ) tc++; else
@@ -114,6 +128,9 @@ bool Tests::testGmp( QString &msg, qint32 &tc )
   mpz_mul_ui( &i2, &i1, 4 );
   if ( mpz_get_si( &i2 ) == 16 ) tc++; else
     { msg.append( "FAIL multiply 16 test.\n" ); pass = false; }
+  mpz_get_str( str, 10, &i2 );
+  if ( strcmp( str, "16" ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get 16 str test.\n" ); pass = false; }
 
   mpz_mul_ui( &i1, &i2, 16 );
   if ( mpz_get_si( &i1 ) == 256 ) tc++; else
@@ -122,6 +139,9 @@ bool Tests::testGmp( QString &msg, qint32 &tc )
   mpz_mul_ui( &i2, &i1, 256 );
   if ( mpz_get_si( &i2 ) == 65536 ) tc++; else
     { msg.append( "FAIL multiply 65536 test.\n" ); pass = false; }
+  mpz_get_str( str, 10, &i2 );
+  if ( strcmp( str, "65536" ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get 65536 str test.\n" ); pass = false; }
 
   mpz_sqrtrem ( &i1, &i3, &i2 );
   if ( mpz_get_si( &i1 ) == 256 ) tc++; else
@@ -143,54 +163,121 @@ bool Tests::testGmp( QString &msg, qint32 &tc )
   mpz_set_str( &i1, "333333333333333333333333333333333333333333333", 10 );
   if ( mpz_cmp( &i3, &i1 ) == 0 ) tc++; else
     { msg.append( "FAIL compare bignum test.\n" ); pass = false; }
+  mpz_get_str( str, 10, &i1 );
+  if ( strcmp( str, "333333333333333333333333333333333333333333333" ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get 333333333333333333333333333333333333333333333 str test.\n" ); pass = false; }
+
+  BsonSerial bcd;
+
+  mpz_set_str( &i1, "0", 10 );
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "0e" ) tc++; else
+    { msg.append( QString( "FAIL BCD conversion: 0 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "1", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "1e" ) tc++; else
-    { msg.append( QString( "FAIL BCD conversion: 1 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "1e" ) tc++; else
+    { msg.append( QString( "FAIL BCD conversion: 1 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "-2", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "2f" ) tc++; else
-    { msg.append( QString( "-2 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "2f" ) tc++; else
+    { msg.append( QString( "-2 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "33", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "33ed" ) tc++; else
-    { msg.append( QString( "33 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "33ed" ) tc++; else
+    { msg.append( QString( "33 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "-44", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "44fd" ) tc++; else
-    { msg.append( QString( "-44 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "44fd" ) tc++; else
+    { msg.append( QString( "-44 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "555", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "555e" ) tc++; else
-    { msg.append( QString( "555 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "555e" ) tc++; else
+    { msg.append( QString( "555 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "-666", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "666f" ) tc++; else
-    { msg.append( QString( "-666 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "666f" ) tc++; else
+    { msg.append( QString( "-666 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "7777", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "7777ed" ) tc++; else
-    { msg.append( QString( "7777 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "7777ed" ) tc++; else
+    { msg.append( QString( "7777 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "-8888", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "8888fd" ) tc++; else
-    { msg.append( QString( "-8888 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "8888fd" ) tc++; else
+    { msg.append( QString( "-8888 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "99999", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "99999e" ) tc++; else
-    { msg.append( QString( "99999 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "99999e" ) tc++; else
+    { msg.append( QString( "99999 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "-123456789", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "123456789f" ) tc++; else
-    { msg.append( QString( "-123456789 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "123456789f" ) tc++; else
+    { msg.append( QString( "-123456789 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
+  mpz_get_str( str, 10, &i1 );
+  if ( strcmp( str, "-123456789" ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get -123456789 str test.\n" ); pass = false; }
 
   mpz_set_str( &i1, "9876543210", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "9876543210ed" ) tc++; else
-    { msg.append( QString( "9876543210 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "9876543210ed" ) tc++; else
+    { msg.append( QString( "9876543210 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
 
   mpz_set_str( &i1, "987654321001234567899876543210012345678998765432100123456789", 10 );
-  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "987654321001234567899876543210012345678998765432100123456789ed" ) tc++; else
-    { msg.append( QString( "987654321001234567899876543210012345678998765432100123456789 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+  bcd = BlockValueMPZ::toBCD( i1 );
+  if ( bcd.toHex() == "987654321001234567899876543210012345678998765432100123456789ed" ) tc++; else
+    { msg.append( QString( "987654321001234567899876543210012345678998765432100123456789 -> %1\n" ).arg( QString::fromUtf8( bcd.toHex()) ) ); pass = false; }
+  BlockValueMPZ::fromBCD( bcd, &i2 );
+  if ( mpz_cmp( &i1, &i2 ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL to/from BCD test %1.\n" ).arg( QString::fromUtf8(bcd.toHex().data()) ) ); pass = false; }
+  mpz_get_str( str, 10, &i1 );
+  if ( strcmp( str, "987654321001234567899876543210012345678998765432100123456789" ) == 0 ) tc++; else
+    { msg.append( "FAIL set/get 987654321001234567899876543210012345678998765432100123456789 str test.\n" ); pass = false; }
 
   mpz_clear( &i1 );
   mpz_clear( &i2 );

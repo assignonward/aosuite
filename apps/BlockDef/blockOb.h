@@ -268,25 +268,25 @@ class BlockValueByteArray : public ValueBase
  */
 class BlockValueMPZ : public ValueBase
 { public:
-    explicit  BlockValueMPZ( QObject *parent = nullptr ) : ValueBase( parent ) {}
-              BlockValueMPZ( const MP_INT &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
-             ~BlockValueMPZ() {}
+    explicit  BlockValueMPZ( QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); }
+              BlockValueMPZ( const MP_INT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); set(v); }
+             ~BlockValueMPZ() { mpz_clear( &m_value ); }
       quint8  type()    const { return RDT_MPZ; }
 static  Utf8String  toStr( const MP_INT & );
 static  BsonSerial  toBCD( const MP_INT & );
+static  qint32 fromBCD( const BsonSerial &, mpz_t );
   BsonSerial  bsonish() const { return toBCD( value() ); }
   JsonSerial  json()    const { return toStr( value() ); }
-      qint32  setBsonish( const BsonSerial &b );
+      qint32  setBsonish( const BsonSerial &b ) { return fromBCD( b, &m_value ); }
         bool  setJson   ( const JsonSerial &j ) { (void)j; return false; } // TODO: fixme
       MP_INT  value()   const { return m_value; }
-        void  set( const MP_INT &v ) { m_value = v; }
+        void  set( const MP_INT &v ) { mpz_set( &m_value, &v ); }
         bool  operator==( const MP_INT &v ) const { (void)v; return false; } // v == value(); TODO: fixme
         bool  operator==( const BlockValueMPZ &v  ) const { (void)v;  return false; } // v.  value() == value(); }
   Utf8String  valueString() const { return "MPZ"; }
         bool  valueEqual( const ValueBase &v ) const { if ( v.type() != type() ) return false;
                                                        return false; // value() == ((BlockValueMPZ *)&v)->value();
                                                      }
-
       MP_INT  m_value;
 };
 
@@ -297,16 +297,16 @@ static  BsonSerial  toBCD( const MP_INT & );
  */
 class BlockValueMPQ : public ValueBase
 { public:
-    explicit  BlockValueMPQ( QObject *parent = nullptr ) : ValueBase( parent ) {}
-              BlockValueMPQ( const MP_RAT &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
-             ~BlockValueMPQ() {}
+    explicit  BlockValueMPQ( QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); }
+              BlockValueMPQ( const MP_RAT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); set(v); }
+             ~BlockValueMPQ() { mpq_clear( &m_value ); }
       quint8  type()    const { return RDT_MPQ; }
   BsonSerial  bsonish() const { return QByteArray(); } // TODO: fixme
   JsonSerial  json()    const { return QByteArray(); } // TODO: fixme
       qint32  setBsonish( const BsonSerial &b ) { (void)b; return -1; } // TODO: fixme
         bool  setJson   ( const JsonSerial &j ) { (void)j; return false; } // TODO: fixme
       MP_RAT  value()   const { return m_value; }
-        void  set( const MP_RAT &v ) { m_value = v; }
+        void  set( const MP_RAT &v ) { mpq_set( &m_value, &v ); }
         bool  operator==( const MP_RAT &v ) const { (void)v; return false; } // v == value(); }  TODO: fixme
         bool  operator==( const BlockValueMPQ &v  ) const { (void)v;  return false; } // v.  value() == value(); }
   Utf8String  valueString() const { return "MPQ"; }

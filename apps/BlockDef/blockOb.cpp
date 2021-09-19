@@ -129,6 +129,8 @@ qint32 BlockValueInt32::setBsonish( const BsonSerial &b )
  */
 Utf8String  BlockValueMPZ::toStr( const MP_INT &in )
 { size_t sz = mpz_sizeinbase( &in, 10 );
+  if ( sz > MAX_MPINT_LEN )
+    { qWarning( "oversized MP_INT %d digits", (int)sz ); return Utf8String( "" ); }
   char str[sz+2];
   mpz_get_str( str, 10, &in );
   return Utf8String( str );
@@ -137,16 +139,19 @@ Utf8String  BlockValueMPZ::toStr( const MP_INT &in )
   /**
  * @brief BlockValueMPZ::toBCD
  * @param in - signed integer to convert
- * @return BCD string, terminated with an E if positive or F if negative
+ * @return BCD string, terminated with an xE/ED if positive or xF/FD if negative, EC/FC if there is a problem
  */
 BsonSerial  BlockValueMPZ::toBCD( const MP_INT &in )
 { BsonSerial bcd;
   qint32 sz = mpz_sizeinbase( &in, 10 );
+  if ( sz > MAX_MPINT_LEN )
+    { qWarning( "oversized MP_INT %d digits", (int)sz ); return Utf8String( "" ); }
   char str[sz+2];
   mpz_get_str( str, 10, &in );
-  int len = strnlength( str, 256 );
+  int len = strnlength( str, MAX_MPINT_LEN );
   if ( len < 1 )
     { bcd.append( (quint8)0xEC ); // empty result, different from 0 which would be 0x0E
+      qWarning( "empty string returned from mpz_get_str" );
       return bcd;
     }
   int i = 0;
@@ -156,16 +161,27 @@ BsonSerial  BlockValueMPZ::toBCD( const MP_INT &in )
       i = 1;
       if ( len == 1 )
         { bcd.append( (quint8)0xFC ); // negative sign only result, different from -0 which would be 0x0F
+          qWarning( "lonely negative sign returned from mpz_get_str" );
           return bcd;
         }
     }
   while ( i < len )
     { if ( (i+1) < len )
-        { bcd.append( ((str[i]-'0') << 4) + (str[i+1]-'0') );
+        { if (( str[i] < '0' ) || ( str[i] > '9' ) || ( str[i+1] < '0' ) || ( str[i+1] > '9' ))
+            { qWarning( "unexpected character in mpz_get_str output" );
+              bcd.append( neg ? (quint8)0xFC : (quint8)0xEC );
+              return bcd;
+            }
+          bcd.append( ((str[i]-'0') << 4) + (str[i+1]-'0') );
           i += 2;
         }
        else
-        { bcd.append( ((str[i]-'0') << 4) + ( neg ? 0xF : 0xE ) );
+        { if (( str[i] < '0' ) || ( str[i] > '9' ))
+            { qWarning( "unexpected character in mpz_get_str output" );
+              bcd.append( neg ? (quint8)0xFC : (quint8)0xEC );
+              return bcd;
+            }
+          bcd.append( ((str[i]-'0') << 4) + ( neg ? 0xF : 0xE ) );
           return bcd;
         }
     }
@@ -173,9 +189,67 @@ BsonSerial  BlockValueMPZ::toBCD( const MP_INT &in )
   return bcd;
 }
 
-qint32   BlockValueMPZ::setBsonish( const BsonSerial &b )
-{ (void)b; return -1; } // TODO: fixme
-
+/**
+ * @brief BlockValueMPZ::fromBCD
+ * @param bcd - octet stream that starts with a BCD coded integer, as above in toBCD()
+ * @param in - (initialized) MP_INT to set the
+ * @return number of bytes read from bcd, or -1 if an error was encountered
+ */
+qint32 BlockValueMPZ::fromBCD( const BsonSerial &bcd, mpz_t in )
+{ if ( bcd.size() < 1 )
+    { qWarning( "fromBCD was passed an empty array" );
+      return 0;
+    }
+  quint8 secondNybble;
+  quint8 firstNybble = (bcd.at(0) & 0xF0) >> 4;
+  if ( firstNybble > 9 )
+    { qWarning( "fromBCD was passed a non-bcd first nybble %x", firstNybble );
+      return 0;
+    }
+  Utf8String iStr;
+  qint32 i = 0;
+  while ( i < MAX_MPINT_LEN )
+    {  firstNybble = (bcd.at(i) & 0xF0) >> 4;
+      secondNybble = (bcd.at(i) & 0x0F);
+      i++;
+      if ( firstNybble < 10 )
+        iStr.append( firstNybble + '0' );
+       else
+        { if (( firstNybble == 15 ) && ( secondNybble == 13 ))
+            { iStr.prepend( "-" );
+              mpz_set_str( in, iStr.data(), 10 );
+              return i;
+            }
+           else if (( firstNybble == 14 ) && ( secondNybble == 13 ))
+            { mpz_set_str( in, iStr.data(), 10 );
+              return i;
+            }
+           else
+            { qWarning( "Invalid first nybble passed to fromBCD %x", firstNybble );
+              return -1;
+            }
+        }
+      if ( secondNybble < 10 )
+        iStr.append( secondNybble + '0' );
+       else
+        { if ( secondNybble == 15 )
+            { iStr.prepend( "-" );
+              mpz_set_str( in, iStr.data(), 10 );
+              return i;
+            }
+           else if ( secondNybble == 14 )
+            { mpz_set_str( in, iStr.data(), 10 );
+              return i;
+            }
+           else
+            { qWarning( "Invalid first nybble passed to fromBCD %x", firstNybble );
+              return -1;
+            }
+        }
+    } // while ( i < MAX_MPINT_LEN )
+  qWarning( "fromBCD did not encounter a terminator within %d bytes", i );
+  return -1;
+}
 
 /**
  * @brief BlockValueRiceyCode::setBsonish
