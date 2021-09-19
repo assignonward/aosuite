@@ -123,6 +123,17 @@ qint32 BlockValueInt32::setBsonish( const BsonSerial &b )
 }
 
 /**
+ * @brief BlockValueMPZ::valueEqual
+ * @param v - generic block value
+ * @return true if v.value() is equal to this.value()
+ */
+bool BlockValueMPZ::valueEqual( const ValueBase &v ) const
+{ if ( v.type() != type() ) return false;
+  MP_INT v2 = (((BlockValueMPZ *)&v)->value());
+  return ( mpz_cmp( &m_value, &v2 ) == 0);
+}
+
+/**
  * @brief BlockValueMPZ::toStr
  * @param in - signed integer to convert
  * @return base 10 string, with negative sign prepended when needed

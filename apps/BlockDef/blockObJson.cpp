@@ -61,6 +61,29 @@ bool BlockValueInt32::setJson( const JsonSerial &j )
 }
 
 /**
+ * @brief BlockValueMPZ::setJson
+ * @param j - json representation of the big integer
+ * @return true if successful
+ */
+bool BlockValueMPZ::setJson( const JsonSerial &j )
+{ JsonSerial t = j.trimmed();
+  if ( t.size() < 3 )
+    { qWarning( "empty array passed to BlockValueInt32::setJson" ); return false; }
+  if ( t.at(0) != '"' )
+    { qWarning( "BlockValueMPZ::setJson expected to start with \"" ); return false; }
+  t = t.mid(1);
+  if ( t.at(t.size()-1) != '"' )
+    { qWarning( "BlockValueMPZ::setJsonexpected to end with \"" ); return false; }
+  t.chop(1);
+  t.append( (quint8)0 );
+
+  int ok = mpz_set_str( &m_value, t.data(), 10 );
+  if ( ok != 0 )
+    qWarning( "problem in converting json to MPZ MP_INT %s %s",j.data(),t.data() );
+  return ( ok == 0 );
+}
+
+/**
  * @brief BlockValueRiceyCode::setJson
  * @param j - ricey code in ASCII hexadecimal
  * @return true if conversion was successful

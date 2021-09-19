@@ -323,7 +323,7 @@
         {
             "name_s": "chainBlock_o",
             "text_s": "An Assign Onward Chain Block. With a signature_o which includes a timei, and the signature of the parent(s).",
-            "type_y": "A0CB00"
+            "type_y": "CB00"
         },
         {
             "name_s": "ExchAdvert_o",
@@ -361,49 +361,55 @@
             "code_s": "o",
             "name_s": "OBJECT",
             "text_s": "in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object",
-            "type_y": "0"
+            "type_y": "00"
         },
         {
             "code_s": "i",
             "name_s": "INT64",
             "text_s": "64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)",
-            "type_y": "1"
+            "type_y": "01"
         },
         {
             "code_s": "l",
             "name_s": "INT32",
             "text_s": "32 bit signed integer - json in an unquoted ASCII decimal string, bson as 4 bytes using void qToLittleEndian(qint32 src, uchar *dest)",
-            "type_y": "2"
+            "type_y": "02"
         },
         {
             "code_s": "n",
             "name_s": "MPZ",
             "text_s": "libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values",
-            "type_y": "3"
+            "type_y": "03"
         },
         {
             "code_s": "r",
             "name_s": "MPQ",
             "text_s": "libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP",
-            "type_y": "4"
+            "type_y": "04"
         },
         {
             "code_s": "y",
             "name_s": "RCODE",
             "text_s": "Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.",
-            "type_y": "5"
+            "type_y": "05"
         },
         {
             "code_s": "s",
             "name_s": "STRING",
             "text_s": "UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator",
-            "type_y": "6"
+            "type_y": "06"
         },
         {
             "code_s": "b",
             "name_s": "BYTEARRAY",
             "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
-            "type_y": "7"
+            "type_y": "07"
+        },
+        {
+            "code_s": "z",
+            "name_s": "NULL",
+            "text_s": "A null block value type, used as an error flag ",
+            "type_y": "0F"
         },
         {
             "code_s": "O",
@@ -454,12 +460,6 @@
             "type_y": "17"
         },
         {
-            "code_s": "z",
-            "name_s": "NULL",
-            "text_s": "A null block value type, used as an error flag ",
-            "type_y": "0F"
-        },
-        {
             "code_s": "*",
             "name_s": "ARRAY",
             "text_s": "this bit is always set in array types",
@@ -469,7 +469,7 @@
             "code_s": "*",
             "name_s": "TYPEMASK",
             "text_s": "used to get the contained value type out of an array type ",
-            "type_y": "F"
+            "type_y": "0F"
         },
         {
             "code_s": "*",

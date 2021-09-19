@@ -54,6 +54,7 @@ virtual     qint32  setBsonish( const BsonSerial & ) = 0;
          ValueBase *jsonValueByKey( RiceyInt, const QJsonValue &, QObject * );
 virtual       bool  setJson( const JsonSerial & ) = 0;
 virtual Utf8String  valueString() const = 0;
+           QString  valueStr() const { return QString::fromUtf8( valueString() ); }
 virtual       bool  valueEqual( const ValueBase & ) const = 0;
         QByteArray  bsonishNull( qint8 ) const;
 };
@@ -276,17 +277,16 @@ static  Utf8String  toStr( const MP_INT & );
 static  BsonSerial  toBCD( const MP_INT & );
 static  qint32 fromBCD( const BsonSerial &, mpz_t );
   BsonSerial  bsonish() const { return toBCD( value() ); }
-  JsonSerial  json()    const { return toStr( value() ); }
+  JsonSerial  json()    const { return "\""+toStr( value() )+"\""; }
       qint32  setBsonish( const BsonSerial &b ) { return fromBCD( b, &m_value ); }
-        bool  setJson   ( const JsonSerial &j ) { (void)j; return false; } // TODO: fixme
+        bool  setJson   ( const JsonSerial &j );
       MP_INT  value()   const { return m_value; }
         void  set( const MP_INT &v ) { mpz_set( &m_value, &v ); }
-        bool  operator==( const MP_INT &v ) const { (void)v; return false; } // v == value(); TODO: fixme
-        bool  operator==( const BlockValueMPZ &v  ) const { (void)v;  return false; } // v.  value() == value(); }
-  Utf8String  valueString() const { return "MPZ"; }
-        bool  valueEqual( const ValueBase &v ) const { if ( v.type() != type() ) return false;
-                                                       return false; // value() == ((BlockValueMPZ *)&v)->value();
-                                                     }
+        bool  operator==( const MP_INT &v ) const { return ( mpz_cmp( &m_value, &v ) == 0 ); } // v == value(); TODO: fixme
+        bool  operator==( const BlockValueMPZ &v  ) const { MP_INT v1 = v.value(); return ( mpz_cmp( &m_value, &v1 ) == 0 ); }
+  Utf8String  valueString() const { return toStr( m_value ); }
+        bool  valueEqual( const ValueBase &v ) const;
+
       MP_INT  m_value;
 };
 

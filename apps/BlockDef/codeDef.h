@@ -23,14 +23,15 @@
 #ifndef CODEDEF_H
 #define CODEDEF_H
 
-#define RDT_OBJECT          0x0 // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
-#define RDT_INT64           0x1 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
-#define RDT_INT32           0x2 // l - 32 bit signed integer - json in an unquoted ASCII decimal string, bson as 4 bytes using void qToLittleEndian(qint32 src, uchar *dest)
-#define RDT_MPZ             0x3 // n - libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values
-#define RDT_MPQ             0x4 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
-#define RDT_RCODE           0x5 // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
-#define RDT_STRING          0x6 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
-#define RDT_BYTEARRAY       0x7 // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
+#define RDT_OBJECT          0x00 // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
+#define RDT_INT64           0x01 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
+#define RDT_INT32           0x02 // l - 32 bit signed integer - json in an unquoted ASCII decimal string, bson as 4 bytes using void qToLittleEndian(qint32 src, uchar *dest)
+#define RDT_MPZ             0x03 // n - libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values
+#define RDT_MPQ             0x04 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
+#define RDT_RCODE           0x05 // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
+#define RDT_STRING          0x06 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
+#define RDT_BYTEARRAY       0x07 // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
+#define RDT_NULL            0x0F // z - A null block value type, used as an error flag 
 #define RDT_OBJECT_ARRAY    0x10 // O - array of zero or more objects encased in []
 #define RDT_INT64_ARRAY     0x11 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
 #define RDT_INT32_ARRAY     0x12 // L - array of zero or more 32 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
@@ -39,9 +40,8 @@
 #define RDT_RCODE_ARRAY     0x15 // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
 #define RDT_STRING_ARRAY    0x16 // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
 #define RDT_BYTEARRAY_ARRAY 0x17 // B - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-#define RDT_NULL            0x0F // z - A null block value type, used as an error flag 
 #define RDT_ARRAY           0x10 // * - this bit is always set in array types
-#define RDT_TYPEMASK        0xF // * - used to get the contained value type out of an array type 
+#define RDT_TYPEMASK        0x0F // * - used to get the contained value type out of an array type 
 #define RDT_OBTYPEMASK      0x1F // * - used to get the contained value type out of an object type
 
 #define RCD_ObTerm_o               0 // Object terminator, indicates no more items in the object in bsonish lists
@@ -108,7 +108,7 @@
 #define RCD_CfShares_n        534403 // The number of shares recorded in the Genesis block.
 #define RCD_CfCoins_n         534435 // The number of "coins" all the shares in this chain represent.
 #define RCD_CfRecFee_r        534404 // The number of coins per byte charged to record data on this chain (usually 1/a very large number).
-#define RCD_chainBlock_o      533888 // An Assign Onward Chain Block. With a signature_o which includes a timei, and the signature of the parent(s).
+#define RCD_chainBlock_o        9600 // An Assign Onward Chain Block. With a signature_o which includes a timei, and the signature of the parent(s).
 #define RCD_ExchAdvert_o      692224 // An exchange advertisement for cross chain exchange swaps (expressed in coins for coins)
 #define RCD_Proposal_o        692256 // A share swap proposal
 #define RCD_Offer_o           692288 // A share swap offer
