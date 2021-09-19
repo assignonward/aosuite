@@ -64,9 +64,9 @@ void  Tests::on_start_clicked()
   pass &= testInt64      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testRicey      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPZ        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+  pass &= testMPQ        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testString     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArray  ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
-  // TODO: MPZ & MPQ
   pass &= testObjectA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt32A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
@@ -495,7 +495,6 @@ bool Tests::testRicey( BlockValueRiceyCode &v, RiceyInt tv, qint32 &tc, QString 
   return pass;
 }
 
-
 bool Tests::testMPZ( QString &msg, qint32 &tc )
 { bool pass = true;
   msg = "MPZ Test: ";
@@ -507,6 +506,14 @@ bool Tests::testMPZ( QString &msg, qint32 &tc )
   mpz_init_set_str( &tv, "0", 10 );  pass &= testMPZ( v, tv, tc, msg );
   mpz_set_str( &tv,  "12345", 10 );  pass &= testMPZ( v, tv, tc, msg );
   mpz_set_str( &tv, "-54321", 10 );  pass &= testMPZ( v, tv, tc, msg );
+  mpz_set_str( &tv, "123456789009876543211234567890098765432112345678900987654321", 10 );
+                                     pass &= testMPZ( v, tv, tc, msg );
+  mpz_set_str( &tv, "-123456789009876543211234567890098765432112345678900987654321", 10 );
+                                     pass &= testMPZ( v, tv, tc, msg );
+  mpz_set_str( &tv, "1234567890098765432112345678900987654321123456789009876543210", 10 );
+                                     pass &= testMPZ( v, tv, tc, msg );
+  mpz_set_str( &tv, "-1234567890098765432112345678900987654321123456789009876543210", 10 );
+                                     pass &= testMPZ( v, tv, tc, msg );
 
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
@@ -550,12 +557,108 @@ bool Tests::testMPZ( BlockValueMPZ &v, const MP_INT &tv, qint32 &tc, QString &ms
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %4 %1 %2 %3\n" )
                      .arg(QString::fromUtf8(BlockValueMPZ::toStr(tv)))
-                     .arg(ok).arg( QString::fromUtf8(j.toHex()) )
+                     .arg(ok).arg( QString::fromUtf8(j) )
                      .arg( v.valueStr() ) ); pass = false; }
 
   return pass;
 }
 
+bool Tests::testMPQ( QString &msg, qint32 &tc )
+{ bool pass = true;
+  msg = "MPQ Test: ";
+  BlockValueMPQ v(this);
+  if ( v.type() == RDT_MPQ ) tc++; else
+    { msg.append( "FAIL type() test.\n" ); pass = false; }
+
+  MP_RAT tv;
+  mpq_init( &tv );
+  mpq_set_si( &tv,  1,  2 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv,  2,  1 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv,  0,  1 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv,  1,  1 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv, -1,  1 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv, -1,  2 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv, -2,  2 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv,  1, -2 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv,  6, -2 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv, -2, -4 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv,  2,  4 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv,  4,  2 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv, 12, 10 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  mpq_set_si( &tv, 10, 12 ); mpq_canonicalize( &tv ); pass &= testMPQ( v, tv, tc, msg );
+  MP_INT v1,v2;
+  mpz_init( &v1 );
+  mpz_init( &v2 );
+  mpz_set_str( &v1, "12345", 10 );
+  mpz_set_str( &v2, "54321", 10 );
+  mpq_set_num( &tv, &v1 );
+  mpq_set_den( &tv, &v2 );
+  mpq_canonicalize( &tv );
+  pass &= testMPQ( v, tv, tc, msg );
+  mpz_set_str( &v1, "12345678900987654321", 10 );
+  mpz_set_str( &v2, "01234567899876543210", 10 );
+  mpq_set_num( &tv, &v1 );
+  mpq_set_den( &tv, &v2 );
+  mpq_canonicalize( &tv );
+  pass &= testMPQ( v, tv, tc, msg );
+  mpz_set_str( &v1, "-123456789009876543211234567890098765432101234567899876543210", 10 );
+  mpz_set_str( &v2, "012345678998765432100123456789987654321001234567899876543210", 10 );
+  mpq_set_num( &tv, &v1 );
+  mpq_set_den( &tv, &v2 );
+  mpq_canonicalize( &tv );
+  pass &= testMPQ( v, tv, tc, msg );
+
+  mpz_clear( &v1 );
+  mpz_clear( &v2 );
+  mpq_clear( &tv );
+  if ( pass )
+    msg.append( QString("Pass %1 tests.").arg(tc) );
+
+  return pass;
+}
+
+bool Tests::testMPQ( BlockValueMPQ &v, const MP_RAT &tv, qint32 &tc, QString &msg )
+{ bool pass = true;
+  v.set( tv );
+  MP_RAT v1 = v.value();
+  if ( mpq_cmp( &v1, &tv ) == 0 ) tc++; else
+    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))) ); pass = false; }
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL value set/get == operator test %1\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))) ); pass = false; }
+
+  MP_RAT v2;
+  mpq_init( &v2 );
+  mpq_set_si( &v2, -5551212, 987654321 );
+  v.set( v2 );
+  v1 = v.value();
+  if ( mpq_cmp( &v1, &tv ) != 0 ) tc++; else
+    { msg.append( QString( "FAIL value set/get other test\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))) ); pass = false; }
+  if ( !( v == tv ) ) tc++; else
+    { msg.append( QString( "FAIL value set/get == operator other test %1\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))) ); pass = false; }
+
+  v.set( tv );
+  BsonSerial b = v.bsonish();
+  v.set( v2 );
+  v.setBsonish( b );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+
+  v.set( tv );
+  JsonSerial j = v.json();
+  v.set( v2 );
+  bool ok = v.setJson( j );
+  if ( ok && ( v == tv )) tc++; else
+    { msg.append( QString( "FAIL json encode/decode test %4 %1 %2 %3\n" )
+                     .arg(QString::fromUtf8(BlockValueMPQ::toStr(tv)))
+                     .arg(ok).arg( QString::fromUtf8(j) )
+                     .arg( v.valueStr() ) ); pass = false; }
+
+  return pass;
+}
 
 bool Tests::testString( QString &msg, qint32 &tc )
 { bool pass = true;

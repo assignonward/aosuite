@@ -46,6 +46,8 @@ public:
        bool  testInt64( BlockValueInt64 &, qint64, qint32 &, QString & );
        bool  testMPZ( QString &, qint32 & );
        bool  testMPZ( BlockValueMPZ &, const MP_INT &, qint32 &, QString & );
+       bool  testMPQ( QString &, qint32 & );
+       bool  testMPQ( BlockValueMPQ &, const MP_RAT &, qint32 &, QString & );
        bool  testRicey( QString &, qint32 & );
        bool  testRicey( BlockValueRiceyCode &, RiceyInt, qint32 &, QString & );
        bool  testString( QString &, qint32 & );

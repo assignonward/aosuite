@@ -282,7 +282,7 @@ static  qint32 fromBCD( const BsonSerial &, mpz_t );
         bool  setJson   ( const JsonSerial &j );
       MP_INT  value()   const { return m_value; }
         void  set( const MP_INT &v ) { mpz_set( &m_value, &v ); }
-        bool  operator==( const MP_INT &v ) const { return ( mpz_cmp( &m_value, &v ) == 0 ); } // v == value(); TODO: fixme
+        bool  operator==( const MP_INT &v ) const { return ( mpz_cmp( &m_value, &v ) == 0 ); }
         bool  operator==( const BlockValueMPZ &v  ) const { MP_INT v1 = v.value(); return ( mpz_cmp( &m_value, &v1 ) == 0 ); }
   Utf8String  valueString() const { return toStr( m_value ); }
         bool  valueEqual( const ValueBase &v ) const;
@@ -301,18 +301,17 @@ class BlockValueMPQ : public ValueBase
               BlockValueMPQ( const MP_RAT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); set(v); }
              ~BlockValueMPQ() { mpq_clear( &m_value ); }
       quint8  type()    const { return RDT_MPQ; }
-  BsonSerial  bsonish() const { return QByteArray(); } // TODO: fixme
-  JsonSerial  json()    const { return QByteArray(); } // TODO: fixme
-      qint32  setBsonish( const BsonSerial &b ) { (void)b; return -1; } // TODO: fixme
-        bool  setJson   ( const JsonSerial &j ) { (void)j; return false; } // TODO: fixme
+static  Utf8String  toStr( const MP_RAT & );
+  BsonSerial  bsonish() const;
+  JsonSerial  json()    const { return "\""+toStr( value() )+"\""; }
+      qint32  setBsonish( const BsonSerial &b );
+        bool  setJson   ( const JsonSerial &j );
       MP_RAT  value()   const { return m_value; }
         void  set( const MP_RAT &v ) { mpq_set( &m_value, &v ); }
-        bool  operator==( const MP_RAT &v ) const { (void)v; return false; } // v == value(); }  TODO: fixme
-        bool  operator==( const BlockValueMPQ &v  ) const { (void)v;  return false; } // v.  value() == value(); }
-  Utf8String  valueString() const { return "MPQ"; }
-        bool  valueEqual( const ValueBase &v ) const { if ( v.type() != type() ) return false;
-                                                       return false; // value() == ((BlockValueMPQ *)&v)->value();
-                                                     }
+        bool  operator==( const MP_RAT &v ) const { return ( mpq_cmp( &m_value, &v ) == 0 ); }
+        bool  operator==( const BlockValueMPQ &v  ) const { MP_RAT v1 = v.value(); return ( mpq_cmp( &m_value, &v1 ) == 0 ); }
+  Utf8String  valueString() const { return toStr( value() ); }
+        bool  valueEqual( const ValueBase &v ) const;
 
       MP_RAT  m_value;
 };

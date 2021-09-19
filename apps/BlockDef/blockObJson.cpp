@@ -68,7 +68,7 @@ bool BlockValueInt32::setJson( const JsonSerial &j )
 bool BlockValueMPZ::setJson( const JsonSerial &j )
 { JsonSerial t = j.trimmed();
   if ( t.size() < 3 )
-    { qWarning( "empty array passed to BlockValueInt32::setJson" ); return false; }
+    { qWarning( "empty array passed to BlockValueMPZ::setJson" ); return false; }
   if ( t.at(0) != '"' )
     { qWarning( "BlockValueMPZ::setJson expected to start with \"" ); return false; }
   t = t.mid(1);
@@ -81,6 +81,46 @@ bool BlockValueMPZ::setJson( const JsonSerial &j )
   if ( ok != 0 )
     qWarning( "problem in converting json to MPZ MP_INT %s %s",j.data(),t.data() );
   return ( ok == 0 );
+}
+
+/**
+ * @brief BlockValueMPQ::setJson
+ * @param j - json representation of two big integers
+ * @return true if successful
+ */
+bool BlockValueMPQ::setJson( const JsonSerial &j )
+{ JsonSerial t = j.trimmed();
+  if ( t.size() < 3 )
+    { qWarning( "empty array passed to BlockValueMPQ::setJson" ); return false; }
+  if ( t.at(0) != '"' )
+    { qWarning( "BlockValueMPQ::setJson expected to start with \"" ); return false; }
+  t = t.mid(1);
+  if ( t.at(t.size()-1) != '"' )
+    { qWarning( "BlockValueMPQ::setJsonexpected to end with \"" ); return false; }
+  t.chop(1);
+  t.append( (quint8)0 );
+  if ( ! (t.count( '/' ) == 1) )
+    { qWarning( "BlockValueMPQ::setJsonexpected to contain one and only /" ); return false; }
+  qint32 si = t.indexOf( '/' );
+  if (( si <= 0 ) || ( si >= (t.size() - 1) ))
+    { qWarning( "BlockValueMPQ::setJsonexpected to include numbers on either side of the /" ); return false; }
+  JsonSerial ns = t.mid( 0,si ); ns.append((quint8)0);
+  JsonSerial ds = t.mid(si+1);   ds.append((quint8)0);
+  // qWarning( "ns %s ds %s", ns.data(), ds.data() );
+  MP_INT n;
+  MP_INT d;
+  int ok;
+  ok = mpz_init_set_str( &n, ns.data(), 10 );
+  if ( ok != 0 )
+    { qWarning( "problem in converting numerator json to MPZ MP_INT %s",ns.data() ); return false; }
+  ok = mpz_init_set_str( &d, ds.data(), 10 );
+  if ( ok != 0 )
+    { qWarning( "problem in converting denominator json to MPZ MP_INT %s",ds.data() ); return false; }
+  mpq_set_num( &m_value, &n );
+  mpq_set_den( &m_value, &d );
+  mpz_clear( &n );
+  mpz_clear( &d );
+  return true;
 }
 
 /**

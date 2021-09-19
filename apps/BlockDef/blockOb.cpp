@@ -263,6 +263,78 @@ qint32 BlockValueMPZ::fromBCD( const BsonSerial &bcd, mpz_t in )
 }
 
 /**
+ * @brief BlockValueMPQ::valueEqual
+ * @param v - generic block value
+ * @return true if v.value() is equal to this.value()
+ */
+bool BlockValueMPQ::valueEqual( const ValueBase &v ) const
+{ if ( v.type() != type() ) return false;
+  MP_RAT v2 = (((BlockValueMPQ *)&v)->value());
+  return ( mpq_cmp( &m_value, &v2 ) == 0);
+}
+
+/**
+ * @brief BlockValueMPQ::toStr
+ * @param in - signed integer to convert
+ * @return base 10 strings separated with / with negative sign prepended when needed
+ */
+Utf8String  BlockValueMPQ::toStr( const MP_RAT &in )
+{ MP_INT n;
+  mpz_init( &n );
+  mpq_get_num( &n, &in );
+  Utf8String s = BlockValueMPZ::toStr( n ) + "/";
+  mpq_get_den( &n, &in );
+  s.append( BlockValueMPZ::toStr( n ) );
+  mpz_clear( &n );
+  return s;
+}
+
+/**
+ * @brief BlockValueMPQ::bsonish
+ * @return numerator followed by denominator both in sign terminated BCD
+ */
+BsonSerial  BlockValueMPQ::bsonish() const
+{ MP_INT n;
+  mpz_init( &n );
+  mpq_get_num( &n, &m_value );
+  BsonSerial b = BlockValueMPZ::toBCD( n );
+  mpq_get_den( &n, &m_value );
+  b.append( BlockValueMPZ::toBCD( n ) );
+  mpz_clear( &n );
+  return b;
+}
+
+/**
+ * @brief BlockValueMPQ::setBsonish
+ * @param b - bsonish stream which should have two sign terminated BCD numbers
+ * @return number of bytes read in total, or -1 if there was a problem
+ */
+qint32  BlockValueMPQ::setBsonish( const BsonSerial &b )
+{ MP_INT n;
+  mpz_init( &n );
+  qint32 len = BlockValueMPZ::fromBCD( b, &n );
+  if ( len < 1 )
+    { mpz_clear( &n );
+      qWarning( "problem reading BCD numerator in BlockValueMPQ::setBsonish()" );
+      return -1;
+    }
+  MP_INT d;
+  mpz_init( &d );
+  qint32 led = BlockValueMPZ::fromBCD( b.mid(len), &d );
+  if ( led < 1 )
+    { mpz_clear( &n );
+      mpz_clear( &d );
+      qWarning( "problem reading BCD denominator in BlockValueMPQ::setBsonish()" );
+      return -1;
+    }
+  mpq_set_num( &m_value, &n );
+  mpq_set_den( &m_value, &d );
+  mpz_clear( &n );
+  mpz_clear( &d );
+  return len + led;
+}
+
+/**
  * @brief BlockValueRiceyCode::setBsonish
  * @param b - ricey code in octets
  * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
