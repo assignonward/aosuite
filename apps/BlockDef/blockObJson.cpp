@@ -404,7 +404,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
 
       case JDT_STRING:
         vbo = newValue( k, parent );
-        if ( typ == RDT_STRING )
+        if (( typ == RDT_STRING ) || ( typ == RDT_MPZ ) || ( typ == RDT_MPQ ))
           vbo->setJson( "\""+jv.toString().toUtf8()+"\"" );
          else
           vbo->setJson(      jv.toString().toUtf8()      );

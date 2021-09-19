@@ -686,8 +686,8 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
         { case RDT_OBJECT:    if ( !(*((BlockValueObject    *)vt)          == *((BlockValueObject    *)vv)          ) ) return false; break;
           case RDT_INT64:     if (  ( ((BlockValueInt64     *)vt)->value() !=  ((BlockValueInt64     *)vv)->value() ) ) return false; break;
           case RDT_INT32:     if (  ( ((BlockValueInt32     *)vt)->value() !=  ((BlockValueInt32     *)vv)->value() ) ) return false; break;
-//        case RDT_MPZ:       if (  ( ((BlockValueMPZ       *)vt)->value() !=  ((BlockValueMPZ       *)vv)->value() ) ) return false; break;
-//        case RDT_MPQ:       if (  ( ((BlockValueMPQ       *)vt)->value() !=  ((BlockValueMPQ       *)vv)->value() ) ) return false; break;
+          case RDT_MPZ:       if ( !(*((BlockValueMPZ       *)vt)          ==  ((BlockValueMPZ       *)vv)->value() ) ) return false; break;
+          case RDT_MPQ:       if ( !(*((BlockValueMPQ       *)vt)          ==  ((BlockValueMPQ       *)vv)->value() ) ) return false; break;
           case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
           case RDT_STRING:    if (  ( ((BlockValueString    *)vt)->value() !=  ((BlockValueString    *)vv)->value() ) ) return false; break;
           case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;

@@ -1236,9 +1236,18 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
 
   BlockObjectMap tv;
   pass &= testObject( v, tv, tc, msg ); // Empty Object test
+  MP_INT v1,v2;
+  mpz_init_set_str( &v1, "12233344445555556666667777777888888888999999999", 10 );
+  mpz_init_set_str( &v2, "98877766665555544444433333333222222221111111110", 10 );
+  MP_RAT vr;
+  mpq_init( &vr );
+  mpq_set_num( &vr, &v1 );
+  mpq_set_den( &vr, &v2 );
 
   tv.insert( RCD_int64_i, new BlockValueInt64    (         -456789, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_int32_l, new BlockValueInt32    (           70000, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_mpz_n  , new BlockValueMPZ      (              v1, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_mpq_r  , new BlockValueMPQ      (              vr, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_type_y , new BlockValueRiceyCode(   RCD_PcolA00_y, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );  pass &= testObject( v, tv, tc, msg );
@@ -1261,6 +1270,9 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tv.insert( RCD_stringArray_S, new BlockArrayString( RCD_stringArray_S, tau8, this ) ); pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_byteArrayArray_B, new BlockArrayByteArray( RCD_byteArrayArray_B, tau8, this ) ); pass &= testObject( v, tv, tc, msg );
 
+  mpz_clear( &v1 );
+  mpz_clear( &v2 );
+  mpq_clear( &vr );
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
 
