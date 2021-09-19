@@ -60,3 +60,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     CodeForm.qrc
+
+LIBS           += -L/usr/local/lib/ -lgmp
+INCLUDEPATH    += /usr/local/include
+DEPENDPATH     += /usr/local/include
+PRE_TARGETDEPS += /usr/local/lib/libgmp.a

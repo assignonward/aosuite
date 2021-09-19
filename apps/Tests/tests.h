@@ -39,6 +39,7 @@ public:
             ~Tests();
        void  liveDelay( int t );
        bool  testDict( QString &, qint32 & );
+       bool  testGmp( QString &, qint32 & );
        bool  testInt32( QString &, qint32 & );
        bool  testInt32( BlockValueInt32 &, qint32, qint32 &, QString & );
        bool  testInt64( QString &, qint32 & );

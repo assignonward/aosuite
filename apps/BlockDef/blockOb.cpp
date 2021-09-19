@@ -22,6 +22,12 @@
  */
 #include "blockOb.h"
 #include <QTextCodec>
+#include <string.h>
+
+size_t strnlength (const char* s, size_t n)
+{ const char *found = (char *)memchr(s, '\0', n);
+  return found ? (size_t)(found-s) : n;
+}
 
     Dictionary  dict;        // Single dictionary for the application
 BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
@@ -105,7 +111,7 @@ qint32 BlockValueInt64::setBsonish( const BsonSerial &b )
 /**
  * @brief BlockValueInt32::setBsonish
  * @param b - byte array which starts with 8 bytes of LittleEndian encoded integer
- * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
+ * @return number of bytes conve2rted from the BsonSerial stream, -1 if there was a problem
  */
 qint32 BlockValueInt32::setBsonish( const BsonSerial &b )
 { if ( b.size() < 4 )
@@ -115,6 +121,61 @@ qint32 BlockValueInt32::setBsonish( const BsonSerial &b )
   s >> m_value;
   return 4;
 }
+
+/**
+ * @brief BlockValueMPZ::toStr
+ * @param in - signed integer to convert
+ * @return base 10 string, with negative sign prepended when needed
+ */
+Utf8String  BlockValueMPZ::toStr( const MP_INT &in )
+{ size_t sz = mpz_sizeinbase( &in, 10 );
+  char str[sz+2];
+  mpz_get_str( str, 10, &in );
+  return Utf8String( str );
+}
+
+  /**
+ * @brief BlockValueMPZ::toBCD
+ * @param in - signed integer to convert
+ * @return BCD string, terminated with an E if positive or F if negative
+ */
+BsonSerial  BlockValueMPZ::toBCD( const MP_INT &in )
+{ BsonSerial bcd;
+  qint32 sz = mpz_sizeinbase( &in, 10 );
+  char str[sz+2];
+  mpz_get_str( str, 10, &in );
+  int len = strnlength( str, 256 );
+  if ( len < 1 )
+    { bcd.append( (quint8)0xEC ); // empty result, different from 0 which would be 0x0E
+      return bcd;
+    }
+  int i = 0;
+  bool neg = false;
+  if ( str[0] == '-' )
+    { neg = true;
+      i = 1;
+      if ( len == 1 )
+        { bcd.append( (quint8)0xFC ); // negative sign only result, different from -0 which would be 0x0F
+          return bcd;
+        }
+    }
+  while ( i < len )
+    { if ( (i+1) < len )
+        { bcd.append( ((str[i]-'0') << 4) + (str[i+1]-'0') );
+          i += 2;
+        }
+       else
+        { bcd.append( ((str[i]-'0') << 4) + ( neg ? 0xF : 0xE ) );
+          return bcd;
+        }
+    }
+  bcd.append( ( neg ? 0xFD : 0xED ) );
+  return bcd;
+}
+
+qint32   BlockValueMPZ::setBsonish( const BsonSerial &b )
+{ (void)b; return -1; } // TODO: fixme
+
 
 /**
  * @brief BlockValueRiceyCode::setBsonish

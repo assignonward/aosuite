@@ -58,6 +58,7 @@ void  Tests::on_start_clicked()
   qint32 count = 0;
   qint32 tc = 0;
   QString msg;
+  pass &= testGmp        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testDict       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt32      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
@@ -78,6 +79,126 @@ void  Tests::on_start_clicked()
     ui->report->append( QString( "\nPassed all %1 tests" ).arg( count ) );
    else
     ui->report->append( "FAILED one or more tests" );
+}
+
+bool Tests::testGmp( QString &msg, qint32 &tc )
+{ bool pass = true;
+  msg = "GMP Test: ";
+
+  MP_INT i1,i2,i3;
+  mpz_init_set_si( &i1, 1 );
+  mpz_init_set_str( &i2, "2", 10 );
+  mpz_init_set_si( &i3, -3 );
+
+  if ( mpz_get_si( &i1 ) == 1 ) tc++; else
+    { msg.append( "FAIL set/get 1 test.\n" ); pass = false; }
+
+  if ( mpz_get_si( &i2 ) == 2 ) tc++; else
+    { msg.append( "FAIL set/get 2 test.\n" ); pass = false; }
+
+  if ( mpz_get_si( &i3 ) == -3 ) tc++; else
+    { msg.append( "FAIL set/get -3 test.\n" ); pass = false; }
+
+  mpz_set_str( &i3, "4", 10 );
+  if ( mpz_get_si( &i3 ) == 4 ) tc++; else
+    { msg.append( "FAIL set/get 4 test.\n" ); pass = false; }
+
+  mpz_set_str( &i3, "-5", 10 );
+  if ( mpz_get_si( &i3 ) == -5 ) tc++; else
+    { msg.append( "FAIL set/get -5 test.\n" ); pass = false; }
+
+  mpz_mul_ui( &i1, &i2, 2 );
+  if ( mpz_get_si( &i1 ) == 4 ) tc++; else
+    { msg.append( "FAIL multiply 4 test.\n" ); pass = false; }
+
+  mpz_mul_ui( &i2, &i1, 4 );
+  if ( mpz_get_si( &i2 ) == 16 ) tc++; else
+    { msg.append( "FAIL multiply 16 test.\n" ); pass = false; }
+
+  mpz_mul_ui( &i1, &i2, 16 );
+  if ( mpz_get_si( &i1 ) == 256 ) tc++; else
+    { msg.append( "FAIL multiply 256 test.\n" ); pass = false; }
+
+  mpz_mul_ui( &i2, &i1, 256 );
+  if ( mpz_get_si( &i2 ) == 65536 ) tc++; else
+    { msg.append( "FAIL multiply 65536 test.\n" ); pass = false; }
+
+  mpz_sqrtrem ( &i1, &i3, &i2 );
+  if ( mpz_get_si( &i1 ) == 256 ) tc++; else
+    { msg.append( "FAIL sqrt 256 test.\n" ); pass = false; }
+  if ( mpz_get_si( &i3 ) == 0 ) tc++; else
+    { msg.append( "FAIL sqrt remainder 0 test.\n" ); pass = false; }
+
+  mpz_init_set_si( &i3, 65536 );
+  if ( mpz_cmp( &i1, &i2 ) < 0 ) tc++; else
+    { msg.append( "FAIL compare less test.\n" ); pass = false; }
+  if ( mpz_cmp( &i3, &i1 ) > 0 ) tc++; else
+    { msg.append( "FAIL compare more test.\n" ); pass = false; }
+  if ( mpz_cmp( &i3, &i2 ) == 0 ) tc++; else
+    { msg.append( "FAIL compare equal test.\n" ); pass = false; }
+
+  mpz_set_str( &i1, "111111111111111111111111111111111111111111111", 10 );
+  mpz_set_str( &i2, "222222222222222222222222222222222222222222222", 10 );
+  mpz_add( &i3, &i1, &i2 );
+  mpz_set_str( &i1, "333333333333333333333333333333333333333333333", 10 );
+  if ( mpz_cmp( &i3, &i1 ) == 0 ) tc++; else
+    { msg.append( "FAIL compare bignum test.\n" ); pass = false; }
+
+  mpz_set_str( &i1, "1", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "1e" ) tc++; else
+    { msg.append( QString( "FAIL BCD conversion: 1 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "-2", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "2f" ) tc++; else
+    { msg.append( QString( "-2 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "33", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "33ed" ) tc++; else
+    { msg.append( QString( "33 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "-44", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "44fd" ) tc++; else
+    { msg.append( QString( "-44 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "555", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "555e" ) tc++; else
+    { msg.append( QString( "555 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "-666", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "666f" ) tc++; else
+    { msg.append( QString( "-666 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "7777", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "7777ed" ) tc++; else
+    { msg.append( QString( "7777 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "-8888", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "8888fd" ) tc++; else
+    { msg.append( QString( "-8888 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "99999", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "99999e" ) tc++; else
+    { msg.append( QString( "99999 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "-123456789", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "123456789f" ) tc++; else
+    { msg.append( QString( "-123456789 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "9876543210", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "9876543210ed" ) tc++; else
+    { msg.append( QString( "9876543210 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_set_str( &i1, "987654321001234567899876543210012345678998765432100123456789", 10 );
+  if ( BlockValueMPZ::toBCD( i1 ).toHex() == "987654321001234567899876543210012345678998765432100123456789ed" ) tc++; else
+    { msg.append( QString( "987654321001234567899876543210012345678998765432100123456789 -> %1\n" ).arg( QString::fromUtf8( BlockValueMPZ::toBCD( i1 ).toHex()) ) ); pass = false; }
+
+  mpz_clear( &i1 );
+  mpz_clear( &i2 );
+  mpz_clear( &i3 );
+
+  if ( pass )
+    msg.append( QString("Pass %1 functional tests.").arg(tc) );
+  return true;
 }
 
 bool Tests::testDict( QString &msg, qint32 &tc )

@@ -272,9 +272,11 @@ class BlockValueMPZ : public ValueBase
               BlockValueMPZ( const MP_INT &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
              ~BlockValueMPZ() {}
       quint8  type()    const { return RDT_MPZ; }
-  BsonSerial  bsonish() const { return QByteArray(); } // TODO: fixme
-  JsonSerial  json()    const { return QByteArray(); } // TODO: fixme
-      qint32  setBsonish( const BsonSerial &b ) { (void)b; return -1; } // TODO: fixme
+static  Utf8String  toStr( const MP_INT & );
+static  BsonSerial  toBCD( const MP_INT & );
+  BsonSerial  bsonish() const { return toBCD( value() ); }
+  JsonSerial  json()    const { return toStr( value() ); }
+      qint32  setBsonish( const BsonSerial &b );
         bool  setJson   ( const JsonSerial &j ) { (void)j; return false; } // TODO: fixme
       MP_INT  value()   const { return m_value; }
         void  set( const MP_INT &v ) { m_value = v; }
