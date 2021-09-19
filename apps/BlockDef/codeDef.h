@@ -31,17 +31,17 @@
 #define RDT_RCODE           0x5 // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
 #define RDT_STRING          0x6 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
 #define RDT_BYTEARRAY       0x7 // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-#define RDT_OBJECT_ARRAY    0x8 // O - array of zero or more objects encased in []
-#define RDT_INT64_ARRAY     0x9 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
-#define RDT_INT32_ARRAY     0xA // L - array of zero or more 32 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
-#define RDT_MPZ_ARRAY       0xB // N - array of zero or more libGMP signed integers stored as described above
-#define RDT_MPQ_ARRAY       0xC // R - array of zero or more libGMP rational fractions stored as described above
-#define RDT_RCODE_ARRAY     0xD // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
-#define RDT_STRING_ARRAY    0xE // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
-#define RDT_BYTEARRAY_ARRAY 0xF // B - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-#define RDT_NULL            0x10 // z - A null block value type, used as an error flag 
-#define RDT_ARRAY           0x8 // * - this bit is always set in array types
-#define RDT_TYPEMASK        0x7 // * - used to get the contained value type out of an array type 
+#define RDT_OBJECT_ARRAY    0x10 // O - array of zero or more objects encased in []
+#define RDT_INT64_ARRAY     0x11 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
+#define RDT_INT32_ARRAY     0x12 // L - array of zero or more 32 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
+#define RDT_MPZ_ARRAY       0x13 // N - array of zero or more libGMP signed integers stored as described above
+#define RDT_MPQ_ARRAY       0x14 // R - array of zero or more libGMP rational fractions stored as described above
+#define RDT_RCODE_ARRAY     0x15 // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
+#define RDT_STRING_ARRAY    0x16 // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
+#define RDT_BYTEARRAY_ARRAY 0x17 // B - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
+#define RDT_NULL            0x0F // z - A null block value type, used as an error flag 
+#define RDT_ARRAY           0x10 // * - this bit is always set in array types
+#define RDT_TYPEMASK        0xF // * - used to get the contained value type out of an array type 
 #define RDT_OBTYPEMASK      0x1F // * - used to get the contained value type out of an object type
 
 #define RCD_ObTerm_o               0 // Object terminator, indicates no more items in the object in bsonish lists
@@ -54,14 +54,14 @@
 #define RCD_name_s                38 // Name as a string, use depends on context, often a key name
 #define RCD_code_s               102 // Code as a string, use depends on context, often a key type
 #define RCD_data_b                 7 // Generic data block, use determined by the object which contains it.
-#define RCD_objectArray_O          8 // A generic array of object elements
-#define RCD_int64Array_I           9 // A generic array of int64 elements
-#define RCD_int32Array_L          10 // A generic array of int32 elements
-#define RCD_mpzArray_N            11 // A generic array of MPZ elements
-#define RCD_mpqArray_R            12 // A generic array of MPQ elements
-#define RCD_riceyArray_Y          13 // A generic array of Ricey elements
-#define RCD_stringArray_S         14 // A generic array of string elements
-#define RCD_byteArrayArray_B      15 // A generic array of byte array elementschainBlock_o 0xA000 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.
+#define RCD_objectArray_O         16 // A generic array of object elements
+#define RCD_int64Array_I          17 // A generic array of int64 elements
+#define RCD_int32Array_L          18 // A generic array of int32 elements
+#define RCD_mpzArray_N            19 // A generic array of MPZ elements
+#define RCD_mpqArray_R            20 // A generic array of MPQ elements
+#define RCD_riceyArray_Y          21 // A generic array of Ricey elements
+#define RCD_stringArray_S         22 // A generic array of string elements
+#define RCD_byteArrayArray_B      23 // A generic array of byte array elementschainBlock_o 0xA000 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.
 #define RCD_signedBlock_o         96 // A Signed Block in the chain always contains a parentSignature_O a time_i of when the block was signed, the signature_O is found in the object which contains the signedBlock_O.
 #define RCD_parentSignature_o     64 // Contains a copy of the signature_O of one or more (more in the case of merging forked chains) parent blocks.
 #define RCD_signature_o           32 // Hash object, only found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
@@ -73,17 +73,17 @@
 #define RCD_SHA3b512_y          4261 // algorithm ID (algor) for SHA3 - 512
 #define RCD_jpg_y               2085 // Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_png_y               2117 // Found in image objects, tells what format the data_b is to be interpreted as
-#define RCD_riceyTypes_O       10248 // An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
-#define RCD_riceyCodes_O       10280 // An array object which contains the description, name and ricey code for each defined ricey code in the system.
+#define RCD_riceyTypes_O       10256 // An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
+#define RCD_riceyCodes_O       10288 // An array object which contains the description, name and ricey code for each defined ricey code in the system.
 #define RCD_PcolTA01_y        600069 // Test protocol, symbol: TⒶ2021.9.7
 #define RCD_PcolTA02_y        600101 // Test protocol, symbol: TⒶ2021.10.13
 #define RCD_PcolA00_y         616453 // Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
 #define RCD_PcolA01_y         616485 // Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
 #define RCD_ProtocolId_y      529093 // An Assign Onward Protocol identifier.
-#define RCD_ProtocolDef_O     529096 // An Assign Onward Protocol Definition - overall, defines an array of containers and contents 
-#define RCD_RequiredItems_Y     9869 // Items that must appear in a container (to fulfill the protocol requirements)
-#define RCD_OptionalItems_Y     9901 // Items that may optionally appear in a container, do not violate protocol if they are missing.
-#define RCD_RangeBounds_O       9864 // Boundaries for valid values
+#define RCD_ProtocolDef_O     529104 // An Assign Onward Protocol Definition - overall, defines an array of containers and contents 
+#define RCD_RequiredItems_Y     9877 // Items that must appear in a container (to fulfill the protocol requirements)
+#define RCD_OptionalItems_Y     9909 // Items that may optionally appear in a container, do not violate protocol if they are missing.
+#define RCD_RangeBounds_O       9872 // Boundaries for valid values
 #define RCD_min_i                 65 // Used in range boundaries
 #define RCD_min_l                 66 // Used in range boundaries
 #define RCD_min_n                 67 // Used in range boundaries
@@ -92,8 +92,8 @@
 #define RCD_max_l                 98 // Used in range boundaries
 #define RCD_max_n                 99 // Used in range boundaries
 #define RCD_max_r                100 // Used in range boundaries
-#define RCD_enum_Y                77 // Used to define available choices
-#define RCD_enum_S                78 // Used to define available choices
+#define RCD_enum_Y                85 // Used to define available choices
+#define RCD_enum_S                86 // Used to define available choices
 #define RCD_GenesisBlock_o    530432 // An Assign Onward Genesis Block. With a signature_o which includes a timei, and other definitions for the chain.
 #define RCD_ChainDesc_o       534144 // Chain Description, generally only found in the Genesis Block - descriptive items like name, symbol, number of coins represented by all shares, etc.
 #define RCD_ChainFunc_o       534400 // Chain Functional items description, generally only found in the Genesis Block - functional items like number of shares, expiration rates, recording fees, etc.
@@ -114,7 +114,7 @@
 #define RCD_Offer_o           692288 // A share swap offer
 #define RCD_Acceptance_o      692320 // A share swap acceptance of offer
 #define RCD_Cancellation_o    694144 // A share swap notice of cancellation (for cause, usually time expiration)
-#define RCD_Identity_o          4240 // A cross chain identity, may be tied to share ownership but carries its own key pair
+#define RCD_Identity_o          4224 // A cross chain identity, may be tied to share ownership but carries its own key pair
 
 
 #endif // CODEDEF_H

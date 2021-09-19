@@ -277,16 +277,17 @@ void MainWindow::firstPass()
         { v.append( QString( "WARN: short line '%1' in Ricey Code Definitions.\n" ).arg( line ) );
         }
     }
+  bool ok;
   foreach ( QString line, notesList )
     { QStringList words = line.split(" ",QString::SkipEmptyParts);
       if ( words.size() > 3 )
         { if ( words.at(1).startsWith( "0x" ) )
             { if (( words.at(1).size() > 2 ) && ( words.at(1).size() < 5 ))
                 { if ( words.at(3).size() == 1 )
-                    { if ( notesNumChar.contains( words.at(1).at(2) ) )
+                    { if ( notesNumChar.contains( words.at(1).toInt(&ok,16) & RDT_OBTYPEMASK ) )
                         notesExtraChar.insert( words.at(1).at(2), words.at(3).at(0) );
                        else
-                        notesNumChar.insert( words.at(1).at(2), words.at(3).at(0) );
+                        notesNumChar.insert( words.at(1).toInt(&ok,16) & RDT_OBTYPEMASK, words.at(3).at(0) );
                     } else { v.append( QString( "WARN: 4th word in Code Notes '%1' isn't length 1.\n" ).arg( line ) ); }
                 } else { v.append( QString( "WARN: 2nd word in Code Notes '%1' isn't length 2 or 3.\n" ).arg( line ) ); }
             } else { v.append( QString( "WARN: 2nd word in Code Notes '%1' doesn't start with 0x.\n" ).arg( line ) ); }
@@ -346,12 +347,13 @@ bool MainWindow::rulesCheck( QString name, QString num )
     { v.append( QString( "rulesCheck: num '%1' does not start with 0x.\n" ).arg( num ) );
       return false;
     }
-  QChar numlc = num.at( num.size() - 1 );
+  bool ok;
+  qint32 numlc = num.toInt(&ok,16) & RDT_OBTYPEMASK;
   if ( !notesNumChar.keys().contains( numlc ) )
     { v.append( QString( "rulesCheck: num '%1' does not end with a recognized code.\n" ).arg( num ) );
       return false;
     }
-  QChar namelc = name.at( name.size() - 1 );
+  QChar namelc = name.at(name.size()-1);
   if ( notesNumChar[numlc] != namelc ) // A kind of post-fix Hungarian notation to make the json/bson strictly typed
     { v.append( QString( "rulesCheck: name '%1' does not end with the expected character %2.\n" ).arg( name ).arg( notesNumChar[numlc] ) );
       return false;
@@ -361,8 +363,8 @@ bool MainWindow::rulesCheck( QString name, QString num )
     { v.append( QString( "rulesCheck: '%1' does not translate as bytes of hex code.\n" ).arg( num ) );
       return false;
     }
-  if ( ba.size() > 7 )
-    { v.append( QString( "rulesCheck: '%1' too long for an AO Rice Code (%2 bytes, max is 7).\n" ).arg( num ).arg( ba.size() ) );
+  if ( ba.size() > MAX_RICEY_LEN )
+    { v.append( QString( "rulesCheck: '%1' too long for an AO Rice Code (%2 bytes, max is %3).\n" ).arg( num ).arg( ba.size() ).arg( MAX_RICEY_LEN ) );
       return false;
     }
   if ( !validRicey( ba ) )

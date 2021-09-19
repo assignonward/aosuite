@@ -53,42 +53,42 @@
         {
             "name_s": "objectArray_O",
             "text_s": "A generic array of object elements",
-            "type_y": "08"
+            "type_y": "10"
         },
         {
             "name_s": "int64Array_I",
             "text_s": "A generic array of int64 elements",
-            "type_y": "09"
+            "type_y": "11"
         },
         {
             "name_s": "int32Array_L",
             "text_s": "A generic array of int32 elements",
-            "type_y": "0A"
+            "type_y": "12"
         },
         {
             "name_s": "mpzArray_N",
             "text_s": "A generic array of MPZ elements",
-            "type_y": "0B"
+            "type_y": "13"
         },
         {
             "name_s": "mpqArray_R",
             "text_s": "A generic array of MPQ elements",
-            "type_y": "0C"
+            "type_y": "14"
         },
         {
             "name_s": "riceyArray_Y",
             "text_s": "A generic array of Ricey elements",
-            "type_y": "0D"
+            "type_y": "15"
         },
         {
             "name_s": "stringArray_S",
             "text_s": "A generic array of string elements",
-            "type_y": "0E"
+            "type_y": "16"
         },
         {
             "name_s": "byteArrayArray_B",
             "text_s": "A generic array of byte array elementschainBlock_o 0xA000 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.",
-            "type_y": "0F"
+            "type_y": "17"
         },
         {
             "name_s": "signedBlock_o",
@@ -148,12 +148,12 @@
         {
             "name_s": "riceyTypes_O",
             "text_s": "An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.",
-            "type_y": "D008"
+            "type_y": "D010"
         },
         {
             "name_s": "riceyCodes_O",
             "text_s": "An array object which contains the description, name and ricey code for each defined ricey code in the system.",
-            "type_y": "D028"
+            "type_y": "D030"
         },
         {
             "name_s": "PcolTA01_y",
@@ -183,22 +183,22 @@
         {
             "name_s": "ProtocolDef_O",
             "text_s": "An Assign Onward Protocol Definition - overall, defines an array of containers and contents ",
-            "type_y": "A0A548"
+            "type_y": "A0A550"
         },
         {
             "name_s": "RequiredItems_Y",
             "text_s": "Items that must appear in a container (to fulfill the protocol requirements)",
-            "type_y": "CD0D"
+            "type_y": "CD15"
         },
         {
             "name_s": "OptionalItems_Y",
             "text_s": "Items that may optionally appear in a container, do not violate protocol if they are missing.",
-            "type_y": "CD2D"
+            "type_y": "CD35"
         },
         {
             "name_s": "RangeBounds_O",
             "text_s": "Boundaries for valid values",
-            "type_y": "CD08"
+            "type_y": "CD10"
         },
         {
             "name_s": "min_i",
@@ -243,12 +243,12 @@
         {
             "name_s": "enum_Y",
             "text_s": "Used to define available choices",
-            "type_y": "4D"
+            "type_y": "55"
         },
         {
             "name_s": "enum_S",
             "text_s": "Used to define available choices",
-            "type_y": "4E"
+            "type_y": "56"
         },
         {
             "name_s": "GenesisBlock_o",
@@ -353,7 +353,7 @@
         {
             "name_s": "Identity_o",
             "text_s": "A cross chain identity, may be tied to share ownership but carries its own key pair",
-            "type_y": "A110"
+            "type_y": "A100"
         }
     ],
     "riceyTypes_O": [
@@ -409,67 +409,67 @@
             "code_s": "O",
             "name_s": "OBJECT_ARRAY",
             "text_s": "array of zero or more objects encased in []",
-            "type_y": "8"
+            "type_y": "10"
         },
         {
             "code_s": "I",
             "name_s": "INT64_ARRAY",
             "text_s": "array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson",
-            "type_y": "9"
+            "type_y": "11"
         },
         {
             "code_s": "L",
             "name_s": "INT32_ARRAY",
             "text_s": "array of zero or more 32 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson",
-            "type_y": "A"
+            "type_y": "12"
         },
         {
             "code_s": "N",
             "name_s": "MPZ_ARRAY",
             "text_s": "array of zero or more libGMP signed integers stored as described above",
-            "type_y": "B"
+            "type_y": "13"
         },
         {
             "code_s": "R",
             "name_s": "MPQ_ARRAY",
             "text_s": "array of zero or more libGMP rational fractions stored as described above",
-            "type_y": "C"
+            "type_y": "14"
         },
         {
             "code_s": "Y",
             "name_s": "RCODE_ARRAY",
             "text_s": "array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson",
-            "type_y": "D"
+            "type_y": "15"
         },
         {
             "code_s": "S",
             "name_s": "STRING_ARRAY",
             "text_s": "array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator",
-            "type_y": "E"
+            "type_y": "16"
         },
         {
             "code_s": "B",
             "name_s": "BYTEARRAY_ARRAY",
             "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
-            "type_y": "F"
+            "type_y": "17"
         },
         {
             "code_s": "z",
             "name_s": "NULL",
             "text_s": "A null block value type, used as an error flag ",
-            "type_y": "10"
+            "type_y": "0F"
         },
         {
             "code_s": "*",
             "name_s": "ARRAY",
             "text_s": "this bit is always set in array types",
-            "type_y": "8"
+            "type_y": "10"
         },
         {
             "code_s": "*",
             "name_s": "TYPEMASK",
             "text_s": "used to get the contained value type out of an array type ",
-            "type_y": "7"
+            "type_y": "F"
         },
         {
             "code_s": "*",

@@ -67,7 +67,7 @@ public:
              qint32  maxNumLength;
         QStringList  riceyList,notesList;
      QList<RiceyInt> riceyInts;
- QHash<QChar, QChar> notesNumChar;
+ QHash<qint32, QChar> notesNumChar;
  QHash<QChar, QChar> notesExtraChar;
 
 private:
