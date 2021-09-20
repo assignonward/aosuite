@@ -1064,31 +1064,21 @@ bool Tests::testMPQA( QString &msg, qint32 &tc )
     { msg.append( "FAIL type() test.\n" ); pass = false; }
 
   QList<MP_RAT> tv;
-                                   pass &= testMPQA( v, tv, tc, msg ); // Empty Array test
-  /*
-  tv.append(                  0 ); pass &= testInt64A( v, tv, tc, msg );
-  tv.append(                  1 ); pass &= testInt64A( v, tv, tc, msg );
-  tv.append(                 -1 ); pass &= testInt64A( v, tv, tc, msg );
-  tv.append(              70000 ); pass &= testInt64A( v, tv, tc, msg );
-  tv.append(             -70000 ); pass &= testInt64A( v, tv, tc, msg );
-  tv.append(         5123456789 ); pass &= testInt64A( v, tv, tc, msg );
-  tv.append(        -5123456789 ); pass &= testInt64A( v, tv, tc, msg );
-  for ( qint64 i = 4500000000000000; i <= 4500000000001000; i++ )
-    { tv.append( i ); tv.append( -i*2 ); } // Something about the array decoder is precision limited, more than the straight integer json codec
-                                   pass &= testInt64A( v, tv, tc, msg );
-  tv.clear();
-  for ( qint64 i = 1; i < 1100; i++ )
-    tv.append(0);
-                            pass &= testInt64A( v, tv, tc, msg );
-  tv.clear();
-  for ( qint64 i = 1; i < 1101; i++ )
-    tv.append(i*438957);
-                            pass &= testInt64A( v, tv, tc, msg );
-  tv.clear();
-  for ( qint64 i = 1; i < 1102; i++ )
-    tv.append(-i*234683);
-                            pass &= testInt64A( v, tv, tc, msg );
-*/
+  pass &= testMPQA( v, tv, tc, msg ); // Empty Array test
+  MP_RAT v1; mpq_init( &v1 ); mpq_set_str( &v1,                                          "12345", 10 ); tv.append( v1 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT v2; mpq_init( &v2 ); mpq_set_str( &v2,                                    "77777/67890", 10 ); tv.append( v2 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT v3; mpq_init( &v3 ); mpq_set_str( &v3,                                   "-12345/77777", 10 ); tv.append( v3 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT v4; mpq_init( &v4 ); mpq_set_str( &v4,                                       "-67890/1", 10 ); tv.append( v4 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT v5; mpq_init( &v5 ); mpq_set_str( &v5,                                       "1/123456", 10 ); tv.append( v5 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT v6; mpq_init( &v6 ); mpq_set_str( &v6,                              "-123456/123456789", 10 ); tv.append( v6 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT v7; mpq_init( &v7 ); mpq_set_str( &v7,   "123456123456123456123456123456123456123456/1", 10 ); tv.append( v7 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT v8; mpq_init( &v8 ); mpq_set_str( &v8,  "-123456123456123456123456123456123456123456/1", 10 ); tv.append( v8 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT v9; mpq_init( &v9 ); mpq_set_str( &v9,  "1/1234561234561234561234561234561234561234567", 10 ); tv.append( v9 ); pass &= testMPQA( v, tv, tc, msg );
+  MP_RAT va; mpq_init( &va ); mpq_set_str( &va, "-1/1234561234561234561234561234561234561234567", 10 ); tv.append( va ); pass &= testMPQA( v, tv, tc, msg );
+
+  foreach ( MP_RAT v, tv )
+    mpq_clear( &v );
+
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
 
@@ -1128,7 +1118,7 @@ bool Tests::testMPQA( BlockArrayMPQ &v, const QList<MP_RAT> &tv, qint32 &tc, QSt
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  bool ok = v.setJson( j ); qWarning( "json %s", j.data() );
+  bool ok = v.setJson( j ); // qWarning( "json %s", j.data() );
   if ( ok && ( v == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
       if ( v.size() != tv.size() )
