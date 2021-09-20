@@ -21,6 +21,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+######################################################################
+#                                                                    #
+# Note: imagemagick requires permission to write PDF files:          #
+# edit /etc/ImageMagick-X/policy.xml to modify the PDF line to read: #
+#  <policy domain="coder" rights="read | write" pattern="PDF" />     #
+#                                                                    #
+######################################################################
+
 set -e
 set -x
 sudo apt update -y
