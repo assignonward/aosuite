@@ -60,6 +60,10 @@ public:
        bool  testInt32A( BlockArrayInt32 &, const QList<qint32> &, qint32 &, QString & );
        bool  testInt64A( QString &, qint32 & );
        bool  testInt64A( BlockArrayInt64 &, const QList<qint64> &, qint32 &, QString & );
+       bool  testMPZA( QString &, qint32 & );
+       bool  testMPZA( BlockArrayMPZ &, const QList<MP_INT> &, qint32 &, QString & );
+       bool  testMPQA( QString &, qint32 & );
+       bool  testMPQA( BlockArrayMPQ &, const QList<MP_RAT> &, qint32 &, QString & );
        bool  testRiceyA( QString &, qint32 & );
        bool  testRiceyA( BlockArrayRicey &, const QList<RiceyCode> &, qint32 &, QString & );
        bool  testRiceyA( BlockArrayRicey &, const QList<RiceyInt>  &, qint32 &, QString & );

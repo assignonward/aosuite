@@ -190,6 +190,7 @@ JsonSerial  BlockValueString::json() const
   if (( fqi >= lqi ) || ( fqi < 0 ) || ( lqi < 0 ))
     return "\"\"";
   return js.mid( fqi, lqi-fqi+1 );
+  // TODO: refactor to expose this encoding to the string array
 }
 
 /**
@@ -278,10 +279,11 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
             { case RDT_INT64_ARRAY:     append( (qint64)v.toLongLong() ); break;
               case RDT_INT32_ARRAY:     append( (qint32)v.toInt() ); break;
               case RDT_RCODE_ARRAY:     append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
-              case RDT_STRING_ARRAY:    append( v.toString().toUtf8() ); break;
+              case RDT_STRING_ARRAY:    append( v.toString().toUtf8() ); break; // TODO: encode using the same escapes as in the BlockString.json() function
               case RDT_BYTEARRAY_ARRAY: append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
               case RDT_MPZ_ARRAY:
-              case RDT_MPQ_ARRAY: qWarning( "unhandled type in KeyValueArray::setJson()" ); return false;
+              case RDT_MPQ_ARRAY:       append( v.toString().toUtf8() ); break;
+              default: qWarning( "unhandled type in KeyValueArray::setJson()" ); return false;
     }   }   }
   return true;
 }

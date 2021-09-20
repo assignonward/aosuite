@@ -70,10 +70,11 @@ void  Tests::on_start_clicked()
   pass &= testObjectA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt32A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+  pass &= testMPZA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+  pass &= testMPQA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testRiceyA     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testStringA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArrayA ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
-  // TODO: MPZ & MPQ Arrays
   pass &= testObject     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
 
   if ( pass )
@@ -976,6 +977,176 @@ bool Tests::testInt64A( BlockArrayInt64 &v, const QList<qint64> &tv, qint32 &tc,
               msg.append( QString( "     value mismatch at %1, original %2 read from json %3\n" ).arg(i).arg(tv.at(i)).arg(v.at(i)) );
         }
     }
+  return pass;
+}
+
+bool Tests::testMPZA( QString &msg, qint32 &tc )
+{ bool pass = true;
+  msg = "MPZ array Test: ";
+  BlockArrayMPZ v(RCD_mpzArray_N,this);
+  if ( v.type() == RDT_MPZ_ARRAY ) tc++; else
+    { msg.append( "FAIL type() test.\n" ); pass = false; }
+
+  QList<MP_INT> tv;
+                                                                    pass &= testMPZA( v, tv, tc, msg ); // Empty Array test
+  MP_INT v1; mpz_init_set_str( &v1, "12345", 10 ); tv.append( v1 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT v2; mpz_init_set_str( &v2, "67890", 10 ); tv.append( v2 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT v3; mpz_init_set_str( &v3, "-12345", 10 ); tv.append( v3 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT v4; mpz_init_set_str( &v4, "-67890", 10 ); tv.append( v4 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT v5; mpz_init_set_str( &v5, "123456", 10 ); tv.append( v5 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT v6; mpz_init_set_str( &v6, "-123456", 10 ); tv.append( v6 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT v7; mpz_init_set_str( &v7, "123456123456123456123456123456123456123456", 10 ); tv.append( v7 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT v8; mpz_init_set_str( &v8, "-123456123456123456123456123456123456123456", 10 ); tv.append( v8 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT v9; mpz_init_set_str( &v9, "1234561234561234561234561234561234561234567", 10 ); tv.append( v9 ); pass &= testMPZA( v, tv, tc, msg );
+  MP_INT va; mpz_init_set_str( &va, "-1234561234561234561234561234561234561234567", 10 ); tv.append( va ); pass &= testMPZA( v, tv, tc, msg );
+
+  foreach ( MP_INT v, tv )
+    mpz_clear( &v );
+  if ( pass )
+    msg.append( QString("Pass %1 tests.").arg(tc) );
+
+  return pass;
+}
+
+bool Tests::testMPZA( BlockArrayMPZ &v, const QList<MP_INT> &tv, qint32 &tc, QString &msg )
+{ bool pass = true;
+  v.set( tv );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
+
+  MP_INT other;
+  mpz_init_set_str( &other, "5551212", 10 );
+  BsonSerial b = v.bsonish();
+  v.clear();
+  if ( v.append( other ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
+  v.setBsonish( b );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+
+  JsonSerial j = v.json();
+  v.clear();
+  if ( v.append( other ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
+  bool ok = v.setJson( j );
+  if ( ok && ( v == tv )) tc++; else
+    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
+      if ( v.size() != tv.size() )
+        msg.append( QString( "    size mismatch original %1 read from json %2\n" ).arg( tv.size() ).arg( v.size() ) );
+       else
+        { MP_INT v1;
+          MP_INT v2;
+          for ( qint32 i = 0; i < v.size() ; i++ )
+            { v1 = v.at(i);
+              v2 = tv.at(i);
+              if ( mpz_cmp( &v1, &v2 ) != 0 )
+                msg.append( QString( "     value mismatch at %1\n" ).arg(i) );
+            }
+        }
+    }
+  mpz_clear( &other );
+  return pass;
+}
+
+bool Tests::testMPQA( QString &msg, qint32 &tc )
+{ bool pass = true;
+  msg = "MPQ array Test: ";
+  BlockArrayMPQ v(RCD_mpqArray_R,this);
+  if ( v.type() == RDT_MPQ_ARRAY ) tc++; else
+    { msg.append( "FAIL type() test.\n" ); pass = false; }
+
+  QList<MP_RAT> tv;
+                                   pass &= testMPQA( v, tv, tc, msg ); // Empty Array test
+  /*
+  tv.append(                  0 ); pass &= testInt64A( v, tv, tc, msg );
+  tv.append(                  1 ); pass &= testInt64A( v, tv, tc, msg );
+  tv.append(                 -1 ); pass &= testInt64A( v, tv, tc, msg );
+  tv.append(              70000 ); pass &= testInt64A( v, tv, tc, msg );
+  tv.append(             -70000 ); pass &= testInt64A( v, tv, tc, msg );
+  tv.append(         5123456789 ); pass &= testInt64A( v, tv, tc, msg );
+  tv.append(        -5123456789 ); pass &= testInt64A( v, tv, tc, msg );
+  for ( qint64 i = 4500000000000000; i <= 4500000000001000; i++ )
+    { tv.append( i ); tv.append( -i*2 ); } // Something about the array decoder is precision limited, more than the straight integer json codec
+                                   pass &= testInt64A( v, tv, tc, msg );
+  tv.clear();
+  for ( qint64 i = 1; i < 1100; i++ )
+    tv.append(0);
+                            pass &= testInt64A( v, tv, tc, msg );
+  tv.clear();
+  for ( qint64 i = 1; i < 1101; i++ )
+    tv.append(i*438957);
+                            pass &= testInt64A( v, tv, tc, msg );
+  tv.clear();
+  for ( qint64 i = 1; i < 1102; i++ )
+    tv.append(-i*234683);
+                            pass &= testInt64A( v, tv, tc, msg );
+*/
+  if ( pass )
+    msg.append( QString("Pass %1 tests.").arg(tc) );
+
+  return pass;
+}
+
+bool Tests::testMPQA( BlockArrayMPQ &v, const QList<MP_RAT> &tv, qint32 &tc, QString &msg )
+{ bool pass = true;
+  v.set( tv );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
+
+  MP_INT oNum,oDen;
+  MP_RAT other;
+  mpz_init_set_str( &oNum, "5551212", 10 );
+  mpz_init_set_str( &oDen, "2125551212", 10 );
+  mpq_init( &other );
+  mpq_set_num( &other, &oNum );
+  mpq_set_den( &other, &oDen );
+  BsonSerial b = v.bsonish();
+  v.clear();
+  if ( v.append( other ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
+  v.setBsonish( b );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bsonish() ) tc++; else
+    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+
+  JsonSerial j = v.json();
+  v.clear();
+  if ( v.append( other ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
+  bool ok = v.setJson( j ); qWarning( "json %s", j.data() );
+  if ( ok && ( v == tv )) tc++; else
+    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false;
+      if ( v.size() != tv.size() )
+        msg.append( QString( "    size mismatch original %1 read from json %2\n" ).arg( tv.size() ).arg( v.size() ) );
+       else
+        { MP_RAT v1;
+          MP_RAT v2;
+          for ( qint32 i = 0; i < v.size() ; i++ )
+            { v1 = v.at(i);
+              v2 = tv.at(i);
+              if ( mpq_cmp( &v1, &v2 ) != 0 )
+                msg.append( QString( "     value mismatch at %1\n" ).arg(i) );
+            }
+        }
+    }
+  mpq_clear( &other );
+  mpz_clear( &oNum );
+  mpz_clear( &oDen );
   return pass;
 }
 
