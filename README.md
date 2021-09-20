@@ -2,6 +2,8 @@ Assign Onward
 
 State: Pre-alpha, non functional, still designing.
 
+2021: sort of a cleanish sheet restart, trying more of a bottup up approach.
+
 Goal: To demonstrate a distributed Promise Of Correctness blockchain recording system.
 
 Quickstart:
