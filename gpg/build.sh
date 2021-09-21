@@ -3,6 +3,10 @@
 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob;f=README
 
 set -e
+echo ""
+echo "build.sh"
+echo ""
+set -x
 
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
@@ -63,3 +67,6 @@ sudo make install
 popd
 
 sudo ldconfig
+
+set +x
+echo "build.sh complete."
