@@ -1,7 +1,7 @@
 #! /bin/bash
 # MIT License
 #
-# Copyright (c) 2018 Assign Onward
+# Copyright (c) 2021 Assign Onward
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 ######################################################################
 #                                                                    #
 # Note: imagemagick requires permission to write PDF files:          #
+# do a sudo apt-get install -y imagemagick first, then:              #
 # edit /etc/ImageMagick-X/policy.xml to modify the PDF line to read: #
 #  <policy domain="coder" rights="read | write" pattern="PDF" />     #
 #                                                                    #
@@ -31,12 +32,17 @@
 
 set -e
 set -x
-sudo apt update -y
-sudo apt install -y g++ gcc
-sudo apt install -y automake make build-essential bison flex gettext texinfo transfig fig2dev gnutls-bin rng-tools adns-tools nettle-dev libncurses5-dev libsqlite3-dev libldap2-dev libreadline-dev libgmp-dev libbz2-dev zlib1g-dev qt5-default qtcreator
-sudo apt install -y lib64c-dev lib64z1 lib64z1-dev imagemagick
+sudo apt-get update -y
+sudo apt-get install -y imagemagick
+# TODO: maybe auto-edit the policy.xml file here...
+sudo apt-get install -y automake make build-essential bison flex gettext texinfo
+sudo apt-get install -y transfig fig2dev gnutls-bin rng-tools adns-tools nettle-dev libncurses5-dev
+sudo apt-get install -y libsqlite3-dev libldap2-dev libreadline-dev libgmp-dev libbz2-dev zlib1g-dev
+sudo apt-get install -y lib64c-dev lib64z1 lib64z1-dev
+sudo apt-get install -y qt5-default qtcreator
+sudo apt-get install -y g++ gcc
 # This one to fix syntax highlighting and compile warnings in qt creator in 20.04
-sudo apt install -y libclang-common-8-dev
+sudo apt-get install -y libclang-common-8-dev
 
 # for gpg:
 pushd gpg
@@ -58,4 +64,3 @@ make
 popd
 set +x
 echo "prepDevEnv.sh complete."
-
