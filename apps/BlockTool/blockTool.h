@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2018 Assign Onward
+ * Copyright (c) 2021 Assign Onward
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,31 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "aboutform.h"
-#include "appname.h"
+#ifndef BLOCKTOOL_H
+#define BLOCKTOOL_H
 
-AboutForm::AboutForm( QWidget *cw ) :
-    QScrollArea(cw),
-    ui(new Ui::AboutForm)
-{ ui->setupUi(this);
-  new QVBoxLayout( cw );
-  cw->layout()->addWidget( this );
-  ui->appName   ->setText( APPNAME    );
-  ui->appDesc   ->setText( APPDESC    );
-  ui->appVersion->setText( APPVERSION );
-  ui->appStatus ->setText( APPSTATUS  );
-  showLibVersions();
+#include <QScrollArea>
+#include "blockOb.h"
+
+namespace Ui {
+class BlockTool;
 }
 
-AboutForm::~AboutForm()
-{ delete ui;
-}
+class BlockTool : public QScrollArea
+{
+    Q_OBJECT
 
-#include <gmp.h>
-#include <gcrypt.h>
+public:
+   explicit  BlockTool( QWidget *cw = nullptr );
+            ~BlockTool();
 
-void AboutForm::showLibVersions()
-{ ui->libVersions->append( QString( "GMP %1"      ).arg( gmp_version                                   ) );
-  ui->libVersions->append( QString( "libgcrypt %1").arg( QString::fromUtf8( gcry_check_version(NULL) ) ) );
-  ui->libVersions->append( QString( "Qt %1"       ).arg( QString::fromUtf8( qVersion()               ) ) );
-}
+public slots:
+       void  on_start_clicked();
+
+public:
+         Ui::BlockTool *ui;
+};
+
+#endif // BLOCKTOOL_H

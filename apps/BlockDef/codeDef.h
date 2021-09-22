@@ -62,10 +62,11 @@
 #define RCD_mpqArray_R             20 // A generic array of MPQ elements
 #define RCD_riceyArray_Y           21 // A generic array of Ricey elements
 #define RCD_stringArray_S          22 // A generic array of string elements
-#define RCD_byteArrayArray_B       23 // A generic array of byte array elementschainBlock_o 0xA000 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.
+#define RCD_byteArrayArray_B       23 // A generic array of byte array element 
+#define RCD_chainBlock_o         9600 // An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) 
 #define RCD_hashedOb_o             32 // An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.
 #define RCD_hash_o                 64 // Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
-#define RCD_parentHash_o           96 // Contains a copy of the signature_O of one or more (more in the case of merging forked chains) parent blocks.
+#define RCD_parentHash_O          112 // Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.
 #define RCD_time_i                 33 // UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.
 #define RCD_AOShares_n             35 // A quantity of shares - meaning depends on context
 #define RCD_SHA256_y               37 // algorithm ID (algor) for SHA2 - 256
@@ -84,8 +85,8 @@
 #define RCD_PcolA00_y        95682565 // Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
 #define RCD_PcolA01_y        95682597 // Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
 #define RCD_ProtocolList_O       4208 // An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle 
-#define RCD_ProtocolDef_o        4128 // An Assign Onward Protocol Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) 
-#define RCD_ItemDef_o            4096 // An Assign Onward Protocol Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) 
+#define RCD_ProtocolDef_o        4128 // An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) 
+#define RCD_ItemDef_o            4096 // An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) 
 #define RCD_ProtocolSig_o        4192 // A signature on an Assign Onward Protocol Definition, indicating the protocol is "approved" by the signer
 #define RCD_RequiredItems_O      4112 // Items that must appear in a container (to fulfill the protocol requirements)
 #define RCD_OptionalItems_O      4144 // Items that may optionally appear in a container, do not violate protocol if they are missing.
@@ -115,7 +116,6 @@
 #define RCD_CfShares_n         534403 // The number of shares recorded in the Genesis block.
 #define RCD_CfCoins_n          534435 // The number of "coins" all the shares in this chain represent.
 #define RCD_CfRecFee_r         534404 // The number of coins per byte charged to record data on this chain (usually 1/a very large number).
-#define RCD_chainBlock_o         9600 // An Assign Onward Chain Block. With a signature_o which includes a timei, and the signature of the parent(s).
 #define RCD_ExchAdvert_o       692224 // An exchange advertisement for cross chain exchange swaps (expressed in coins for coins)
 #define RCD_Proposal_o         692256 // A share swap proposal
 #define RCD_Offer_o            692288 // A share swap offer

@@ -24,7 +24,7 @@
 #define ABOUTFORM_H
 
 #include <QScrollArea>
-#include "MainWinCommon.h"
+// #include "MainWinCommon.h"
 #include "ui_aboutform.h"
 
 namespace Ui {

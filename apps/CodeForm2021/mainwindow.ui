@@ -36,6 +36,11 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <widget class="QWidget" name="blockToolTab">
+       <attribute name="title">
+        <string>Block Tool</string>
+       </attribute>
+      </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
         <string>Dictionary</string>
@@ -249,6 +254,11 @@ p, li { white-space: pre-wrap; }
       <widget class="QWidget" name="testsTab">
        <attribute name="title">
         <string>Tests</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="aboutTab">
+       <attribute name="title">
+        <string>About</string>
        </attribute>
       </widget>
      </widget>

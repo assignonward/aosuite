@@ -28,6 +28,8 @@
 #include <QFile>
 #include "riceyCodes.h"
 #include "tests.h"
+#include "blockTool.h"
+#include "aboutform.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -35,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     restoreConfig();
-    new Tests( ui->testsTab );
+    new AboutForm( ui->    aboutTab );
+    new BlockTool( ui->blockToolTab );
+    new Tests    ( ui->    testsTab );
 
     on_update_clicked();
 }

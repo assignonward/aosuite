@@ -92,8 +92,13 @@
         },
         {
             "name_s": "byteArrayArray_B",
-            "text_s": "A generic array of byte array elementschainBlock_o 0xA000 // A Chain Block always contains a signedBlock_O which includes a time_i, and a signature_O that signs the whole signedBlock_O.",
+            "text_s": "A generic array of byte array element ",
             "type_y": "17"
+        },
+        {
+            "name_s": "chainBlock_o",
+            "text_s": "An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) ",
+            "type_y": "CB00"
         },
         {
             "name_s": "hashedOb_o",
@@ -106,9 +111,9 @@
             "type_y": "40"
         },
         {
-            "name_s": "parentHash_o",
-            "text_s": "Contains a copy of the signature_O of one or more (more in the case of merging forked chains) parent blocks.",
-            "type_y": "60"
+            "name_s": "parentHash_O",
+            "text_s": "Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.",
+            "type_y": "70"
         },
         {
             "name_s": "time_i",
@@ -202,12 +207,12 @@
         },
         {
             "name_s": "ProtocolDef_o",
-            "text_s": "An Assign Onward Protocol Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "text_s": "An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
             "type_y": "A020"
         },
         {
             "name_s": "ItemDef_o",
-            "text_s": "An Assign Onward Protocol Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "text_s": "An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
             "type_y": "A000"
         },
         {
@@ -354,11 +359,6 @@
             "name_s": "CfRecFee_r",
             "text_s": "The number of coins per byte charged to record data on this chain (usually 1/a very large number).",
             "type_y": "A0CF04"
-        },
-        {
-            "name_s": "chainBlock_o",
-            "text_s": "An Assign Onward Chain Block. With a signature_o which includes a timei, and the signature of the parent(s).",
-            "type_y": "CB00"
         },
         {
             "name_s": "ExchAdvert_o",
