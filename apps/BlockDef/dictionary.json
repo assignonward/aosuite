@@ -177,13 +177,23 @@
         },
         {
             "name_s": "ProtocolId_y",
-            "text_s": "An Assign Onward Protocol identifier.",
-            "type_y": "A0A545"
+            "text_s": "A shorthand Assign Onward Protocol identifier.",
+            "type_y": "A0A045"
         },
         {
-            "name_s": "ProtocolDef_O",
-            "text_s": "An Assign Onward Protocol Definition - overall, defines an array of containers and contents ",
-            "type_y": "A0A550"
+            "name_s": "ProtocolSig_o",
+            "text_s": "A signature on an Assign Onward Protocol Definition, indicating the protocol is \"approved\" by the signer",
+            "type_y": "A0A060"
+        },
+        {
+            "name_s": "ProtocolDef_o",
+            "text_s": "An Assign Onward Protocol Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "type_y": "A0A040"
+        },
+        {
+            "name_s": "ProtocolList_O",
+            "text_s": "An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle ",
+            "type_y": "A0A050"
         },
         {
             "name_s": "RequiredItems_Y",

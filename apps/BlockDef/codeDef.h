@@ -79,8 +79,10 @@
 #define RCD_PcolTA02_y        600101 // Test protocol, symbol: TⒶ2021.10.13
 #define RCD_PcolA00_y         616453 // Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
 #define RCD_PcolA01_y         616485 // Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
-#define RCD_ProtocolId_y      529093 // An Assign Onward Protocol identifier.
-#define RCD_ProtocolDef_O     529104 // An Assign Onward Protocol Definition - overall, defines an array of containers and contents 
+#define RCD_ProtocolId_y      528453 // A shorthand Assign Onward Protocol identifier.
+#define RCD_ProtocolSig_o     528480 // A signature on an Assign Onward Protocol Definition, indicating the protocol is "approved" by the signer
+#define RCD_ProtocolDef_o     528448 // An Assign Onward Protocol Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) 
+#define RCD_ProtocolList_O    528464 // An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle 
 #define RCD_RequiredItems_Y     9877 // Items that must appear in a container (to fulfill the protocol requirements)
 #define RCD_OptionalItems_Y     9909 // Items that may optionally appear in a container, do not violate protocol if they are missing.
 #define RCD_RangeBounds_O       9872 // Boundaries for valid values
