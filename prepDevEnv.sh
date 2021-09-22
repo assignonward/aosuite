@@ -40,7 +40,7 @@ sudo apt-get install -y transfig fig2dev gnutls-bin rng-tools adns-tools nettle-
 sudo apt-get install -y libsqlite3-dev libldap2-dev libreadline-dev libgmp-dev libbz2-dev zlib1g-dev
 sudo apt-get install -y lib64c-dev lib64z1 lib64z1-dev
 sudo apt-get install -y qt5-default qtcreator
-sudo apt-get install -y g++ gcc
+sudo apt-get install -y g++ gcc graphviz
 # This one to fix syntax highlighting and compile warnings in qt creator in 20.04
 sudo apt-get install -y libclang-common-8-dev
 

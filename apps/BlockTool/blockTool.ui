@@ -45,7 +45,18 @@
     <item row="2" column="0">
      <widget class="QTextEdit" name="report"/>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="1">
+     <widget class="QLabel" name="graphic">
+      <property name="text">
+       <string>Graphic
+View</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="topMargin">
        <number>0</number>
@@ -89,7 +100,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="tests.qrc">:/icons/AOBlockTool.png</pixmap>
+         <pixmap resource="blockTool.qrc">:/icons/AOBlockTool.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>

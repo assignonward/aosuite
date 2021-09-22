@@ -41,4 +41,27 @@ BlockTool::~BlockTool()
 void  BlockTool::on_start_clicked()
 { ui->report->clear();
   ui->report->append( "FAILED one or more tests" );
+
+  QFile fs(":/files/x.dot");
+  QFile fd("/tmp/x.dot");
+  fs.open( QIODevice::ReadOnly );
+  fd.open( QIODevice::WriteOnly );
+  fd.write( fs.readAll() );
+  // dot -Tpng x.dot -O
+  QStringList args;
+  args.append( "-Tpng" );
+  args.append( "/tmp/x.dot" );
+  args.append( "-O" );
+  if ( pp )
+    pp->deleteLater();
+  pp = new QProcess(this);
+  connect( pp, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(graphvizDone()) );
+  pp->start( "dot", args );
+}
+
+void  BlockTool::graphvizDone()
+{ QPixmap p( "/tmp/x.dot.png" );
+  ui->graphic->setPixmap( p );
+  if ( pp )
+    pp->deleteLater();
 }

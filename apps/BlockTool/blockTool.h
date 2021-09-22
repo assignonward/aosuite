@@ -24,7 +24,9 @@
 #define BLOCKTOOL_H
 
 #include <QScrollArea>
+#include <QProcess>
 #include "blockOb.h"
+
 
 namespace Ui {
 class BlockTool;
@@ -40,9 +42,11 @@ public:
 
 public slots:
        void  on_start_clicked();
+       void  graphvizDone();
 
 public:
-         Ui::BlockTool *ui;
+    Ui::BlockTool *ui;
+QPointer<QProcess> pp;
 };
 
 #endif // BLOCKTOOL_H
