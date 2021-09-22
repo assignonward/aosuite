@@ -1414,13 +1414,13 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tv.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );  pass &= testObject( v, tv, tc, msg );
 
   BlockObjectMap tvo = tv; // Nesting test
-  tv.insert( RCD_signedBlock_o    , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_hashedOb_o  , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   tvo = tv;
-  tv.insert( RCD_signature_o      , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_hash_o      , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   tvo = tv;
-  tv.insert( RCD_chainBlock_o     , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_chainBlock_o, new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   tvo = tv;
-  tv.insert( RCD_parentSignature_o, new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_parentHash_o, new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   QList<qint64> ta64 = { 0,1,-1,70000,-70000,-5123456789, 5123456789 };
   tv.insert( RCD_int64Array_I, new BlockArrayInt64( RCD_int64Array_I, ta64, this ) ); pass &= testObject( v, tv, tc, msg );
   QList<qint32> ta32 = { 0,1,-1,70000,-70000 };

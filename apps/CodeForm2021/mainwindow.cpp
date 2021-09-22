@@ -348,7 +348,7 @@ bool MainWindow::rulesCheck( QString name, QString num )
       return false;
     }
   bool ok;
-  qint32 numlc = num.toInt(&ok,16) & RDT_OBTYPEMASK;
+  qint64 numlc = num.toLongLong(&ok,16) & RDT_OBTYPEMASK;
   if ( !notesNumChar.keys().contains( numlc ) )
     { v.append( QString( "rulesCheck: num '%1' does not end with a recognized code.\n" ).arg( num ) );
       return false;
@@ -494,7 +494,7 @@ QString MainWindow::codesLineToHtml( QString line )
    else
     { QString word = words.at(0);
       int sz = word.size() + words.at(1).size() + 1;
-      for ( int i = 0; i < maxNumLength + maxNameLength - sz + 1; i++ )
+      for ( int i = 0; i < maxNumLength + maxNameLength - sz + 3; i++ )
         word.append( "&nbsp;" );
       html.append( word+"</font><font color=#000080>"+words.at(1)+" </font><font color=#008000> // " );
       if ( words.at(2) != "//" )
