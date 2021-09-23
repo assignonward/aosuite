@@ -35,7 +35,7 @@ set -x
 sudo apt-get update -y
 sudo apt-get install -y imagemagick
 echo "TODO: maybe auto-edit the policy.xml file here... until then, do it by hand then edit this file to comment out the exit 1 and run again."
-# exit 1
+exit 1
 sudo apt-get install -y automake make build-essential bison flex gettext texinfo
 sudo apt-get install -y transfig fig2dev gnutls-bin rng-tools adns-tools nettle-dev libncurses5-dev
 sudo apt-get install -y libsqlite3-dev libldap2-dev libreadline-dev libgmp-dev libbz2-dev zlib1g-dev
