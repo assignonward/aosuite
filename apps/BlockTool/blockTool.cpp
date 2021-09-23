@@ -86,12 +86,13 @@ void  BlockTool::updateGraph()
   if ( pp )
     pp->deleteLater();
   pp = new QProcess(this);
-  connect( pp, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(graphvizDone()) );
+  connect( pp, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(graphvizDone(int,QProcess::ExitStatus)) );
   pp->start( "dot", args );
 }
 
-void  BlockTool::graphvizDone()
-{ liveDelay( 50 );
+void  BlockTool::graphvizDone(int code,QProcess::ExitStatus status)
+{ qWarning( "finished %d %d", code, status );
+  liveDelay( 50 );
   QPixmap p( "/tmp/x.dot.png" );
   ui->graphic->setPixmap( p );
   if ( pp )

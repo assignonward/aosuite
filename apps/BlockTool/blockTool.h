@@ -45,7 +45,7 @@ public slots:
        void  on_start_clicked();
        void  writeWrappedDot( QByteArray d );
        void  updateGraph();
-       void  graphvizDone();
+       void  graphvizDone(int,QProcess::ExitStatus);
 
 public:
     Ui::BlockTool *ui;
