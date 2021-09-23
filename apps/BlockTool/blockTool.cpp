@@ -63,7 +63,6 @@ void  BlockTool::on_start_clicked()
   hso->insert( RCD_time_i, hti );
 
   writeWrappedDot( kvp->dot() );
-  updateGraph();
 }
 
 void  BlockTool::writeWrappedDot( QByteArray d )
@@ -73,6 +72,8 @@ void  BlockTool::writeWrappedDot( QByteArray d )
   fd.write( "rankdir=LR;\n\n" );
   fd.write( d );
   fd.write( "}\n" );
+  fd.flush();
+  fd.close();
   // qWarning( "%s", d.data() );
   updateGraph();
 }
@@ -91,7 +92,7 @@ void  BlockTool::updateGraph()
 }
 
 void  BlockTool::graphvizDone(int code,QProcess::ExitStatus status)
-{ qWarning( "finished %d %d", code, status );
+{ // qWarning( "finished %d %d", code, status );
   liveDelay( 50 );
   QPixmap p( "/tmp/x.dot.png" );
   ui->graphic->setPixmap( p );
