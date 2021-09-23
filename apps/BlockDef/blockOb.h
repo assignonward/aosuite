@@ -49,6 +49,7 @@ static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *
 virtual     quint8  type()    const = 0;
 virtual BsonSerial  bsonish() const = 0;
 virtual JsonSerial  json()    const = 0;
+virtual  DotSerial  dot()     const { return json(); }
 virtual     qint32  setBsonish( const BsonSerial & ) = 0;
          ValueBase *bsonishValueByKey( RiceyInt, const BsonSerial &, qint32 *l = nullptr, QObject *parent = nullptr );
          ValueBase *jsonValueByKey( RiceyInt, const QJsonValue &, QObject * );
@@ -86,20 +87,21 @@ class KeyValueBase : public ValueBase
 {
     Q_OBJECT
 public:
-    explicit  KeyValueBase( const RiceyCode &r, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( r ); }
-    explicit  KeyValueBase( const RiceyInt  &k, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
-             ~KeyValueBase() {}
-      qint32  setKey( const RiceyCode &r );
-        bool  setKey( const RiceyInt &k ) { return( setKey( intToRice( k ) ) > 0 ); }
-  Utf8String  keyHex()  const { return keyCode().toHex(); }
-        char *keyHexd() const { return keyHex().data();   }
-   RiceyCode  keyCode() const { return intToRice( m_key ); }
-    RiceyInt  key()     const { return m_key; }
-      quint8  type()    const { return (m_key & RDT_OBTYPEMASK); }
-  Utf8String  valueString() const { return "kvb"; }
-virtual bool  valueEqual( const ValueBase &v ) const { (void)v; qWarning( "KeyValueBase::valueEqual() should be overriden" ); return false; }
+         explicit  KeyValueBase( const RiceyCode &r, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( r ); }
+         explicit  KeyValueBase( const RiceyInt  &k, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
+                  ~KeyValueBase() {}
+           qint32  setKey( const RiceyCode &r );
+             bool  setKey( const RiceyInt &k ) { return( setKey( intToRice( k ) ) > 0 ); }
+       Utf8String  keyHex()  const { return keyCode().toHex(); }
+             char *keyHexd() const { return keyHex().data();   }
+        RiceyCode  keyCode() const { return intToRice( m_key ); }
+         RiceyInt  key()     const { return m_key; }
+           quint8  type()    const { return (m_key & RDT_OBTYPEMASK); }
+virtual DotSerial  dot()     const = 0;
+       Utf8String  valueString() const { return "kvb"; }
+     virtual bool  valueEqual( const ValueBase &v ) const { (void)v; qWarning( "KeyValueBase::valueEqual() should be overriden" ); return false; }
 
-   RiceyInt  m_key; // Ricey code bsonish key
+         RiceyInt  m_key; // Ricey code bsonish key
 };
 
 /**
@@ -110,13 +112,15 @@ class KeyValuePair : public KeyValueBase
     Q_OBJECT
 public:
     explicit  KeyValuePair( const RiceyInt &k, QObject *parent = nullptr ) : KeyValueBase( k, parent ) {}
+              KeyValuePair( const RiceyInt &k, ValueBase *vp, QObject *parent = nullptr ) : KeyValueBase( k, parent ) { set(vp); }
              ~KeyValuePair() { if ( m_value ) m_value->deleteLater(); }
-        void  set( ValueBase &value ) { if ( value.type() != type() ) qWarning("kvp type mismatch"); else { if ( m_value ) m_value->deleteLater(); m_value = &value; } }
- ValueBase &  valueRef() const { return *m_value; }
+        void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning("kvp type mismatch"); else { if ( m_value ) m_value->deleteLater(); m_value = vp; } }
+   ValueBase *value() const { return m_value; }
   BsonSerial  bsonish()  const;
   JsonSerial  json()     const;
       qint32  setBsonish( const BsonSerial & );
         bool  setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
+   DotSerial  dot()      const;
   Utf8String  valueString() const { return "kvp"; }
 virtual bool  valueEqual( const ValueBase &v ) const { (void)v; qWarning( "KeyValuePair::valueEqual() should be overriden" ); return false; }
 
@@ -353,6 +357,7 @@ public:
   JsonSerial  json()    const;
       qint32  setBsonish( const BsonSerial &b );
         bool  setJson   ( const JsonSerial &j );
+   DotSerial  dot()      const;
   Utf8String  valueString() const { return "array"; }
 virtual bool  valueEqual( const ValueBase &v ) const { (void)v; qWarning( "KeyValueArray::valueEqual() should be overriden" ); return false; }
 
@@ -378,6 +383,7 @@ class BlockValueObject : public ValueBase
        JsonSerial  json()    const;
            qint32  setBsonish(  const BsonSerial &b );
              bool  setJson   (  const JsonSerial &j );
+        DotSerial  dot()      const;
              void  clear()   { QList<RiceyInt> keys = m_obMap.keys(); foreach( RiceyInt k, keys ) { if ( m_obMap[k] != nullptr ) m_obMap[k]->deleteLater(); m_obMap.remove(k); } }
            qint32  size() const { return m_obMap.size(); }
    QList<RiceyInt> keys() const { return m_obMap.keys(); }

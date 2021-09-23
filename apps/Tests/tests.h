@@ -74,6 +74,9 @@ public:
        bool  testObject( QString &, qint32 & );
        bool  testObject( BlockValueObject &, const BlockObjectMap &, qint32 &, QString & );
 
+signals:
+       void  newDot( QByteArray );
+
 public slots:
        void  on_start_clicked();
 

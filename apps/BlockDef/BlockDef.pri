@@ -31,6 +31,7 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/blockOb.cpp \
+    $$PWD/blockObDot.cpp \
     $$PWD/blockObJson.cpp \
     $$PWD/dictionary.cpp \
     $$PWD/riceyCodes.cpp

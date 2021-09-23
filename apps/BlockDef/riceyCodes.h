@@ -34,6 +34,7 @@ typedef QByteArray RiceyCode;
 typedef QByteArray JsonSerial;
 typedef QByteArray BsonSerial;
 typedef QByteArray Utf8String;
+typedef QByteArray DotSerial;
 typedef    quint64 RiceyInt;
 
      bool validRicey( const RiceyCode & );

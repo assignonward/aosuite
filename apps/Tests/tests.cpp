@@ -786,7 +786,7 @@ bool Tests::testObjectA( QString &msg, qint32 &tc )
   to.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );
   to.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );
   tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with one varied object
-  tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with two varied but identical objects
+  tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); emit newDot( v.dot() ); // Array with two varied but identical objects
   tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with thee varied but identical objects
   tv.clear();
 

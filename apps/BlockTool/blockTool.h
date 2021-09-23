@@ -39,9 +39,12 @@ class BlockTool : public QScrollArea
 public:
    explicit  BlockTool( QWidget *cw = nullptr );
             ~BlockTool();
+       void  liveDelay( int t );
 
 public slots:
        void  on_start_clicked();
+       void  writeWrappedDot( QByteArray d );
+       void  updateGraph();
        void  graphvizDone();
 
 public:

@@ -24,6 +24,7 @@
 #include "blockTool.h"
 #include "ui_blockTool.h"
 #include "blockOb.h"
+#include <unistd.h>
 
 BlockTool::BlockTool( QWidget *cw ) :
     QScrollArea(cw),
@@ -38,16 +39,46 @@ BlockTool::BlockTool( QWidget *cw ) :
 BlockTool::~BlockTool()
 { delete ui; }
 
+void BlockTool::liveDelay( int t )
+{ QTimer timer;
+  timer.setSingleShot( true );
+  timer.start( t );
+  QCoreApplication::processEvents( QEventLoop::AllEvents, t );
+  while ( timer.isActive() )
+    { usleep( 5000 ); // Get 5ms of "real sleep"
+      QCoreApplication::processEvents( QEventLoop::AllEvents, 50 );
+    }
+}
+
 void  BlockTool::on_start_clicked()
 { ui->report->clear();
-  ui->report->append( "FAILED one or more tests" );
+  ui->report->append( "Static test block" );
+  BlockValueObject *cbo = new BlockValueObject( this );
+  KeyValuePair     *kvp = new KeyValuePair(RCD_chainBlock_o,cbo,this);
+  BlockValueObject *hdo = new BlockValueObject( this );
+  cbo->insert( RCD_hashedOb_o, hdo );
+  BlockValueObject *hso = new BlockValueObject( this );
+  cbo->insert( RCD_hash_o, hso );
+  BlockValueInt64 *hti = new BlockValueInt64( 1234, this );
+  hso->insert( RCD_time_i, hti );
 
-  QFile fs(":/files/x.dot");
-  QFile fd("/tmp/x.dot");
-  fs.open( QIODevice::ReadOnly );
+  writeWrappedDot( kvp->dot() );
+  updateGraph();
+}
+
+void  BlockTool::writeWrappedDot( QByteArray d )
+{ QFile fd("/tmp/x.dot");
   fd.open( QIODevice::WriteOnly );
-  fd.write( fs.readAll() );
-  // dot -Tpng x.dot -O
+  fd.write( "digraph AO {\n" );
+  fd.write( "rankdir=LR;\n\n" );
+  fd.write( d );
+  fd.write( "}\n" );
+  // qWarning( "%s", d.data() );
+  updateGraph();
+}
+
+void  BlockTool::updateGraph()
+{ // dot -Tpng /tmp/x.dot -O
   QStringList args;
   args.append( "-Tpng" );
   args.append( "/tmp/x.dot" );
@@ -60,7 +91,8 @@ void  BlockTool::on_start_clicked()
 }
 
 void  BlockTool::graphvizDone()
-{ QPixmap p( "/tmp/x.dot.png" );
+{ liveDelay( 50 );
+  QPixmap p( "/tmp/x.dot.png" );
   ui->graphic->setPixmap( p );
   if ( pp )
     pp->deleteLater();
