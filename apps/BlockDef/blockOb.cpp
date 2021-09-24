@@ -647,6 +647,21 @@ bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
   return true;
 }
 
+bool  BlockValueObject::insert( KeyValueArray *kva )
+{ if ( kva == nullptr )
+    { qWarning( "will not insert null kva" ); return false; }
+  if (( kva->key() & RDT_OBTYPEMASK ) != kva->type() )
+    { qWarning( "will not insert mismatched type and value" ); return false; }
+  if ( !dict.codesContainCode( kva->key() ) )
+    { qWarning( "key not recognized, will not insert." ); return false; }
+  if ( m_obMap.contains( kva->key() ) )
+    { qWarning( "type collision, insertion blocked." ); return false; }
+  qWarning( "BlockValueArray not yet implemented... need to before this works." );
+  return false;
+  // m_obMap.insert( kva->key(), kva->value() );
+  return true;
+}
+
 /**
  * @brief BlockValueObject::insert
  * @param vl - list of items to insert

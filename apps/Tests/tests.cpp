@@ -786,7 +786,7 @@ bool Tests::testObjectA( QString &msg, qint32 &tc )
   to.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );
   to.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );
   tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with one varied object
-  tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); emit newDot( v.dot() ); // Array with two varied but identical objects
+  tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with two varied but identical objects
   tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with thee varied but identical objects
   tv.clear();
 
@@ -1422,7 +1422,7 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tvo = tv;
   tv.insert( RCD_hashedOb_o  , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   QList<qint64> ta64 = { 0,1,-1,70000,-70000,-5123456789, 5123456789 };
-  tv.insert( RCD_int64Array_I, new BlockArrayInt64( RCD_int64Array_I, ta64, this ) ); pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_int64Array_I, new BlockArrayInt64( RCD_int64Array_I, ta64, this ) ); pass &= testObject( v, tv, tc, msg ); emit newDot( v.dot() );
   QList<qint32> ta32 = { 0,1,-1,70000,-70000 };
   tv.insert( RCD_int32Array_L, new BlockArrayInt32( RCD_int32Array_L, ta32, this ) ); pass &= testObject( v, tv, tc, msg );
   QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_Y, RCD_data_b, RCD_PcolA00_y, RCD_RangeBounds_O };

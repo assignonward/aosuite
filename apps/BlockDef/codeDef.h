@@ -69,11 +69,11 @@
 #define RCD_parentHash_O          112 // Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.
 #define RCD_time_i                 33 // UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.
 #define RCD_AOShares_n             35 // A quantity of shares - meaning depends on context
-#define RCD_SHA256_y               37 // algorithm ID (algor) for SHA2 - 256
-#define RCD_ECB256_y               69 // algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1
 #define RCD_itemRelAddr_Y          85 // Navigation from the current itemDef to an operand in an operation, sequence of item types when navigating deeper, relative step back or to root to get higher in the hiearchy
 #define RCD_navUpOne_y            997 // Navigate 'up one' level in a nested block, used in operand relative addressing.
 #define RCD_navChainBlock_y       453 // Navigate to the 'root' of this chain block, used in operand absolute addressing.
+#define RCD_SHA256_y               37 // algorithm ID (algor) for SHA2 - 256
+#define RCD_ECB256_y               69 // algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1
 #define RCD_RSA3072_y            4293 // algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes
 #define RCD_SHA3b512_y           4261 // algorithm ID (algor) for SHA3 - 512
 #define RCD_jpg_y                2085 // Found in image objects, tells what format the data_b is to be interpreted as

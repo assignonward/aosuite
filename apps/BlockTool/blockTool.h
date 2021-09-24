@@ -42,7 +42,7 @@ public:
        void  liveDelay( int t );
 
 public slots:
-       void  on_start_clicked();
+       void  on_chain_clicked();
        void  writeWrappedDot( QByteArray d );
        void  updateGraph();
        void  graphvizDone(int,QProcess::ExitStatus);

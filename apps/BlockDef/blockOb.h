@@ -322,6 +322,17 @@ static  Utf8String  toStr( const MP_RAT & );
       MP_RAT  m_value;
 };
 
+class BlockValueArray : public ValueBase
+{ public:
+    explicit  BlockValueArray( QObject *parent = nullptr ) : ValueBase( parent ) {}
+              BlockValueArray( const ValueArray &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
+             ~BlockValueArray() {}
+  ValueArray  value() const { return m_value; }
+        void  set( const ValueArray &v ) { m_value.clear(); m_value = v; }
+
+  ValueArray  m_value;
+};
+
 /**
  * @brief The KeyValueArray class - zero or more values of the same type stored under a single key
  *   order of items in the array is important, conserved, and determined by the creator of the array.
@@ -388,8 +399,9 @@ class BlockValueObject : public ValueBase
            qint32  size() const { return m_obMap.size(); }
    QList<RiceyInt> keys() const { return m_obMap.keys(); }
              bool  contains( RiceyInt k ) const { return m_obMap.contains( k ); }
-             bool  insert    ( RiceyInt k, ValueBase *v );
-           qint32  insert    ( const BlockObjectMap &vl );
+             bool  insert    ( RiceyInt, ValueBase * );
+             bool  insert    ( KeyValueArray * );
+           qint32  insert    ( const BlockObjectMap & );
              bool  insert    ( RiceyInt k, const BlockObjectMap &v ) { BlockValueObject    *vp = new BlockValueObject   ( v, this ); bool ok = insert( k, vp ); if ( !ok ) vp->deleteLater(); return ok; }             bool  insert    ( RiceyInt k,       qint64  v ) { BlockValueInt64     *vp = new BlockValueInt64    ( v, this ); bool ok = insert( k, vp ); if ( !ok ) vp->deleteLater(); return ok; }
              bool  insert    ( RiceyInt k,               qint32  v ) { BlockValueInt32     *vp = new BlockValueInt32    ( v, this ); bool ok = insert( k, vp ); if ( !ok ) vp->deleteLater(); return ok; }
              bool  insert    ( RiceyInt k,         const MP_INT &v ) { BlockValueMPZ       *vp = new BlockValueMPZ      ( v, this ); bool ok = insert( k, vp ); if ( !ok ) vp->deleteLater(); return ok; }

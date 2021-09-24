@@ -50,18 +50,28 @@ void BlockTool::liveDelay( int t )
     }
 }
 
-void  BlockTool::on_start_clicked()
+void  BlockTool::on_chain_clicked()
 { ui->report->clear();
-  ui->report->append( "Static test block" );
+  ui->report->append( "Sample chain block" );
   BlockValueObject *cbo = new BlockValueObject( this );
   KeyValuePair     *kvp = new KeyValuePair(RCD_chainBlock_o,cbo,this);
   BlockValueObject *hdo = new BlockValueObject( this );
   cbo->insert( RCD_hashedOb_o, hdo );
   BlockValueObject *hso = new BlockValueObject( this );
   cbo->insert( RCD_hash_o, hso );
+  BlockValueRiceyCode *htc = new BlockValueRiceyCode( RCD_SHA3b512_y, this );
+  hso->insert( RCD_type_y, htc );
   BlockValueInt64 *hti = new BlockValueInt64( 1234, this );
   hso->insert( RCD_time_i, hti );
-
+  BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
+  hso->insert( RCD_data_b, hdp );
+  BlockValueByteArray *dbp = new BlockValueByteArray( "BinarySample", this );
+  hdo->insert( RCD_data_b, dbp );
+  BlockValueString *stp = new BlockValueString( "StringSample", this );
+  hdo->insert( RCD_text_s, stp );
+  BlockArrayObject *poa = new BlockArrayObject( RCD_parentHash_O, this );
+  hdo->insert( RCD_parentHash_O, poa );
+  ui->report->append( kvp->json() );
   writeWrappedDot( kvp->dot() );
 }
 
@@ -93,6 +103,7 @@ void  BlockTool::updateGraph()
 
 void  BlockTool::graphvizDone(int code,QProcess::ExitStatus status)
 { // qWarning( "finished %d %d", code, status );
+  (void)code; (void)status;
   liveDelay( 50 );
   QPixmap p( "/tmp/x.dot.png" );
   ui->graphic->setPixmap( p );

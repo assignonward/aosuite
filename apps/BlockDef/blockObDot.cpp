@@ -51,6 +51,8 @@ DotSerial KeyValueArray::dot() const
   d.append( "  labeljust = \"l\";\n" );
   d.append( "  margin = 4;\n" );
   d.append( "  fontsize = 12;\n" );
+  if ( size() == 0 )
+    d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
   quint8 t = type();
   for ( qint32 i = 0; i < size(); i++ )
     { if ( at(i) )

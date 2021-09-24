@@ -126,16 +126,6 @@
             "type_y": "23"
         },
         {
-            "name_s": "SHA256_y",
-            "text_s": "algorithm ID (algor) for SHA2 - 256",
-            "type_y": "25"
-        },
-        {
-            "name_s": "ECB256_y",
-            "text_s": "algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1",
-            "type_y": "45"
-        },
-        {
             "name_s": "itemRelAddr_Y",
             "text_s": "Navigation from the current itemDef to an operand in an operation, sequence of item types when navigating deeper, relative step back or to root to get higher in the hiearchy",
             "type_y": "55"
@@ -149,6 +139,16 @@
             "name_s": "navChainBlock_y",
             "text_s": "Navigate to the 'root' of this chain block, used in operand absolute addressing.",
             "type_y": "8345"
+        },
+        {
+            "name_s": "SHA256_y",
+            "text_s": "algorithm ID (algor) for SHA2 - 256",
+            "type_y": "25"
+        },
+        {
+            "name_s": "ECB256_y",
+            "text_s": "algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1",
+            "type_y": "45"
         },
         {
             "name_s": "RSA3072_y",

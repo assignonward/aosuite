@@ -64,14 +64,14 @@ View</string>
       <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Self Tests</string>
+         <string>Samples:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="start">
+       <widget class="QPushButton" name="chain">
         <property name="text">
-         <string>Start</string>
+         <string>Chain</string>
         </property>
        </widget>
       </item>
