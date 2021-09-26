@@ -41,7 +41,7 @@ qint32 dex = 0;
 DotSerial KeyValuePair::dot() const
 { DotSerial d;
   DotSerial kn = dict.nameFromCode(key());
-  d.append( "subgraph cluster_c"+DotSerial::number( dex++ )+" {\n" );
+  d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
   d.append( "  label =\""+kn+"\";\n" );
   d.append( "  labeljust = \"l\";\n" );
   d.append( "  margin = 4;\n" );
@@ -76,7 +76,8 @@ DotSerial KeyValueArray::dot() const
           d.append( "  margin = 4;\n" );
           d.append( "  fontsize = 10;\n\n" );
             DotSerial v = at(i)->dot();
-            // v.replace(DotSerial("\""), DotSerial(""));
+            if ( ( at(i)->type() & RDT_TYPEMASK ) == RDT_RCODE )
+              v.replace(DotSerial("\""), DotSerial(""));
             if ( t == RDT_OBJECT_ARRAY )
               d.append( v+"\n" );
              else

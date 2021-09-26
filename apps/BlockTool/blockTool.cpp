@@ -80,9 +80,17 @@ void  BlockTool::on_chain_clicked()
   hsop->insert( RCD_time_i, htip );
   BlockValueByteArray *hdpp = new BlockValueByteArray( "HashTrample", this );
   hsop->insert( RCD_data_b, hdpp );
-
+/*
+  QList<RiceyInt> ta;
+  ta.append( RCD_ProtocolDef_o );
+  ta.append( RCD_RequiredItems_O );
+  ta.append( RCD_OptionalItems_O );
+  BlockArrayRicey *bar = new BlockArrayRicey( RCD_riceyArray_Y, ta, this );
+  hdo->insert( RCD_riceyArray_Y, bar );
+*/
   ui->report->append( kvp->json() );
   ui->report->append( kvp->bsonish().toHex() );
+//  ui->report->append( kvp->dot() );
   writeWrappedDot( kvp->dot() );
 }
 
@@ -95,7 +103,6 @@ void  BlockTool::writeWrappedDot( QByteArray d )
   fd.write( "}\n" );
   fd.flush();
   fd.close();
-  // qWarning( "%s", d.data() );
   updateGraph();
 }
 
