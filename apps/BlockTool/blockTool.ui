@@ -43,7 +43,13 @@
      <number>0</number>
     </property>
     <item row="2" column="0">
-     <widget class="QTextEdit" name="report"/>
+     <widget class="QTextEdit" name="report">
+      <property name="font">
+       <font>
+        <family>DejaVu Sans Mono</family>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="2" column="1">
      <widget class="QLabel" name="graphic">

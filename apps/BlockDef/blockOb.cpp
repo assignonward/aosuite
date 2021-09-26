@@ -24,6 +24,47 @@
 #include <QTextCodec>
 #include <string.h>
 
+// Design Intent:
+//
+// Block data structures provide an extensible, specifiable format for the
+//   communication and storage of data and the common wrappers that accompany
+//   it in blockchain operations.  The basic structures resemble .json object
+//   formats, including objects, arrays, and individual data elements, but the
+//   keys are made to be strongly typed, and specify a larger number of datatypes
+//   than standard .json does.  Nonetheless, a block data structure can be expressed
+//   in standard .json format and manipulated with common .json tools.
+//
+// The intended form for operations and communications is designated "bsonish" - a
+//   binary form of the json structures which is both more compact and more specific,
+//   there is only one correct bsonish representation of a given object because:
+//   1) duplicate key values are not allowed in a single level of an object container
+//   2) key-value elements in an object container are listed in key sort order
+//   3) array elements are always listed in the order in which they are saved
+//   4) sparse arrays are not allowed, they always start with element 0 (or can be empty)
+//   (designated bsonish because bson implies a certain translation of json which bsonish is not.)
+//
+// Further, in a given protocol, only recognized keys (defined in the protocol) are allowed.
+//
+// Defined data types include:
+//   0) Objects, contain 0 or more key-value pairs
+//   1) int64, 8 byte signed integers stored LSB first
+//   2) int32, 4 byte signed integers stored LSB first (potentially deprecated)
+//   3) MPZ, arbitrary precision integers stored MSB first in BCD, terminated with F for negative and E for positive
+//   4) MPQ, arbitrary precision ratio of two integers stored as two MPZ: numerator / denominator
+//   5) RCODE, when used as a key - a rice code value which appears in the protocol dictionary
+//      note that the following data types use rice code numbers (positive integers from 0 to 2^63) to specify lengths in bsonish code
+//   6) String, any valid UTF-8 string stored as a rice code length followed by the characters - not including null terminator
+//   7) Data, any octet stream stored as a rice code length followed by the data
+//   8-15) arrays of the above, stored as a rice code specifying 0 or more elements, followed by that number of elements stored as above
+//
+// State of the code:
+//
+// Functional, but not my proudest work.  Could be refactored to make more sensible inheritance
+//   of the values into arrays of values, I think that would streamline the implementation and
+//   reduce the abundance of special case handling code.
+//
+
+
 size_t strnlength (const char* s, size_t n)
 { const char *found = (char *)memchr(s, '\0', n);
   return found ? (size_t)(found-s) : n;
@@ -562,11 +603,15 @@ BsonSerial BlockValueObject::bsonish() const
 { QList<RiceyInt> keys = m_obMap.keys();
   BsonSerial b = intToRice( m_obMap.size() );
   foreach ( RiceyInt key, keys )
-    { b.append( intToRice(key) );
-      if ( m_obMap[key] != nullptr )
-        b.append( m_obMap[key]->bsonish() );
+    { if ( m_obMap[key] != nullptr )
+        { if ( ( m_obMap[key]->type() & RDT_ARRAY ) == 0 )
+            b.append( intToRice(key) ); // Arrays put out their own keys... annoying.
+          b.append( m_obMap[key]->bsonish() );
+        }
        else
-        b.append( bsonishNull( m_obMap[key]->type() ) );
+        { b.append( intToRice(key) );
+          b.append( bsonishNull( m_obMap[key]->type() ) );
+        }
     }
   return b;
 }
@@ -594,7 +639,8 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
       RiceyInt k = riceToInt( b.mid(i), &len, &ok );
       if ( !ok )
         { qWarning( "bad key rice code" ); return -1; }
-      i += len;
+      if  ( ( k & RDT_ARRAY ) == 0 )
+        i += len; // Arrays expect to re-read their key... annoying.
       if ( b.size() <= i )
         { qWarning( "object key data missing" ); return -1; }
       ValueBase *vbo = bsonishValueByKey( k, b.mid(i), &len, this );

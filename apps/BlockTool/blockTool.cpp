@@ -72,6 +72,7 @@ void  BlockTool::on_chain_clicked()
   BlockArrayObject *poa = new BlockArrayObject( RCD_parentHash_O, this );
   hdo->insert( RCD_parentHash_O, poa );
   ui->report->append( kvp->json() );
+  ui->report->append( kvp->bsonish().toHex() );
   writeWrappedDot( kvp->dot() );
 }
 

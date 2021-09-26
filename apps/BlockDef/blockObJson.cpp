@@ -26,6 +26,27 @@
 #include <QJsonValue>
 #include <QVariant>
 
+// Design Intent:
+//
+// The json() and setJson() functions of block object family members are intended as
+//   a bi-directional serialization/deserialization pathway to/from a somewhat human
+//   readable form for the block data.  Although json is not the primary form for
+//   block data, it should be possible to serialize a block as json, edit it, then
+//   deserialize the edited json data back into a block object.  Operations like
+//   hash and digital signatures require the bsonish representation of the data, so
+//   they cannot be calculated directly on json representations without first
+//   translating to bsonish.
+//
+// State of the code:
+//
+// Although the Qt Json library functions are convenient for parsing of structures
+//   like arrays, they are struggling with accuracy of larger int64 numbers due to
+//   internal representation of such numbers as double floats.  I am beginning to
+//   question the utility of including the int32 data type, and also the value of
+//   representing qint64 as naked integers in json rather than ASCII decimal strings
+//   which would not suffer the precision problems of the bare integers.
+//
+
 /**
  * @brief BlockValueInt64::setJson
  * @param j - byte array which should contain a UTF8 encoded integer

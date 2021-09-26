@@ -20,6 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+// Design Intent:
+//
+// The dot() functions of block object family members are intended to create
+//   a read-only graphviz presentation of the block structure, showing object
+//   nesting, key labels and data value summaries.  Larger data objects may be
+//   abbreviated to convey the structure of larger blocks rather than the
+//   absolute complete contents.
+//
+// When protocols start specifying operations, the intent is for the .dot graphs
+//    to include arrows and symbols to illustrate the operands, operations and
+//    where the results of the operations appear in the structure.
+//
+
 #include "blockOb.h"
 
 qint32 dex = 0;
@@ -83,30 +97,38 @@ DotSerial BlockValueObject::dot() const
   if ( keys.size() == 0 )
     d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
    else foreach ( RiceyInt i, keys )
-    { DotSerial kn = dict.nameFromCode(i);
-      d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-      d.append( "  label =\""+kn+"\";\n" );
-      d.append( "  margin = 4;\n" );
-      d.append( "  style = rounded;\n" );
-      d.append( "  fontsize = 10;\n\n" );
+    { bool done = false;
       if ( value(i) )
-        { DotSerial v = value(i)->dot();
-          quint8 t = value(i)->type();
-          //if ( t == RDT_STRING )
-          //  v.replace(DotSerial("!"), DotSerial(""));
-          if (( t == RDT_STRING ) || ( t == RDT_MPZ ) || ( t == RDT_MPQ ) || ( t == RDT_RCODE ) || ( t == RDT_BYTEARRAY ))
-            d.append( "node_"+DotSerial::number( dex++ )
-                     +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
-           else if (( t == RDT_OBJECT ) || (( t & RDT_ARRAY ) == RDT_ARRAY ))
-            d.append( v+"\n" );
+        if (( value(i)->type() & RDT_ARRAY ) == RDT_ARRAY )
+           { d.append( value(i)->dot() );
+             done = true;
+           }
+      if ( !done )
+        { DotSerial kn = dict.nameFromCode(i);
+          d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
+          d.append( "  label =\""+kn+"\";\n" );
+          d.append( "  margin = 4;\n" );
+          d.append( "  style = rounded;\n" );
+          d.append( "  fontsize = 10;\n\n" );
+          if ( value(i) )
+            { DotSerial v = value(i)->dot();
+              quint8 t = value(i)->type();
+              //if ( t == RDT_STRING )
+              //  v.replace(DotSerial("!"), DotSerial(""));
+              if (( t == RDT_STRING ) || ( t == RDT_MPZ ) || ( t == RDT_MPQ ) || ( t == RDT_RCODE ) || ( t == RDT_BYTEARRAY ))
+                d.append( "node_"+DotSerial::number( dex++ )
+                         +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
+               else if (( t == RDT_OBJECT ) || (( t & RDT_ARRAY ) == RDT_ARRAY ))
+                d.append( v+"\n" );
+               else
+                d.append( "node_"+DotSerial::number( dex++ )
+                         +" [ label=\""+v+"\"; shape=box; style=rounded; fontsize=10; ];\n" );
+            }
            else
             d.append( "node_"+DotSerial::number( dex++ )
-                     +" [ label=\""+v+"\"; shape=box; style=rounded; fontsize=10; ];\n" );
+                     +" [ label=\"NULL\"; shape=box; style=rounded; fontsize=10; ];\n" );
+          d.append( "  }\n" );
         }
-       else
-        d.append( "node_"+DotSerial::number( dex++ )
-                 +" [ label=\"NULL\"; shape=box; style=rounded; fontsize=10; ];\n" );
-      d.append( "  }\n" );
     }
   return d;
 }
