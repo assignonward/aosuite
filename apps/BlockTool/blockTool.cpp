@@ -71,6 +71,16 @@ void  BlockTool::on_chain_clicked()
   hdo->insert( RCD_text_s, stp );
   BlockArrayObject *poa = new BlockArrayObject( RCD_parentHash_O, this );
   hdo->insert( RCD_parentHash_O, poa );
+
+  BlockValueObject *hsop = new BlockValueObject( this );
+  poa->append( hsop );
+  BlockValueRiceyCode *htcp = new BlockValueRiceyCode( RCD_SHA3b512_y, this );
+  hsop->insert( RCD_type_y, htcp );
+  BlockValueInt64 *htip = new BlockValueInt64( 1122, this );
+  hsop->insert( RCD_time_i, htip );
+  BlockValueByteArray *hdpp = new BlockValueByteArray( "HashTrample", this );
+  hsop->insert( RCD_data_b, hdpp );
+
   ui->report->append( kvp->json() );
   ui->report->append( kvp->bsonish().toHex() );
   writeWrappedDot( kvp->dot() );
