@@ -44,8 +44,9 @@ DotSerial KeyValuePair::dot() const
   d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
   d.append( "  label =\""+kn+"\";\n" );
   d.append( "  labeljust = \"l\";\n" );
+  d.append( "  style = rounded;\n" );
   d.append( "  margin = 4;\n" );
-  d.append( "  fontsize = 12;\n\n" );
+  d.append( "  fontsize = 10;\n\n" );
   if ( value() )
     { DotSerial v = value()->dot();
       // v.replace(DotSerial("\""), DotSerial(""));
@@ -64,7 +65,7 @@ DotSerial KeyValueArray::dot() const
   d.append( "  label =\""+kn+"["+DotSerial::number( size() )+"]\";\n" );
   d.append( "  labeljust = \"l\";\n" );
   d.append( "  margin = 4;\n" );
-  d.append( "  fontsize = 12;\n" );
+  d.append( "  fontsize = 10;\n" );
   if ( size() == 0 )
     d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
   quint8 t = type();

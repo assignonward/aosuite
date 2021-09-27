@@ -1,6 +1,54 @@
 {
     "riceyCodes_O": [
         {
+            "group_y": "DA25",
+            "name_s": "group_y",
+            "text_s": "groupDefGroup_y Identifies what group a definition belongs to",
+            "type_y": "DA05"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "groupDefGroup_y",
+            "text_s": "groupDefGroup_y These codes are used to identify what group a code belongs to",
+            "type_y": "DA25"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "dataGroup_y",
+            "text_s": "groupDefGroup_y Generic data group - many items simply not yet classified",
+            "type_y": "DA45"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "protocolIdGroup_y",
+            "text_s": "groupDefGroup_y These codes identify established protocols",
+            "type_y": "DA65"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "protocolActorGroup_y",
+            "text_s": "groupDefGroup_y These codes identify actors within protocols",
+            "type_y": "DB05"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "algorithmIdGroup_y",
+            "text_s": "groupDefGroup_y These codes identify algorithms",
+            "type_y": "DB25"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "structNavGroup_y",
+            "text_s": "groupDefGroup_y These codes direct protocol operations to operands",
+            "type_y": "DB45"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "dictionaryGroup_y",
+            "text_s": "groupDefGroup_y These codes are used specifically for dictionary contaioners",
+            "type_y": "DB65"
+        },
+        {
             "group_y": "DA45",
             "name_s": "ObTerm_o",
             "text_s": "dataGroup_y Object terminator, indicates no more items in the object in bsonish lists",
@@ -35,42 +83,6 @@
             "name_s": "type_y",
             "text_s": "dataGroup_y Identifies an algorithm type for hash or crypto key, or other types depending on context",
             "type_y": "05"
-        },
-        {
-            "group_y": "DA25",
-            "name_s": "group_y",
-            "text_s": "groupDefGroup_y Identifies what group a definition belongs to",
-            "type_y": "DA05"
-        },
-        {
-            "group_y": "DA25",
-            "name_s": "groupDefGroup_y",
-            "text_s": "groupDefGroup_y These codes are used to identify what group a code belongs to",
-            "type_y": "DA25"
-        },
-        {
-            "group_y": "DA25",
-            "name_s": "dataGroup_y",
-            "text_s": "groupDefGroup_y Generic data group - basically not yet classified",
-            "type_y": "DA45"
-        },
-        {
-            "group_y": "DA25",
-            "name_s": "protocolIdGroup_y",
-            "text_s": "groupDefGroup_y These codes identify established protocols",
-            "type_y": "DA65"
-        },
-        {
-            "group_y": "DA25",
-            "name_s": "algorithmIdGroup_y",
-            "text_s": "groupDefGroup_y These codes identify algorithms",
-            "type_y": "DB05"
-        },
-        {
-            "group_y": "DA25",
-            "name_s": "structNavGroup_y",
-            "text_s": "groupDefGroup_y These codes direct protocol operations to operands",
-            "type_y": "DB25"
         },
         {
             "group_y": "DA45",
@@ -187,70 +199,52 @@
             "type_y": "23"
         },
         {
-            "group_y": "DB05",
+            "group_y": "DB25",
             "name_s": "SHA256_y",
             "text_s": "algorithmIdGroup_y algorithm ID (algor) for SHA2 - 256",
             "type_y": "25"
         },
         {
-            "group_y": "DB05",
+            "group_y": "DB25",
             "name_s": "ECB256_y",
             "text_s": "algorithmIdGroup_y algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1",
             "type_y": "45"
         },
         {
             "group_y": "DB25",
-            "name_s": "itemRelAddr_Y",
-            "text_s": "structNavGroup_y Navigation from the current itemDef to an operand in an operation, sequence of item types when navigating deeper, relative step back or to root to get higher in the hiearchy",
-            "type_y": "55"
-        },
-        {
-            "group_y": "DB25",
-            "name_s": "navUpOne_y",
-            "text_s": "structNavGroup_y Navigate 'up one' level in a nested block, used in operand relative addressing.",
-            "type_y": "8765"
-        },
-        {
-            "group_y": "DB25",
-            "name_s": "navChainBlock_y",
-            "text_s": "structNavGroup_y Navigate to the 'root' of this chain block, used in operand absolute addressing.",
-            "type_y": "8345"
-        },
-        {
-            "group_y": "DB05",
             "name_s": "RSA3072_y",
             "text_s": "algorithmIdGroup_y algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes",
             "type_y": "A145"
         },
         {
-            "group_y": "DB05",
+            "group_y": "DB25",
             "name_s": "SHA3b512_y",
             "text_s": "algorithmIdGroup_y algorithm ID (algor) for SHA3 - 512",
             "type_y": "A125"
         },
         {
-            "group_y": "DB05",
+            "group_y": "DB25",
             "name_s": "jpg_y",
             "text_s": "algorithmIdGroup_y Found in image objects, tells what format the data_b is to be interpreted as",
             "type_y": "9025"
         },
         {
-            "group_y": "DB05",
+            "group_y": "DB25",
             "name_s": "png_y",
             "text_s": "algorithmIdGroup_y Found in image objects, tells what format the data_b is to be interpreted as",
             "type_y": "9045"
         },
         {
-            "group_y": "DA45",
+            "group_y": "DB65",
             "name_s": "riceyTypes_O",
-            "text_s": "dataGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.",
-            "type_y": "D010"
+            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.",
+            "type_y": "D1C710"
         },
         {
-            "group_y": "DA45",
+            "group_y": "DB65",
             "name_s": "riceyCodes_O",
-            "text_s": "dataGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.",
-            "type_y": "D030"
+            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.",
+            "type_y": "D1C730"
         },
         {
             "group_y": "DA65",
@@ -275,6 +269,36 @@
             "name_s": "PcolA01_y",
             "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees",
             "type_y": "ADD08025"
+        },
+        {
+            "group_y": "DB05",
+            "name_s": "actorRecMaker_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who wants to create a record (in a blockchain)",
+            "type_y": "ACC705"
+        },
+        {
+            "group_y": "DB05",
+            "name_s": "actorRecUser_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who wants to retrieve a record (from a blockchain)",
+            "type_y": "ACC725"
+        },
+        {
+            "group_y": "DB05",
+            "name_s": "actorRecRecorder_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who handles requests to create records (in a blockchain)",
+            "type_y": "ACC745"
+        },
+        {
+            "group_y": "DB05",
+            "name_s": "actorRecRetriever_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
+            "type_y": "ACC765"
+        },
+        {
+            "group_y": "DB05",
+            "name_s": "actorRecStorage_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who physically stores and retrieves records (in a blockchain)",
+            "type_y": "ACC805"
         },
         {
             "group_y": "DA45",
@@ -317,6 +341,30 @@
             "name_s": "OperationalReq_O",
             "text_s": "dataGroup_y Constraints on values found in Required or Optional items",
             "type_y": "A050"
+        },
+        {
+            "group_y": "DB45",
+            "name_s": "itemRelAddr_Y",
+            "text_s": "structNavGroup_y Navigation from the current itemDef to an operand in an operation, sequence of item types when navigating deeper, relative step back or to root to get higher in the hiearchy",
+            "type_y": "FFF555"
+        },
+        {
+            "group_y": "DB45",
+            "name_s": "navUpOne_y",
+            "text_s": "structNavGroup_y Navigate 'up one' level in a nested block, used in operand relative addressing.",
+            "type_y": "FFF565"
+        },
+        {
+            "group_y": "DB45",
+            "name_s": "navChainBlock_y",
+            "text_s": "structNavGroup_y Navigate to the 'root' of this chain block, used in operand absolute addressing.",
+            "type_y": "FFF505"
+        },
+        {
+            "group_y": "DB45",
+            "name_s": "navJumpToBlock_y",
+            "text_s": "structNavGroup_y The next item in the itemRelAddr_Y array contains a chainBlock index, navigation will continue from that block.",
+            "type_y": "FFF525"
         },
         {
             "group_y": "DA45",
