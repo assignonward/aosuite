@@ -60,15 +60,16 @@ public slots:
        void  on_write_clicked();
 
 public:
-            QString  t; // translation
-            QString  v; // violations
-        QJsonObject  jo;
-             qint32  maxNameLength;
-             qint32  maxNumLength;
-        QStringList  riceyList,notesList;
-     QList<RiceyInt> riceyInts;
- QHash<qint32, QChar> notesNumChar;
- QHash<QChar, QChar> notesExtraChar;
+                QString  t; // translation
+                QString  v; // violations
+            QJsonObject  jo;
+                 qint32  maxNameLength;
+                 qint32  maxNumLength;
+            QStringList  riceyList,notesList;
+         QList<RiceyInt> riceyInts;
+ QHash<QString, QString> riceyCodes;
+    QHash<qint32, QChar> notesNumChar;
+     QHash<QChar, QChar> notesExtraChar;
 
 private:
     Ui::MainWindow *ui;

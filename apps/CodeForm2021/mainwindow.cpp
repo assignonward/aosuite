@@ -248,6 +248,7 @@ void MainWindow::showResults()
 void MainWindow::firstPass()
 { QStringList names,codes;
   riceyInts.clear();
+  riceyCodes.clear();
   foreach ( QString line, riceyList )
     { QStringList words = line.split(" ",QString::SkipEmptyParts);
       if ( words.size() > 1 )
@@ -257,6 +258,8 @@ void MainWindow::firstPass()
             { v.append( QString( "ERROR: name %1 used twice, second time in line '%2'\n" ).arg( words.at(0) ).arg( line ) ); }
            else
             names.append( words.at(0) );
+
+          riceyCodes.insert( words.at(0), words.at(1) );
 
           if ( !words.at(1).startsWith( "0x" ) || (words.at(1).size() < 3) )
             { v.append( QString( "ERROR: num '%1' must start with 0x and be followed by at least 1 digit in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
@@ -421,6 +424,9 @@ QJsonValue MainWindow::riceyLineToJson( QString line )
         { v.append( QString( "ricey line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
        else
         { rlo.insert( "text_s", line.mid( line.indexOf("//") + 3 ) ); }
+      if ( words.size() > 3 )
+        if ( riceyCodes.contains( words.at(3) ) )
+          { rlo.insert( "group_y", riceyCodes[words.at(3)].mid(2) ); }
     }
   return QJsonValue( rlo );
 }
