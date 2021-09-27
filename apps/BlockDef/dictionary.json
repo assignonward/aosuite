@@ -45,7 +45,7 @@
         {
             "group_y": "DA25",
             "name_s": "groupDefGroup_y",
-            "text_s": "groupDefGroup_y Generic data group - basically not yet classified",
+            "text_s": "groupDefGroup_y These codes are used to identify what group a code belongs to",
             "type_y": "DA25"
         },
         {

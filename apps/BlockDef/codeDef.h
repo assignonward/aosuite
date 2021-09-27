@@ -51,7 +51,7 @@
 #define RCD_mpq_r                     4 // dataGroup_y Generic MPQ large integer fraction, use depends on context.
 #define RCD_type_y                    5 // dataGroup_y Identifies an algorithm type for hash or crypto key, or other types depending on context
 #define RCD_group_y               11525 // groupDefGroup_y Identifies what group a definition belongs to
-#define RCD_groupDefGroup_y       11557 // groupDefGroup_y Generic data group - basically not yet classified
+#define RCD_groupDefGroup_y       11557 // groupDefGroup_y These codes are used to identify what group a code belongs to
 #define RCD_dataGroup_y           11589 // groupDefGroup_y Generic data group - basically not yet classified
 #define RCD_protocolIdGroup_y     11621 // groupDefGroup_y These codes identify established protocols
 #define RCD_algorithmIdGroup_y    11653 // groupDefGroup_y These codes identify algorithms
