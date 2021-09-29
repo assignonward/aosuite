@@ -75,6 +75,13 @@ View</string>
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="protocol">
+        <property name="text">
+         <string>Protocol</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="chain">
         <property name="text">
          <string>Chain</string>

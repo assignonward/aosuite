@@ -80,7 +80,123 @@ void  BlockTool::on_chain_clicked()
   hsop->insert( RCD_time_i, htip );
   BlockValueByteArray *hdpp = new BlockValueByteArray( "HashTrample", this );
   hsop->insert( RCD_data_b, hdpp );
+
+  BlockArrayObject *sil = new BlockArrayObject( RCD_separableItems_O, this );
+  cbo->insert( RCD_separableItems_O, sil );
+  BlockArrayObject *sih = new BlockArrayObject( RCD_separableItemsHashes_O, this );
+  hdo->insert( RCD_separableItemsHashes_O, sih );
+
+  ui->report->append( kvp->json() );
+  ui->report->append( kvp->bsonish().toHex() );
+//  ui->report->append( kvp->dot() );
+  writeWrappedDot( kvp->dot() );
+}
+
+void  BlockTool::on_protocol_clicked()
+{ ui->report->clear();
+  ui->report->append( "Sample protocol block" );
+  BlockValueObject *pdo = new BlockValueObject( this );
+  KeyValuePair     *kvp = new KeyValuePair(RCD_ProtocolDef_o,pdo,this);
+  BlockValueObject *hdo = new BlockValueObject( this );
+  pdo->insert( RCD_hashedOb_o, hdo );
+  BlockValueObject *hso = new BlockValueObject( this );
+  pdo->insert( RCD_hash_o, hso );
+  BlockValueRiceyCode *htc = new BlockValueRiceyCode( RCD_SHA3b512_y, this );
+  hso->insert( RCD_type_y, htc );
+  BlockValueInt64 *hti = new BlockValueInt64( 123, this );
+  hso->insert( RCD_time_i, hti );
+  BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
+  hso->insert( RCD_data_b, hdp );
+
+  BlockValueString *stp = new BlockValueString( "TⒶ2021.9.22", this );
+  hdo->insert( RCD_text_s, stp );
+  BlockArrayObject *idl = new BlockArrayObject( RCD_ItemDefList_O, this );
+  hdo->insert( RCD_ItemDefList_O, idl );
+
+  BlockValueObject *ido = new BlockValueObject( this );
+  idl->append( ido );
+  BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_hash_o, this );
+  ido->insert( RCD_type_y, idc );
+  BlockArrayRicey *ril = new BlockArrayRicey( RCD_RequiredItems_Y, this );
+  ido->insert( RCD_RequiredItems_Y, ril );
+  BlockValueRiceyCode *ri1 = new BlockValueRiceyCode( RCD_type_y, this );
+  ril->append( ri1 );
+  BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_data_b, this );
+  ril->append( ri2 );
+  BlockValueRiceyCode *ri3 = new BlockValueRiceyCode( RCD_time_i, this );
+  ril->append( ri3 );
+  BlockArrayRicey *oil = new BlockArrayRicey( RCD_OptionalItems_Y, this );
+  ido->insert( RCD_OptionalItems_Y, oil );
+  BlockArrayObject *orl = new BlockArrayObject( RCD_OperReqList_O, this );
+  ido->insert( RCD_OperReqList_O, orl );
+
+  BlockValueObject *or1 = new BlockValueObject( this );
+  orl->append( or1 );
+    BlockValueRiceyCode *or1t = new BlockValueRiceyCode( RCD_type_y, this );
+    or1->insert( RCD_type_y, or1t );
+    BlockArrayRicey *or1o = new BlockArrayRicey( RCD_OpMemberOf_Y, this );
+    or1->insert( RCD_OpMemberOf_Y, or1o );
+      BlockValueRiceyCode *or1m1 = new BlockValueRiceyCode( RCD_SHA256_y, this );
+      or1o->append( or1m1 );
+      BlockValueRiceyCode *or1m2 = new BlockValueRiceyCode( RCD_SHA3b512_y, this );
+      or1o->append( or1m2 );
+  BlockValueObject *or2 = new BlockValueObject( this );
+  orl->append( or2 );
+    BlockValueRiceyCode *or2t = new BlockValueRiceyCode( RCD_time_i, this );
+    or2->insert( RCD_type_y, or2t );
+    BlockValueRiceyCode *or2to = new BlockValueRiceyCode( RCD_time_i, this );
+    or2->insert( RCD_OpTimeValue_y, or2to );
+
+  BlockValueObject *or3 = new BlockValueObject( this );
+  orl->append( or3 );
+    BlockValueRiceyCode *or3t = new BlockValueRiceyCode( RCD_time_i, this );
+    or3->insert( RCD_type_y, or3t );
+    BlockArrayRicey *or3o = new BlockArrayRicey( RCD_OpGreaterThan_Y, this );
+    or3->insert( RCD_OpGreaterThan_Y, or3o );
+      BlockValueRiceyCode *or3s1 = new BlockValueRiceyCode( RCD_navUpOne_y, this );
+      or3o->append( or3s1 );
+      BlockValueRiceyCode *or3s2 = new BlockValueRiceyCode( RCD_hashedOb_o, this );
+      or3o->append( or3s2 );
+      BlockValueRiceyCode *or3s3 = new BlockValueRiceyCode( RCD_navIfPresent_y, this );
+      or3o->append( or3s3 );
+      BlockValueRiceyCode *or3s4 = new BlockValueRiceyCode( RCD_parentHash_O, this );
+      or3o->append( or3s4 );
+      BlockValueRiceyCode *or3s5 = new BlockValueRiceyCode( RCD_time_i, this );
+      or3o->append( or3s5 );
+
+  BlockValueObject *or4 = new BlockValueObject( this );
+  orl->append( or4 );
+    BlockValueRiceyCode *or4t = new BlockValueRiceyCode( RCD_data_b, this );
+    or4->insert( RCD_type_y, or4t );
+    BlockArrayObject *or4o = new BlockArrayObject( RCD_OpHash_O, this );
+    or4->insert( RCD_OpHash_O, or4o );
+      BlockValueObject *or41 = new BlockValueObject( this );
+      or4o->append( or41 );
+        BlockArrayRicey *or411 = new BlockArrayRicey( this );
+        or41->insert( RCD_riceyArray_Y, or411 );
+          BlockValueRiceyCode *or4111 = new BlockValueRiceyCode( RCD_type_y, this );
+          or411->append( or4111 );
+      BlockValueObject *or42 = new BlockValueObject( this );
+      or4o->append( or42 );
+        BlockArrayRicey *or421 = new BlockArrayRicey( this );
+        or42->insert( RCD_riceyArray_Y, or421 );
+          BlockValueRiceyCode *or4211 = new BlockValueRiceyCode( RCD_time_i, this );
+          or421->append( or4211 );
+     BlockValueObject *or43 = new BlockValueObject( this );
+     or4o->append( or43 );
+       BlockArrayRicey *or431 = new BlockArrayRicey( this );
+       or43->insert( RCD_riceyArray_Y, or431 );
+         BlockValueRiceyCode *or4311 = new BlockValueRiceyCode( RCD_navUpOne_y, this );
+         or431->append( or4311 );
+         BlockValueRiceyCode *or4312 = new BlockValueRiceyCode( RCD_hashedOb_o, this );
+         or431->append( or4312 );
+
 /*
+  BlockValueByteArray *dbp = new BlockValueByteArray( "BinarySample", this );
+  hdo->insert( RCD_data_b, dbp );
+  BlockValueString *stp = new BlockValueString( "StringSample", this );
+  hdo->insert( RCD_text_s, stp );
+
   QList<RiceyInt> ta;
   ta.append( RCD_ProtocolDef_o );
   ta.append( RCD_RequiredItems_O );
@@ -90,7 +206,7 @@ void  BlockTool::on_chain_clicked()
 */
   ui->report->append( kvp->json() );
   ui->report->append( kvp->bsonish().toHex() );
-//  ui->report->append( kvp->dot() );
+ // ui->report->append( kvp->dot() );
   writeWrappedDot( kvp->dot() );
 }
 

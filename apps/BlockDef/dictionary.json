@@ -45,8 +45,26 @@
         {
             "group_y": "DA25",
             "name_s": "dictionaryGroup_y",
-            "text_s": "groupDefGroup_y These codes are used specifically for dictionary contaioners",
+            "text_s": "groupDefGroup_y These codes are used specifically for dictionary containers",
             "type_y": "DB65"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "chainGroup_y",
+            "text_s": "groupDefGroup_y These codes are used for chain structure items",
+            "type_y": "DC05"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "operationGroup_y",
+            "text_s": "groupDefGroup_y These codes define calculation/operation types",
+            "type_y": "DC25"
+        },
+        {
+            "group_y": "DA25",
+            "name_s": "protocolDefGroup_y",
+            "text_s": "groupDefGroup_y These codes are used in protocol definition",
+            "type_y": "DC45"
         },
         {
             "group_y": "DA45",
@@ -164,30 +182,6 @@
         },
         {
             "group_y": "DA45",
-            "name_s": "chainBlock_o",
-            "text_s": "dataGroup_y An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) ",
-            "type_y": "CB00"
-        },
-        {
-            "group_y": "DA45",
-            "name_s": "hashedOb_o",
-            "text_s": "dataGroup_y An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.",
-            "type_y": "20"
-        },
-        {
-            "group_y": "DA45",
-            "name_s": "hash_o",
-            "text_s": "dataGroup_y Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.",
-            "type_y": "40"
-        },
-        {
-            "group_y": "DA45",
-            "name_s": "parentHash_O",
-            "text_s": "dataGroup_y Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.",
-            "type_y": "70"
-        },
-        {
-            "group_y": "DA45",
             "name_s": "time_i",
             "text_s": "dataGroup_y UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.",
             "type_y": "21"
@@ -197,6 +191,48 @@
             "name_s": "AOShares_n",
             "text_s": "dataGroup_y A quantity of shares - meaning depends on context",
             "type_y": "23"
+        },
+        {
+            "group_y": "DC05",
+            "name_s": "chainBlock_o",
+            "text_s": "chainGroup_y An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) ",
+            "type_y": "CB00"
+        },
+        {
+            "group_y": "DC05",
+            "name_s": "hashedOb_o",
+            "text_s": "chainGroup_y An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.",
+            "type_y": "20"
+        },
+        {
+            "group_y": "DC05",
+            "name_s": "hash_o",
+            "text_s": "chainGroup_y Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.",
+            "type_y": "60"
+        },
+        {
+            "group_y": "DC05",
+            "name_s": "parentHash_O",
+            "text_s": "chainGroup_y Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.",
+            "type_y": "70"
+        },
+        {
+            "group_y": "DC05",
+            "name_s": "separableItems_O",
+            "text_s": "chainGroup_y List of items which are only indirectly included in the hash chain",
+            "type_y": "30"
+        },
+        {
+            "group_y": "DC05",
+            "name_s": "separableItemsHashes_O",
+            "text_s": "chainGroup_y Hashes of separable items which do get included in the hash chain",
+            "type_y": "50"
+        },
+        {
+            "group_y": "DC05",
+            "name_s": "separatedItem_o",
+            "text_s": "chainGroup_y Included separable items are contained in hashedOb_o, when they have been separated this object container replaces them, along with optional information about the separated item (where it might be found, why it was removed, when it was removed, on whose authority it was removed, etc.)",
+            "type_y": "888660"
         },
         {
             "group_y": "DB25",
@@ -301,46 +337,88 @@
             "type_y": "ACC805"
         },
         {
-            "group_y": "DA45",
+            "group_y": "DC45",
             "name_s": "ProtocolList_O",
-            "text_s": "dataGroup_y An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle ",
+            "text_s": "protocolDefGroup_y An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle ",
             "type_y": "A070"
         },
         {
-            "group_y": "DA45",
+            "group_y": "DC45",
             "name_s": "ProtocolDef_o",
-            "text_s": "dataGroup_y An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "text_s": "protocolDefGroup_y An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
             "type_y": "A020"
         },
         {
-            "group_y": "DA45",
-            "name_s": "ItemDef_o",
-            "text_s": "dataGroup_y An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
-            "type_y": "A000"
-        },
-        {
-            "group_y": "DA45",
-            "name_s": "ProtocolSig_o",
-            "text_s": "dataGroup_y A signature on an Assign Onward Protocol Definition, indicating the protocol is \"approved\" by the signer",
-            "type_y": "A060"
-        },
-        {
-            "group_y": "DA45",
-            "name_s": "RequiredItems_O",
-            "text_s": "dataGroup_y Items that must appear in a container (to fulfill the protocol requirements)",
+            "group_y": "DC45",
+            "name_s": "ItemDefList_O",
+            "text_s": "protocolDefGroup_y A list of Assign Onward Protocol Item Definitions",
             "type_y": "A010"
         },
         {
-            "group_y": "DA45",
-            "name_s": "OptionalItems_O",
-            "text_s": "dataGroup_y Items that may optionally appear in a container, do not violate protocol if they are missing.",
-            "type_y": "A030"
+            "group_y": "DC45",
+            "name_s": "ItemDef_o",
+            "text_s": "protocolDefGroup_y An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "type_y": "A000"
         },
         {
-            "group_y": "DA45",
-            "name_s": "OperationalReq_O",
-            "text_s": "dataGroup_y Constraints on values found in Required or Optional items",
-            "type_y": "A050"
+            "group_y": "DC45",
+            "name_s": "ProtocolSig_o",
+            "text_s": "protocolDefGroup_y A signature on an Assign Onward Protocol Definition, indicating the protocol is \"approved\" by the signer",
+            "type_y": "A060"
+        },
+        {
+            "group_y": "DC45",
+            "name_s": "RequiredItems_Y",
+            "text_s": "protocolDefGroup_y Items that must appear in a container (to fulfill the protocol requirements)",
+            "type_y": "A075"
+        },
+        {
+            "group_y": "DC45",
+            "name_s": "OptionalItems_Y",
+            "text_s": "protocolDefGroup_y Items that may optionally appear in a container, do not violate protocol if they are missing.",
+            "type_y": "A115"
+        },
+        {
+            "group_y": "DC45",
+            "name_s": "OperReqList_O",
+            "text_s": "protocolDefGroup_y Operational requirements / constraints on values found in Required or Optional items",
+            "type_y": "A250"
+        },
+        {
+            "group_y": "DC45",
+            "name_s": "OperReq_o",
+            "text_s": "protocolDefGroup_y A single operational requirement / constraint on value found in an item",
+            "type_y": "A240"
+        },
+        {
+            "group_y": "DC25",
+            "name_s": "OpMemberOf_Y",
+            "text_s": "operationGroup_y List of possible values for an RCODE",
+            "type_y": "A015"
+        },
+        {
+            "group_y": "DC25",
+            "name_s": "OpGreaterThan_Y",
+            "text_s": "operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be greater than all",
+            "type_y": "A035"
+        },
+        {
+            "group_y": "DC25",
+            "name_s": "OpLessThan_Y",
+            "text_s": "operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be less than all",
+            "type_y": "A055"
+        },
+        {
+            "group_y": "DC25",
+            "name_s": "OpTimeValue_y",
+            "text_s": "operationGroup_y The specified object should be assigned a time value, RCD_time_i indicates the time should be the current time - other values may be used in the future to indicate other types of time values.",
+            "type_y": "A045"
+        },
+        {
+            "group_y": "DC25",
+            "name_s": "OpHash_O",
+            "text_s": "operationGroup_y Three parameters follow, describing inputs to the hash function",
+            "type_y": "A130"
         },
         {
             "group_y": "DB45",
@@ -365,6 +443,12 @@
             "name_s": "navJumpToBlock_y",
             "text_s": "structNavGroup_y The next item in the itemRelAddr_Y array contains a chainBlock index, navigation will continue from that block.",
             "type_y": "FFF525"
+        },
+        {
+            "group_y": "DB45",
+            "name_s": "navIfPresent_y",
+            "text_s": "structNavGroup_y If the next item is present, then proceed - otherwise this condition is satisfied by the absence of the optional item.",
+            "type_y": "FFF545"
         },
         {
             "group_y": "DA45",
