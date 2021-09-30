@@ -60,7 +60,6 @@ void  Tests::on_start_clicked()
   QString msg;
   pass &= testGmp        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testDict       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
-  pass &= testInt32      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testRicey      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPZ        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
@@ -68,7 +67,6 @@ void  Tests::on_start_clicked()
   pass &= testString     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArray  ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testObjectA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
-  pass &= testInt32A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPZA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPQA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
@@ -326,55 +324,6 @@ bool Tests::testDict( QString &msg, qint32 &tc )
   return pass;
 }
 
-bool Tests::testInt32( QString &msg, qint32 &tc )
-{ bool pass = true;
-  msg = "int32 Test: ";
-  BlockValueInt32 v(this);
-  if ( v.type() == RDT_INT32 ) tc++; else
-    { msg.append( "FAIL type() test.\n" ); pass = false; }
-
-  qint32 tv;
-  tv =      0; pass &= testInt32( v, tv, tc, msg );
-  tv =      1; pass &= testInt32( v, tv, tc, msg );
-  tv =     -1; pass &= testInt32( v, tv, tc, msg );
-  tv =  70000; pass &= testInt32( v, tv, tc, msg );
-  tv = -70000; pass &= testInt32( v, tv, tc, msg );
-
-  if ( pass )
-    msg.append( QString("Pass %1 tests.").arg(tc) );
-
-  return pass;
-}
-
-bool Tests::testInt32( BlockValueInt32 &v, qint32 tv, qint32 &tc, QString &msg )
-{ bool pass = true;
-  v.set( tv );
-  if ( v.value() == tv ) tc++; else
-    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv) ); pass = false; }
-
-  BsonSerial b = v.bsonish();
-  v.set( tv + 1 );
-  if  ( v.value() != tv ) tc++; else
-    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.value() ) ); pass = false; }
-  v.setBsonish( b );
-  if ( v.value() == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
-            .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
-
-  JsonSerial j = v.json();
-  // msg.append( QString( "int32 json '%1'\n" ).arg( QString::fromUtf8( j ) ) );
-  v.set( tv - 1 );
-  if  ( v.value() != tv ) tc++; else
-    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.value() ) ); pass = false; }
-  bool ok = v.setJson( j );
-  if ( ok && ( v.value() == tv )) tc++; else
-    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
-
-  return pass;
-}
 
 bool Tests::testInt64( QString &msg, qint32 &tc )
 { bool pass = true;
@@ -781,7 +730,6 @@ bool Tests::testObjectA( QString &msg, qint32 &tc )
   QList<BlockObjectMap> tv;
   pass &= testObjectA( v, tv, tc, msg ); // Empty Array test
   to.insert( RCD_int64_i, new BlockValueInt64    (         -456789, this) );
-  to.insert( RCD_int32_l, new BlockValueInt32    (           70000, this) );
   to.insert( RCD_type_y , new BlockValueRiceyCode(   RCD_PcolA00_y, this) );
   to.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );
   to.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );
@@ -830,70 +778,6 @@ bool Tests::testObjectA( BlockArrayObject &v, const QList<BlockObjectMap> &tv, q
   return pass;
 }
 
-bool Tests::testInt32A( QString &msg, qint32 &tc )
-{ bool pass = true;
-  msg = "int32 array Test: ";
-  BlockArrayInt32 v(RCD_int32Array_L,this);
-  if ( v.type() == RDT_INT32_ARRAY ) tc++; else
-    { msg.append( "FAIL type() test.\n" ); pass = false; }
-
-  QList<qint32> tv;
-                       pass &= testInt32A( v, tv, tc, msg ); // Empty Array test
-  tv.append(      0 ); pass &= testInt32A( v, tv, tc, msg );
-  tv.append(      1 ); pass &= testInt32A( v, tv, tc, msg );
-  tv.append(     -1 ); pass &= testInt32A( v, tv, tc, msg );
-  tv.append(  70000 ); pass &= testInt32A( v, tv, tc, msg );
-  tv.append( -70000 ); pass &= testInt32A( v, tv, tc, msg );
-  tv.clear();
-  for ( qint32 i = 1; i < 1100; i++ )
-    tv.append(0);
-                       pass &= testInt32A( v, tv, tc, msg );
-  tv.clear();
-  for ( qint32 i = 1; i < 1101; i++ )
-    tv.append(i);
-                       pass &= testInt32A( v, tv, tc, msg );
-  tv.clear();
-  for ( qint32 i = 1; i < 1102; i++ )
-    tv.append(-i);
-                       pass &= testInt32A( v, tv, tc, msg );
-
-  if ( pass )
-    msg.append( QString("Pass %1 tests.").arg(tc) );
-
-  return pass;
-}
-
-bool Tests::testInt32A( BlockArrayInt32 &v, const QList<qint32> &tv, qint32 &tc, QString &msg )
-{ bool pass = true;
-  v.set( tv );
-  if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
-
-  BsonSerial b = v.bsonish();
-  v.clear();
-  if ( v.append( 123 ) ) tc++; else
-    { pass = false; msg.append( "FAIL during append()\n" ); }
-  if  ( !( v.value() == tv ) ) tc++; else
-    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
-  if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
-            .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
-
-  JsonSerial j = v.json();
-  v.clear();
-  if ( v.append( 321 ) ) tc++; else
-    { pass = false; msg.append( "FAIL during append()\n" ); }
-  if  ( !( v.value() == tv ) ) tc++; else
-    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  bool ok = v.setJson( j );
-  if ( ok && ( v == tv )) tc++; else
-    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
-  return pass;
-}
 
 bool Tests::testInt64A( QString &msg, qint32 &tc )
 { bool pass = true;
@@ -1406,7 +1290,6 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   mpq_set_den( &vr, &v2 );
 
   tv.insert( RCD_int64_i, new BlockValueInt64    (         -456789, this) );  pass &= testObject( v, tv, tc, msg );
-  tv.insert( RCD_int32_l, new BlockValueInt32    (           70000, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_mpz_n  , new BlockValueMPZ      (              v1, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_mpq_r  , new BlockValueMPQ      (              vr, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_type_y , new BlockValueRiceyCode(   RCD_PcolA00_y, this) );  pass &= testObject( v, tv, tc, msg );
@@ -1423,8 +1306,6 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tv.insert( RCD_hashedOb_o  , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   QList<qint64> ta64 = { 0,1,-1,70000,-70000,-5123456789, 5123456789 };
   tv.insert( RCD_int64Array_I, new BlockArrayInt64( RCD_int64Array_I, ta64, this ) ); pass &= testObject( v, tv, tc, msg ); emit newDot( v.dot() );
-  QList<qint32> ta32 = { 0,1,-1,70000,-70000 };
-  tv.insert( RCD_int32Array_L, new BlockArrayInt32( RCD_int32Array_L, ta32, this ) ); pass &= testObject( v, tv, tc, msg );
   QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_Y, RCD_data_b, RCD_PcolA00_y, RCD_RangeBounds_O };
   tv.insert( RCD_riceyArray_Y, new BlockArrayRicey( RCD_riceyArray_Y, tari, this ) ); pass &= testObject( v, tv, tc, msg );
   QList<Utf8String> tau8 = { "A", "1", "Stringy" };

@@ -86,12 +86,6 @@
         },
         {
             "group_y": "DA45",
-            "name_s": "int32_l",
-            "text_s": "dataGroup_y Generic signed int32, use depends on context.",
-            "type_y": "02"
-        },
-        {
-            "group_y": "DA45",
             "name_s": "mpz_n",
             "text_s": "dataGroup_y Generic MPZ large integer, use depends on context.",
             "type_y": "03"
@@ -149,12 +143,6 @@
             "name_s": "int64Array_I",
             "text_s": "dataGroup_y A generic array of int64 elements",
             "type_y": "11"
-        },
-        {
-            "group_y": "DA45",
-            "name_s": "int32Array_L",
-            "text_s": "dataGroup_y A generic array of int32 elements",
-            "type_y": "12"
         },
         {
             "group_y": "DA45",
@@ -512,12 +500,6 @@
         },
         {
             "group_y": "DA45",
-            "name_s": "min_l",
-            "text_s": "dataGroup_y Used in range boundaries",
-            "type_y": "42"
-        },
-        {
-            "group_y": "DA45",
             "name_s": "min_n",
             "text_s": "dataGroup_y Used in range boundaries",
             "type_y": "43"
@@ -533,12 +515,6 @@
             "name_s": "max_i",
             "text_s": "dataGroup_y Used in range boundaries",
             "type_y": "61"
-        },
-        {
-            "group_y": "DA45",
-            "name_s": "max_l",
-            "text_s": "dataGroup_y Used in range boundaries",
-            "type_y": "62"
         },
         {
             "group_y": "DA45",
@@ -699,12 +675,6 @@
             "type_y": "01"
         },
         {
-            "code_s": "l",
-            "name_s": "INT32",
-            "text_s": "32 bit signed integer - json in an unquoted ASCII decimal string, bson as 4 bytes using void qToLittleEndian(qint32 src, uchar *dest)",
-            "type_y": "02"
-        },
-        {
             "code_s": "n",
             "name_s": "MPZ",
             "text_s": "libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values",
@@ -751,12 +721,6 @@
             "name_s": "INT64_ARRAY",
             "text_s": "array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson",
             "type_y": "11"
-        },
-        {
-            "code_s": "L",
-            "name_s": "INT32_ARRAY",
-            "text_s": "array of zero or more 32 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson",
-            "type_y": "12"
         },
         {
             "code_s": "N",

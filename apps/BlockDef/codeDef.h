@@ -25,7 +25,6 @@
 
 #define RDT_OBJECT          0x00 // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
 #define RDT_INT64           0x01 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
-#define RDT_INT32           0x02 // l - 32 bit signed integer - json in an unquoted ASCII decimal string, bson as 4 bytes using void qToLittleEndian(qint32 src, uchar *dest)
 #define RDT_MPZ             0x03 // n - libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values
 #define RDT_MPQ             0x04 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
 #define RDT_RCODE           0x05 // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
@@ -34,7 +33,6 @@
 #define RDT_NULL            0x0F // z - A null block value type, used as an error flag 
 #define RDT_OBJECT_ARRAY    0x10 // O - array of zero or more objects encased in []
 #define RDT_INT64_ARRAY     0x11 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
-#define RDT_INT32_ARRAY     0x12 // L - array of zero or more 32 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
 #define RDT_MPZ_ARRAY       0x13 // N - array of zero or more libGMP signed integers stored as described above
 #define RDT_MPQ_ARRAY       0x14 // R - array of zero or more libGMP rational fractions stored as described above
 #define RDT_RCODE_ARRAY     0x15 // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
@@ -58,7 +56,6 @@
 #define RCD_serviceDescriptors_y       11877 // groupDefGroup_y These codes are used for service requests and responses
 #define RCD_ObTerm_o                       0 // dataGroup_y Object terminator, indicates no more items in the object in bsonish lists
 #define RCD_int64_i                        1 // dataGroup_y Generic signed int64, use depends on context.
-#define RCD_int32_l                        2 // dataGroup_y Generic signed int32, use depends on context.
 #define RCD_mpz_n                          3 // dataGroup_y Generic MPZ large integer, use depends on context.
 #define RCD_mpq_r                          4 // dataGroup_y Generic MPQ large integer fraction, use depends on context.
 #define RCD_type_y                         5 // dataGroup_y Identifies an algorithm type for hash or crypto key, or other types depending on context
@@ -69,7 +66,6 @@
 #define RCD_data_b                         7 // dataGroup_y Generic data block, use determined by the object which contains it.
 #define RCD_objectArray_O                 16 // dataGroup_y A generic array of object elements
 #define RCD_int64Array_I                  17 // dataGroup_y A generic array of int64 elements
-#define RCD_int32Array_L                  18 // dataGroup_y A generic array of int32 elements
 #define RCD_mpzArray_N                    19 // dataGroup_y A generic array of MPZ elements
 #define RCD_mpqArray_R                    20 // dataGroup_y A generic array of MPQ elements
 #define RCD_riceyArray_Y                  21 // dataGroup_y A generic array of Ricey elements
@@ -129,11 +125,9 @@
 #define RCD_recordRetrievalResult_o   692992 // serviceDescriptors_y Object describes success (with data) or failure of a record retrieval attempt
 #define RCD_RangeBounds_O               4240 // dataGroup_y Boundaries for valid values
 #define RCD_min_i                         65 // dataGroup_y Used in range boundaries
-#define RCD_min_l                         66 // dataGroup_y Used in range boundaries
 #define RCD_min_n                         67 // dataGroup_y Used in range boundaries
 #define RCD_min_r                         68 // dataGroup_y Used in range boundaries
 #define RCD_max_i                         97 // dataGroup_y Used in range boundaries
-#define RCD_max_l                         98 // dataGroup_y Used in range boundaries
 #define RCD_max_n                         99 // dataGroup_y Used in range boundaries
 #define RCD_max_r                        100 // dataGroup_y Used in range boundaries
 #define RCD_enum_Y                       117 // dataGroup_y Used to define available choices

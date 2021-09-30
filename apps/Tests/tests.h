@@ -40,8 +40,6 @@ public:
        void  liveDelay( int t );
        bool  testDict( QString &, qint32 & );
        bool  testGmp( QString &, qint32 & );
-       bool  testInt32( QString &, qint32 & );
-       bool  testInt32( BlockValueInt32 &, qint32, qint32 &, QString & );
        bool  testInt64( QString &, qint32 & );
        bool  testInt64( BlockValueInt64 &, qint64, qint32 &, QString & );
        bool  testMPZ( QString &, qint32 & );
@@ -56,8 +54,6 @@ public:
        bool  testByteArray( BlockValueByteArray &, const QByteArray &, qint32 &, QString & );
        bool  testObjectA( QString &, qint32 & );
        bool  testObjectA( BlockArrayObject &, const QList<BlockObjectMap> &, qint32 &, QString & );
-       bool  testInt32A( QString &, qint32 & );
-       bool  testInt32A( BlockArrayInt32 &, const QList<qint32> &, qint32 &, QString & );
        bool  testInt64A( QString &, qint32 & );
        bool  testInt64A( BlockArrayInt64 &, const QList<qint64> &, qint32 &, QString & );
        bool  testMPZA( QString &, qint32 & );

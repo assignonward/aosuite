@@ -90,7 +90,6 @@ ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
   qint32 t = key & RDT_TYPEMASK;
   if ( t == RDT_OBJECT    ) { BlockValueObject    *vbo = new BlockValueObject( parent );    if ( vtc ) vbo->set( ((BlockValueObject    *)vtc)->value() ); return vbo; }
   if ( t == RDT_INT64     ) { BlockValueInt64     *vbo = new BlockValueInt64( parent );     if ( vtc ) vbo->set( ((BlockValueInt64     *)vtc)->value() ); return vbo; }
-  if ( t == RDT_INT32     ) { BlockValueInt32     *vbo = new BlockValueInt32( parent );     if ( vtc ) vbo->set( ((BlockValueInt32     *)vtc)->value() ); return vbo; }
   if ( t == RDT_MPZ       ) { BlockValueMPZ       *vbo = new BlockValueMPZ( parent );       if ( vtc ) vbo->set( ((BlockValueMPZ       *)vtc)->value() ); return vbo; }
   if ( t == RDT_MPQ       ) { BlockValueMPQ       *vbo = new BlockValueMPQ( parent );       if ( vtc ) vbo->set( ((BlockValueMPQ       *)vtc)->value() ); return vbo; }
   if ( t == RDT_RCODE     ) { BlockValueRiceyCode *vbo = new BlockValueRiceyCode( parent ); if ( vtc ) vbo->set( ((BlockValueRiceyCode *)vtc)->value() ); return vbo; }
@@ -146,21 +145,6 @@ qint32 BlockValueInt64::setBsonish( const BsonSerial &b )
   s.setByteOrder(QDataStream::LittleEndian);
   s >> m_value;
   return 8;
-}
-
-
-/**
- * @brief BlockValueInt32::setBsonish
- * @param b - byte array which starts with 8 bytes of LittleEndian encoded integer
- * @return number of bytes conve2rted from the BsonSerial stream, -1 if there was a problem
- */
-qint32 BlockValueInt32::setBsonish( const BsonSerial &b )
-{ if ( b.size() < 4 )
-    { qWarning( "undersized array passed to BlockValueInt32::setBsonish" ); return -1; }
-  QDataStream s(b);
-  s.setByteOrder(QDataStream::LittleEndian);
-  s >> m_value;
-  return 4;
 }
 
 /**
@@ -472,7 +456,6 @@ BsonSerial ValueBase::bsonishNull( qint8 keyType ) const
   switch ( keyType )
     { case RDT_OBJECT:    s << intToRice( 0 );               break;
       case RDT_INT64:     s << (qint64)0;                    break;
-      case RDT_INT32:     s << (qint32)0;                    break;
       case RDT_MPZ:       s << (quint8)0x0E;                 break;
       case RDT_MPQ:       s << (quint8)0x0E << (quint8)0x1E; break;
       case RDT_RCODE:     s << intToRice( RCD_ObTerm_o );    break;
@@ -746,7 +729,6 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
       switch ( k & RDT_OBTYPEMASK )
         { case RDT_OBJECT:    if ( !(*((BlockValueObject    *)vt)          == *((BlockValueObject    *)vv)          ) ) return false; break;
           case RDT_INT64:     if (  ( ((BlockValueInt64     *)vt)->value() !=  ((BlockValueInt64     *)vv)->value() ) ) return false; break;
-          case RDT_INT32:     if (  ( ((BlockValueInt32     *)vt)->value() !=  ((BlockValueInt32     *)vv)->value() ) ) return false; break;
           case RDT_MPZ:       if ( !(*((BlockValueMPZ       *)vt)          ==  ((BlockValueMPZ       *)vv)->value() ) ) return false; break;
           case RDT_MPQ:       if ( !(*((BlockValueMPQ       *)vt)          ==  ((BlockValueMPQ       *)vv)->value() ) ) return false; break;
           case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
@@ -755,7 +737,6 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_OBJECT_ARRAY:
 
           case RDT_INT64_ARRAY:     if (  ( ((BlockArrayInt64     *)vt)->value() !=  ((BlockArrayInt64     *)vv)->value() ) ) return false; break;
-          case RDT_INT32_ARRAY:     if (  ( ((BlockArrayInt32     *)vt)->value() !=  ((BlockArrayInt32     *)vv)->value() ) ) return false; break;
 //        case RDT_MPZ_ARRAY:       if (  ( ((BlockArrayMPZ       *)vt)->value() !=  ((BlockArrayMPZ       *)vv)->value() ) ) return false; break;
 //        case RDT_MPQ_ARRAY:       if (  ( ((BlockArrayMPQ       *)vt)->value() !=  ((BlockArrayMPQ       *)vv)->value() ) ) return false; break;
           case RDT_RCODE_ARRAY:     if (  ( ((BlockArrayRicey     *)vt)->value() !=  ((BlockArrayRicey     *)vv)->value() ) ) return false; break;

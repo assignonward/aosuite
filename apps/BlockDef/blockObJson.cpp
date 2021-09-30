@@ -65,23 +65,6 @@ bool BlockValueInt64::setJson( const JsonSerial &j )
 }
 
 /**
- * @brief BlockValueInt32::setJson
- * @param j - byte array which should contain a UTF8 encoded integer
- * @return true if conversion was successful
- */
-bool BlockValueInt32::setJson( const JsonSerial &j )
-{ if ( j.size() < 1 )
-    { qWarning( "empty array passed to BlockValueInt32::setJson" ); return false; }
-  bool ok;
-  qint32 v = j.toLong(&ok);
-  if ( ok )
-    m_value = v;
-   else
-    qWarning( "problem in converting json to long" );
-  return ok;
-}
-
-/**
  * @brief BlockValueMPZ::setJson
  * @param j - json representation of the big integer
  * @return true if successful
@@ -298,7 +281,6 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
       foreach ( QVariant v, vl )
         { switch ( type() )
             { case RDT_INT64_ARRAY:     append( (qint64)v.toLongLong() ); break;
-              case RDT_INT32_ARRAY:     append( (qint32)v.toInt() ); break;
               case RDT_RCODE_ARRAY:     append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
               case RDT_STRING_ARRAY:    append( v.toString().toUtf8() ); break; // TODO: encode using the same escapes as in the BlockString.json() function
               case RDT_BYTEARRAY_ARRAY: append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
@@ -391,8 +373,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
   bool typeMatch = false;
   switch ( typ )
     { case RDT_OBJECT:    typeMatch = jv.isObject(); jdt = JDT_OBJECT; break;
-      case RDT_INT64:
-      case RDT_INT32:     typeMatch = jv.isDouble(); jdt = JDT_DOUBLE; break;
+      case RDT_INT64:     typeMatch = jv.isDouble(); jdt = JDT_DOUBLE; break;
       case RDT_MPZ:
       case RDT_MPQ:
       case RDT_RCODE:
@@ -400,7 +381,6 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
       case RDT_BYTEARRAY: typeMatch = jv.isString(); jdt = JDT_STRING; break;
       case RDT_OBJECT_ARRAY:
       case RDT_INT64_ARRAY:
-      case RDT_INT32_ARRAY:
       case RDT_MPZ_ARRAY:
       case RDT_MPQ_ARRAY:
       case RDT_RCODE_ARRAY:
@@ -421,7 +401,6 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
         return vbo;
 
       case JDT_DOUBLE:
-        if ( typ == RDT_INT32 ) { return new BlockValueInt32( jv.toInt(), this ); }
         if ( typ == RDT_INT64 ) { return new BlockValueInt64( jv.toInt(), this ); }
         return nullptr;
 
