@@ -110,6 +110,7 @@
 #define RCD_OperReqList_O              4432 // protocolDefGroup_y Operational requirements / constraints on values found in Required or Optional items
 #define RCD_OperReq_o                  4416 // protocolDefGroup_y A single operational requirement / constraint on value found in an item
 #define RCD_OpMemberOf_Y               4117 // operationGroup_y List of possible values for an RCODE
+#define RCD_OpOneOrMoreOf_Y            4373 // operationGroup_y One or more objects of the listed types are required to appear
 #define RCD_OpGreaterThan_Y            4149 // operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be greater than all
 #define RCD_OpLessThan_Y               4181 // operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be less than all
 #define RCD_OpTimeValue_y              4165 // operationGroup_y The specified object should be assigned a time value, RCD_time_i indicates the time should be the current time - other values may be used in the future to indicate other types of time values.

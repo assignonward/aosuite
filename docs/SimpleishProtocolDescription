@@ -1,0 +1,99 @@
+Simple Protocol AO0
+
+Actor: 
+ Requestor of Recording
+  Outgoing Messages:
+   Query Available Services
+    What services are available from the server under Protocol AO0?
+   Request Recording (my id + database name + record data)
+     
+  Responses Understood:
+   Available Services
+    Respond to Query Available Services
+    Record to Database X (line sent once per available database with X replaced by database uid)
+   Recording Result
+    Denied: Reason
+    Success in Database X: Record uid
+    
+Actor:
+ Recording Service Provider
+  Recording Requestor Interface:
+   Outgoing Messages: 
+    Available Services List
+    Recording Results
+     Failure: Reason
+     Success in Database X: Record uid
+    Request Not Supported: Reason (only sent when Requestor successfully identifies themselves)
+    
+   Incoming Messages Understood:
+    Query Available Services
+    Request Recording
+    
+  Recording Backend Interface:
+   Outgoing Messages:
+    Record This (includes data and an identifier)
+    
+   Responses Understood:
+    Success: request identifier plus recorded uid
+    Failure: reason
+      
+Actor:
+ Recording Backend
+  Outgoing Messages:
+   Success: request identifier plus recorded uid
+   Failure: request identifier plus reason (only when a well formed request is received)
+   
+  Incoming Messages Understood: 
+   Record This (including data and an identifier)
+  
+   
+Actor:   
+ Requestor of Record Retrieval
+  Outgoing Messages:
+   Query Available Services
+    What services are available from the server under Protocol AO0?
+   Request Recording (my id + database name + uid of record)
+   
+  Responses Understood: 
+   Available Services
+    Respond to Query Available Services
+    Record to Database X (line sent once per available database with X replaced by database name(s))
+   Record Retrieval Result
+    Denied: Reason
+    Success: Database name + Record uid + Record data
+
+Actor:
+ Record Retrieval Service Provider
+  Record Retrieval Requestor Interface:
+   Outgoing Messages: 
+    Available Services List
+    Retrieval Results
+     Failure: Reason
+     Success: Database name + Record uid + Record data
+    Request Not Supported: Reason (only sent when Requestor successfully identifies themselves)
+    
+   Incoming Messages Understood:
+    Query Available Services
+    Request Record Retrieval
+    
+  Record Retrieval Backend Interface:
+   Outgoing Messages:
+     Query Available Services List
+     Retreive This (includes an identifier + database name + uid)
+    
+   Responses Understood:
+    Available Services List
+    Success: identifier + database name + record uid + record data
+    Failure: reason
+      
+Actor:
+ Recording Backend
+  Outgoing Messages:
+   Available Services List
+   Success: request identifier plus recorded uid
+   Failure: request identifier plus reason (only when a well formed request is received)
+   
+  Incoming Messages Understood: 
+    Query Available Services List
+    Retrieve This (includes an identifier + database name + uid)
+   

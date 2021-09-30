@@ -398,6 +398,12 @@
         },
         {
             "group_y": "DC25",
+            "name_s": "OpOneOrMoreOf_Y",
+            "text_s": "operationGroup_y One or more objects of the listed types are required to appear",
+            "type_y": "A215"
+        },
+        {
+            "group_y": "DC25",
             "name_s": "OpGreaterThan_Y",
             "text_s": "operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be greater than all",
             "type_y": "A035"
