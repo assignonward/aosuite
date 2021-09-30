@@ -93,6 +93,23 @@ void  BlockTool::on_DAO0_clicked()
   BlockArrayObject *orl = new BlockArrayObject( RCD_OperReqList_O, this );
   ido->insert( RCD_OperReqList_O, orl );
 
+  BlockValueObject *iro = new BlockValueObject( this );
+  idl->append( iro );
+  BlockValueRiceyCode *irc = new BlockValueRiceyCode( RCD_recordStorageResult_o, this );
+  iro->insert( RCD_type_y, irc );
+  BlockArrayRicey *rilr = new BlockArrayRicey( RCD_RequiredItems_Y, this );
+  iro->insert( RCD_RequiredItems_Y, rilr );
+  BlockValueRiceyCode *ri1r = new BlockValueRiceyCode( RCD_type_y, this );
+  rilr->append( ri1r );
+  BlockValueRiceyCode *ri2r = new BlockValueRiceyCode( RCD_userId_b, this );
+  rilr->append( ri2r );
+  BlockArrayRicey *oilr = new BlockArrayRicey( RCD_OptionalItems_Y, this );
+  iro->insert( RCD_OptionalItems_Y, oilr );
+  BlockValueRiceyCode *oi1r = new BlockValueRiceyCode( RCD_data_b, this );
+  oilr->append( oi1r );
+  BlockArrayObject *orlr = new BlockArrayObject( RCD_OperReqList_O, this );
+  iro->insert( RCD_OperReqList_O, orlr );
+
   ui->report->append( jsonReformat( kvp->json() ) );
   ui->report->append( kvp->bsonish().toHex() );
  // ui->report->append( kvp->dot() );
