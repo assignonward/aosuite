@@ -75,6 +75,13 @@ View</string>
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="DAO0">
+        <property name="text">
+         <string>DⒶ0</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="hash">
         <property name="text">
          <string>Hash</string>

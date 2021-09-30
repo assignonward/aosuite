@@ -50,6 +50,55 @@ void BlockTool::liveDelay( int t )
     }
 }
 
+QByteArray  BlockTool::jsonReformat( QByteArray j )
+{ QJsonDocument jd = QJsonDocument::fromJson( j );
+  return jd.toJson();
+}
+
+void  BlockTool::on_DAO0_clicked()
+{ ui->report->clear();
+  ui->report->append( "DⒶ0 protocol" );
+  BlockValueObject *pdo = new BlockValueObject( this );
+  KeyValuePair     *kvp = new KeyValuePair(RCD_ProtocolDef_o,pdo,this);
+  BlockValueObject *hdo = new BlockValueObject( this );
+  pdo->insert( RCD_hashedOb_o, hdo );
+  BlockValueObject *hso = new BlockValueObject( this );
+  pdo->insert( RCD_hash_o, hso );
+  BlockValueRiceyCode *htc = new BlockValueRiceyCode( RCD_SHA3b512_y, this );
+  hso->insert( RCD_type_y, htc );
+  BlockValueInt64 *hti = new BlockValueInt64( 123, this );
+  hso->insert( RCD_time_i, hti );
+  BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
+  hso->insert( RCD_data_b, hdp );
+
+  BlockValueRiceyCode *pcc = new BlockValueRiceyCode( RCD_PcolDAO0_y, this );
+  hdo->insert( RCD_type_y, pcc );
+  BlockValueString *stp = new BlockValueString( "DⒶ0", this );
+  hdo->insert( RCD_text_s, stp );
+  BlockArrayObject *idl = new BlockArrayObject( RCD_ItemDefList_O, this );
+  hdo->insert( RCD_ItemDefList_O, idl );
+
+  BlockValueObject *ido = new BlockValueObject( this );
+  idl->append( ido );
+  BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_reqRecordStorage_o, this );
+  ido->insert( RCD_type_y, idc );
+  BlockArrayRicey *ril = new BlockArrayRicey( RCD_RequiredItems_Y, this );
+  ido->insert( RCD_RequiredItems_Y, ril );
+  BlockValueRiceyCode *ri1 = new BlockValueRiceyCode( RCD_data_b, this );
+  ril->append( ri1 );
+  BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_userId_b, this );
+  ril->append( ri2 );
+  BlockArrayRicey *oil = new BlockArrayRicey( RCD_OptionalItems_Y, this );
+  ido->insert( RCD_OptionalItems_Y, oil );
+  BlockArrayObject *orl = new BlockArrayObject( RCD_OperReqList_O, this );
+  ido->insert( RCD_OperReqList_O, orl );
+
+  ui->report->append( jsonReformat( kvp->json() ) );
+  ui->report->append( kvp->bsonish().toHex() );
+ // ui->report->append( kvp->dot() );
+  writeWrappedDot( kvp->dot() );
+}
+
 void  BlockTool::on_chain_clicked()
 { ui->report->clear();
   ui->report->append( "Sample chain block" );
@@ -86,7 +135,7 @@ void  BlockTool::on_chain_clicked()
   BlockArrayObject *sih = new BlockArrayObject( RCD_separableItemsHashes_O, this );
   hdo->insert( RCD_separableItemsHashes_O, sih );
 
-  ui->report->append( kvp->json() );
+  ui->report->append( jsonReformat( kvp->json() ) );
   ui->report->append( kvp->bsonish().toHex() );
 //  ui->report->append( kvp->dot() );
   writeWrappedDot( kvp->dot() );
@@ -108,7 +157,9 @@ void  BlockTool::on_hash_clicked()
   BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
   hso->insert( RCD_data_b, hdp );
 
-  BlockValueString *stp = new BlockValueString( "TⒶ2021.9.22", this );
+  BlockValueRiceyCode *pcc = new BlockValueRiceyCode( RCD_PcolDAO2_y, this );
+  hdo->insert( RCD_type_y, pcc );
+  BlockValueString *stp = new BlockValueString( "DⒶ2", this );
   hdo->insert( RCD_text_s, stp );
   BlockArrayObject *idl = new BlockArrayObject( RCD_ItemDefList_O, this );
   hdo->insert( RCD_ItemDefList_O, idl );
@@ -204,7 +255,7 @@ void  BlockTool::on_hash_clicked()
   BlockArrayRicey *bar = new BlockArrayRicey( RCD_riceyArray_Y, ta, this );
   hdo->insert( RCD_riceyArray_Y, bar );
 */
-  ui->report->append( kvp->json() );
+  ui->report->append( jsonReformat( kvp->json() ) );
   ui->report->append( kvp->bsonish().toHex() );
  // ui->report->append( kvp->dot() );
   writeWrappedDot( kvp->dot() );
