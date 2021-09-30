@@ -278,27 +278,57 @@
         },
         {
             "group_y": "DA65",
-            "name_s": "PcolTA01_y",
-            "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22",
-            "type_y": "ADDADD05"
+            "name_s": "PcolDAO0_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ0",
+            "type_y": "A0DDD005"
         },
         {
             "group_y": "DA65",
-            "name_s": "PcolTA02_y",
+            "name_s": "PcolDAO1_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ1",
+            "type_y": "A0DDD025"
+        },
+        {
+            "group_y": "DA65",
+            "name_s": "PcolDAO2_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ2",
+            "type_y": "A0DDD045"
+        },
+        {
+            "group_y": "DA65",
+            "name_s": "PcolDAO3_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ3",
+            "type_y": "A0DDD065"
+        },
+        {
+            "group_y": "DA65",
+            "name_s": "PcolDAO4_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ4",
+            "type_y": "A0DDD105"
+        },
+        {
+            "group_y": "DA65",
+            "name_s": "PcolTAO1_y",
+            "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22",
+            "type_y": "A0BBB005"
+        },
+        {
+            "group_y": "DA65",
+            "name_s": "PcolTAO2_y",
             "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13",
-            "type_y": "ADDADD25"
+            "type_y": "A0BBB025"
         },
         {
             "group_y": "DA65",
             "name_s": "PcolA00_y",
             "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin",
-            "type_y": "ADD08005"
+            "type_y": "A0AAA005"
         },
         {
             "group_y": "DA65",
             "name_s": "PcolA01_y",
             "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees",
-            "type_y": "ADD08025"
+            "type_y": "A0AAA025"
         },
         {
             "group_y": "DB05",

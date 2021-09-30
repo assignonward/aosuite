@@ -43,7 +43,7 @@ public:
 
 public slots:
        void  on_chain_clicked();
-       void  on_protocol_clicked();
+       void  on_hash_clicked();
        void  writeWrappedDot( QByteArray d );
        void  updateGraph();
        void  graphvizDone(int,QProcess::ExitStatus);

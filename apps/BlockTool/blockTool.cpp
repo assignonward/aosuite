@@ -92,7 +92,7 @@ void  BlockTool::on_chain_clicked()
   writeWrappedDot( kvp->dot() );
 }
 
-void  BlockTool::on_protocol_clicked()
+void  BlockTool::on_hash_clicked()
 { ui->report->clear();
   ui->report->append( "Sample protocol block" );
   BlockValueObject *pdo = new BlockValueObject( this );

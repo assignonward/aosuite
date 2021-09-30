@@ -88,10 +88,15 @@
 #define RCD_png_y                       2117 // algorithmIdGroup_y Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_riceyTypes_O             1336208 // dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
 #define RCD_riceyCodes_O             1336240 // dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.
-#define RCD_PcolTA01_y              95858309 // protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22
-#define RCD_PcolTA02_y              95858341 // protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13
-#define RCD_PcolA00_y               95682565 // protocolIdGroup_y Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
-#define RCD_PcolA01_y               95682597 // protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
+#define RCD_PcolDAO0_y              68642821 // protocolIdGroup_y Development protocol, symbol: DⒶ0
+#define RCD_PcolDAO1_y              68642853 // protocolIdGroup_y Development protocol, symbol: DⒶ1
+#define RCD_PcolDAO2_y              68642885 // protocolIdGroup_y Development protocol, symbol: DⒶ2
+#define RCD_PcolDAO3_y              68642917 // protocolIdGroup_y Development protocol, symbol: DⒶ3
+#define RCD_PcolDAO4_y              68642949 // protocolIdGroup_y Development protocol, symbol: DⒶ4
+#define RCD_PcolTAO1_y              68081669 // protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22
+#define RCD_PcolTAO2_y              68081701 // protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13
+#define RCD_PcolA00_y               67801093 // protocolIdGroup_y Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
+#define RCD_PcolA01_y               67801125 // protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
 #define RCD_actorRecMaker_y           729989 // protocolActorGroup_y Actor definition: the actor who wants to create a record (in a blockchain)
 #define RCD_actorRecUser_y            730021 // protocolActorGroup_y Actor definition: the actor who wants to retrieve a record (from a blockchain)
 #define RCD_actorRecRecorder_y        730053 // protocolActorGroup_y Actor definition: the actor who handles requests to create records (in a blockchain)

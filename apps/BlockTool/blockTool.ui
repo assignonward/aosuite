@@ -75,9 +75,9 @@ View</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="protocol">
+       <widget class="QPushButton" name="hash">
         <property name="text">
-         <string>Protocol</string>
+         <string>Hash</string>
         </property>
        </widget>
       </item>
