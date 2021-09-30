@@ -67,6 +67,12 @@
             "type_y": "DC45"
         },
         {
+            "group_y": "DA25",
+            "name_s": "serviceDescriptors_y",
+            "text_s": "groupDefGroup_y These codes are used for service requests and responses",
+            "type_y": "DC65"
+        },
+        {
             "group_y": "DA45",
             "name_s": "ObTerm_o",
             "text_s": "dataGroup_y Object terminator, indicates no more items in the object in bsonish lists",
@@ -455,6 +461,42 @@
             "name_s": "navIfPresent_y",
             "text_s": "structNavGroup_y If the next item is present, then proceed - otherwise this condition is satisfied by the absence of the optional item.",
             "type_y": "FFF545"
+        },
+        {
+            "group_y": "DC65",
+            "name_s": "reqAvailServices_o",
+            "text_s": "serviceDescriptors_y Object contains the protocol name and/or uid (some protocols will require uid, early ones will go by name).",
+            "type_y": "AAA540"
+        },
+        {
+            "group_y": "DC65",
+            "name_s": "availServicesList_O",
+            "text_s": "serviceDescriptors_y List of services provided, objects contain a type_y: service descriptor and possibly additional info like lists of items, database names, etc.",
+            "type_y": "AAA550"
+        },
+        {
+            "group_y": "DC65",
+            "name_s": "reqRecordStorage_o",
+            "text_s": "serviceDescriptors_y Object describes the id of the requestor, id of the database to record in, and the data to record",
+            "type_y": "AAA520"
+        },
+        {
+            "group_y": "DC65",
+            "name_s": "recordStorageResult_o",
+            "text_s": "serviceDescriptors_y Object describes success or failure of a record storage attempt",
+            "type_y": "AAA500"
+        },
+        {
+            "group_y": "DC65",
+            "name_s": "reqRecordRetrieval_o",
+            "text_s": "serviceDescriptors_y Object describes the id of the requestor, id of the database to record in, and id of the record to retrieve",
+            "type_y": "AAA620"
+        },
+        {
+            "group_y": "DC65",
+            "name_s": "recordRetrievalResult_o",
+            "text_s": "serviceDescriptors_y Object describes success (with data) or failure of a record retrieval attempt",
+            "type_y": "AAA600"
         },
         {
             "group_y": "DA45",
