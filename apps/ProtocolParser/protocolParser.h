@@ -25,12 +25,19 @@
 
 #include "blockOb.h"
 
+/**
+ * @brief The ProtocolParser class - reads a single protocol and passes requested data to actor-users
+ *   TODO: a ProtocolListParser to read a list of protocols and separate them into
+ *         individual protocols that this class can handle.
+ */
 class ProtocolParser : public QObject
 {
     Q_OBJECT
 public:
-          explicit  ProtocolParser(QObject *parent = nullptr) : QObject( parent ) {}
-                   ~ProtocolParser() {}
+     ProtocolParser( const BsonSerial &b, QObject *parent = nullptr) : QObject( parent ) { pr = new KeyValuePair( b, this ); }
+    ~ProtocolParser() {}
+
+  QPointer<KeyValuePair> pr;
 };
 
 #endif // PROTOCOLPARSER_H

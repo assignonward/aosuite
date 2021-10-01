@@ -122,13 +122,16 @@ qint32 KeyValueBase::setKey( const RiceyCode &key )
  * @return length of all data read from b to get key and value, or -1 if there was a problem
  */
 qint32  KeyValuePair::setBsonish( const BsonSerial &b )
-{ qint32 len = setKey( b );
+{ if ( m_value )
+    m_value->deleteLater();
+  m_value = nullptr;
+  qint32 len = setKey( b );
   if ( len < 1 )
-    { qWarning( "problem reading key" ); return -1; }
+    { qWarning( "problem reading key" ); setKey( RCD_null_z ); return -1; }
   qint32 i = len;
   ValueBase *vbo = bsonishValueByKey( key(), b.mid(i), &len, this );
   if ( vbo == nullptr )
-    { qWarning( "problem reading value" ); return -1; }
+    { qWarning( "problem reading value" ); setKey( RCD_null_z ); return -1; }
   m_value = vbo;
   return i+len;
 }

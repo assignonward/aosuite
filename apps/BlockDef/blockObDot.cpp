@@ -81,6 +81,9 @@ DotSerial KeyValueArray::dot() const
               v.replace(DotSerial("\""), DotSerial(""));
             if ( t == RDT_OBJECT_ARRAY )
               d.append( v+"\n" );
+             else if ( t == RDT_STRING_ARRAY )
+              d.append( "node_"+DotSerial::number( dex++ )
+                       +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
              else
               d.append( "node_"+DotSerial::number( dex++ )
                        +" [ label=\""+v+"\"; shape=box; style=rounded; fontsize=10; ];\n" );

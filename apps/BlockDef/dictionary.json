@@ -193,6 +193,12 @@
             "type_y": "23"
         },
         {
+            "group_y": "DA42",
+            "name_s": "null_z",
+            "text_s": "dataGroup_y This key indicates the value is empty, has no value",
+            "type_y": "0F"
+        },
+        {
             "group_y": "DC02",
             "name_s": "chainBlock_o",
             "text_s": "chainGroup_y An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) ",
@@ -271,6 +277,18 @@
             "type_y": "9042"
         },
         {
+            "group_y": "DA42",
+            "name_s": "success_y",
+            "text_s": "dataGroup_y success code",
+            "type_y": "C002"
+        },
+        {
+            "group_y": "DA42",
+            "name_s": "failure_y",
+            "text_s": "dataGroup_y failure code",
+            "type_y": "F002"
+        },
+        {
             "group_y": "DB62",
             "name_s": "riceyTypes_O",
             "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.",
@@ -286,43 +304,43 @@
             "group_y": "DA62",
             "name_s": "PcolDAO0_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ0",
-            "type_y": "A0DDD002"
+            "type_y": "DDA08002"
         },
         {
             "group_y": "DA62",
             "name_s": "PcolDAO1_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ1",
-            "type_y": "A0DDD022"
+            "type_y": "DDA08022"
         },
         {
             "group_y": "DA62",
             "name_s": "PcolDAO2_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ2",
-            "type_y": "A0DDD042"
+            "type_y": "DDA08042"
         },
         {
             "group_y": "DA62",
             "name_s": "PcolDAO3_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ3",
-            "type_y": "A0DDD062"
+            "type_y": "DDA08062"
         },
         {
             "group_y": "DA62",
             "name_s": "PcolDAO4_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ4",
-            "type_y": "A0DDD102"
+            "type_y": "DDA08102"
         },
         {
             "group_y": "DA62",
             "name_s": "PcolTAO1_y",
             "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22",
-            "type_y": "A0BBB002"
+            "type_y": "A7A08002"
         },
         {
             "group_y": "DA62",
             "name_s": "PcolTAO2_y",
             "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13",
-            "type_y": "A0BBB022"
+            "type_y": "A7A08022"
         },
         {
             "group_y": "DA62",
@@ -338,33 +356,27 @@
         },
         {
             "group_y": "DB02",
-            "name_s": "actorRecMaker_y",
+            "name_s": "actorWriterClient_y",
             "text_s": "protocolActorGroup_y Actor definition: the actor who wants to create a record (in a blockchain)",
             "type_y": "ACC702"
         },
         {
             "group_y": "DB02",
-            "name_s": "actorRecUser_y",
+            "name_s": "actorWriterServer_y",
             "text_s": "protocolActorGroup_y Actor definition: the actor who wants to retrieve a record (from a blockchain)",
             "type_y": "ACC722"
         },
         {
             "group_y": "DB02",
-            "name_s": "actorRecRecorder_y",
+            "name_s": "actorReaderClient_y",
             "text_s": "protocolActorGroup_y Actor definition: the actor who handles requests to create records (in a blockchain)",
             "type_y": "ACC742"
         },
         {
             "group_y": "DB02",
-            "name_s": "actorRecRetriever_y",
+            "name_s": "actorReaderServer_y",
             "text_s": "protocolActorGroup_y Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
             "type_y": "ACC762"
-        },
-        {
-            "group_y": "DB02",
-            "name_s": "actorRecStorage_y",
-            "text_s": "protocolActorGroup_y Actor definition: the actor who physically stores and retrieves records (in a blockchain)",
-            "type_y": "ACC802"
         },
         {
             "group_y": "DC42",
@@ -376,37 +388,61 @@
             "group_y": "DC42",
             "name_s": "ProtocolDef_o",
             "text_s": "protocolDefGroup_y An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
-            "type_y": "A020"
-        },
-        {
-            "group_y": "DC42",
-            "name_s": "ItemDefList_O",
-            "text_s": "protocolDefGroup_y A list of Assign Onward Protocol Item Definitions",
-            "type_y": "A010"
-        },
-        {
-            "group_y": "DC42",
-            "name_s": "ItemDef_o",
-            "text_s": "protocolDefGroup_y An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
-            "type_y": "A000"
+            "type_y": "A060"
         },
         {
             "group_y": "DC42",
             "name_s": "ProtocolSig_o",
             "text_s": "protocolDefGroup_y A signature on an Assign Onward Protocol Definition, indicating the protocol is \"approved\" by the signer",
-            "type_y": "A060"
+            "type_y": "A040"
         },
         {
             "group_y": "DC42",
-            "name_s": "RequiredItems_Y",
-            "text_s": "protocolDefGroup_y Items that must appear in a container (to fulfill the protocol requirements)",
+            "name_s": "ItemDefList_O",
+            "text_s": "protocolDefGroup_y A list of Assign Onward Protocol Item Definitions",
+            "type_y": "A030"
+        },
+        {
+            "group_y": "DC42",
+            "name_s": "ItemDef_o",
+            "text_s": "protocolDefGroup_y An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "type_y": "A020"
+        },
+        {
+            "group_y": "DC42",
+            "name_s": "ActorDefList_O",
+            "text_s": "protocolDefGroup_y A list of Actor definitions, a valid protocol definition should contain one or more actor definitions",
+            "type_y": "A010"
+        },
+        {
+            "group_y": "DC42",
+            "name_s": "ActorDef_o",
+            "text_s": "protocolDefGroup_y A single Actor definition",
+            "type_y": "A000"
+        },
+        {
+            "group_y": "DC42",
+            "name_s": "OutgoingItemsList_O",
+            "text_s": "protocolDefGroup_y A list items this actor publishes",
+            "type_y": "A170"
+        },
+        {
+            "group_y": "DC42",
+            "name_s": "IncomingItemsList_O",
+            "text_s": "protocolDefGroup_y A list items this actor consumes",
+            "type_y": "A150"
+        },
+        {
+            "group_y": "DC42",
+            "name_s": "DefinedSubItems_Y",
+            "text_s": "protocolDefGroup_y Items that may appear in a container (to fulfill the protocol requirements)",
             "type_y": "A072"
         },
         {
             "group_y": "DC42",
-            "name_s": "OptionalItems_Y",
-            "text_s": "protocolDefGroup_y Items that may optionally appear in a container, do not violate protocol if they are missing.",
-            "type_y": "A112"
+            "name_s": "DefinedSubItemsDesc_S",
+            "text_s": "protocolDefGroup_y Optional, description of what the items represent in this context",
+            "type_y": "A076"
         },
         {
             "group_y": "DC42",
