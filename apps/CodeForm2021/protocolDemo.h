@@ -24,7 +24,7 @@
 #define PROTOCOLDEMO_H
 
 #include <QObject>
-
+#include "blockOb.h"
 
 class WriterClient : public QObject
 {
@@ -33,7 +33,14 @@ public:
     explicit WriterClient(QObject *parent = nullptr) : QObject(parent) {}
 
 signals:
+    void sendRequest( QByteArray );
 
+public slots:
+    void setProtocol( BsonSerial p ) { protocol = p; }
+    void receiveResponse( QByteArray );
+
+public:
+  BsonSerial protocol;
 };
 
 class WriterServer : public QObject
@@ -43,7 +50,14 @@ public:
     explicit WriterServer(QObject *parent = nullptr) : QObject(parent) {}
 
 signals:
+    void sendResponse( QByteArray );
 
+public slots:
+    void setProtocol( BsonSerial p ) { protocol = p; }
+    void receiveRequest( QByteArray );
+
+public:
+  BsonSerial protocol;
 };
 
 class ReaderClient : public QObject
@@ -53,7 +67,14 @@ public:
     explicit ReaderClient(QObject *parent = nullptr) : QObject(parent) {}
 
 signals:
+    void sendRequest( QByteArray );
 
+public slots:
+    void setProtocol( BsonSerial p ) { protocol = p; }
+    void receiveResponse( QByteArray );
+
+public:
+  BsonSerial protocol;
 };
 
 class ReaderServer : public QObject
@@ -63,7 +84,14 @@ public:
     explicit ReaderServer(QObject *parent = nullptr) : QObject(parent) {}
 
 signals:
+    void sendResponse( QByteArray );
 
+public slots:
+    void setProtocol( BsonSerial p ) { protocol = p; }
+    void receiveRequest( QByteArray );
+
+public:
+  BsonSerial protocol;
 };
 
 class ProtocolDemo : public QObject
@@ -73,6 +101,7 @@ public:
     explicit ProtocolDemo(QObject *parent = nullptr);
 
 signals:
+    void setProtocol( BsonSerial );
 
 public:
     WriterClient  wc;

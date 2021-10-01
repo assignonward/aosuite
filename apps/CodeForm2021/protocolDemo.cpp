@@ -19,9 +19,30 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */#include "protocolDemo.h"
+ */
+#include "protocolDemo.h"
 
 ProtocolDemo::ProtocolDemo(QObject *parent) : QObject(parent)
 {
-
+  connect( this, SIGNAL( setProtocol(BsonSerial) ), &wc, SLOT( setProtocol(BsonSerial) ) );
+  connect( this, SIGNAL( setProtocol(BsonSerial) ), &rc, SLOT( setProtocol(BsonSerial) ) );
+  connect( this, SIGNAL( setProtocol(BsonSerial) ), &ws, SLOT( setProtocol(BsonSerial) ) );
+  connect( this, SIGNAL( setProtocol(BsonSerial) ), &rs, SLOT( setProtocol(BsonSerial) ) );
 }
+
+void WriterClient::receiveResponse( QByteArray resp )
+{ (void)resp;
+}
+
+void ReaderClient::receiveResponse( QByteArray resp )
+{ (void)resp;
+}
+
+void WriterServer::receiveRequest( QByteArray req )
+{ (void)req;
+}
+
+void ReaderServer::receiveRequest( QByteArray req )
+{ (void)req;
+}
+
