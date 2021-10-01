@@ -26,6 +26,7 @@ CONFIG += c++11
 include(../AboutForm/AboutForm.pri)
 include(../BlockDef/BlockDef.pri)
 include(../BlockTool/BlockTool.pri)
+include(../ProtocolParser/ProtocolParser.pri)
 include(../Tests/Tests.pri)
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
