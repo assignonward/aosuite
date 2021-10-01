@@ -195,8 +195,8 @@ void MainWindow::init()
   t.clear();
   notesNumChar.clear();
   notesExtraChar.clear();
-  notesList = ui->notes->toPlainText().split("\n",QString::SkipEmptyParts);
-  riceyList = ui->ricey->toPlainText().split("\n",QString::SkipEmptyParts);
+  notesList = ui->notes->toPlainText().split("\n",Qt::SkipEmptyParts);
+  riceyList = ui->ricey->toPlainText().split("\n",Qt::SkipEmptyParts);
   maxNameLength = 0;
   maxNumLength  = 0;
 }
@@ -250,7 +250,7 @@ void MainWindow::firstPass()
   riceyInts.clear();
   riceyCodes.clear();
   foreach ( QString line, riceyList )
-    { QStringList words = line.split(" ",QString::SkipEmptyParts);
+    { QStringList words = line.split(" ",Qt::SkipEmptyParts);
       if ( words.size() > 1 )
         { if ( words.at(0).size() > maxNameLength )
             maxNameLength = words.at(0).size();
@@ -287,7 +287,7 @@ void MainWindow::firstPass()
     }
   bool ok;
   foreach ( QString line, notesList )
-    { QStringList words = line.split(" ",QString::SkipEmptyParts);
+    { QStringList words = line.split(" ",Qt::SkipEmptyParts);
       if ( words.size() > 3 )
         { if ( words.at(1).startsWith( "0x" ) )
             { if (( words.at(1).size() > 2 ) && ( words.at(1).size() < 5 ))
@@ -314,7 +314,7 @@ void MainWindow::translateRicey()
         v.append( "WARN: missing // in: "+line+"\n" );
        else
         { QString left = line.mid( 0, ics );
-          QStringList lList = left.split(" ",QString::SkipEmptyParts);
+          QStringList lList = left.split(" ",Qt::SkipEmptyParts);
           if ( lList.size() != 2 )
             v.append( QString( "WARN: %1 words before // in: %2\n" ).arg( lList.size() ).arg( line ) );
           if ( lList.size() > 1 )
@@ -409,7 +409,7 @@ void MainWindow::translateToJson()
 
 QJsonValue MainWindow::riceyLineToJson( QString line )
 { QJsonObject rlo;
-  QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+  QStringList words = line.split( QChar(' '), Qt::SkipEmptyParts );
   if ( words.size() < 4 )
     { v.append( QString( "ricey line '%1' doesn't have at least 4 words" ).arg( line ) ); }
    else
@@ -433,7 +433,7 @@ QJsonValue MainWindow::riceyLineToJson( QString line )
 
 QJsonValue MainWindow::notesLineToJson( QString line )
 { QJsonObject nlo;
-  QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+  QStringList words = line.split( QChar(' '), Qt::SkipEmptyParts );
   if ( words.size() < 4 )
     { v.append( QString( "notes line '%1' doesn't have at least 4 words" ).arg( line ) ); }
    else
@@ -460,7 +460,7 @@ void MainWindow::on_reformat_clicked()
 { QString html;
   int maxLen = 0;
   foreach ( QString line, notesList )
-    { QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+    { QStringList words = line.split( QChar(' '), Qt::SkipEmptyParts );
       if ( words.size() > 0 )
         if ( words.at(0).size() > maxLen )
           maxLen = words.at(0).size();
@@ -479,7 +479,7 @@ void MainWindow::on_reformat_clicked()
 
 QString MainWindow::notesLineToHtml( QString line, int maxLen )
 { QString html = "<font color=#000000>";
-  QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+  QStringList words = line.split( QChar(' '), Qt::SkipEmptyParts );
   if ( words.size() < 4 )
     { v.append( QString( "notes line '%1' doesn't have at least 4 words" ).arg( line ) ); }
    else
@@ -499,7 +499,7 @@ QString MainWindow::notesLineToHtml( QString line, int maxLen )
 
 QString MainWindow::codesLineToHtml( QString line )
 { QString html = "<font color=#000000>";
-  QStringList words = line.split( QChar(' '), QString::SkipEmptyParts );
+  QStringList words = line.split( QChar(' '), Qt::SkipEmptyParts );
   if ( words.size() < 4 )
     { v.append( QString( "notes line '%1' doesn't have at least 4 words" ).arg( line ) ); }
    else

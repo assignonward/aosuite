@@ -27,6 +27,7 @@
 #include <QMap>
 #include <QPointer>
 #include <QDataStream>
+#include <QIODevice>
 #include "dictionary.h"
 
 #include <stdio.h>
