@@ -22,7 +22,6 @@
  */
 #include "blockOb.h"
 // #include <QTextCodec> qt5 method
-#include <QStringConverter>
 #include <string.h>
 
 // Design Intent:
@@ -504,13 +503,15 @@ BsonSerial KeyValueArray::bsonish() const
       return BsonSerial();
     }
   quint64 elementCount = 0;
-  foreach ( ValueBase *vp, m_values )
-    if ( vp != nullptr )
+  for ( qint32 i = 0; i < m_values.size(); i++ )
+    if ( m_values.at(i) != nullptr )
       elementCount++;
   b.append( intToRice( elementCount ) );
-  foreach ( ValueBase *vp, m_values )
-    if ( vp != nullptr )
-      b.append( vp->bsonish() );
+  for ( qint32 i = 0; i < m_values.size(); i++ )
+    { ValueBase *vp = m_values.at(i);
+      if ( vp != nullptr )
+        b.append( vp->bsonish() );
+    }
   return b;
 }
 

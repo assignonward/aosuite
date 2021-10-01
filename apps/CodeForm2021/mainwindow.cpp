@@ -264,7 +264,7 @@ void MainWindow::firstPass()
           if ( !words.at(1).startsWith( "0x" ) || (words.at(1).size() < 3) )
             { v.append( QString( "ERROR: num '%1' must start with 0x and be followed by at least 1 digit in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
            else
-            { qint64 nv = riceToInt( QByteArray::fromHex( words.at(1).mid(2).toUtf8() ) );
+            { RiceyInt nv = riceToInt( QByteArray::fromHex( words.at(1).mid(2).toUtf8() ) );
               if ( riceyInts.contains( nv ) )
                 { v.append( QString( "ERROR: RiceyInt value collision, duplicate int form in line '%1'\n" ).arg( line ) ); }
                else

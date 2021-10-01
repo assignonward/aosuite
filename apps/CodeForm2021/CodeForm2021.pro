@@ -43,11 +43,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES +=  \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    protocolDemo.cpp
 
 HEADERS +=   \
     appname.h \
-    mainwindow.h
+    mainwindow.h \
+    protocolDemo.h
 
 FORMS += \
     mainwindow.ui

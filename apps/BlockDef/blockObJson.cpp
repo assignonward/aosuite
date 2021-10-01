@@ -230,8 +230,9 @@ JsonSerial  KeyValueArray::json() const
   j.append( dict.nameFromCode(m_key) );
   j.append( "\": [ " );
   bool wroteOne = false;
-  foreach ( ValueBase *vp, m_values )
-    { if ( vp != nullptr )
+  for ( qint32 i = 0; i < m_values.size(); i++ )
+    { ValueBase *vp = m_values.at(i);
+      if ( vp != nullptr )
         { j.append( vp->json() + " , \n" );
           wroteOne = true;
         }
@@ -248,7 +249,7 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
     { qWarning( "KeyValueArray::document is not a JsonObject '%s'",j.data() ); return false; }
   QJsonObject jo = jd.object();
   if ( jo.keys().size() != 1 )
-    { qWarning( "object has %d keys (should be 1)", jo.keys().size() ); return false; }
+    { qWarning( "object has %lld keys (should be 1)", jo.keys().size() ); return false; }
 
   QStringList keys = jo.keys();
   Utf8String obKey = keys.at(0).toUtf8();
@@ -264,8 +265,9 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
   if ( ja.size() < 1 )  // Empty?
     return true;        // We're done.
   if ( type() == RDT_OBJECT_ARRAY )
-    { foreach ( QJsonValue jv, ja )
-        { if ( !jv.isObject() )
+    { for ( qint32 i = 0; i < ja.size(); i++ )
+        { QJsonValue jv = ja.at(i);
+          if ( !jv.isObject() )
             qWarning( "array element is not object in KeyValueArray::setJson() type OBJECT_ARRAY" );
            else
             { QJsonObject jo = jv.toObject();

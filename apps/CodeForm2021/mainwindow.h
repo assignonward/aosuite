@@ -26,6 +26,7 @@
 #include <QMainWindow>
 #include <QJsonObject>
 #include "riceyCodes.h"
+#include "protocolDemo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -70,6 +71,8 @@ public:
  QHash<QString, QString> riceyCodes;
     QHash<qint32, QChar> notesNumChar;
      QHash<QChar, QChar> notesExtraChar;
+
+           ProtocolDemo  pd;
 
 private:
     Ui::MainWindow *ui;

@@ -334,7 +334,7 @@ public:
                                      if ( type() == RDT_STRING_ARRAY    ) { return append( new BlockValueString   (v, this) ); }
                                      if ( type() == RDT_BYTEARRAY_ARRAY ) { return append( new BlockValueByteArray(v, this) ); } qWarning( "type mismatch BA %d",(int)type() ); return false; }
         bool  append( const BlockObjectMap &v );
-        void  append( const ValueArray &v ) { foreach ( ValueBase *vbp, v ) m_values.append( newValue( key() & RDT_TYPEMASK, this, vbp ) ); };
+        void  append( const ValueArray &v ) { for ( qint32 i = 0; i < v.size(); i++ ) m_values.append( newValue( key() & RDT_TYPEMASK, this, v.at(i) ) ); };
    ValueBase *at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return m_values.at(n); else return nullptr; }
   ValueArray  value() { return m_values; }
         void  set( const ValueArray &v ) { clear(); append( v ); };
