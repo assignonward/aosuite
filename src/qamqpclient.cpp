@@ -504,7 +504,8 @@ void QAmqpClientPrivate::startOk()
     clientProperties["version"] = QString(QAMQP_VERSION);
     clientProperties["platform"] = QString("Qt %1").arg(qVersion());
     clientProperties["product"] = QString("QAMQP");
- // clientProperties.unite(customProperties);
+ // clientProperties.unite(customProperties);  Possible behavior change since duplicates are not overwritten by unite
+    clientProperties.insert(customProperties);
     stream << clientProperties;
 
     authenticator->write(stream);

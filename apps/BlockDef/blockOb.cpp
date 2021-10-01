@@ -21,7 +21,8 @@
  * SOFTWARE.
  */
 #include "blockOb.h"
-#include <QTextCodec>
+// #include <QTextCodec> qt5 method
+#include <QStringConverter>
 #include <string.h>
 
 // Design Intent:
@@ -435,11 +436,14 @@ qint32  BlockValueString::setBsonish( const BsonSerial &b )
       return sz;
     }
   QByteArray string = b.mid(sz, length);
+/* Qt5 method of validating UTF-8
   QTextCodec::ConverterState state;
   QTextCodec *codec = QTextCodec::codecForName("UTF-8");
   codec->toUnicode( string.constData(), string.size(), &state );
   if (state.invalidChars > 0) // Checking if string is valid UTF-8?
     { qWarning( "invalid UTF8" ); return -1; }
+*/
+  // TODO: Still need some method of validating string to be valid utf8?
   set( string );
   return sz+length;
 }
