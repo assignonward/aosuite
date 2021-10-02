@@ -367,6 +367,9 @@ void  BlockTool::graphvizDone(int code,QProcess::ExitStatus status)
   liveDelay( 50 );
   QPixmap p( "/tmp/x.dot.png" );
   ui->graphic->setPixmap( p );
+  ui->graphicScroll->setMinimumWidth( p.width() + qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent) );
+  liveDelay( 50 );
+  ui->contents->updateGeometry();
   if ( pp )
     pp->deleteLater();
 }
