@@ -114,10 +114,11 @@
 #define RCD_ActorDef_o                   4096 // protocolDefGroup_y A single Actor definition
 #define RCD_OutgoingItemsList_O          4336 // protocolDefGroup_y A list items this actor publishes
 #define RCD_IncomingItemsList_O          4304 // protocolDefGroup_y A list items this actor consumes
-#define RCD_DefinedSubItems_Y            4210 // protocolDefGroup_y Items that may appear in a container (to fulfill the protocol requirements)
-#define RCD_DefinedSubItemsDesc_S        4214 // protocolDefGroup_y Optional, description of what the items represent in this context
-#define RCD_OperReqList_O                4432 // protocolDefGroup_y Operational requirements / constraints on values found in Required or Optional items
-#define RCD_OperReq_o                    4416 // protocolDefGroup_y A single operational requirement / constraint on value found in an item
+#define RCD_SubItemDefs_O                4176 // protocolDefGroup_y inside _o or _O items, SubItemDefs_O defines the requirements for sub-items which may appear
+#define RCD_DefinedSubItems_Y            4210 // protocolDefGroup_y DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)
+#define RCD_DefinedSubItemsDesc_S        4214 // protocolDefGroup_y DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context
+#define RCD_OperReqList_O                4432 // protocolDefGroup_y USE inside SubItemDefs_O Operational requirements / constraints on values found in Required or Optional items
+#define RCD_OperReq_o                    4416 // protocolDefGroup_y USE inside SubItemDefs_O A single operational requirement / constraint on value found in an item
 #define RCD_OpMemberOf_Y                 4114 // operationGroup_y List of possible values for an RCODE
 #define RCD_OpOneOrMoreOf_Y              4370 // operationGroup_y One or more objects of the listed types are required to appear
 #define RCD_OpGreaterThan_Y              4146 // operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be greater than all

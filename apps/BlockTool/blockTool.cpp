@@ -386,7 +386,7 @@ void  BlockTool::writeWrappedDot( QByteArray d )
 
 void  BlockTool::updateGraph()
 { // dot -Tpng /tmp/x.dot -O
-  QStringList args;
+  QVector<QString> args;
   args.append( "-Tpng" );
   args.append( "/tmp/x.dot" );
   args.append( "-O" );

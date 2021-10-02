@@ -434,26 +434,32 @@
         },
         {
             "group_y": "DC42",
+            "name_s": "SubItemDefs_O",
+            "text_s": "protocolDefGroup_y inside _o or _O items, SubItemDefs_O defines the requirements for sub-items which may appear",
+            "type_y": "A050"
+        },
+        {
+            "group_y": "DC42",
             "name_s": "DefinedSubItems_Y",
-            "text_s": "protocolDefGroup_y Items that may appear in a container (to fulfill the protocol requirements)",
+            "text_s": "protocolDefGroup_y DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)",
             "type_y": "A072"
         },
         {
             "group_y": "DC42",
             "name_s": "DefinedSubItemsDesc_S",
-            "text_s": "protocolDefGroup_y Optional, description of what the items represent in this context",
+            "text_s": "protocolDefGroup_y DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context",
             "type_y": "A076"
         },
         {
             "group_y": "DC42",
             "name_s": "OperReqList_O",
-            "text_s": "protocolDefGroup_y Operational requirements / constraints on values found in Required or Optional items",
+            "text_s": "protocolDefGroup_y USE inside SubItemDefs_O Operational requirements / constraints on values found in Required or Optional items",
             "type_y": "A250"
         },
         {
             "group_y": "DC42",
             "name_s": "OperReq_o",
-            "text_s": "protocolDefGroup_y A single operational requirement / constraint on value found in an item",
+            "text_s": "protocolDefGroup_y USE inside SubItemDefs_O A single operational requirement / constraint on value found in an item",
             "type_y": "A240"
         },
         {

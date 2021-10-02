@@ -251,7 +251,7 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
   if ( jo.keys().size() != 1 )
     { qWarning( "object has %lld keys (should be 1)", jo.keys().size() ); return false; }
 
-  QStringList keys = jo.keys();
+  QVector<QString> keys = jo.keys();
   Utf8String obKey = keys.at(0).toUtf8();
   if ( !dict.codesContainName( obKey ) )
     { qWarning( "dictionary does not contain a %s element", obKey.data() ); return false; }
@@ -339,7 +339,7 @@ bool  BlockValueObject::setJson( const JsonSerial &j )
       return false;
     }
   QJsonObject jo   = jd.object();
-  QStringList keys = jo.keys();
+  QVector<QString> keys = jo.keys();
   clear();
   if ( keys.size() < 1 ) // Empty object?
     return true;         // yes, we're done.
