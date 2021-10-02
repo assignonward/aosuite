@@ -47,6 +47,7 @@ public:
           explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) {}
                    ~ValueBase() {}
 static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
+static  JsonSerial removeQuotes( const JsonSerial &j );
 virtual     quint8  type()    const = 0;
 virtual BsonSerial  bsonish() const = 0;
 virtual JsonSerial  json()    const = 0;
@@ -170,7 +171,7 @@ class BlockValueRiceyCode : public ValueBase
              ~BlockValueRiceyCode() {}
       quint8  type()    const { return RDT_RCODE; }
   BsonSerial  bsonish() const { return m_value; }
-  JsonSerial  json()    const { return "\""+m_value.toHex()+"\""; }
+  JsonSerial  json()    const { return "\""+dict.nameFromCode(m_value)+"\""; }
       qint32  setBsonish ( const BsonSerial & );
         bool  setJson    ( const JsonSerial & );
    RiceyCode  value()    const { return m_value; }

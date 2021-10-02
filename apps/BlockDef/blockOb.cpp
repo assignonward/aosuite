@@ -74,6 +74,20 @@ size_t strnlength (const char* s, size_t n)
 BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
 
 /**
+ * @brief ValueBase::removeQuotes
+ * @param j - json value to remove quotes from
+ * @return j trimmed of whitespace and if " is present at the start and end also remove them.
+ */
+JsonSerial ValueBase::removeQuotes( const JsonSerial &j )
+{ JsonSerial jt = j.trimmed();
+  if ( jt.endsWith( '"' ) && jt.startsWith( '"' ) )
+    { jt.chop(1);
+      return jt.mid(1);
+    }
+  return jt;
+}
+
+/**
  * @brief ValueBase::newValue
  * @param key - tells the type of value object to return
  * @param parent - optional, parent for the new value object

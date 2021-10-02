@@ -133,11 +133,13 @@ bool BlockValueMPQ::setJson( const JsonSerial &j )
  * @return true if conversion was successful
  */
 bool  BlockValueRiceyCode::setJson( const JsonSerial &j )
-{ RiceyCode r = j.fromHex( j );
-  if ( !validRicey( r ) )
-    { qWarning( "invalid ricey code in json" ); return false; }
-  m_value = r;
-  return true;
+{ JsonSerial jt = removeQuotes( j );
+  if ( dict.codesContainName( jt ) )
+    { m_value = dict.riceyFromCodeName( jt );
+      return true;
+    }
+  qWarning( "invalid code name in json %s", jt.data() );
+  return false;
 }
 
 /**
@@ -280,10 +282,19 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
     }
    else
     { QVariantList vl = ja.toVariantList();
+      Utf8String vt;
       foreach ( QVariant v, vl )
         { switch ( type() )
-            { case RDT_INT64_ARRAY:     append( (qint64)v.toLongLong() ); break;
-              case RDT_RCODE_ARRAY:     append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
+            { case RDT_INT64_ARRAY:
+                append( (qint64)v.toLongLong() );
+                break;
+              case RDT_RCODE_ARRAY:
+                vt = removeQuotes( v.toString().toUtf8() );
+                if ( dict.codesContainName( vt ) )
+                  append( dict.codeFromCodeName( vt ) );
+                 else
+                  qWarning( "dictionary does not contain %s", vt.data() );
+                break;
               case RDT_STRING_ARRAY:    append( v.toString().toUtf8() ); break; // TODO: encode using the same escapes as in the BlockString.json() function
               case RDT_BYTEARRAY_ARRAY: append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
               case RDT_MPZ_ARRAY:
@@ -394,7 +405,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
     { qWarning( "%s value does not match type %d", dict.nameFromCode(k).data(), typ ); return nullptr; }
   ValueBase *vbo;
   QJsonDocument jd;
-  QString str;
+  // QString str;
   switch ( jdt )
     { case JDT_OBJECT:
         vbo = newValue( k, parent );

@@ -199,6 +199,7 @@ void MainWindow::init()
   riceyList = ui->ricey->toPlainText().split("\n",Qt::SkipEmptyParts);
   maxNameLength = 0;
   maxNumLength  = 0;
+  maxCombLength = 0;
 }
 
 /**
@@ -275,6 +276,8 @@ void MainWindow::firstPass()
               qint32 sz = QString::number( nv ).size();
               if ( sz > maxNumLength )
                 maxNumLength = sz;
+              if ( (words.at(0).size() + words.at(1).size()) > maxCombLength )
+                maxCombLength = words.at(0).size() + words.at(1).size();
               if ( codes.contains( words.at(1) ) )
                 { v.append( QString( "ERROR: code %1 used twice, second time in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
                else
@@ -356,14 +359,20 @@ bool MainWindow::rulesCheck( QString name, QString num )
       return false;
     }
   bool ok;
-  qint64 numlc = num.toLongLong(&ok,16) & RDT_OBTYPEMASK;
-  if ( !notesNumChar.keys().contains( numlc ) )
+  qint64 numlc = riceToInt( QByteArray::fromHex( num.mid(2).toUtf8() ), nullptr, &ok ) & RDT_OBTYPEMASK;
+  if ( !ok )
+    { v.append( QString( "rulesCheck: num '%1' did not successfully convert riceToInt().\n" ).arg( num ) );
+      return false;
+    }
+  if ( !notesNumChar.contains( numlc ) )
     { v.append( QString( "rulesCheck: num '%1' does not end with a recognized code.\n" ).arg( num ) );
       return false;
     }
   QChar namelc = name.at(name.size()-1);
   if ( notesNumChar[numlc] != namelc ) // A kind of post-fix Hungarian notation to make the json/bson strictly typed
-    { v.append( QString( "rulesCheck: name '%1' does not end with the expected character %2.\n" ).arg( name ).arg( notesNumChar[numlc] ) );
+    { v.append( QString( "rulesCheck: name '%1' does not end '%2' with the expected %3 %4 character %4.\n" )
+                   .arg( name ).arg( namelc ).arg( numlc ).arg( num )
+                   .arg( notesNumChar[numlc] ) );
       return false;
     }
   QByteArray ba = QByteArray::fromHex( num.mid(2).toUtf8() );
@@ -505,7 +514,7 @@ QString MainWindow::codesLineToHtml( QString line )
    else
     { QString word = words.at(0);
       int sz = word.size() + words.at(1).size() + 1;
-      for ( int i = 0; i < maxNumLength + maxNameLength - sz + 3; i++ )
+      for ( int i = 0; i < maxCombLength - sz + 2; i++ )
         word.append( "&nbsp;" );
       html.append( word+"</font><font color=#000080>"+words.at(1)+" </font><font color=#008000> // " );
       if ( words.at(2) != "//" )

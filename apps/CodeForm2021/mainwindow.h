@@ -66,6 +66,7 @@ public:
             QJsonObject  jo;
                  qint32  maxNameLength;
                  qint32  maxNumLength;
+                 qint32  maxCombLength;
         QVector<QString> riceyList,notesList;
          QList<RiceyInt> riceyInts;
  QHash<QString, QString> riceyCodes;

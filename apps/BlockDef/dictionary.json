@@ -737,6 +737,18 @@
             "name_s": "Identity_o",
             "text_s": "dataGroup_y A cross chain identity, may be tied to share ownership but carries its own key pair",
             "type_y": "A100"
+        },
+        {
+            "group_y": "DA42",
+            "name_s": "NineCode_z",
+            "text_s": "dataGroup_y A test code to check a 9 byte ricey code",
+            "type_y": "81808080808080800F"
+        },
+        {
+            "group_y": "DA42",
+            "name_s": "MaxiCode_z",
+            "text_s": "dataGroup_y A test code to check a 9 byte ricey code",
+            "type_y": "FFFFFFFFFFFFFFFF6F"
         }
     ],
     "riceyTypes_O": [

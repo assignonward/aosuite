@@ -392,15 +392,16 @@ bool Tests::testRicey( QString &msg, qint32 &tc )
     { msg.append( "FAIL type() test.\n" ); pass = false; }
 
   RiceyInt tv;
-  tv =                  0; pass &= testRicey( v, tv, tc, msg );
-  tv =               0x01; pass &= testRicey( v, tv, tc, msg );
-  tv =               0x7F; pass &= testRicey( v, tv, tc, msg );
-  tv =               0x80; pass &= testRicey( v, tv, tc, msg );
-  tv =               0x81; pass &= testRicey( v, tv, tc, msg );
-  tv =             0xA0A0; pass &= testRicey( v, tv, tc, msg );
-  tv =           0xA0A0A0; pass &= testRicey( v, tv, tc, msg );
-  tv =         0xA0A0A0A0; pass &= testRicey( v, tv, tc, msg );
-  tv = 0x7060504030201000; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_ObTerm_o       ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_int64_i        ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_code_s         ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_separatedItem_o; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_PcolDAO0_y     ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_itemRelAddr_Y  ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_RangeBounds_O  ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_Identity_o     ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_NineCode_z     ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_MaxiCode_z     ; pass &= testRicey( v, tv, tc, msg );
 
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
@@ -1032,43 +1033,25 @@ bool Tests::testRiceyA( QString &msg, qint32 &tc )
     { msg.append( "FAIL type() test.\n" ); pass = false; }
 
   QList<RiceyInt> tv;
-                                   pass &= testRiceyA( v, tv, tc, msg ); // Empty Array test
-  tv.append(                  0 ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append(               0x01 ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append(               0x7F ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append(               0x80 ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append(               0x81 ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append(             0xA0A0 ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append(           0xA0A0A0 ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append(         0xA0A0A0A0 ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append( 0x7060504030201000 ); pass &= testRiceyA( v, tv, tc, msg );
+                                    pass &= testRiceyA( v, tv, tc, msg ); // Empty Array test
+  tv.append( RCD_ObTerm_o        ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_int64_i         ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_code_s          ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_separatedItem_o ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_PcolDAO0_y      ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_itemRelAddr_Y   ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_RangeBounds_O   ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_Identity_o      ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_NineCode_z      ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_MaxiCode_z      ); pass &= testRiceyA( v, tv, tc, msg );
   tv.clear();
   for ( qint32 i = 1; i < 1100; i++ )
-    tv.append(0);
+    tv.append(RCD_ObTerm_o);
                                    pass &= testRiceyA( v, tv, tc, msg );
   tv.clear();
   for ( qint32 i = 1; i < 1101; i++ )
-    tv.append(i*438957);
+    tv.append(RCD_MaxiCode_z);
                                    pass &= testRiceyA( v, tv, tc, msg );
-
-  QList<RiceyCode> rc;
-  rc.append( intToRice(                 0) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.append( intToRice(              0x01) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.append( intToRice(              0x7F) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.append( intToRice(              0x80) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.append( intToRice(              0x81) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.append( intToRice(            0xA0A0) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.append( intToRice(          0xA0A0A0) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.append( intToRice(        0xA0A0A0A0) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.append( intToRice(0x7060504030201000) ); pass &= testRiceyA( v, rc, tc, msg );
-  rc.clear();
-  for ( qint32 i = 1; i < 1100; i++ )
-    rc.append( intToRice(0) );
-                                   pass &= testRiceyA( v, rc, tc, msg );
-  rc.clear();
-  for ( qint64 i = 1; i < 1101; i++ )
-    rc.append( intToRice(i*438957) );
-                                   pass &= testRiceyA( v, rc, tc, msg );
 
   if ( pass )
     msg.append( QString("Pass %1 tests.").arg(tc) );
