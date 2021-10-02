@@ -80,7 +80,7 @@ void  BlockTool::on_DAO0_clicked()
 
   BlockValueObject *ido = new BlockValueObject( this );
   idl->append( ido );
-  BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_reqRecordStorage_o, this );
+  BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_requestRecordStorage_o, this );
   ido->insert( RCD_type_y, idc );
   BlockArrayRicey *ril = new BlockArrayRicey( RCD_DefinedSubItems_Y, this );
   ido->insert( RCD_DefinedSubItems_Y, ril );
@@ -108,7 +108,7 @@ void  BlockTool::on_DAO0_clicked()
 
   BlockValueObject *idgo = new BlockValueObject( this );
   idl->append( idgo );
-  BlockValueRiceyCode *idg = new BlockValueRiceyCode( RCD_reqRecordRetrieval_o, this );
+  BlockValueRiceyCode *idg = new BlockValueRiceyCode( RCD_requestRecordRetrieval_o, this );
   idgo->insert( RCD_type_y, idg );
   BlockArrayRicey *rigl = new BlockArrayRicey( RCD_DefinedSubItems_Y, this );
   idgo->insert( RCD_DefinedSubItems_Y, rigl );
@@ -146,7 +146,7 @@ void  BlockTool::on_DAO0_clicked()
   ado1->insert( RCD_OutgoingItemsList_O, ado1o );
     BlockValueObject *ado1o1 = new BlockValueObject( this );
     ado1o->append( ado1o1 );
-    BlockValueRiceyCode *ado1o1i = new BlockValueRiceyCode( RCD_reqRecordStorage_o, this );
+    BlockValueRiceyCode *ado1o1i = new BlockValueRiceyCode( RCD_requestRecordStorage_o, this );
     ado1o1->insert( RCD_type_y, ado1o1i );
   BlockArrayObject *ado1i = new BlockArrayObject( RCD_IncomingItemsList_O, this );
   ado1->insert( RCD_IncomingItemsList_O, ado1i );

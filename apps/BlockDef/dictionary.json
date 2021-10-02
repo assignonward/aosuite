@@ -530,7 +530,7 @@
         },
         {
             "group_y": "DC62",
-            "name_s": "reqAvailServices_o",
+            "name_s": "requestAvailServices_o",
             "text_s": "serviceDescriptors_y Object contains the protocol name and/or uid (some protocols will require uid, early ones will go by name).",
             "type_y": "AAA540"
         },
@@ -542,7 +542,7 @@
         },
         {
             "group_y": "DC62",
-            "name_s": "reqRecordStorage_o",
+            "name_s": "requestRecordStorage_o",
             "text_s": "serviceDescriptors_y Object describes the id of the requestor, id of the database to record in, and the data to record",
             "type_y": "AAA520"
         },
@@ -554,7 +554,7 @@
         },
         {
             "group_y": "DC62",
-            "name_s": "reqRecordRetrieval_o",
+            "name_s": "requestRecordRetrieval_o",
             "text_s": "serviceDescriptors_y Object describes the id of the requestor, id of the database to record in, and id of the record to retrieve",
             "type_y": "AAA620"
         },
