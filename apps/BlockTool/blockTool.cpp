@@ -34,6 +34,12 @@ BlockTool::BlockTool( QWidget *cw ) :
     { new QVBoxLayout( cw );
       cw->layout()->addWidget( this );
     }
+  panelA = new BlockPanel( ui->frameA );
+  panelX = new BlockPanel( ui->frameX );
+  panelY = new BlockPanel( ui->frameY );
+  connect( this, SIGNAL(showA(KeyValuePair *)), panelA, SLOT(setBlock(KeyValuePair *)));
+  connect( this, SIGNAL(showX(KeyValuePair *)), panelX, SLOT(setBlock(KeyValuePair *)));
+  connect( this, SIGNAL(showY(KeyValuePair *)), panelY, SLOT(setBlock(KeyValuePair *)));
 }
 
 BlockTool::~BlockTool()
@@ -174,6 +180,7 @@ void  BlockTool::on_DAO0_clicked()
   ui->report->append( kvp->bsonish().toHex() );
   // ui->report->append( kvp->dot() );
   writeWrappedDot( kvp->dot() );
+  emit showA( kvp );
 }
 
 void  BlockTool::on_chain_clicked()
@@ -368,8 +375,6 @@ void  BlockTool::graphvizDone(int code,QProcess::ExitStatus status)
   QPixmap p( "/tmp/x.dot.png" );
   ui->graphic->setPixmap( p );
   ui->graphicScroll->setMinimumWidth( p.width() + qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent) );
-  liveDelay( 50 );
-  ui->contents->updateGeometry();
   if ( pp )
     pp->deleteLater();
 }

@@ -42,28 +42,7 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item row="2" column="1">
-     <widget class="QTextEdit" name="report">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <family>DejaVu Sans Mono</family>
-       </font>
-      </property>
-      <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="4">
+    <item row="1" column="0" colspan="6">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="topMargin">
        <number>0</number>
@@ -131,6 +110,22 @@
      </layout>
     </item>
     <item row="2" column="2">
+     <widget class="QFrame" name="frameX">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="4" rowspan="2">
      <widget class="QScrollArea" name="graphicScroll">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -155,8 +150,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>70</width>
-         <height>240</height>
+         <width>68</width>
+         <height>195</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -191,6 +186,59 @@ View</string>
         </item>
        </layout>
       </widget>
+     </widget>
+    </item>
+    <item row="2" column="1" rowspan="2">
+     <widget class="QTextEdit" name="report">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>DejaVu Sans Mono</family>
+       </font>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QFrame" name="frameY">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3" rowspan="2">
+     <widget class="QFrame" name="frameA">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
      </widget>
     </item>
    </layout>

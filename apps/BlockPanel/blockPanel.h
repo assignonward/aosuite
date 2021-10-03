@@ -20,47 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef BLOCKTOOL_H
-#define BLOCKTOOL_H
+#ifndef BLOCKPANEL_H
+#define BLOCKPANEL_H
 
 #include <QScrollArea>
-#include <QProcess>
 #include "blockOb.h"
-#include "blockPanel.h"
 
 namespace Ui {
-class BlockTool;
+class BlockPanel;
 }
 
-class BlockTool : public QScrollArea
+class BlockPanel : public QScrollArea
 {
     Q_OBJECT
 
 public:
-   explicit  BlockTool( QWidget *cw = nullptr );
-            ~BlockTool();
-       void  liveDelay( int t );
- QByteArray  jsonReformat( QByteArray );
+   explicit  BlockPanel( QWidget *cw = nullptr );
+            ~BlockPanel();
 
 signals:
-       void  showA( KeyValuePair * );
-       void  showX( KeyValuePair * );
-       void  showY( KeyValuePair * );
 
 public slots:
-       void  on_chain_clicked();
-       void  on_hash_clicked();
-       void  on_DAO0_clicked();
-       void  writeWrappedDot( QByteArray d );
-       void  updateGraph();
-       void  graphvizDone(int,QProcess::ExitStatus);
+    void  setBlock( KeyValuePair * );
 
 public:
-   QPointer<BlockPanel> panelA;
-   QPointer<BlockPanel> panelX;
-   QPointer<BlockPanel> panelY;
-         Ui::BlockTool *ui;
-     QPointer<QProcess> pp;
+         Ui::BlockPanel *ui;
 };
 
-#endif // BLOCKTOOL_H
+#endif // BLOCKPANEL_H

@@ -20,47 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef BLOCKTOOL_H
-#define BLOCKTOOL_H
-
-#include <QScrollArea>
-#include <QProcess>
-#include "blockOb.h"
+#include <QtWidgets>
 #include "blockPanel.h"
+#include "ui_blockPanel.h"
+#include "blockOb.h"
+#include <unistd.h>
 
-namespace Ui {
-class BlockTool;
+// TODO: test intentional failures, error checking, length reporting, trailing input data, etc.
+
+BlockPanel::BlockPanel( QWidget *cw ) :
+    QScrollArea(cw),
+    ui(new Ui::BlockPanel)
+{ ui->setupUi(this);
+  if ( cw )
+    { QVBoxLayout *vb = new QVBoxLayout( cw );
+      cw->layout()->addWidget( this );
+      vb->setContentsMargins( 0,0,0,0 );
+    }
 }
 
-class BlockTool : public QScrollArea
-{
-    Q_OBJECT
+BlockPanel::~BlockPanel()
+{ delete ui; }
 
-public:
-   explicit  BlockTool( QWidget *cw = nullptr );
-            ~BlockTool();
-       void  liveDelay( int t );
- QByteArray  jsonReformat( QByteArray );
-
-signals:
-       void  showA( KeyValuePair * );
-       void  showX( KeyValuePair * );
-       void  showY( KeyValuePair * );
-
-public slots:
-       void  on_chain_clicked();
-       void  on_hash_clicked();
-       void  on_DAO0_clicked();
-       void  writeWrappedDot( QByteArray d );
-       void  updateGraph();
-       void  graphvizDone(int,QProcess::ExitStatus);
-
-public:
-   QPointer<BlockPanel> panelA;
-   QPointer<BlockPanel> panelX;
-   QPointer<BlockPanel> panelY;
-         Ui::BlockTool *ui;
-     QPointer<QProcess> pp;
-};
-
-#endif // BLOCKTOOL_H
+void  BlockPanel::setBlock( KeyValuePair *kvp )
+{ ui->view->setText( kvp->json() );
+  this->setMinimumWidth( 300 );
+}

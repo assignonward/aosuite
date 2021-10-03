@@ -25,6 +25,7 @@ CONFIG += c++11
 
 include(../AboutForm/AboutForm.pri)
 include(../BlockDef/BlockDef.pri)
+include(../BlockPanel/BlockPanel.pri)
 include(../BlockTool/BlockTool.pri)
 include(../ProtocolParser/ProtocolParser.pri)
 include(../Tests/Tests.pri)
