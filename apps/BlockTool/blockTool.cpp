@@ -34,9 +34,9 @@ BlockTool::BlockTool( QWidget *cw ) :
     { new QVBoxLayout( cw );
       cw->layout()->addWidget( this );
     }
-  panelA = new BlockPanel( ui->frameA );
-  panelX = new BlockPanel( ui->frameX );
-  panelY = new BlockPanel( ui->frameY );
+  panelA = new BlockPanel( ui->frameA ); panelA->setLabel( "A" );
+  panelX = new BlockPanel( ui->frameX ); panelX->setLabel( "X" );
+  panelY = new BlockPanel( ui->frameY ); panelY->setLabel( "Y" );
   connect( this, SIGNAL(showA(KeyValuePair *)), panelA, SLOT(setBlock(KeyValuePair *)));
   connect( this, SIGNAL(showX(KeyValuePair *)), panelX, SLOT(setBlock(KeyValuePair *)));
   connect( this, SIGNAL(showY(KeyValuePair *)), panelY, SLOT(setBlock(KeyValuePair *)));
@@ -181,6 +181,7 @@ void  BlockTool::on_DAO0_clicked()
   // ui->report->append( kvp->dot() );
   writeWrappedDot( kvp->dot() );
   emit showA( kvp );
+  kvp->deleteLater();
 }
 
 void  BlockTool::on_chain_clicked()
@@ -223,6 +224,7 @@ void  BlockTool::on_chain_clicked()
   ui->report->append( kvp->bsonish().toHex() );
 //  ui->report->append( kvp->dot() );
   writeWrappedDot( kvp->dot() );
+  kvp->deleteLater();
 }
 
 void  BlockTool::on_hash_clicked()
@@ -341,6 +343,7 @@ void  BlockTool::on_hash_clicked()
   ui->report->append( kvp->bsonish().toHex() );
  // ui->report->append( kvp->dot() );
   writeWrappedDot( kvp->dot() );
+  kvp->deleteLater();
 }
 
 void  BlockTool::writeWrappedDot( QByteArray d )

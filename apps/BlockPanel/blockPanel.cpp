@@ -46,3 +46,6 @@ void  BlockPanel::setBlock( KeyValuePair *kvp )
 { ui->view->setText( kvp->json() );
   this->setMinimumWidth( 300 );
 }
+
+void  BlockPanel::setLabel( QString t )
+{ ui->view->setText( t ); }

@@ -37,6 +37,7 @@ class BlockPanel : public QScrollArea
 public:
    explicit  BlockPanel( QWidget *cw = nullptr );
             ~BlockPanel();
+       void  setLabel( QString );
 
 signals:
 
