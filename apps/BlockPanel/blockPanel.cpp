@@ -41,10 +41,19 @@ BlockPanel::BlockPanel( QString l, QWidget *cw ) :
 }
 
 BlockPanel::~BlockPanel()
-{ delete ui; }
+{ delete ui;
+  if ( kvp )
+    kvp->deleteLater();
+}
 
-void  BlockPanel::setBlock( KeyValuePair *kvp )
-{ ui->view->setText( kvp->json() );
+void  BlockPanel::setBlock( KeyValuePair *p )
+{ if ( kvp )
+    { kvp->clear();
+      kvp->setBsonish( p->bsonish() );
+    }
+   else
+    kvp = new KeyValuePair( p->bsonish() );
+  ui->view->setText( kvp->json() );
   this->setMinimumWidth( 300 );
 }
 

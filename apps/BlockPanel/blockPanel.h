@@ -45,6 +45,7 @@ public slots:
     void  setBlock( KeyValuePair * );
 
 public:
+  QPointer<KeyValuePair> kvp;
                 QString  label;
          Ui::BlockPanel *ui;
 };
