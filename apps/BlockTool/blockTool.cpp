@@ -34,9 +34,9 @@ BlockTool::BlockTool( QWidget *cw ) :
     { new QVBoxLayout( cw );
       cw->layout()->addWidget( this );
     }
-  panelA = new BlockPanel( ui->frameA ); panelA->setLabel( "A" );
-  panelX = new BlockPanel( ui->frameX ); panelX->setLabel( "X" );
-  panelY = new BlockPanel( ui->frameY ); panelY->setLabel( "Y" );
+  panelA = new BlockPanel( "A", ui->frameA );
+  panelX = new BlockPanel( "X", ui->frameX );
+  panelY = new BlockPanel( "Y", ui->frameY );
   connect( this, SIGNAL(showA(KeyValuePair *)), panelA, SLOT(setBlock(KeyValuePair *)));
   connect( this, SIGNAL(showX(KeyValuePair *)), panelX, SLOT(setBlock(KeyValuePair *)));
   connect( this, SIGNAL(showY(KeyValuePair *)), panelY, SLOT(setBlock(KeyValuePair *)));

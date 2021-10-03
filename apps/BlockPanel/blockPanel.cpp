@@ -28,7 +28,7 @@
 
 // TODO: test intentional failures, error checking, length reporting, trailing input data, etc.
 
-BlockPanel::BlockPanel( QWidget *cw ) :
+BlockPanel::BlockPanel( QString l, QWidget *cw ) :
     QScrollArea(cw),
     ui(new Ui::BlockPanel)
 { ui->setupUi(this);
@@ -37,6 +37,7 @@ BlockPanel::BlockPanel( QWidget *cw ) :
       cw->layout()->addWidget( this );
       vb->setContentsMargins( 0,0,0,0 );
     }
+  setLabel(l);
 }
 
 BlockPanel::~BlockPanel()
@@ -47,5 +48,11 @@ void  BlockPanel::setBlock( KeyValuePair *kvp )
   this->setMinimumWidth( 300 );
 }
 
+/**
+ * @brief BlockPanel::setLabel - label is a unique identifier for this panel, and is shown in the ui at creation
+ * @param t - text to serve in label
+ */
 void  BlockPanel::setLabel( QString t )
-{ ui->view->setText( t ); }
+{ label = t;
+  ui->view->setText( t );
+}

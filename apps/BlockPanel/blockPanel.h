@@ -35,7 +35,7 @@ class BlockPanel : public QScrollArea
     Q_OBJECT
 
 public:
-   explicit  BlockPanel( QWidget *cw = nullptr );
+   explicit  BlockPanel( QString l, QWidget *cw = nullptr );
             ~BlockPanel();
        void  setLabel( QString );
 
@@ -45,6 +45,7 @@ public slots:
     void  setBlock( KeyValuePair * );
 
 public:
+                QString  label;
          Ui::BlockPanel *ui;
 };
 
