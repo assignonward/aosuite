@@ -100,9 +100,9 @@ void  BlockPanel::writeWrappedDot( QByteArray d )
   fd.write( "rankdir=LR;\n" );
   liveDelay( 50 );
   switch ( m_mode )
-    { case make:  fd.write( "bgcolor=lightgreen;\n" ); break;
-      case build: fd.write( "bgcolor=lightblue;\n"  ); break;
-      case idle:  fd.write( "bgcolor=lightgrey;\n"  ); break;
+    { case make:  fd.write( "node [color=darkgreen]; graph [color=darkgreen];\n" ); break;
+      case build: fd.write( "node [color=darkblue];  graph [color=darkblue];\n"  ); break;
+      case idle:  fd.write( "node [color=grey];      graph [color=grey];\n"      ); break;
     }
   fd.write( d );
   fd.write( "}\n" );
