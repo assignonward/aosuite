@@ -41,6 +41,7 @@ public:
             ~BlockTool();
        void  liveDelay( int t );
  QByteArray  jsonReformat( QByteArray );
+       void  setBuild( KeyValuePair * );
 
 signals:
        void  showA( KeyValuePair * );
@@ -56,9 +57,6 @@ public slots:
        void  on_buildA_toggled(bool);
        void  on_buildX_toggled(bool);
        void  on_buildY_toggled(bool);
-       void  writeWrappedDot( QByteArray d );
-       void  updateGraph();
-       void  graphvizDone(int,QProcess::ExitStatus);
 
 public:
    QPointer<BlockPanel> panelA;

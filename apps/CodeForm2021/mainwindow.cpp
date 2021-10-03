@@ -38,10 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     restoreConfig();
     new AboutForm( ui->    aboutTab );
-    BlockTool *bt = new BlockTool( ui->blockToolTab );
-    Tests     *tp = new Tests    ( ui->    testsTab );
-    connect( tp, SIGNAL( newDot(QByteArray)), bt, SLOT(writeWrappedDot(QByteArray)) );
-
+    new BlockTool( ui->blockToolTab );
+    new Tests    ( ui->    testsTab );
     on_update_clicked();
 }
 

@@ -31,8 +31,9 @@ BlockTool::BlockTool( QWidget *cw ) :
     ui(new Ui::BlockTool)
 { ui->setupUi(this);
   if ( cw )
-    { new QVBoxLayout( cw );
+    { QVBoxLayout *vb = new QVBoxLayout( cw );
       cw->layout()->addWidget( this );
+      vb->setContentsMargins( 0,0,0,0 );
     }
   panelA = new BlockPanel( "A", ui->frameA );
   panelX = new BlockPanel( "X", ui->frameX );
@@ -64,6 +65,12 @@ void  BlockTool::on_buildY_toggled(bool c)
     ui->makeX->setChecked(true);
 }
 
+void  BlockTool::setBuild( KeyValuePair *kvp )
+{ if ( ui->buildA->isChecked() ) { panelA->setBlock( kvp ); return; }
+  if ( ui->buildX->isChecked() ) { panelX->setBlock( kvp ); return; }
+  if ( ui->buildY->isChecked() ) { panelY->setBlock( kvp ); return; }
+  qWarning( "no build panel checked" );
+}
 
 void BlockTool::liveDelay( int t )
 { QTimer timer;
@@ -199,8 +206,7 @@ void  BlockTool::on_DAO0_clicked()
   ui->report->append( jsonReformat( kvp->json() ) );
   ui->report->append( kvp->bsonish().toHex() );
   // ui->report->append( kvp->dot() );
-  writeWrappedDot( kvp->dot() );
-  emit showA( kvp );
+  setBuild( kvp );
   kvp->deleteLater();
 }
 
@@ -243,7 +249,7 @@ void  BlockTool::on_chain_clicked()
   ui->report->append( jsonReformat( kvp->json() ) );
   ui->report->append( kvp->bsonish().toHex() );
 //  ui->report->append( kvp->dot() );
-  writeWrappedDot( kvp->dot() );
+  setBuild( kvp );
   kvp->deleteLater();
 }
 
@@ -362,42 +368,7 @@ void  BlockTool::on_hash_clicked()
   ui->report->append( jsonReformat( kvp->json() ) );
   ui->report->append( kvp->bsonish().toHex() );
  // ui->report->append( kvp->dot() );
-  writeWrappedDot( kvp->dot() );
+  setBuild( kvp );
   kvp->deleteLater();
 }
 
-void  BlockTool::writeWrappedDot( QByteArray d )
-{ QFile fd("/tmp/x.dot");
-  fd.open( QIODevice::WriteOnly );
-  fd.write( "digraph AO {\n" );
-  fd.write( "rankdir=LR;\n\n" );
-  fd.write( d );
-  fd.write( "}\n" );
-  fd.flush();
-  fd.close();
-  updateGraph();
-}
-
-void  BlockTool::updateGraph()
-{ // dot -Tpng /tmp/x.dot -O
-  QVector<QString> args;
-  args.append( "-Tpng" );
-  args.append( "/tmp/x.dot" );
-  args.append( "-O" );
-  if ( pp )
-    pp->deleteLater();
-  pp = new QProcess(this);
-  connect( pp, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(graphvizDone(int,QProcess::ExitStatus)) );
-  pp->start( "dot", args );
-}
-
-void  BlockTool::graphvizDone(int code,QProcess::ExitStatus status)
-{ // qWarning( "finished %d %d", code, status );
-  (void)code; (void)status;
-  liveDelay( 50 );
-  QPixmap p( "/tmp/x.dot.png" );
-  ui->graphic->setPixmap( p );
-  ui->graphicScroll->setMinimumWidth( p.width() + qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent) );
-  if ( pp )
-    pp->deleteLater();
-}

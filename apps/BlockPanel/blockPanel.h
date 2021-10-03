@@ -24,6 +24,7 @@
 #define BLOCKPANEL_H
 
 #include <QScrollArea>
+#include <QProcess>
 #include "blockOb.h"
 
 namespace Ui {
@@ -37,16 +38,22 @@ class BlockPanel : public QScrollArea
 public:
    explicit  BlockPanel( QString l, QWidget *cw = nullptr );
             ~BlockPanel();
+       void  liveDelay( int t );
        void  setLabel( QString );
 
 signals:
 
 public slots:
     void  setBlock( KeyValuePair * );
+    void  writeWrappedDot( QByteArray d );
+    void  updateGraph();
+    void  graphvizDone(int,QProcess::ExitStatus);
+
 
 public:
   QPointer<KeyValuePair> kvp;
-                QString  label;
+                QString  m_label;
+      QPointer<QProcess> pp;
          Ui::BlockPanel *ui;
 };
 

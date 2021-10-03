@@ -53,8 +53,7 @@ void  BlockPanel::setBlock( KeyValuePair *p )
     }
    else
     kvp = new KeyValuePair( p->bsonish() );
-  ui->view->setText( kvp->json() );
-  this->setMinimumWidth( 300 );
+  writeWrappedDot( kvp->dot() );
 }
 
 /**
@@ -62,6 +61,55 @@ void  BlockPanel::setBlock( KeyValuePair *p )
  * @param t - text to serve in label
  */
 void  BlockPanel::setLabel( QString t )
-{ label = t;
+{ m_label = t;
   ui->view->setText( t );
 }
+
+void BlockPanel::liveDelay( int t )
+{ QTimer timer;
+  timer.setSingleShot( true );
+  timer.start( t );
+  QCoreApplication::processEvents( QEventLoop::AllEvents, t );
+  while ( timer.isActive() )
+    { usleep( 5000 ); // Get 5ms of "real sleep"
+      QCoreApplication::processEvents( QEventLoop::AllEvents, 50 );
+    }
+}
+
+void  BlockPanel::writeWrappedDot( QByteArray d )
+{ QFile fd(QString("/tmp/%1.dot").arg(m_label));
+  fd.open( QIODevice::WriteOnly );
+  fd.write( "digraph AO {\n" );
+  fd.write( "rankdir=LR;\n\n" );
+  fd.write( d );
+  fd.write( "}\n" );
+  fd.flush();
+  fd.close();
+  updateGraph();
+}
+
+void  BlockPanel::updateGraph()
+{ // dot -Tpng /tmp/x.dot -O
+  QVector<QString> args;
+  args.append( "-Tpng" );
+  args.append( QString("/tmp/%1.dot").arg(m_label) );
+  args.append( "-O" );
+  if ( pp )
+    pp->deleteLater();
+  pp = new QProcess(this);
+  connect( pp, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(graphvizDone(int,QProcess::ExitStatus)) );
+  pp->start( "dot", args );
+}
+
+void  BlockPanel::graphvizDone(int code,QProcess::ExitStatus status)
+{ if ( code != 0 )
+    qWarning( "BlockPanel::graphvizDone() %d %d", code, status );
+  liveDelay( 50 );
+  QPixmap p( QString("/tmp/%1.dot.png").arg(m_label) );
+  ui->view->setPixmap( p );
+  this->setMinimumWidth( p.width() + qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent) );
+  if ( pp )
+    pp->deleteLater();
+  pp = nullptr;
+}
+
