@@ -97,7 +97,7 @@ void  BlockTool::on_DAO0_clicked()
   BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
   hso->insert( RCD_data_b, hdp );
 
-  BlockValueRiceyCode *pcc = new BlockValueRiceyCode( RCD_PcolDAO0_y, this );
+  BlockValueRiceyCode *pcc = new BlockValueRiceyCode( RCD_ProtocolDAO0_y, this );
   hdo->insert( RCD_type_y, pcc );
   BlockValueString *stp = new BlockValueString( "DⒶ0", this );
   hdo->insert( RCD_text_s, stp );
@@ -263,7 +263,7 @@ void  BlockTool::on_hash_clicked()
   BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
   hso->insert( RCD_data_b, hdp );
 
-  BlockValueRiceyCode *pcc = new BlockValueRiceyCode( RCD_PcolDAO2_y, this );
+  BlockValueRiceyCode *pcc = new BlockValueRiceyCode( RCD_ProtocolDAO2_y, this );
   hdo->insert( RCD_type_y, pcc );
   BlockValueString *stp = new BlockValueString( "DⒶ2", this );
   hdo->insert( RCD_text_s, stp );

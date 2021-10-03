@@ -73,6 +73,18 @@
             "type_y": "DC62"
         },
         {
+            "group_y": "DB62",
+            "name_s": "riceyTypes_O",
+            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.",
+            "type_y": "D1C710"
+        },
+        {
+            "group_y": "DB62",
+            "name_s": "riceyCodes_O",
+            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.",
+            "type_y": "D1C730"
+        },
+        {
             "group_y": "DA42",
             "name_s": "ObTerm_o",
             "text_s": "dataGroup_y Object terminator, indicates no more items in the object in bsonish lists",
@@ -289,68 +301,56 @@
             "type_y": "F002"
         },
         {
-            "group_y": "DB62",
-            "name_s": "riceyTypes_O",
-            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.",
-            "type_y": "D1C710"
-        },
-        {
-            "group_y": "DB62",
-            "name_s": "riceyCodes_O",
-            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.",
-            "type_y": "D1C730"
-        },
-        {
             "group_y": "DA62",
-            "name_s": "PcolDAO0_y",
+            "name_s": "ProtocolDAO0_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ0",
             "type_y": "DDA08002"
         },
         {
             "group_y": "DA62",
-            "name_s": "PcolDAO1_y",
+            "name_s": "ProtocolDAO1_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ1",
             "type_y": "DDA08022"
         },
         {
             "group_y": "DA62",
-            "name_s": "PcolDAO2_y",
+            "name_s": "ProtocolDAO2_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ2",
             "type_y": "DDA08042"
         },
         {
             "group_y": "DA62",
-            "name_s": "PcolDAO3_y",
+            "name_s": "ProtocolDAO3_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ3",
             "type_y": "DDA08062"
         },
         {
             "group_y": "DA62",
-            "name_s": "PcolDAO4_y",
+            "name_s": "ProtocolDAO4_y",
             "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ4",
             "type_y": "DDA08102"
         },
         {
             "group_y": "DA62",
-            "name_s": "PcolTAO1_y",
+            "name_s": "ProtocolTAO1_y",
             "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22",
             "type_y": "A7A08002"
         },
         {
             "group_y": "DA62",
-            "name_s": "PcolTAO2_y",
+            "name_s": "ProtocolTAO2_y",
             "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13",
             "type_y": "A7A08022"
         },
         {
             "group_y": "DA62",
-            "name_s": "PcolA00_y",
+            "name_s": "ProtocolA00_y",
             "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin",
             "type_y": "A002"
         },
         {
             "group_y": "DA62",
-            "name_s": "PcolA01_y",
+            "name_s": "ProtocolA01_y",
             "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees",
             "type_y": "A022"
         },

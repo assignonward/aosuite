@@ -54,6 +54,8 @@
 #define RCD_operationGroup_y                       11810 // groupDefGroup_y These codes define calculation/operation types
 #define RCD_protocolDefGroup_y                     11842 // groupDefGroup_y These codes are used in protocol definition
 #define RCD_serviceDescriptors_y                   11874 // groupDefGroup_y These codes are used for service requests and responses
+#define RCD_riceyTypes_O                         1336208 // dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
+#define RCD_riceyCodes_O                         1336240 // dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.
 #define RCD_ObTerm_o                                   0 // dataGroup_y Object terminator, indicates no more items in the object in bsonish lists
 #define RCD_int64_i                                    1 // dataGroup_y Generic signed int64, use depends on context.
 #define RCD_type_y                                     2 // dataGroup_y Identifies an algorithm type for hash or crypto key, or other types depending on context
@@ -90,17 +92,15 @@
 #define RCD_png_y                                   2114 // algorithmIdGroup_y Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_success_y                               8194 // dataGroup_y success code
 #define RCD_failure_y                              14338 // dataGroup_y failure code
-#define RCD_riceyTypes_O                         1336208 // dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
-#define RCD_riceyCodes_O                         1336240 // dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.
-#define RCD_PcolDAO0_y                         195559426 // protocolIdGroup_y Development protocol, symbol: DⒶ0
-#define RCD_PcolDAO1_y                         195559458 // protocolIdGroup_y Development protocol, symbol: DⒶ1
-#define RCD_PcolDAO2_y                         195559490 // protocolIdGroup_y Development protocol, symbol: DⒶ2
-#define RCD_PcolDAO3_y                         195559522 // protocolIdGroup_y Development protocol, symbol: DⒶ3
-#define RCD_PcolDAO4_y                         195559554 // protocolIdGroup_y Development protocol, symbol: DⒶ4
-#define RCD_PcolTAO1_y                          82313218 // protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22
-#define RCD_PcolTAO2_y                          82313250 // protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13
-#define RCD_PcolA00_y                               4098 // protocolIdGroup_y Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
-#define RCD_PcolA01_y                               4130 // protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
+#define RCD_ProtocolDAO0_y                     195559426 // protocolIdGroup_y Development protocol, symbol: DⒶ0
+#define RCD_ProtocolDAO1_y                     195559458 // protocolIdGroup_y Development protocol, symbol: DⒶ1
+#define RCD_ProtocolDAO2_y                     195559490 // protocolIdGroup_y Development protocol, symbol: DⒶ2
+#define RCD_ProtocolDAO3_y                     195559522 // protocolIdGroup_y Development protocol, symbol: DⒶ3
+#define RCD_ProtocolDAO4_y                     195559554 // protocolIdGroup_y Development protocol, symbol: DⒶ4
+#define RCD_ProtocolTAO1_y                      82313218 // protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22
+#define RCD_ProtocolTAO2_y                      82313250 // protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13
+#define RCD_ProtocolA00_y                           4098 // protocolIdGroup_y Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
+#define RCD_ProtocolA01_y                           4130 // protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
 #define RCD_actorWriterClient_y                   729986 // protocolActorGroup_y Actor definition: the actor who wants to create a record (in a blockchain)
 #define RCD_actorWriterServer_y                   730018 // protocolActorGroup_y Actor definition: the actor who wants to retrieve a record (from a blockchain)
 #define RCD_actorReaderClient_y                   730050 // protocolActorGroup_y Actor definition: the actor who handles requests to create records (in a blockchain)

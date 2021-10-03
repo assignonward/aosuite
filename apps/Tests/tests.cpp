@@ -396,7 +396,7 @@ bool Tests::testRicey( QString &msg, qint32 &tc )
   tv = RCD_int64_i        ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_code_s         ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_separatedItem_o; pass &= testRicey( v, tv, tc, msg );
-  tv = RCD_PcolDAO0_y     ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_ProtocolDAO0_y ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_itemRelAddr_Y  ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_RangeBounds_O  ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_Identity_o     ; pass &= testRicey( v, tv, tc, msg );
@@ -730,10 +730,10 @@ bool Tests::testObjectA( QString &msg, qint32 &tc )
         BlockObjectMap  to;
   QList<BlockObjectMap> tv;
   pass &= testObjectA( v, tv, tc, msg ); // Empty Array test
-  to.insert( RCD_int64_i, new BlockValueInt64    (         -456789, this) );
-  to.insert( RCD_type_y , new BlockValueRiceyCode(   RCD_PcolA00_y, this) );
-  to.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );
-  to.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );
+  to.insert( RCD_int64_i, new BlockValueInt64    (           -456789, this) );
+  to.insert( RCD_type_y , new BlockValueRiceyCode( RCD_ProtocolA00_y, this) );
+  to.insert( RCD_text_s , new BlockValueString   (        "Stringy!", this) );
+  to.insert( RCD_data_b , new BlockValueByteArray(       "123456789", this) );
   tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with one varied object
   tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with two varied but identical objects
   tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with thee varied but identical objects
@@ -1038,7 +1038,7 @@ bool Tests::testRiceyA( QString &msg, qint32 &tc )
   tv.append( RCD_int64_i         ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_code_s          ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_separatedItem_o ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append( RCD_PcolDAO0_y      ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_ProtocolDAO0_y  ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_itemRelAddr_Y   ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_RangeBounds_O   ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_Identity_o      ); pass &= testRiceyA( v, tv, tc, msg );
@@ -1272,12 +1272,12 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   mpq_set_num( &vr, &v1 );
   mpq_set_den( &vr, &v2 );
 
-  tv.insert( RCD_int64_i, new BlockValueInt64    (         -456789, this) );  pass &= testObject( v, tv, tc, msg );
-  tv.insert( RCD_mpz_n  , new BlockValueMPZ      (              v1, this) );  pass &= testObject( v, tv, tc, msg );
-  tv.insert( RCD_mpq_r  , new BlockValueMPQ      (              vr, this) );  pass &= testObject( v, tv, tc, msg );
-  tv.insert( RCD_type_y , new BlockValueRiceyCode(   RCD_PcolA00_y, this) );  pass &= testObject( v, tv, tc, msg );
-  tv.insert( RCD_text_s , new BlockValueString   (      "Stringy!", this) );  pass &= testObject( v, tv, tc, msg );
-  tv.insert( RCD_data_b , new BlockValueByteArray(     "123456789", this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_int64_i, new BlockValueInt64    (           -456789, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_mpz_n  , new BlockValueMPZ      (                v1, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_mpq_r  , new BlockValueMPQ      (                vr, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_type_y , new BlockValueRiceyCode( RCD_ProtocolA00_y, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_text_s , new BlockValueString   (        "Stringy!", this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_data_b , new BlockValueByteArray(       "123456789", this) );  pass &= testObject( v, tv, tc, msg );
 
   BlockObjectMap tvo = tv; // Nesting test
   tv.insert( RCD_hashedOb_o  , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
@@ -1289,7 +1289,7 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tv.insert( RCD_hashedOb_o  , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   QList<qint64> ta64 = { 0,1,-1,70000,-70000,-5123456789, 5123456789 };
   tv.insert( RCD_int64Array_I, new BlockArrayInt64( RCD_int64Array_I, ta64, this ) ); pass &= testObject( v, tv, tc, msg ); emit newDot( v.dot() );
-  QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_Y, RCD_data_b, RCD_PcolA00_y, RCD_RangeBounds_O };
+  QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_Y, RCD_data_b, RCD_ProtocolA00_y, RCD_RangeBounds_O };
   tv.insert( RCD_riceyArray_Y, new BlockArrayRicey( RCD_riceyArray_Y, tari, this ) ); pass &= testObject( v, tv, tc, msg );
   QList<Utf8String> tau8 = { "A", "1", "Stringy" };
   tv.insert( RCD_stringArray_S, new BlockArrayString( RCD_stringArray_S, tau8, this ) ); pass &= testObject( v, tv, tc, msg );

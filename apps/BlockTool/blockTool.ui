@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>785</width>
+    <width>1045</width>
     <height>485</height>
    </rect>
   </property>
@@ -31,7 +31,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>783</width>
+     <width>1043</width>
      <height>483</height>
     </rect>
    </property>
@@ -102,6 +102,20 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="read">
+        <property name="text">
+         <string>Read</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="clear">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QGroupBox" name="groupBox">
@@ -211,6 +225,13 @@ QGroupBox::title {
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="save">
+        <property name="text">
+         <string>Save</string>
+        </property>
        </widget>
       </item>
       <item>
