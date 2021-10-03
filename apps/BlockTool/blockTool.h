@@ -51,6 +51,11 @@ public slots:
        void  on_chain_clicked();
        void  on_hash_clicked();
        void  on_DAO0_clicked();
+       void  on_makeX_toggled(bool);
+       void  on_makeY_toggled(bool);
+       void  on_buildA_toggled(bool);
+       void  on_buildX_toggled(bool);
+       void  on_buildY_toggled(bool);
        void  writeWrappedDot( QByteArray d );
        void  updateGraph();
        void  graphvizDone(int,QProcess::ExitStatus);

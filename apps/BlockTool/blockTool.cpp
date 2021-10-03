@@ -45,6 +45,26 @@ BlockTool::BlockTool( QWidget *cw ) :
 BlockTool::~BlockTool()
 { delete ui; }
 
+void  BlockTool::on_makeX_toggled(bool c)
+{ if ( c & ui->buildX->isChecked() )
+    ui->buildA->setChecked(true);
+}
+void  BlockTool::on_makeY_toggled(bool c)
+{ if ( c & ui->buildY->isChecked() )
+    ui->buildA->setChecked(true);
+}
+void  BlockTool::on_buildA_toggled(bool c)
+{ (void)c; }
+void  BlockTool::on_buildX_toggled(bool c)
+{ if ( c & ui->makeX->isChecked() )
+    ui->makeY->setChecked(true);
+}
+void  BlockTool::on_buildY_toggled(bool c)
+{ if ( c & ui->makeY->isChecked() )
+    ui->makeX->setChecked(true);
+}
+
+
 void BlockTool::liveDelay( int t )
 { QTimer timer;
   timer.setSingleShot( true );
