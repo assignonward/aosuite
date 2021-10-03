@@ -42,6 +42,7 @@ public:
        void  liveDelay( int t );
        void  setLabel( QString );
        void  setMode( Mode m ) { if ( m != m_mode ) { m_mode = m; update(); } else m_mode = m; }
+       void  clear() { if ( m_kvp ) { m_kvp->clear(); m_kvp = nullptr; update(); } }
 
 signals:
 
@@ -54,7 +55,7 @@ public slots:
 
 public:
                    Mode  m_mode;
-  QPointer<KeyValuePair> kvp;
+  QPointer<KeyValuePair> m_kvp;
                 QString  m_label;
       QPointer<QProcess> pp;
                    bool  drawingInProgress;

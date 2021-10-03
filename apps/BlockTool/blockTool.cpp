@@ -77,6 +77,12 @@ void  BlockTool::setBuild( KeyValuePair *kvp )
   qWarning( "no build panel checked" );
 }
 
+void  BlockTool::clearMake()
+{ if ( ui->makeX->isChecked() ) { panelX->clear(); return; }
+  if ( ui->makeY->isChecked() ) { panelY->clear(); return; }
+  qWarning( "no build panel checked" );
+}
+
 void BlockTool::liveDelay( int t )
 { QTimer timer;
   timer.setSingleShot( true );

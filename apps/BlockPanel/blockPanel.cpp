@@ -44,23 +44,27 @@ BlockPanel::BlockPanel( QString l, Mode m, QWidget *cw ) :
 
 BlockPanel::~BlockPanel()
 { delete ui;
-  if ( kvp )
-    kvp->deleteLater();
+  if ( m_kvp )
+    m_kvp->deleteLater();
 }
 
 void  BlockPanel::setBlock( KeyValuePair *p )
-{ if ( kvp )
-    { kvp->clear();
-      kvp->setBsonish( p->bsonish() );
+{ if ( m_kvp )
+    { m_kvp->clear();
+      m_kvp->setBsonish( p->bsonish() );
     }
    else
-    kvp = new KeyValuePair( p->bsonish() );
+    m_kvp = new KeyValuePair( p->bsonish() );
   update();
 }
 
 void  BlockPanel::update()
-{ if ( kvp )
-    writeWrappedDot( kvp->dot() );
+{ if ( m_kvp )
+    writeWrappedDot( m_kvp->dot() );
+   else
+    { ui->view->clear();
+      ui->view->setText( m_label );
+    }
 }
 
 /**
@@ -100,9 +104,9 @@ void  BlockPanel::writeWrappedDot( QByteArray d )
   fd.write( "rankdir=LR;\n" );
   liveDelay( 50 );
   switch ( m_mode )
-    { case make:  fd.write( "node [color=darkgreen]; graph [color=darkgreen];\n" ); break;
-      case build: fd.write( "node [color=darkblue];  graph [color=darkblue];\n"  ); break;
-      case idle:  fd.write( "node [color=grey];      graph [color=grey];\n"      ); break;
+    { case make:  fd.write( "node [color=darkgreen]; graph [color=darkgreen] bgcolor=mintcream;\n"  ); break;
+      case build: fd.write( "node [color=darkblue];  graph [color=darkblue]  bgcolor=ghostwhite;\n" ); break;
+      case idle:  fd.write( "node [color=grey];      graph [color=grey]      bgcolor=grey90;\n" ); break;
     }
   fd.write( d );
   fd.write( "}\n" );

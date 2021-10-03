@@ -42,6 +42,7 @@ public:
        void  liveDelay( int t );
  QByteArray  jsonReformat( QByteArray );
        void  setBuild( KeyValuePair * );
+       void  clearMake();
 
 signals:
        void  showA( KeyValuePair * );
@@ -49,6 +50,7 @@ signals:
        void  showY( KeyValuePair * );
 
 public slots:
+       void  on_clear_clicked() { clearMake(); }
        void  on_chain_clicked();
        void  on_hash_clicked();
        void  on_DAO0_clicked();

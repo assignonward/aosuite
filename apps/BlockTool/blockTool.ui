@@ -188,7 +188,7 @@
         </property>
         <property name="styleSheet">
          <string notr="true">QGroupBox { 
-     border: 2px solid darkgreen; 
+     border: 2px solid green; 
      border-radius: 5px; 
      font-size: 12px
  }
@@ -241,7 +241,7 @@ QGroupBox::title {
         </property>
         <property name="styleSheet">
          <string notr="true">QGroupBox { 
-     border: 2px solid darkblue; 
+     border: 2px solid blue; 
      border-radius: 5px; 
      font-size: 12px
  }
