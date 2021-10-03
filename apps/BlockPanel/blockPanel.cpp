@@ -28,10 +28,12 @@
 
 // TODO: test intentional failures, error checking, length reporting, trailing input data, etc.
 
-BlockPanel::BlockPanel( QString l, QWidget *cw ) :
+BlockPanel::BlockPanel( QString l, Mode m, QWidget *cw ) :
     QScrollArea(cw),
     ui(new Ui::BlockPanel)
-{ ui->setupUi(this);
+{ drawingInProgress = false;
+  m_mode = m;
+  ui->setupUi(this);
   if ( cw )
     { QVBoxLayout *vb = new QVBoxLayout( cw );
       cw->layout()->addWidget( this );
@@ -53,7 +55,12 @@ void  BlockPanel::setBlock( KeyValuePair *p )
     }
    else
     kvp = new KeyValuePair( p->bsonish() );
-  writeWrappedDot( kvp->dot() );
+  update();
+}
+
+void  BlockPanel::update()
+{ if ( kvp )
+    writeWrappedDot( kvp->dot() );
 }
 
 /**
@@ -77,10 +84,26 @@ void BlockPanel::liveDelay( int t )
 }
 
 void  BlockPanel::writeWrappedDot( QByteArray d )
-{ QFile fd(QString("/tmp/%1.dot").arg(m_label));
+{ if ( drawingInProgress )
+    { qint32 loops = 0;
+      while ( drawingInProgress )
+        { liveDelay(30);
+          loops++;
+        }
+      if ( loops > 3 )
+        qWarning( "drawingInProgress paused %d loops", loops );
+    }
+  drawingInProgress = true;
+  QFile fd(QString("/tmp/%1.dot").arg(m_label));
   fd.open( QIODevice::WriteOnly );
   fd.write( "digraph AO {\n" );
-  fd.write( "rankdir=LR;\n\n" );
+  fd.write( "rankdir=LR;\n" );
+  liveDelay( 50 );
+  switch ( m_mode )
+    { case make:  fd.write( "bgcolor=lightgreen;\n" ); break;
+      case build: fd.write( "bgcolor=lightblue;\n"  ); break;
+      case idle:  fd.write( "bgcolor=lightgrey;\n"  ); break;
+    }
   fd.write( d );
   fd.write( "}\n" );
   fd.flush();
@@ -111,5 +134,6 @@ void  BlockPanel::graphvizDone(int code,QProcess::ExitStatus status)
   if ( pp )
     pp->deleteLater();
   pp = nullptr;
+  drawingInProgress = false;
 }
 

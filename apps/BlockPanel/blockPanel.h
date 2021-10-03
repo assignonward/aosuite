@@ -36,24 +36,28 @@ class BlockPanel : public QScrollArea
     Q_OBJECT
 
 public:
-   explicit  BlockPanel( QString l, QWidget *cw = nullptr );
+       enum  Mode { make, build, idle };
+   explicit  BlockPanel( QString l, Mode m, QWidget *cw = nullptr );
             ~BlockPanel();
        void  liveDelay( int t );
        void  setLabel( QString );
+       void  setMode( Mode m ) { if ( m != m_mode ) { m_mode = m; update(); } else m_mode = m; }
 
 signals:
 
 public slots:
+    void  update();
     void  setBlock( KeyValuePair * );
     void  writeWrappedDot( QByteArray d );
     void  updateGraph();
     void  graphvizDone(int,QProcess::ExitStatus);
 
-
 public:
+                   Mode  m_mode;
   QPointer<KeyValuePair> kvp;
                 QString  m_label;
       QPointer<QProcess> pp;
+                   bool  drawingInProgress;
          Ui::BlockPanel *ui;
 };
 

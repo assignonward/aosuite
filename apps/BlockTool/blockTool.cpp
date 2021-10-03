@@ -35,9 +35,9 @@ BlockTool::BlockTool( QWidget *cw ) :
       cw->layout()->addWidget( this );
       vb->setContentsMargins( 0,0,0,0 );
     }
-  panelA = new BlockPanel( "A", ui->frameA );
-  panelX = new BlockPanel( "X", ui->frameX );
-  panelY = new BlockPanel( "Y", ui->frameY );
+  panelA = new BlockPanel( "A", BlockPanel::Mode::build, ui->frameA );
+  panelX = new BlockPanel( "X", BlockPanel::Mode::make , ui->frameX );
+  panelY = new BlockPanel( "Y", BlockPanel::Mode::idle , ui->frameY );
   connect( this, SIGNAL(showA(KeyValuePair *)), panelA, SLOT(setBlock(KeyValuePair *)));
   connect( this, SIGNAL(showX(KeyValuePair *)), panelX, SLOT(setBlock(KeyValuePair *)));
   connect( this, SIGNAL(showY(KeyValuePair *)), panelY, SLOT(setBlock(KeyValuePair *)));
@@ -49,20 +49,25 @@ BlockTool::~BlockTool()
 void  BlockTool::on_makeX_toggled(bool c)
 { if ( c & ui->buildX->isChecked() )
     ui->buildA->setChecked(true);
+  panelX->setMode( c ? BlockPanel::Mode::make : BlockPanel::Mode::idle );
 }
 void  BlockTool::on_makeY_toggled(bool c)
 { if ( c & ui->buildY->isChecked() )
     ui->buildA->setChecked(true);
+  panelY->setMode( c ? BlockPanel::Mode::make : BlockPanel::Mode::idle );
 }
 void  BlockTool::on_buildA_toggled(bool c)
-{ (void)c; }
+{ panelA->setMode( c ? BlockPanel::Mode::build : BlockPanel::Mode::idle );
+}
 void  BlockTool::on_buildX_toggled(bool c)
 { if ( c & ui->makeX->isChecked() )
     ui->makeY->setChecked(true);
+  panelX->setMode( c ? BlockPanel::Mode::build : BlockPanel::Mode::idle );
 }
 void  BlockTool::on_buildY_toggled(bool c)
 { if ( c & ui->makeY->isChecked() )
     ui->makeX->setChecked(true);
+  panelY->setMode( c ? BlockPanel::Mode::build : BlockPanel::Mode::idle );
 }
 
 void  BlockTool::setBuild( KeyValuePair *kvp )
