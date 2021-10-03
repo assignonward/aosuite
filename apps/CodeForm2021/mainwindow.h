@@ -59,6 +59,7 @@ public slots:
        void  on_reformat_clicked();
        void  on_readJson_clicked();
        void  on_write_clicked();
+       void  on_importJson_clicked();
 
 public:
                 QString  t; // translation

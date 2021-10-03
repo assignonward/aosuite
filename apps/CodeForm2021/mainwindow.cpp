@@ -79,9 +79,27 @@ void MainWindow::saveConfig()
   settings.setValue( "codeDefPath", ui->codeDefPath->text() );
 }
 
+/**
+ * @brief MainWindow::on_importJson_clicked - the commonly used full sequence after a git pull with new definitions in .json
+ */
+void MainWindow::on_importJson_clicked()
+{ on_readJson_clicked();
+  on_save_clicked();
+  on_update_clicked();
+  on_write_clicked();
+  on_reformat_clicked();
+  on_save_clicked();
+}
+
+/**
+ * @brief MainWindow::on_save_clicked - just save the configuration to the .ini file
+ */
 void MainWindow::on_save_clicked()
 { saveConfig(); }
 
+/**
+ * @brief MainWindow::on_update_clicked - translate the configuration to new .h and .json files
+ */
 void MainWindow::on_update_clicked()
 { init();
   firstPass();
@@ -95,6 +113,9 @@ void MainWindow::on_update_clicked()
   showResults();
 }
 
+/**
+ * @brief MainWindow::on_readJson_clicked - reads the .json resource and spits it into the configuration, unformatted but suitable for reformat
+ */
 void MainWindow::on_readJson_clicked()
 { QFile f(":/data/dictionary.json");
   if ( !f.open( QIODevice::ReadOnly ) )
@@ -139,7 +160,7 @@ void MainWindow::on_readJson_clicked()
             desc =       cao["text_s"].toString();
           if ( cao.contains( "type_y" ) )
             typ =        cao["type_y"].toString();
-          codes.append( QString( "%1 0x%2 // %3\n").arg( name ).arg( typ ).arg( desc ) );
+          codes.append( QString( "%1 0x%2 // %3\n").arg( name, typ, desc ) );
         }
     }
   if ( codes.size() > 0 )
@@ -163,7 +184,7 @@ void MainWindow::on_readJson_clicked()
             desc =       tao["text_s"].toString();
           if ( tao.contains( "type_y" ) )
             typ =        tao["type_y"].toString();
-          types.append( QString( "%1 0x%2 // %3 - %4\n").arg( name ).arg( typ ).arg( code ).arg( desc ) );
+          types.append( QString( "%1 0x%2 // %3 - %4\n").arg( name, typ, code, desc ) );
         }
     }
   if ( types.size() > 0 )
@@ -171,6 +192,9 @@ void MainWindow::on_readJson_clicked()
 
 }
 
+/**
+ * @brief MainWindow::on_write_clicked - writes the codeDef.h and dictionary.json files
+ */
 void MainWindow::on_write_clicked()
 { QFile file( ui->jsonPath->text() );
   if ( !file.open( QIODevice::WriteOnly ) )
@@ -247,7 +271,8 @@ void MainWindow::showResults()
  * @brief MainWindow::firstPass - pick up some easy stuff for use in the later passes
  */
 void MainWindow::firstPass()
-{ QVector<QString> names,codes;
+{ QVector<QString> names;
+  QVector<QString> codes;
   riceyInts.clear();
   riceyCodes.clear();
   foreach ( QString line, riceyList )
@@ -256,14 +281,14 @@ void MainWindow::firstPass()
         { if ( words.at(0).size() > maxNameLength )
             maxNameLength = words.at(0).size();
           if ( names.contains( words.at(0) ) )
-            { v.append( QString( "ERROR: name %1 used twice, second time in line '%2'\n" ).arg( words.at(0) ).arg( line ) ); }
+            { v.append( QString( "ERROR: name %1 used twice, second time in line '%2'\n" ).arg( words.at(0), line ) ); }
            else
             names.append( words.at(0) );
 
           riceyCodes.insert( words.at(0), words.at(1) );
 
           if ( !words.at(1).startsWith( "0x" ) || (words.at(1).size() < 3) )
-            { v.append( QString( "ERROR: num '%1' must start with 0x and be followed by at least 1 digit in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
+            { v.append( QString( "ERROR: num '%1' must start with 0x and be followed by at least 1 digit in line '%2'\n" ).arg( words.at(1), line ) ); }
            else
             { RiceyInt nv = riceToInt( QByteArray::fromHex( words.at(1).mid(2).toUtf8() ) );
               if ( riceyInts.contains( nv ) )
@@ -271,7 +296,7 @@ void MainWindow::firstPass()
                else
                 riceyInts.append( nv );
               if ( intToRice( nv ) != QByteArray::fromHex( words.at(1).mid(2).toUtf8() ) )
-                { v.append( QString( "ERROR: code '%1' reconstitutes as '%2' in line '%3'\n" ).arg(words.at(1).mid(2)).arg( QString::fromUtf8( intToRice(nv).toHex() ) ).arg( line ) ); }
+                { v.append( QString( "ERROR: code '%1' reconstitutes as '%2' in line '%3'\n" ).arg(words.at(1).mid(2), QString::fromUtf8( intToRice(nv).toHex() ), line ) ); }
               // qDebug( "words.at(1) %s -> %lld", words.at(1).toUtf8().data(), nv );
               qint32 sz = QString::number( nv ).size();
               if ( sz > maxNumLength )
@@ -279,7 +304,7 @@ void MainWindow::firstPass()
               if ( (words.at(0).size() + words.at(1).size()) > maxCombLength )
                 maxCombLength = words.at(0).size() + words.at(1).size();
               if ( codes.contains( words.at(1) ) )
-                { v.append( QString( "ERROR: code %1 used twice, second time in line '%2'\n" ).arg( words.at(1) ).arg( line ) ); }
+                { v.append( QString( "ERROR: code %1 used twice, second time in line '%2'\n" ).arg( words.at(1), line ) ); }
                else
                 codes.append( words.at(1) );
             }
@@ -331,7 +356,7 @@ void MainWindow::translateRicey()
                   QString num = QString::number( riceToInt( QByteArray::fromHex( lList.at(1).mid(2).toUtf8() ) ) );
                   while ( num.size() < maxNumLength )
                     num.prepend( QChar(' ') );
-                  t.append( QString( "#define %4%1 %2 %3\n" ).arg( name ).arg( num ).arg( line.mid(ics) ).arg( rPre ) );
+                  t.append( QString( "#define %4%1 %2 %3\n" ).arg( name, num, line.mid(ics), rPre ) );
                 }
             }
         }
@@ -397,7 +422,7 @@ bool MainWindow::rulesCheck( QString name, QString num )
 void MainWindow::translateNotes()
 { QString nPre = ui->notesPrefix->text();
   foreach ( QString line, notesList )
-    { t.append( QString( "#define %2%1\n" ).arg(line).arg(nPre) );
+    { t.append( QString( "#define %2%1\n" ).arg(line, nPre) );
     }
 }
 
@@ -424,9 +449,9 @@ QJsonValue MainWindow::riceyLineToJson( QString line )
    else
     { rlo.insert( "name_s", words.at(0) );
       if ( words.at(1).size() < 3 )
-        { v.append( QString( "ricey line '%1' code '%2' too short" ).arg( line ).arg( words.at(1) ) ); }
+        { v.append( QString( "ricey line '%1' code '%2' too short" ).arg( line, words.at(1) ) ); }
        else if ( !words.at(1).startsWith( "0x" ) )
-        { v.append( QString( "ricey line '%1' code '%2' doesn't start with 0x" ).arg( line ).arg( words.at(1) ) ); }
+        { v.append( QString( "ricey line '%1' code '%2' doesn't start with 0x" ).arg( line, words.at(1) ) ); }
        else
         rlo.insert( "type_y", words.at(1).mid(2) );
       if ( words.at(2) != "//" )
@@ -448,9 +473,9 @@ QJsonValue MainWindow::notesLineToJson( QString line )
    else
     { nlo.insert( "name_s", words.at(0) );
       if ( words.at(1).size() < 2 )
-        { v.append( QString( "notes line '%1' code '%2' too short" ).arg( line ).arg( words.at(1) ) ); }
+        { v.append( QString( "notes line '%1' code '%2' too short" ).arg( line, words.at(1) ) ); }
        else if ( !words.at(1).startsWith( "0x" ) )
-        { v.append( QString( "notes line '%1' code '%2' doesn't start with 0x" ).arg( line ).arg( words.at(1) ) ); }
+        { v.append( QString( "notes line '%1' code '%2' doesn't start with 0x" ).arg( line, words.at(1) ) ); }
        else
         nlo.insert( "type_y", words.at(1).mid(2) );
       if ( words.at(2) != "//" )
