@@ -152,7 +152,7 @@
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QStackedWidget" name="stackedWidget">
+     <widget class="QStackedWidget" name="valueWidget">
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -328,6 +328,29 @@
          <widget class="QSpinBox" name="arrayIndex">
           <property name="maximum">
            <number>1000000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_null">
+       <layout class="QGridLayout" name="gridLayout_10">
+        <property name="leftMargin">
+         <number>3</number>
+        </property>
+        <property name="topMargin">
+         <number>3</number>
+        </property>
+        <property name="rightMargin">
+         <number>3</number>
+        </property>
+        <property name="bottomMargin">
+         <number>3</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>NULL key has no value</string>
           </property>
          </widget>
         </item>

@@ -55,6 +55,8 @@ signals:
         void  showY( KeyValuePair * );
 
 public slots:
+        void  on_set_clicked();
+        void  on_key_currentTextChanged(const QString &);
         void  on_read_clicked();
         void  on_save_clicked();
         void  on_clear_clicked() { makeClear(); }

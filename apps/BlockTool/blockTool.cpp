@@ -53,6 +53,58 @@ BlockTool::BlockTool( QWidget *cw ) :
 BlockTool::~BlockTool()
 { delete ui; }
 
+void  BlockTool::on_set_clicked()
+{ Utf8String nKey = ui->key->currentText().toUtf8();
+  if ( !dict.codesContainName( nKey ) )
+    { qWarning( "key comboBox text returns unknown key: %s", nKey.data() );
+      return;
+    }
+  ValueBase *vbp = nullptr;
+  quint8 tp = dict.codeFromCodeName( nKey ) & RDT_OBTYPEMASK;
+  if ( tp == RDT_NULL )
+    vbp = new BlockValueNull(this);
+   else
+    { if ( tp <= RDT_STRING )
+        { switch ( tp )
+            { case RDT_INT64    : vbp = new BlockValueInt64    ( ui->intEdit      ->text() .toInt(), this ); break;
+              case RDT_RCODE    : vbp = new BlockValueRiceyCode( dict.codeFromCodeName( ui->rcodeEdit->currentText().toUtf8() ), this ); break;
+              case RDT_MPZ      : vbp = new BlockValueMPZ      ( ui->mpzEdit      ->text().toUtf8(), this ); break;
+              case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit      ->text().toUtf8(), this ); break;
+              case RDT_BYTEARRAY: vbp = new BlockValueByteArray( ui->byteArrayEdit->text().toUtf8(), this ); break;
+              case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit   ->text().toUtf8(), this ); break;
+              // TODO: array types...
+            }
+        }
+    }
+  KeyValuePair *kvp = new KeyValuePair( dict.codeFromCodeName( nKey ), vbp );
+  setMake( kvp );
+  kvp->deleteLater();
+  vbp->deleteLater();
+}
+
+
+void  BlockTool::on_key_currentTextChanged( const QString &nuKey )
+{ Utf8String nKey = nuKey.toUtf8();
+  if ( !dict.codesContainName( nKey ) )
+    { qWarning( "key comboBox selected unknown key: %s", nKey.data() );
+      return;
+    }
+  quint8 tp = dict.codeFromCodeName( nKey ) & RDT_OBTYPEMASK;
+  if ( (tp & RDT_ARRAY) != 0 )
+    { ui->valueWidget->setCurrentIndex( 7 );
+      return;
+    }
+  if (( tp & RDT_TYPEMASK ) > 6 )
+    { if ( ( tp & RDT_TYPEMASK ) == RDT_NULL )
+        ui->valueWidget->setCurrentIndex( 8 );
+       else
+        qWarning( "key comboBox selected unhandled type %d key: %s", tp, nKey.data() );
+      return;
+    }
+  ui->valueWidget->setCurrentIndex( tp & RDT_TYPEMASK );
+}
+
+
 void  BlockTool::on_makeX_toggled(bool c)
 { if ( c & ui->buildX->isChecked() )
     ui->buildA->setChecked(true);
