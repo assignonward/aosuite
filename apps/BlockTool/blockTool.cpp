@@ -66,7 +66,8 @@ void  BlockTool::on_set_clicked()
    else
     { if ( tp <= RDT_STRING )
         { switch ( tp )
-            { case RDT_INT64    : vbp = new BlockValueInt64    ( ui->intEdit      ->text() .toInt(), this ); break;
+            { case RDT_OBJECT   : vbp = new BlockValueObject   ( this ); break;
+              case RDT_INT64    : vbp = new BlockValueInt64    ( ui->intEdit      ->text() .toInt(), this ); break;
               case RDT_RCODE    : vbp = new BlockValueRiceyCode( dict.codeFromCodeName( ui->rcodeEdit->currentText().toUtf8() ), this ); break;
               case RDT_MPZ      : vbp = new BlockValueMPZ      ( ui->mpzEdit      ->text().toUtf8(), this ); break;
               case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit      ->text().toUtf8(), this ); break;
