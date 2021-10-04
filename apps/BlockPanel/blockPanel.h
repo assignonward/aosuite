@@ -36,13 +36,15 @@ class BlockPanel : public QScrollArea
     Q_OBJECT
 
 public:
-       enum  Mode { make, build, idle };
-   explicit  BlockPanel( QString l, Mode m, QWidget *cw = nullptr );
-            ~BlockPanel();
-       void  liveDelay( int t );
-       void  setLabel( QString );
-       void  setMode( Mode m ) { if ( m != m_mode ) { m_mode = m; update(); } else m_mode = m; }
-       void  clear() { if ( m_kvp ) { m_kvp->clear(); m_kvp = nullptr; update(); } }
+        enum  Mode { make, build, idle };
+    explicit  BlockPanel( QString l, Mode m, QWidget *cw = nullptr );
+             ~BlockPanel();
+        void  liveDelay( int t );
+KeyValuePair *kvp() { if ( m_kvp == nullptr ) m_kvp = new KeyValuePair( RCD_null_z, this ); return m_kvp; }
+     QString  label() { return m_label; }
+        void  setLabel( QString );
+        void  setMode( Mode m ) { if ( m != m_mode ) { m_mode = m; update(); } else m_mode = m; }
+        void  clear() { if ( m_kvp ) { m_kvp->clear(); m_kvp = nullptr; update(); } }
 
 signals:
 

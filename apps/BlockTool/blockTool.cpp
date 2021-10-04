@@ -70,17 +70,108 @@ void  BlockTool::on_buildY_toggled(bool c)
   panelY->setMode( c ? BlockPanel::Mode::build : BlockPanel::Mode::idle );
 }
 
-void  BlockTool::setBuild( KeyValuePair *kvp )
-{ if ( ui->buildA->isChecked() ) { panelA->setBlock( kvp ); return; }
-  if ( ui->buildX->isChecked() ) { panelX->setBlock( kvp ); return; }
-  if ( ui->buildY->isChecked() ) { panelY->setBlock( kvp ); return; }
-  qWarning( "no build panel checked" );
+bool  BlockTool::setBuild( KeyValuePair *kvp )
+{ if ( ui->buildA->isChecked() ) { panelA->setBlock( kvp ); return true; }
+  if ( ui->buildX->isChecked() ) { panelX->setBlock( kvp ); return true; }
+  if ( ui->buildY->isChecked() ) { panelY->setBlock( kvp ); return true; }
+  qWarning( "BlockTool::setBuild() no build panel checked" );
+  return false;
 }
 
-void  BlockTool::clearMake()
-{ if ( ui->makeX->isChecked() ) { panelX->clear(); return; }
-  if ( ui->makeY->isChecked() ) { panelY->clear(); return; }
-  qWarning( "no build panel checked" );
+bool  BlockTool::setMake( KeyValuePair *kvp )
+{ if ( ui->makeX->isChecked() ) { panelX->setBlock( kvp ); return true; }
+  if ( ui->makeY->isChecked() ) { panelY->setBlock( kvp ); return true; }
+  qWarning( "BlockTool::setMake() no make panel checked" );
+  return false;
+}
+
+QString  BlockTool::buildLabel()
+{ if ( ui->buildA->isChecked() ) { return panelA->label(); }
+  if ( ui->buildX->isChecked() ) { return panelX->label(); }
+  if ( ui->buildY->isChecked() ) { return panelY->label(); }
+  qWarning( "BlockTool::buildLabel() no build panel checked" );
+  return "-";
+}
+
+QString  BlockTool::makeLabel()
+{ if ( ui->makeX->isChecked() ) { return panelX->label(); }
+  if ( ui->makeY->isChecked() ) { return panelY->label(); }
+  qWarning( "BlockTool::makeLabel() no make panel checked" );
+  return "-";
+}
+
+KeyValuePair *BlockTool::buildKvp()
+{ if ( ui->buildA->isChecked() ) { return panelA->kvp(); }
+  if ( ui->buildX->isChecked() ) { return panelX->kvp(); }
+  if ( ui->buildY->isChecked() ) { return panelY->kvp(); }
+  qWarning( "BlockTool::buildKvp() no build panel checked" );
+  return nullptr;
+}
+
+KeyValuePair *BlockTool::makeKvp()
+{ if ( ui->makeX->isChecked() ) { return panelX->kvp(); }
+  if ( ui->makeY->isChecked() ) { return panelY->kvp(); }
+  qWarning( "BlockTool::makeKvp() no make panel checked" );
+  return nullptr;
+}
+
+bool  BlockTool::makeClear()
+{ if ( ui->makeX->isChecked() ) { panelX->clear(); return true; }
+  if ( ui->makeY->isChecked() ) { panelY->clear(); return true; }
+  qWarning( "no make panel checked" );
+  return false;
+}
+
+void  BlockTool::on_read_clicked()
+{ QString readFile = QFileDialog::getOpenFileName(this,QString("Read Into %1").arg( makeLabel() ), fileDir );
+  if ( readFile.size() < 1 )
+    return;
+  QFile file(readFile);
+  if ( !file.open(QIODevice::ReadOnly) )
+    { qWarning( "could not open %s for reading", readFile.toUtf8().data() );
+      return;
+    }
+  QFileInfo fi = QFileInfo( file );
+  QDir di = fi.dir();
+  fileDir = di.absolutePath();
+  if ( readFile.endsWith( ".json", Qt::CaseInsensitive ) )
+    { JsonSerial js = file.readAll();
+      if ( js.size() > 4 )
+        { KeyValuePair *kvp = makeKvp();
+          kvp->setJson( js );
+          setMake( kvp );
+        }
+      return;
+    }
+  BsonSerial bs = file.readAll();
+  if ( bs.size() > 0 )
+    { KeyValuePair *kvp = makeKvp();
+      kvp->setBsonish( bs );
+      setMake( kvp );
+    }
+}
+
+void  BlockTool::on_save_clicked()
+{ KeyValuePair *kvp = buildKvp();
+  if ( kvp == nullptr )
+    return;
+  QString saveFile = QFileDialog::getSaveFileName(this,QString("Save %1").arg( buildLabel() ), fileDir );
+  if ( saveFile.size() < 1 )
+    return;
+  QFile file(saveFile);
+  if ( !file.open(QIODevice::WriteOnly) )
+    { qWarning( "could not open %s for writing", saveFile.toUtf8().data() );
+      return;
+    }
+  QFileInfo fi = QFileInfo( file );
+  QDir di = fi.dir();
+  fileDir = di.absolutePath();
+  if ( saveFile.endsWith( ".json", Qt::CaseInsensitive ) )
+    { QTextStream ts( &file );
+      ts << jsonReformat( kvp->json() );
+      return;
+    }
+  file.write( kvp->bsonish() );
 }
 
 void BlockTool::liveDelay( int t )

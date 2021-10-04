@@ -37,33 +37,41 @@ class BlockTool : public QScrollArea
     Q_OBJECT
 
 public:
-   explicit  BlockTool( QWidget *cw = nullptr );
-            ~BlockTool();
-       void  liveDelay( int t );
- QByteArray  jsonReformat( QByteArray );
-       void  setBuild( KeyValuePair * );
-       void  clearMake();
+    explicit  BlockTool( QWidget *cw = nullptr );
+             ~BlockTool();
+        void  liveDelay( int t );
+  QByteArray  jsonReformat( QByteArray );
+        bool  setBuild( KeyValuePair * );
+        bool  setMake( KeyValuePair * );
+     QString  buildLabel();
+     QString  makeLabel();
+KeyValuePair *buildKvp();
+KeyValuePair *makeKvp();
+        bool  makeClear();
 
 signals:
-       void  showA( KeyValuePair * );
-       void  showX( KeyValuePair * );
-       void  showY( KeyValuePair * );
+        void  showA( KeyValuePair * );
+        void  showX( KeyValuePair * );
+        void  showY( KeyValuePair * );
 
 public slots:
-       void  on_clear_clicked() { clearMake(); }
-       void  on_chain_clicked();
-       void  on_hash_clicked();
-       void  on_DAO0_clicked();
-       void  on_makeX_toggled(bool);
-       void  on_makeY_toggled(bool);
-       void  on_buildA_toggled(bool);
-       void  on_buildX_toggled(bool);
-       void  on_buildY_toggled(bool);
+        void  on_read_clicked();
+        void  on_save_clicked();
+        void  on_clear_clicked() { makeClear(); }
+        void  on_chain_clicked();
+        void  on_hash_clicked();
+        void  on_DAO0_clicked();
+        void  on_makeX_toggled(bool);
+        void  on_makeY_toggled(bool);
+        void  on_buildA_toggled(bool);
+        void  on_buildX_toggled(bool);
+        void  on_buildY_toggled(bool);
 
 public:
    QPointer<BlockPanel> panelA;
    QPointer<BlockPanel> panelX;
    QPointer<BlockPanel> panelY;
+               QString  fileDir;
          Ui::BlockTool *ui;
      QPointer<QProcess> pp;
 };
