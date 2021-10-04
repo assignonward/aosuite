@@ -42,6 +42,7 @@ public:
                Utf8String  nameFromCode( RiceyInt );
                 RiceyCode  riceyFromCodeName( Utf8String );
                  RiceyInt  codeFromCodeName( Utf8String );
+         QList<Utf8String> names() { return ciByName.keys(); }
 
                QJsonArray  codes;
   QHash<Utf8String,qint32> ciByName;

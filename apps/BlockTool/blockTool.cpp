@@ -41,6 +41,13 @@ BlockTool::BlockTool( QWidget *cw ) :
   connect( this, SIGNAL(showA(KeyValuePair *)), panelA, SLOT(setBlock(KeyValuePair *)));
   connect( this, SIGNAL(showX(KeyValuePair *)), panelX, SLOT(setBlock(KeyValuePair *)));
   connect( this, SIGNAL(showY(KeyValuePair *)), panelY, SLOT(setBlock(KeyValuePair *)));
+
+  QList<Utf8String> keyNames = dict.names();
+  std::sort(keyNames.begin(), keyNames.end());
+  for ( qint32 i = 0; i < keyNames.size(); i++ )
+    { ui->key->insertItem( i, keyNames.at(i) );
+      ui->rcodeEdit->insertItem( i, keyNames.at(i) );
+    }
 }
 
 BlockTool::~BlockTool()
