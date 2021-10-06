@@ -31,8 +31,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1043</width>
-     <height>483</height>
+     <width>1049</width>
+     <height>469</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -60,49 +60,14 @@
     <item row="2" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>Select Key</string>
+       <string>Keys</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QComboBox" name="key"/>
     </item>
     <item row="1" column="5" rowspan="5">
-     <widget class="QFrame" name="frameA">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="3" rowspan="2">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>4</width>
-        <height>4000</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="1" column="4" rowspan="5">
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="spacing">
        <number>6</number>
@@ -144,14 +109,317 @@
       </item>
      </layout>
     </item>
-    <item row="2" column="1">
+    <item row="4" column="0" rowspan="2" colspan="4">
+     <widget class="QTextEdit" name="report">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>DejaVu Sans Mono</family>
+       </font>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="5">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="leftMargin">
+       <number>9</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Samples:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="DAO0">
+        <property name="text">
+         <string>DⒶ0</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="hash">
+        <property name="text">
+         <string>Hash</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="chain">
+        <property name="text">
+         <string>Chain</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="styleSheet">
+         <string notr="true">QGroupBox { 
+     border: 2px solid; 
+     border-radius: 5px; 
+     font-size: 12px
+ }
+QGroupBox::title {
+  background-color: transparent;
+  padding-left: 4px;
+  padding-top: 2px;
+}</string>
+        </property>
+        <property name="title">
+         <string>Show</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>6</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="showJson">
+           <property name="text">
+            <string>json</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="showHex">
+           <property name="text">
+            <string>hex</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="showDot">
+           <property name="text">
+            <string>dot</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="read">
+        <property name="text">
+         <string>Read</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="clear">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox { 
+     border: 2px solid green; 
+     border-radius: 5px; 
+     font-size: 12px
+ }
+QGroupBox::title {
+  background-color: transparent;
+  padding-left: 4px;
+  padding-top: 2px;
+}</string>
+        </property>
+        <property name="title">
+         <string>Make</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_12">
+         <property name="leftMargin">
+          <number>9</number>
+         </property>
+         <property name="topMargin">
+          <number>6</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QRadioButton" name="makeX">
+           <property name="text">
+            <string>X</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QRadioButton" name="makeY">
+           <property name="text">
+            <string>Y</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox { 
+     border: 2px solid blue; 
+     border-radius: 5px; 
+     font-size: 12px
+ }
+QGroupBox::title {
+  background-color: transparent;
+  padding-left: 4px;
+  padding-top: 2px;
+}</string>
+        </property>
+        <property name="title">
+         <string>Build</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_13">
+         <property name="topMargin">
+          <number>6</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QRadioButton" name="buildX">
+           <property name="text">
+            <string>X</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QRadioButton" name="buildY">
+           <property name="text">
+            <string>Y</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QRadioButton" name="buildA">
+           <property name="text">
+            <string>A</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="save">
+        <property name="text">
+         <string>Save</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="maximumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="blockTool.qrc">:/icons/AOBlockTool.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="2">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Value</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="3" column="2">
      <widget class="QStackedWidget" name="valueWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -358,117 +626,56 @@
       </widget>
      </widget>
     </item>
-    <item row="3" column="2">
+    <item row="3" column="3">
      <widget class="QPushButton" name="set">
       <property name="text">
        <string>Set</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="0" rowspan="2" colspan="3">
-     <widget class="QTextEdit" name="report">
+    <item row="4" column="4" rowspan="2">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>4</width>
+        <height>4000</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="6" rowspan="5">
+     <widget class="QFrame" name="frameA">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="font">
-       <font>
-        <family>DejaVu Sans Mono</family>
-       </font>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
       </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="4">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <property name="leftMargin">
-       <number>9</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Samples:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="DAO0">
-        <property name="text">
-         <string>DⒶ0</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="hash">
-        <property name="text">
-         <string>Hash</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="chain">
-        <property name="text">
-         <string>Chain</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="read">
-        <property name="text">
-         <string>Read</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="clear">
-        <property name="text">
-         <string>Clear</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QGroupBox { 
-     border: 2px solid green; 
+    <item row="3" column="0" colspan="2">
+     <widget class="QComboBox" name="key"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="styleSheet">
+       <string notr="true">QGroupBox { 
+     border: 2px solid darkgrey; 
      border-radius: 5px; 
      font-size: 12px
  }
@@ -477,124 +684,52 @@ QGroupBox::title {
   padding-left: 4px;
   padding-top: 2px;
 }</string>
-        </property>
-        <property name="title">
-         <string>Make</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <property name="leftMargin">
-          <number>9</number>
+      </property>
+      <property name="title">
+       <string>Sort By</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_11">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>9</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="1">
+        <widget class="QRadioButton" name="sortId">
+         <property name="text">
+          <string>id</string>
          </property>
-         <property name="topMargin">
-          <number>0</number>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QRadioButton" name="sortName">
+         <property name="text">
+          <string>name</string>
          </property>
-         <property name="bottomMargin">
-          <number>0</number>
+         <property name="checked">
+          <bool>true</bool>
          </property>
-         <item>
-          <widget class="QRadioButton" name="makeX">
-           <property name="text">
-            <string>X</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="makeY">
-           <property name="text">
-            <string>Y</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="groupBox_2">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QGroupBox { 
-     border: 2px solid blue; 
-     border-radius: 5px; 
-     font-size: 12px
- }
-QGroupBox::title {
-  background-color: transparent;
-  padding-left: 4px;
-  padding-top: 2px;
-}</string>
-        </property>
-        <property name="title">
-         <string>Build</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <property name="topMargin">
-          <number>0</number>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QRadioButton" name="sortDict">
+         <property name="text">
+          <string>dict</string>
          </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QRadioButton" name="buildX">
-           <property name="text">
-            <string>X</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="buildY">
-           <property name="text">
-            <string>Y</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="buildA">
-           <property name="text">
-            <string>A</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="save">
-        <property name="text">
-         <string>Save</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="blockTool.qrc">:/icons/AOBlockTool.png</pixmap>
-        </property>
-        <property name="scaledContents">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>

@@ -23,24 +23,24 @@
 #ifndef CODEDEF_H
 #define CODEDEF_H
 
-#define RDT_OBJECT 0x00 // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
-#define RDT_INT64 0x01 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
-#define RDT_RCODE 0x02 // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
-#define RDT_MPZ 0x03 // n - libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values
-#define RDT_MPQ 0x04 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
-#define RDT_BYTEARRAY 0x05 // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-#define RDT_STRING 0x06 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
-#define RDT_NULL 0x0F // z - A null block value type, used as an error flag 
-#define RDT_OBJECT_ARRAY 0x10 // O - array of zero or more objects encased in []
-#define RDT_INT64_ARRAY 0x11 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
-#define RDT_RCODE_ARRAY 0x12 // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
-#define RDT_MPZ_ARRAY 0x13 // N - array of zero or more libGMP signed integers stored as described above
-#define RDT_MPQ_ARRAY 0x14 // R - array of zero or more libGMP rational fractions stored as described above
+#define RDT_OBJECT          0x00 // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
+#define RDT_INT64           0x01 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
+#define RDT_RCODE           0x02 // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
+#define RDT_MPZ             0x03 // n - libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values
+#define RDT_MPQ             0x04 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
+#define RDT_BYTEARRAY       0x05 // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
+#define RDT_STRING          0x06 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
+#define RDT_NULL            0x0F // z - A null block value type, used as an error flag 
+#define RDT_OBJECT_ARRAY    0x10 // O - array of zero or more objects encased in []
+#define RDT_INT64_ARRAY     0x11 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
+#define RDT_RCODE_ARRAY     0x12 // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
+#define RDT_MPZ_ARRAY       0x13 // N - array of zero or more libGMP signed integers stored as described above
+#define RDT_MPQ_ARRAY       0x14 // R - array of zero or more libGMP rational fractions stored as described above
 #define RDT_BYTEARRAY_ARRAY 0x15 // B - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-#define RDT_STRING_ARRAY 0x16 // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
-#define RDT_ARRAY 0x10 // * - this bit is always set in array types
-#define RDT_TYPEMASK 0x0F // * - used to get the contained value type out of an array type 
-#define RDT_OBTYPEMASK 0x1F // * - used to get the contained value type out of an object type
+#define RDT_STRING_ARRAY    0x16 // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
+#define RDT_ARRAY           0x10 // * - this bit is always set in array types
+#define RDT_TYPEMASK        0x0F // * - used to get the contained value type out of an array type 
+#define RDT_OBTYPEMASK      0x1F // * - used to get the contained value type out of an object type
 
 #define RCD_group_y                                11522 // groupDefGroup_y Identifies what group a definition belongs to
 #define RCD_groupDefGroup_y                        11554 // groupDefGroup_y These codes are used to identify what group a code belongs to
@@ -56,6 +56,7 @@
 #define RCD_serviceDescriptors_y                   11874 // groupDefGroup_y These codes are used for service requests and responses
 #define RCD_riceyTypes_O                         1336208 // dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
 #define RCD_riceyCodes_O                         1336240 // dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.
+#define RCD_dict_i                               1336193 // dictionaryGroup_y Index for the order in which codes appear in this (dictionary) list
 #define RCD_ObTerm_o                                   0 // dataGroup_y Object terminator, indicates no more items in the object in bsonish lists
 #define RCD_int64_i                                    1 // dataGroup_y Generic signed int64, use depends on context.
 #define RCD_type_y                                     2 // dataGroup_y Identifies an algorithm type for hash or crypto key, or other types depending on context

@@ -45,6 +45,7 @@ public:
          QList<Utf8String> names() { return ciByName.keys(); }
 
                QJsonArray  codes;
+   QMap<qint32,Utf8String> diNames;
   QHash<Utf8String,qint32> ciByName;
   QHash<RiceyCode ,qint32> ciByRicey;
   QHash<RiceyInt  ,qint32> ciByNum;

@@ -36,6 +36,20 @@
 
 #include "blockOb.h"
 
+/* Calculation edge drawing syntax:
+ node_145 -> hashCalc [constraint=false];
+ node_138 -> hashCalc [constraint=false ltail=cluster_76];
+ node_141 -> hashCalc [constraint=false];
+ hashCalc -> node_143;
+
+ or drawn on the right side:
+
+ node_145 -> hashCalc [constraint=false];
+ node_138 -> hashCalc [constraint=false ltail=cluster_76];
+ node_141 -> hashCalc [constraint=false];
+ node_143 -> hashCalc [dir=back];
+ */
+
 qint32 dex = 0;
 
 DotSerial KeyValuePair::dot() const
@@ -49,8 +63,17 @@ DotSerial KeyValuePair::dot() const
   d.append( "  fontsize = 10;\n\n" );
   if ( value() )
     { DotSerial v = value()->dot();
-      // v.replace(DotSerial("\""), DotSerial(""));
-      d.append( v+";\n" );
+      if ( !v.trimmed().startsWith( "subgraph" ) && !v.trimmed().startsWith( "node" ) )
+        { d.append( "node_"+DotSerial::number( dex++ )
+                   +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
+        }
+       else
+        { // v.replace(DotSerial("\""), DotSerial(""));
+          d.append( v );
+          if ( !v.trimmed().endsWith( ";" ) )
+            d.append( ";" );
+          d.append( "\n" );
+        }
     }
    else
     d.append( "NULL;\n" );

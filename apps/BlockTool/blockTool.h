@@ -41,18 +41,19 @@ public:
              ~BlockTool();
         void  liveDelay( int t );
   QByteArray  jsonReformat( QByteArray );
-        bool  setBuild( KeyValuePair * );
-        bool  setMake( KeyValuePair * );
+        bool  setBuild( KeyValueBase * );
+        bool  setMake( KeyValueBase * );
      QString  buildLabel();
      QString  makeLabel();
-KeyValuePair *buildKvp();
-KeyValuePair *makeKvp();
+KeyValueBase *buildKvb();
+KeyValueBase *makeKvb();
         bool  makeClear();
+        void  sortKeys();
 
 signals:
-        void  showA( KeyValuePair * );
-        void  showX( KeyValuePair * );
-        void  showY( KeyValuePair * );
+        void  showA( KeyValueBase * );
+        void  showX( KeyValueBase * );
+        void  showY( KeyValueBase * );
 
 public slots:
         void  on_set_clicked();
@@ -68,6 +69,9 @@ public slots:
         void  on_buildA_toggled(bool);
         void  on_buildX_toggled(bool);
         void  on_buildY_toggled(bool);
+        void  on_sortName_toggled(bool);
+        void  on_sortId_toggled(bool);
+        void  on_sortDict_toggled(bool);
 
 public:
    QPointer<BlockPanel> panelA;

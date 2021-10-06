@@ -44,23 +44,23 @@ BlockPanel::BlockPanel( QString l, Mode m, QWidget *cw ) :
 
 BlockPanel::~BlockPanel()
 { delete ui;
-  if ( m_kvp )
-    m_kvp->deleteLater();
+  if ( m_kvb )
+    m_kvb->deleteLater();
 }
 
-void  BlockPanel::setBlock( KeyValuePair *p )
-{ if ( m_kvp )
-    { m_kvp->clear();
-      m_kvp->setBsonish( p->bsonish() );
-    }
+void  BlockPanel::setBlock( KeyValueBase *p )
+{ if ( m_kvb )
+    m_kvb->deleteLater();
+  if ( p->key() & RDT_ARRAY )
+    m_kvb = new KeyValueArray( p->bsonish(), this );
    else
-    m_kvp = new KeyValuePair( p->bsonish() );
+    m_kvb = new KeyValuePair( p->bsonish(), this );
   update();
 }
 
 void  BlockPanel::update()
-{ if ( m_kvp )
-    writeWrappedDot( m_kvp->dot() );
+{ if ( m_kvb )
+    writeWrappedDot( m_kvb->dot() );
    else
     { ui->view->clear();
       ui->view->setText( m_label );
@@ -102,6 +102,7 @@ void  BlockPanel::writeWrappedDot( QByteArray d )
   fd.open( QIODevice::WriteOnly );
   fd.write( "digraph AO {\n" );
   fd.write( "rankdir=LR;\n" );
+  fd.write( "compound=true;\n" );
   liveDelay( 50 );
   switch ( m_mode )
     { case make:  fd.write( "node [color=darkgreen]; graph [color=darkgreen] bgcolor=mintcream;\n"  ); break;

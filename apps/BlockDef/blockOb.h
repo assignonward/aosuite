@@ -48,6 +48,7 @@ public:
                    ~ValueBase() {}
 static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
 static  JsonSerial removeQuotes( const JsonSerial &j );
+virtual     qint32  childCount() const { return 0; }
 virtual       void  clear()         = 0;
 virtual     quint8  type()    const = 0;
 virtual BsonSerial  bsonish() const = 0;
@@ -332,6 +333,7 @@ public:
     explicit  KeyValueArray( RiceyInt  k, QObject *parent = nullptr ) : KeyValueBase(            k, parent ) {}
     explicit  KeyValueArray( RiceyCode r, QObject *parent = nullptr ) : KeyValueBase( riceToInt(r), parent ) {}
              ~KeyValueArray() { clear(); }
+      qint32  childCount() const { qint32 c = size(); for ( qint32 i = 0; i < size(); i++ ) { ValueBase *v =  m_values.at(i); c += v->childCount(); } return c; }
         void  clear() { while ( m_values.size() > 0 ) { if ( m_values.last() != nullptr ) { m_values.last()->deleteLater(); } m_values.removeLast(); } }
       qint32  size() const { return m_values.size(); }
         bool  append( ValueBase *value );
@@ -375,6 +377,7 @@ class BlockValueObject : public ValueBase
                    BlockValueObject( const BsonSerial &b, QObject *parent = nullptr ) : ValueBase( parent ) { setBsonish(b); }
                    BlockValueObject( QObject *parent, const JsonSerial &j ) : ValueBase( parent ) { setJson(j); }
                   ~BlockValueObject() { clear(); }
+           qint32  childCount() const { qint32 c = size(); foreach ( ValueBase *v, m_obMap ) c += v->childCount(); return c; }
            quint8  type()    const { return RDT_OBJECT; }
        BsonSerial  bsonish() const;
        JsonSerial  json()    const;

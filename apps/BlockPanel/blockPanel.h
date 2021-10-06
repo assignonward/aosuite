@@ -40,24 +40,24 @@ public:
     explicit  BlockPanel( QString l, Mode m, QWidget *cw = nullptr );
              ~BlockPanel();
         void  liveDelay( int t );
-KeyValuePair *kvp() { if ( m_kvp == nullptr ) m_kvp = new KeyValuePair( RCD_null_z, this ); return m_kvp; }
+KeyValueBase *kvb() { if ( m_kvb == nullptr ) m_kvb = new KeyValuePair( RCD_null_z, this ); return m_kvb; }
      QString  label() { return m_label; }
         void  setLabel( QString );
         void  setMode( Mode m ) { if ( m != m_mode ) { m_mode = m; update(); } else m_mode = m; }
-        void  clear() { if ( m_kvp ) { m_kvp->clear(); m_kvp = nullptr; update(); } }
+        void  clear() { if ( m_kvb ) { m_kvb->clear(); m_kvb = nullptr; update(); } }
 
 signals:
 
 public slots:
     void  update();
-    void  setBlock( KeyValuePair * );
+    void  setBlock( KeyValueBase * );
     void  writeWrappedDot( QByteArray d );
     void  updateGraph();
     void  graphvizDone(int,QProcess::ExitStatus);
 
 public:
                    Mode  m_mode;
-  QPointer<KeyValuePair> m_kvp;
+  QPointer<KeyValueBase> m_kvb;
                 QString  m_label;
       QPointer<QProcess> pp;
                    bool  drawingInProgress;

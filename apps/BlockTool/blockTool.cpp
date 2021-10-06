@@ -38,16 +38,11 @@ BlockTool::BlockTool( QWidget *cw ) :
   panelA = new BlockPanel( "A", BlockPanel::Mode::build, ui->frameA );
   panelX = new BlockPanel( "X", BlockPanel::Mode::make , ui->frameX );
   panelY = new BlockPanel( "Y", BlockPanel::Mode::idle , ui->frameY );
-  connect( this, SIGNAL(showA(KeyValuePair *)), panelA, SLOT(setBlock(KeyValuePair *)));
-  connect( this, SIGNAL(showX(KeyValuePair *)), panelX, SLOT(setBlock(KeyValuePair *)));
-  connect( this, SIGNAL(showY(KeyValuePair *)), panelY, SLOT(setBlock(KeyValuePair *)));
+  connect( this, SIGNAL(showA(KeyValueBase *)), panelA, SLOT(setBlock(KeyValueBase *)));
+  connect( this, SIGNAL(showX(KeyValueBase *)), panelX, SLOT(setBlock(KeyValueBase *)));
+  connect( this, SIGNAL(showY(KeyValueBase *)), panelY, SLOT(setBlock(KeyValueBase *)));
 
-  QList<Utf8String> keyNames = dict.names();
-  std::sort(keyNames.begin(), keyNames.end());
-  for ( qint32 i = 0; i < keyNames.size(); i++ )
-    { ui->key->insertItem( i, keyNames.at(i) );
-      ui->rcodeEdit->insertItem( i, keyNames.at(i) );
-    }
+  sortKeys();
 }
 
 BlockTool::~BlockTool()
@@ -59,27 +54,46 @@ void  BlockTool::on_set_clicked()
     { qWarning( "key comboBox text returns unknown key: %s", nKey.data() );
       return;
     }
-  ValueBase *vbp = nullptr;
+      ValueBase *vbp = nullptr;
+  KeyValueArray *kva = nullptr;
   quint8 tp = dict.codeFromCodeName( nKey ) & RDT_OBTYPEMASK;
   if ( tp == RDT_NULL )
     vbp = new BlockValueNull(this);
    else
-    { if ( tp <= RDT_STRING )
-        { switch ( tp )
-            { case RDT_OBJECT   : vbp = new BlockValueObject   ( this ); break;
-              case RDT_INT64    : vbp = new BlockValueInt64    ( ui->intEdit      ->text() .toInt(), this ); break;
-              case RDT_RCODE    : vbp = new BlockValueRiceyCode( dict.codeFromCodeName( ui->rcodeEdit->currentText().toUtf8() ), this ); break;
-              case RDT_MPZ      : vbp = new BlockValueMPZ      ( ui->mpzEdit      ->text().toUtf8(), this ); break;
-              case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit      ->text().toUtf8(), this ); break;
-              case RDT_BYTEARRAY: vbp = new BlockValueByteArray( ui->byteArrayEdit->text().toUtf8(), this ); break;
-              case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit   ->text().toUtf8(), this ); break;
-              // TODO: array types...
-            }
+    { switch ( tp )
+        { case RDT_OBJECT   : vbp = new BlockValueObject   ( this ); break;
+          case RDT_INT64    : vbp = new BlockValueInt64    ( ui->intEdit      ->text() .toInt(), this ); break;
+          case RDT_RCODE    : vbp = new BlockValueRiceyCode( dict.codeFromCodeName( ui->rcodeEdit->currentText().toUtf8() ), this ); break;
+          case RDT_MPZ      : vbp = new BlockValueMPZ      ( ui->mpzEdit      ->text().toUtf8(), this ); break;
+          case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit      ->text().toUtf8(), this ); break;
+          case RDT_BYTEARRAY: vbp = new BlockValueByteArray( ui->byteArrayEdit->text().toUtf8(), this ); break;
+          case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit   ->text().toUtf8(), this ); break;
+          case RDT_OBJECT_ARRAY   : kva = new BlockArrayObject   ( dict.codeFromCodeName( nKey ), this ); break;
+          case RDT_INT64_ARRAY    : kva = new BlockArrayInt64    ( dict.codeFromCodeName( nKey ), this ); break;
+          case RDT_RCODE_ARRAY    : kva = new BlockArrayRicey    ( dict.codeFromCodeName( nKey ), this ); break;
+          case RDT_MPZ_ARRAY      : kva = new BlockArrayMPZ      ( dict.codeFromCodeName( nKey ), this ); break;
+          case RDT_MPQ_ARRAY      : kva = new BlockArrayMPQ      ( dict.codeFromCodeName( nKey ), this ); break;
+          case RDT_BYTEARRAY_ARRAY: kva = new BlockArrayByteArray( dict.codeFromCodeName( nKey ), this ); break;
+          case RDT_STRING_ARRAY   : kva = new BlockArrayString   ( dict.codeFromCodeName( nKey ), this ); break;
         }
     }
-  KeyValuePair *kvp = new KeyValuePair( dict.codeFromCodeName( nKey ), vbp );
-  setMake( kvp );
-  kvp->deleteLater();
+  ui->report->clear();
+  ui->report->append( "set clicked" );
+  KeyValueBase *kvb = nullptr;
+  if ( vbp )
+    kvb = new KeyValuePair( dict.codeFromCodeName( nKey ), vbp );
+   else if ( kva )
+    kvb = kva;
+   else
+    { qWarning( "no value or array established." );
+      ui->report->append( "oops" );
+      return;
+    }
+  setMake( kvb );
+  if ( ui->showJson->isChecked() )ui->report->append( jsonReformat( kvb->json() ) );
+  if ( ui->showHex ->isChecked() )ui->report->append( kvb->bsonish().toHex() );
+  if ( ui->showDot ->isChecked() )ui->report->append( kvb->dot() );
+  // kvp->deleteLater(); child of vbp, no need to delete this
   vbp->deleteLater();
 }
 
@@ -105,6 +119,43 @@ void  BlockTool::on_key_currentTextChanged( const QString &nuKey )
   ui->valueWidget->setCurrentIndex( tp & RDT_TYPEMASK );
 }
 
+void  BlockTool::on_sortName_toggled(bool) { sortKeys(); }
+void  BlockTool::on_sortId_toggled  (bool) { sortKeys(); }
+void  BlockTool::on_sortDict_toggled(bool) { sortKeys(); }
+void  BlockTool::sortKeys()
+{ QSignalBlocker blockKey(ui->key);
+  QSignalBlocker blockRcodeEdit(ui->rcodeEdit);
+  ui->key->clear();
+  ui->rcodeEdit->clear();
+
+  if ( ui->sortName->isChecked() )
+    { QList<Utf8String> keyNames = dict.names();
+      std::sort(keyNames.begin(), keyNames.end());
+      for ( qint32 i = 0; i < keyNames.size(); i++ )
+        { ui->key      ->insertItem( i, keyNames.at(i) );
+          ui->rcodeEdit->insertItem( i, keyNames.at(i) );
+        }
+    }
+   else if ( ui->sortDict->isChecked() )
+    { QList<qint32> ind = dict.diNames.keys();
+      std::sort(ind.begin(), ind.end());
+      for ( qint32 i = 0; i < ind.size(); i++ )
+        { ui->key      ->insertItem( i, dict.diNames[ind.at(i)] );
+          ui->rcodeEdit->insertItem( i, dict.diNames[ind.at(i)] );
+        }
+    }
+   else if ( ui->sortId->isChecked() )
+    { QList<RiceyInt> ri = dict.ciByNum.keys();
+      std::sort(ri.begin(), ri.end());
+      for ( qint32 i = 0; i < ri.size(); i++ )
+        { ui->key      ->insertItem( i, dict.nameFromCode(ri.at(i)) );
+          ui->rcodeEdit->insertItem( i, dict.nameFromCode(ri.at(i)) );
+        }
+    }
+   else
+    qWarning( "no key sort method checked" );
+
+}
 
 void  BlockTool::on_makeX_toggled(bool c)
 { if ( c & ui->buildX->isChecked() )
@@ -130,17 +181,17 @@ void  BlockTool::on_buildY_toggled(bool c)
   panelY->setMode( c ? BlockPanel::Mode::build : BlockPanel::Mode::idle );
 }
 
-bool  BlockTool::setBuild( KeyValuePair *kvp )
-{ if ( ui->buildA->isChecked() ) { panelA->setBlock( kvp ); return true; }
-  if ( ui->buildX->isChecked() ) { panelX->setBlock( kvp ); return true; }
-  if ( ui->buildY->isChecked() ) { panelY->setBlock( kvp ); return true; }
+bool  BlockTool::setBuild( KeyValueBase *kvb )
+{ if ( ui->buildA->isChecked() ) { panelA->setBlock( kvb ); return true; }
+  if ( ui->buildX->isChecked() ) { panelX->setBlock( kvb ); return true; }
+  if ( ui->buildY->isChecked() ) { panelY->setBlock( kvb ); return true; }
   qWarning( "BlockTool::setBuild() no build panel checked" );
   return false;
 }
 
-bool  BlockTool::setMake( KeyValuePair *kvp )
-{ if ( ui->makeX->isChecked() ) { panelX->setBlock( kvp ); return true; }
-  if ( ui->makeY->isChecked() ) { panelY->setBlock( kvp ); return true; }
+bool  BlockTool::setMake( KeyValueBase *kvb )
+{ if ( ui->makeX->isChecked() ) { panelX->setBlock( kvb ); return true; }
+  if ( ui->makeY->isChecked() ) { panelY->setBlock( kvb ); return true; }
   qWarning( "BlockTool::setMake() no make panel checked" );
   return false;
 }
@@ -160,17 +211,17 @@ QString  BlockTool::makeLabel()
   return "-";
 }
 
-KeyValuePair *BlockTool::buildKvp()
-{ if ( ui->buildA->isChecked() ) { return panelA->kvp(); }
-  if ( ui->buildX->isChecked() ) { return panelX->kvp(); }
-  if ( ui->buildY->isChecked() ) { return panelY->kvp(); }
+KeyValueBase *BlockTool::buildKvb()
+{ if ( ui->buildA->isChecked() ) { return panelA->kvb(); }
+  if ( ui->buildX->isChecked() ) { return panelX->kvb(); }
+  if ( ui->buildY->isChecked() ) { return panelY->kvb(); }
   qWarning( "BlockTool::buildKvp() no build panel checked" );
   return nullptr;
 }
 
-KeyValuePair *BlockTool::makeKvp()
-{ if ( ui->makeX->isChecked() ) { return panelX->kvp(); }
-  if ( ui->makeY->isChecked() ) { return panelY->kvp(); }
+KeyValueBase *BlockTool::makeKvb()
+{ if ( ui->makeX->isChecked() ) { return panelX->kvb(); }
+  if ( ui->makeY->isChecked() ) { return panelY->kvb(); }
   qWarning( "BlockTool::makeKvp() no make panel checked" );
   return nullptr;
 }
@@ -197,23 +248,23 @@ void  BlockTool::on_read_clicked()
   if ( readFile.endsWith( ".json", Qt::CaseInsensitive ) )
     { JsonSerial js = file.readAll();
       if ( js.size() > 4 )
-        { KeyValuePair *kvp = makeKvp();
-          kvp->setJson( js );
-          setMake( kvp );
+        { KeyValueBase *kvb = makeKvb();
+          kvb->setJson( js );
+          setMake( kvb );
         }
       return;
     }
   BsonSerial bs = file.readAll();
   if ( bs.size() > 0 )
-    { KeyValuePair *kvp = makeKvp();
-      kvp->setBsonish( bs );
-      setMake( kvp );
+    { KeyValueBase *kvb = makeKvb();
+      kvb->setBsonish( bs );
+      setMake( kvb );
     }
 }
 
 void  BlockTool::on_save_clicked()
-{ KeyValuePair *kvp = buildKvp();
-  if ( kvp == nullptr )
+{ KeyValueBase *kvb = buildKvb();
+  if ( kvb == nullptr )
     return;
   QString saveFile = QFileDialog::getSaveFileName(this,QString("Save %1").arg( buildLabel() ), fileDir );
   if ( saveFile.size() < 1 )
@@ -228,10 +279,10 @@ void  BlockTool::on_save_clicked()
   fileDir = di.absolutePath();
   if ( saveFile.endsWith( ".json", Qt::CaseInsensitive ) )
     { QTextStream ts( &file );
-      ts << jsonReformat( kvp->json() );
+      ts << jsonReformat( kvb->json() );
       return;
     }
-  file.write( kvp->bsonish() );
+  file.write( kvb->bsonish() );
 }
 
 void BlockTool::liveDelay( int t )
@@ -365,9 +416,9 @@ void  BlockTool::on_DAO0_clicked()
   BlockValueRiceyCode *ad4 = new BlockValueRiceyCode( RCD_actorReaderServer_y, this );
   ado4->insert( RCD_type_y, ad4 );
 
-  ui->report->append( jsonReformat( kvp->json() ) );
-  ui->report->append( kvp->bsonish().toHex() );
-  // ui->report->append( kvp->dot() );
+  if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
+  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
+  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot() );
   setBuild( kvp );
   kvp->deleteLater();
 }
@@ -408,9 +459,9 @@ void  BlockTool::on_chain_clicked()
   BlockArrayObject *sih = new BlockArrayObject( RCD_separableItemsHashes_O, this );
   hdo->insert( RCD_separableItemsHashes_O, sih );
 
-  ui->report->append( jsonReformat( kvp->json() ) );
-  ui->report->append( kvp->bsonish().toHex() );
-//  ui->report->append( kvp->dot() );
+  if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
+  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
+  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot() );
   setBuild( kvp );
   kvp->deleteLater();
 }
@@ -527,9 +578,9 @@ void  BlockTool::on_hash_clicked()
   BlockArrayRicey *bar = new BlockArrayRicey( RCD_riceyArray_Y, ta, this );
   hdo->insert( RCD_riceyArray_Y, bar );
 */
-  ui->report->append( jsonReformat( kvp->json() ) );
-  ui->report->append( kvp->bsonish().toHex() );
- // ui->report->append( kvp->dot() );
+  if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
+  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
+  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot() );
   setBuild( kvp );
   kvp->deleteLater();
 }

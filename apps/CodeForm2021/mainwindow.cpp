@@ -430,8 +430,9 @@ void MainWindow::translateNotes()
 void MainWindow::translateToJson()
 { jo = QJsonObject();
   QJsonArray ja;
+  qint32 i = 0;
   foreach ( QString line, riceyList )
-    ja.append( riceyLineToJson( line ) );
+    ja.append( riceyLineToJson( line, i++ ) );
   jo.insert( "riceyCodes_O", ja );
   QJsonArray jt;
   foreach ( QString line, notesList )
@@ -439,7 +440,7 @@ void MainWindow::translateToJson()
   jo.insert( "riceyTypes_O", jt );
 }
 
-QJsonValue MainWindow::riceyLineToJson( QString line )
+QJsonValue MainWindow::riceyLineToJson( QString line, qint32 index )
 { QJsonObject rlo;
   QVector<QString> words = line.split( QChar(' '), Qt::SkipEmptyParts );
   if ( words.size() < 4 )
@@ -459,6 +460,8 @@ QJsonValue MainWindow::riceyLineToJson( QString line )
       if ( words.size() > 3 )
         if ( riceyCodes.contains( words.at(3) ) )
           { rlo.insert( "group_y", riceyCodes[words.at(3)].mid(2) ); }
+      if ( index >= 0 )
+        rlo.insert( "dict_i", index );
     }
   return QJsonValue( rlo );
 }
