@@ -102,10 +102,10 @@ void  Dictionary::interpret( const JsonSerial &js )
                        else
                         diNames.insert( co["dict_i"].toInt(), co["name_s"].toString().toUtf8() );
                     }
-                  if ( !co.contains("type_y") )
-                    qWarning( "riceyCodes_O at %d has no type_y element.", i );
+                  if ( !co.contains("type_b") )
+                    qWarning( "riceyCodes_O at %d has no type_b element.", i );
                    else
-                    { QByteArray ricey = QByteArray::fromHex( co["type_y"].toString().toUtf8() );
+                    { QByteArray ricey = QByteArray::fromHex( co["type_b"].toString().toUtf8() );
                       ciByRicey.insert( ricey, i );
                       ciByNum.insert( riceToInt(ricey), i );
                       // TODO: type checking vs the riceyTypes_O table info
@@ -163,9 +163,9 @@ RiceyCode  Dictionary::riceyFromCodeName( Utf8String n )
   if ( !jv.isObject() )
     return RiceyCode();
   QJsonObject jo = jv.toObject();
-  if ( !jo.contains("type_y") )
+  if ( !jo.contains("type_b") )
     return RiceyCode();
-  return RiceyCode::fromHex( jo["type_y"].toString().toUtf8() );
+  return RiceyCode::fromHex( jo["type_b"].toString().toUtf8() );
 }
 
 /**
@@ -180,7 +180,7 @@ RiceyInt  Dictionary::codeFromCodeName( Utf8String n )
   if ( !jv.isObject() )
     return -1;
   QJsonObject jo = jv.toObject();
-  if ( !jo.contains("type_y") )
+  if ( !jo.contains("type_b") )
     return -1;
-  return riceToInt( RiceyCode::fromHex( jo["type_y"].toString().toUtf8() ) );
+  return riceToInt( RiceyCode::fromHex( jo["type_b"].toString().toUtf8() ) );
 }

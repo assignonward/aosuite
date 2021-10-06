@@ -2,885 +2,815 @@
     "riceyCodes_O": [
         {
             "dict_i": 0,
-            "group_y": "DA22",
-            "name_s": "group_y",
-            "text_s": "groupDefGroup_y Identifies what group a definition belongs to",
-            "type_y": "DA02"
+            "group_s": "dictionaryGroup_y",
+            "name_s": "riceyTypes_O",
+            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.",
+            "type_b": "D1C710"
         },
         {
             "dict_i": 1,
-            "group_y": "DA22",
-            "name_s": "groupDefGroup_y",
-            "text_s": "groupDefGroup_y These codes are used to identify what group a code belongs to",
-            "type_y": "DA22"
+            "group_s": "dictionaryGroup_y",
+            "name_s": "riceyCodes_O",
+            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.",
+            "type_b": "D1C730"
         },
         {
             "dict_i": 2,
-            "group_y": "DA22",
-            "name_s": "dataGroup_y",
-            "text_s": "groupDefGroup_y Generic data group - many items simply not yet classified",
-            "type_y": "DA42"
+            "group_s": "dictionaryGroup_y",
+            "name_s": "dict_i",
+            "text_s": "dictionaryGroup_y Index for the order in which codes appear in this (dictionary) list",
+            "type_b": "D1C701"
         },
         {
             "dict_i": 3,
-            "group_y": "DA22",
-            "name_s": "protocolIdGroup_y",
-            "text_s": "groupDefGroup_y These codes identify established protocols",
-            "type_y": "DA62"
+            "group_s": "dictionaryGroup_y",
+            "name_s": "type_b",
+            "text_s": "dictionaryGroup_y In the dictionary definition context, _y is not defined yet, use this instead of type_y",
+            "type_b": "D1C705"
         },
         {
             "dict_i": 4,
-            "group_y": "DA22",
-            "name_s": "protocolActorGroup_y",
-            "text_s": "groupDefGroup_y These codes identify actors within protocols",
-            "type_y": "DB02"
+            "group_s": "dictionaryGroup_y",
+            "name_s": "group_s",
+            "text_s": "dictionaryGroup_y A logical collecting of code names, can become a folder structure if necessary.",
+            "type_b": "D1C706"
         },
         {
             "dict_i": 5,
-            "group_y": "DA22",
-            "name_s": "algorithmIdGroup_y",
-            "text_s": "groupDefGroup_y These codes identify algorithms",
-            "type_y": "DB22"
+            "group_s": "dataGroup_y",
+            "name_s": "ObTerm_o",
+            "text_s": "dataGroup_y Object terminator, indicates no more items in the object in bsonish lists",
+            "type_b": "00"
         },
         {
             "dict_i": 6,
-            "group_y": "DA22",
-            "name_s": "structNavGroup_y",
-            "text_s": "groupDefGroup_y These codes direct protocol operations to operands",
-            "type_y": "DB42"
+            "group_s": "dataGroup_y",
+            "name_s": "int64_i",
+            "text_s": "dataGroup_y Generic signed int64, use depends on context.",
+            "type_b": "01"
         },
         {
             "dict_i": 7,
-            "group_y": "DA22",
-            "name_s": "dictionaryGroup_y",
-            "text_s": "groupDefGroup_y These codes are used specifically for dictionary containers",
-            "type_y": "DB62"
+            "group_s": "dataGroup_y",
+            "name_s": "type_y",
+            "text_s": "dataGroup_y Identifies an algorithm type for hash or crypto key, or other types depending on context",
+            "type_b": "02"
         },
         {
             "dict_i": 8,
-            "group_y": "DA22",
-            "name_s": "chainGroup_y",
-            "text_s": "groupDefGroup_y These codes are used for chain structure items",
-            "type_y": "DC02"
+            "group_s": "dataGroup_y",
+            "name_s": "mpz_n",
+            "text_s": "dataGroup_y Generic MPZ large integer, use depends on context.",
+            "type_b": "03"
         },
         {
             "dict_i": 9,
-            "group_y": "DA22",
-            "name_s": "operationGroup_y",
-            "text_s": "groupDefGroup_y These codes define calculation/operation types",
-            "type_y": "DC22"
+            "group_s": "dataGroup_y",
+            "name_s": "mpq_r",
+            "text_s": "dataGroup_y Generic MPQ large integer fraction, use depends on context.",
+            "type_b": "04"
         },
         {
             "dict_i": 10,
-            "group_y": "DA22",
-            "name_s": "protocolDefGroup_y",
-            "text_s": "groupDefGroup_y These codes are used in protocol definition",
-            "type_y": "DC42"
+            "group_s": "dataGroup_y",
+            "name_s": "data_b",
+            "text_s": "dataGroup_y Generic data block, use determined by the object which contains it.",
+            "type_b": "05"
         },
         {
             "dict_i": 11,
-            "group_y": "DA22",
-            "name_s": "serviceDescriptors_y",
-            "text_s": "groupDefGroup_y These codes are used for service requests and responses",
-            "type_y": "DC62"
+            "group_s": "dataGroup_y",
+            "name_s": "text_s",
+            "text_s": "dataGroup_y Generic string, use depends on context, for instance in an image object this would be the alt text",
+            "type_b": "06"
         },
         {
             "dict_i": 12,
-            "group_y": "DB62",
-            "name_s": "riceyTypes_O",
-            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.",
-            "type_y": "D1C710"
+            "group_s": "dataGroup_y",
+            "name_s": "name_s",
+            "text_s": "dataGroup_y Name as a string, use depends on context, often a key name",
+            "type_b": "26"
         },
         {
             "dict_i": 13,
-            "group_y": "DB62",
-            "name_s": "riceyCodes_O",
-            "text_s": "dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.",
-            "type_y": "D1C730"
+            "group_s": "dataGroup_y",
+            "name_s": "desc_s",
+            "text_s": "dataGroup_y Description of the current object, specific use depends on context",
+            "type_b": "46"
         },
         {
             "dict_i": 14,
-            "group_y": "DB62",
-            "name_s": "dict_i",
-            "text_s": "dictionaryGroup_y Index for the order in which codes appear in this (dictionary) list",
-            "type_y": "D1C701"
+            "group_s": "dataGroup_y",
+            "name_s": "code_s",
+            "text_s": "dataGroup_y Code as a string, use depends on context, often a key type",
+            "type_b": "66"
         },
         {
             "dict_i": 15,
-            "group_y": "DA42",
-            "name_s": "ObTerm_o",
-            "text_s": "dataGroup_y Object terminator, indicates no more items in the object in bsonish lists",
-            "type_y": "00"
+            "group_s": "dataGroup_y",
+            "name_s": "userId_b",
+            "text_s": "dataGroup_y Unique user identifier, possibly the 256bit hash of a userID_o that has all kinds of stuff in it",
+            "type_b": "25"
         },
         {
             "dict_i": 16,
-            "group_y": "DA42",
-            "name_s": "int64_i",
-            "text_s": "dataGroup_y Generic signed int64, use depends on context.",
-            "type_y": "01"
+            "group_s": "dataGroup_y",
+            "name_s": "objectArray_O",
+            "text_s": "dataGroup_y A generic array of object elements",
+            "type_b": "10"
         },
         {
             "dict_i": 17,
-            "group_y": "DA42",
-            "name_s": "type_y",
-            "text_s": "dataGroup_y Identifies an algorithm type for hash or crypto key, or other types depending on context",
-            "type_y": "02"
+            "group_s": "dataGroup_y",
+            "name_s": "int64Array_I",
+            "text_s": "dataGroup_y A generic array of int64 elements",
+            "type_b": "11"
         },
         {
             "dict_i": 18,
-            "group_y": "DA42",
-            "name_s": "mpz_n",
-            "text_s": "dataGroup_y Generic MPZ large integer, use depends on context.",
-            "type_y": "03"
+            "group_s": "dataGroup_y",
+            "name_s": "riceyArray_Y",
+            "text_s": "dataGroup_y A generic array of Ricey elements",
+            "type_b": "12"
         },
         {
             "dict_i": 19,
-            "group_y": "DA42",
-            "name_s": "mpq_r",
-            "text_s": "dataGroup_y Generic MPQ large integer fraction, use depends on context.",
-            "type_y": "04"
+            "group_s": "dataGroup_y",
+            "name_s": "mpzArray_N",
+            "text_s": "dataGroup_y A generic array of MPZ elements",
+            "type_b": "13"
         },
         {
             "dict_i": 20,
-            "group_y": "DA42",
-            "name_s": "data_b",
-            "text_s": "dataGroup_y Generic data block, use determined by the object which contains it.",
-            "type_y": "05"
+            "group_s": "dataGroup_y",
+            "name_s": "mpqArray_R",
+            "text_s": "dataGroup_y A generic array of MPQ elements",
+            "type_b": "14"
         },
         {
             "dict_i": 21,
-            "group_y": "DA42",
-            "name_s": "text_s",
-            "text_s": "dataGroup_y Generic string, use depends on context, for instance in an image object this would be the alt text",
-            "type_y": "06"
+            "group_s": "dataGroup_y",
+            "name_s": "byteArrayArray_B",
+            "text_s": "dataGroup_y A generic array of byte array element ",
+            "type_b": "15"
         },
         {
             "dict_i": 22,
-            "group_y": "DA42",
-            "name_s": "name_s",
-            "text_s": "dataGroup_y Name as a string, use depends on context, often a key name",
-            "type_y": "26"
+            "group_s": "dataGroup_y",
+            "name_s": "stringArray_S",
+            "text_s": "dataGroup_y A generic array of string elements",
+            "type_b": "16"
         },
         {
             "dict_i": 23,
-            "group_y": "DA42",
-            "name_s": "desc_s",
-            "text_s": "dataGroup_y Description of the current object, specific use depends on context",
-            "type_y": "46"
+            "group_s": "dataGroup_y",
+            "name_s": "time_i",
+            "text_s": "dataGroup_y UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.",
+            "type_b": "21"
         },
         {
             "dict_i": 24,
-            "group_y": "DA42",
-            "name_s": "code_s",
-            "text_s": "dataGroup_y Code as a string, use depends on context, often a key type",
-            "type_y": "66"
+            "group_s": "dataGroup_y",
+            "name_s": "AOShares_n",
+            "text_s": "dataGroup_y A quantity of shares - meaning depends on context",
+            "type_b": "23"
         },
         {
             "dict_i": 25,
-            "group_y": "DA42",
-            "name_s": "userId_b",
-            "text_s": "dataGroup_y Unique user identifier, possibly the 256bit hash of a userID_o that has all kinds of stuff in it",
-            "type_y": "25"
+            "group_s": "dataGroup_y",
+            "name_s": "null_z",
+            "text_s": "dataGroup_y This key indicates the value is empty, has no value",
+            "type_b": "0F"
         },
         {
             "dict_i": 26,
-            "group_y": "DA42",
-            "name_s": "objectArray_O",
-            "text_s": "dataGroup_y A generic array of object elements",
-            "type_y": "10"
+            "group_s": "chainGroup_y",
+            "name_s": "chainBlock_o",
+            "text_s": "chainGroup_y An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) ",
+            "type_b": "CB00"
         },
         {
             "dict_i": 27,
-            "group_y": "DA42",
-            "name_s": "int64Array_I",
-            "text_s": "dataGroup_y A generic array of int64 elements",
-            "type_y": "11"
+            "group_s": "chainGroup_y",
+            "name_s": "hashedOb_o",
+            "text_s": "chainGroup_y An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.",
+            "type_b": "20"
         },
         {
             "dict_i": 28,
-            "group_y": "DA42",
-            "name_s": "riceyArray_Y",
-            "text_s": "dataGroup_y A generic array of Ricey elements",
-            "type_y": "12"
+            "group_s": "chainGroup_y",
+            "name_s": "hash_o",
+            "text_s": "chainGroup_y Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.",
+            "type_b": "60"
         },
         {
             "dict_i": 29,
-            "group_y": "DA42",
-            "name_s": "mpzArray_N",
-            "text_s": "dataGroup_y A generic array of MPZ elements",
-            "type_y": "13"
+            "group_s": "chainGroup_y",
+            "name_s": "parentHash_O",
+            "text_s": "chainGroup_y Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.",
+            "type_b": "70"
         },
         {
             "dict_i": 30,
-            "group_y": "DA42",
-            "name_s": "mpqArray_R",
-            "text_s": "dataGroup_y A generic array of MPQ elements",
-            "type_y": "14"
+            "group_s": "chainGroup_y",
+            "name_s": "separableItems_O",
+            "text_s": "chainGroup_y List of items which are only indirectly included in the hash chain",
+            "type_b": "30"
         },
         {
             "dict_i": 31,
-            "group_y": "DA42",
-            "name_s": "byteArrayArray_B",
-            "text_s": "dataGroup_y A generic array of byte array element ",
-            "type_y": "15"
+            "group_s": "chainGroup_y",
+            "name_s": "separableItemsHashes_O",
+            "text_s": "chainGroup_y Hashes of separable items which do get included in the hash chain",
+            "type_b": "50"
         },
         {
             "dict_i": 32,
-            "group_y": "DA42",
-            "name_s": "stringArray_S",
-            "text_s": "dataGroup_y A generic array of string elements",
-            "type_y": "16"
+            "group_s": "chainGroup_y",
+            "name_s": "separatedItem_o",
+            "text_s": "chainGroup_y Included separable items are contained in hashedOb_o, when they have been separated this object container replaces them, along with optional information about the separated item (where it might be found, why it was removed, when it was removed, on whose authority it was removed, etc.)",
+            "type_b": "888660"
         },
         {
             "dict_i": 33,
-            "group_y": "DA42",
-            "name_s": "time_i",
-            "text_s": "dataGroup_y UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.",
-            "type_y": "21"
+            "group_s": "algorithmIdGroup_y",
+            "name_s": "SHA256_y",
+            "text_s": "algorithmIdGroup_y algorithm ID (algor) for SHA2 - 256",
+            "type_b": "22"
         },
         {
             "dict_i": 34,
-            "group_y": "DA42",
-            "name_s": "AOShares_n",
-            "text_s": "dataGroup_y A quantity of shares - meaning depends on context",
-            "type_y": "23"
+            "group_s": "algorithmIdGroup_y",
+            "name_s": "ECB256_y",
+            "text_s": "algorithmIdGroup_y algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1",
+            "type_b": "42"
         },
         {
             "dict_i": 35,
-            "group_y": "DA42",
-            "name_s": "null_z",
-            "text_s": "dataGroup_y This key indicates the value is empty, has no value",
-            "type_y": "0F"
+            "group_s": "algorithmIdGroup_y",
+            "name_s": "RSA3072_y",
+            "text_s": "algorithmIdGroup_y algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes",
+            "type_b": "A142"
         },
         {
             "dict_i": 36,
-            "group_y": "DC02",
-            "name_s": "chainBlock_o",
-            "text_s": "chainGroup_y An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) ",
-            "type_y": "CB00"
+            "group_s": "algorithmIdGroup_y",
+            "name_s": "SHA3b512_y",
+            "text_s": "algorithmIdGroup_y algorithm ID (algor) for SHA3 - 512",
+            "type_b": "A122"
         },
         {
             "dict_i": 37,
-            "group_y": "DC02",
-            "name_s": "hashedOb_o",
-            "text_s": "chainGroup_y An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.",
-            "type_y": "20"
+            "group_s": "algorithmIdGroup_y",
+            "name_s": "jpg_y",
+            "text_s": "algorithmIdGroup_y Found in image objects, tells what format the data_b is to be interpreted as",
+            "type_b": "9022"
         },
         {
             "dict_i": 38,
-            "group_y": "DC02",
-            "name_s": "hash_o",
-            "text_s": "chainGroup_y Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.",
-            "type_y": "60"
+            "group_s": "algorithmIdGroup_y",
+            "name_s": "png_y",
+            "text_s": "algorithmIdGroup_y Found in image objects, tells what format the data_b is to be interpreted as",
+            "type_b": "9042"
         },
         {
             "dict_i": 39,
-            "group_y": "DC02",
-            "name_s": "parentHash_O",
-            "text_s": "chainGroup_y Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.",
-            "type_y": "70"
+            "group_s": "dataGroup_y",
+            "name_s": "success_y",
+            "text_s": "dataGroup_y success code",
+            "type_b": "C002"
         },
         {
             "dict_i": 40,
-            "group_y": "DC02",
-            "name_s": "separableItems_O",
-            "text_s": "chainGroup_y List of items which are only indirectly included in the hash chain",
-            "type_y": "30"
+            "group_s": "dataGroup_y",
+            "name_s": "failure_y",
+            "text_s": "dataGroup_y failure code",
+            "type_b": "F002"
         },
         {
             "dict_i": 41,
-            "group_y": "DC02",
-            "name_s": "separableItemsHashes_O",
-            "text_s": "chainGroup_y Hashes of separable items which do get included in the hash chain",
-            "type_y": "50"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolDAO0_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ0",
+            "type_b": "DDA08002"
         },
         {
             "dict_i": 42,
-            "group_y": "DC02",
-            "name_s": "separatedItem_o",
-            "text_s": "chainGroup_y Included separable items are contained in hashedOb_o, when they have been separated this object container replaces them, along with optional information about the separated item (where it might be found, why it was removed, when it was removed, on whose authority it was removed, etc.)",
-            "type_y": "888660"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolDAO1_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ1",
+            "type_b": "DDA08022"
         },
         {
             "dict_i": 43,
-            "group_y": "DB22",
-            "name_s": "SHA256_y",
-            "text_s": "algorithmIdGroup_y algorithm ID (algor) for SHA2 - 256",
-            "type_y": "22"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolDAO2_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ2",
+            "type_b": "DDA08042"
         },
         {
             "dict_i": 44,
-            "group_y": "DB22",
-            "name_s": "ECB256_y",
-            "text_s": "algorithmIdGroup_y algorithm ID (algor) for Elliptic Curve ECDSA curve BrainpoolP256r1",
-            "type_y": "42"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolDAO3_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ3",
+            "type_b": "DDA08062"
         },
         {
             "dict_i": 45,
-            "group_y": "DB22",
-            "name_s": "RSA3072_y",
-            "text_s": "algorithmIdGroup_y algorithm ID (algor) for 3072 bit RSA - less commonly used algorithms get longer ricey codes",
-            "type_y": "A142"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolDAO4_y",
+            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ4",
+            "type_b": "DDA08102"
         },
         {
             "dict_i": 46,
-            "group_y": "DB22",
-            "name_s": "SHA3b512_y",
-            "text_s": "algorithmIdGroup_y algorithm ID (algor) for SHA3 - 512",
-            "type_y": "A122"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolTAO1_y",
+            "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22",
+            "type_b": "A7A08002"
         },
         {
             "dict_i": 47,
-            "group_y": "DB22",
-            "name_s": "jpg_y",
-            "text_s": "algorithmIdGroup_y Found in image objects, tells what format the data_b is to be interpreted as",
-            "type_y": "9022"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolTAO2_y",
+            "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13",
+            "type_b": "A7A08022"
         },
         {
             "dict_i": 48,
-            "group_y": "DB22",
-            "name_s": "png_y",
-            "text_s": "algorithmIdGroup_y Found in image objects, tells what format the data_b is to be interpreted as",
-            "type_y": "9042"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolA00_y",
+            "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin",
+            "type_b": "A002"
         },
         {
             "dict_i": 49,
-            "group_y": "DA42",
-            "name_s": "success_y",
-            "text_s": "dataGroup_y success code",
-            "type_y": "C002"
+            "group_s": "protocolIdGroup_y",
+            "name_s": "ProtocolA01_y",
+            "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees",
+            "type_b": "A022"
         },
         {
             "dict_i": 50,
-            "group_y": "DA42",
-            "name_s": "failure_y",
-            "text_s": "dataGroup_y failure code",
-            "type_y": "F002"
+            "group_s": "protocolActorGroup_y",
+            "name_s": "actorWriterClient_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who wants to create a record (in a blockchain)",
+            "type_b": "ACC702"
         },
         {
             "dict_i": 51,
-            "group_y": "DA62",
-            "name_s": "ProtocolDAO0_y",
-            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ0",
-            "type_y": "DDA08002"
+            "group_s": "protocolActorGroup_y",
+            "name_s": "actorWriterServer_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who wants to retrieve a record (from a blockchain)",
+            "type_b": "ACC722"
         },
         {
             "dict_i": 52,
-            "group_y": "DA62",
-            "name_s": "ProtocolDAO1_y",
-            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ1",
-            "type_y": "DDA08022"
+            "group_s": "protocolActorGroup_y",
+            "name_s": "actorReaderClient_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who handles requests to create records (in a blockchain)",
+            "type_b": "ACC742"
         },
         {
             "dict_i": 53,
-            "group_y": "DA62",
-            "name_s": "ProtocolDAO2_y",
-            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ2",
-            "type_y": "DDA08042"
+            "group_s": "protocolActorGroup_y",
+            "name_s": "actorReaderServer_y",
+            "text_s": "protocolActorGroup_y Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
+            "type_b": "ACC762"
         },
         {
             "dict_i": 54,
-            "group_y": "DA62",
-            "name_s": "ProtocolDAO3_y",
-            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ3",
-            "type_y": "DDA08062"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "ProtocolList_O",
+            "text_s": "protocolDefGroup_y An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle ",
+            "type_b": "A070"
         },
         {
             "dict_i": 55,
-            "group_y": "DA62",
-            "name_s": "ProtocolDAO4_y",
-            "text_s": "protocolIdGroup_y Development protocol, symbol: DⒶ4",
-            "type_y": "DDA08102"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "ProtocolDef_o",
+            "text_s": "protocolDefGroup_y An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "type_b": "A060"
         },
         {
             "dict_i": 56,
-            "group_y": "DA62",
-            "name_s": "ProtocolTAO1_y",
-            "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.9.22",
-            "type_y": "A7A08002"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "ProtocolSig_o",
+            "text_s": "protocolDefGroup_y A signature on an Assign Onward Protocol Definition, indicating the protocol is \"approved\" by the signer",
+            "type_b": "A040"
         },
         {
             "dict_i": 57,
-            "group_y": "DA62",
-            "name_s": "ProtocolTAO2_y",
-            "text_s": "protocolIdGroup_y Test protocol, symbol: TⒶ2021.10.13",
-            "type_y": "A7A08022"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "ItemDefList_O",
+            "text_s": "protocolDefGroup_y A list of Assign Onward Protocol Item Definitions",
+            "type_b": "A030"
         },
         {
             "dict_i": 58,
-            "group_y": "DA62",
-            "name_s": "ProtocolA00_y",
-            "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin",
-            "type_y": "A002"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "ItemDef_o",
+            "text_s": "protocolDefGroup_y An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "type_b": "A020"
         },
         {
             "dict_i": 59,
-            "group_y": "DA62",
-            "name_s": "ProtocolA01_y",
-            "text_s": "protocolIdGroup_y Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees",
-            "type_y": "A022"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "ActorDefList_O",
+            "text_s": "protocolDefGroup_y A list of Actor definitions, a valid protocol definition should contain one or more actor definitions",
+            "type_b": "A010"
         },
         {
             "dict_i": 60,
-            "group_y": "DB02",
-            "name_s": "actorWriterClient_y",
-            "text_s": "protocolActorGroup_y Actor definition: the actor who wants to create a record (in a blockchain)",
-            "type_y": "ACC702"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "ActorDef_o",
+            "text_s": "protocolDefGroup_y A single Actor definition",
+            "type_b": "A000"
         },
         {
             "dict_i": 61,
-            "group_y": "DB02",
-            "name_s": "actorWriterServer_y",
-            "text_s": "protocolActorGroup_y Actor definition: the actor who wants to retrieve a record (from a blockchain)",
-            "type_y": "ACC722"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "OutgoingItemsList_O",
+            "text_s": "protocolDefGroup_y A list items this actor publishes",
+            "type_b": "A170"
         },
         {
             "dict_i": 62,
-            "group_y": "DB02",
-            "name_s": "actorReaderClient_y",
-            "text_s": "protocolActorGroup_y Actor definition: the actor who handles requests to create records (in a blockchain)",
-            "type_y": "ACC742"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "IncomingItemsList_O",
+            "text_s": "protocolDefGroup_y A list items this actor consumes",
+            "type_b": "A150"
         },
         {
             "dict_i": 63,
-            "group_y": "DB02",
-            "name_s": "actorReaderServer_y",
-            "text_s": "protocolActorGroup_y Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
-            "type_y": "ACC762"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "SubItemDefs_O",
+            "text_s": "protocolDefGroup_y inside _o or _O items, SubItemDefs_O defines the requirements for sub-items which may appear",
+            "type_b": "A050"
         },
         {
             "dict_i": 64,
-            "group_y": "DC42",
-            "name_s": "ProtocolList_O",
-            "text_s": "protocolDefGroup_y An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle ",
-            "type_y": "A070"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "DefinedSubItems_Y",
+            "text_s": "protocolDefGroup_y DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)",
+            "type_b": "A072"
         },
         {
             "dict_i": 65,
-            "group_y": "DC42",
-            "name_s": "ProtocolDef_o",
-            "text_s": "protocolDefGroup_y An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
-            "type_y": "A060"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "DefinedSubItemsDesc_S",
+            "text_s": "protocolDefGroup_y DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context",
+            "type_b": "A076"
         },
         {
             "dict_i": 66,
-            "group_y": "DC42",
-            "name_s": "ProtocolSig_o",
-            "text_s": "protocolDefGroup_y A signature on an Assign Onward Protocol Definition, indicating the protocol is \"approved\" by the signer",
-            "type_y": "A040"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "OperReqList_O",
+            "text_s": "protocolDefGroup_y USE inside SubItemDefs_O Operational requirements / constraints on values found in Required or Optional items",
+            "type_b": "A250"
         },
         {
             "dict_i": 67,
-            "group_y": "DC42",
-            "name_s": "ItemDefList_O",
-            "text_s": "protocolDefGroup_y A list of Assign Onward Protocol Item Definitions",
-            "type_y": "A030"
+            "group_s": "protocolDefGroup_y",
+            "name_s": "OperReq_o",
+            "text_s": "protocolDefGroup_y USE inside SubItemDefs_O A single operational requirement / constraint on value found in an item",
+            "type_b": "A240"
         },
         {
             "dict_i": 68,
-            "group_y": "DC42",
-            "name_s": "ItemDef_o",
-            "text_s": "protocolDefGroup_y An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
-            "type_y": "A020"
+            "group_s": "operationGroup_y",
+            "name_s": "OpMemberOf_Y",
+            "text_s": "operationGroup_y List of possible values for an RCODE",
+            "type_b": "A012"
         },
         {
             "dict_i": 69,
-            "group_y": "DC42",
-            "name_s": "ActorDefList_O",
-            "text_s": "protocolDefGroup_y A list of Actor definitions, a valid protocol definition should contain one or more actor definitions",
-            "type_y": "A010"
+            "group_s": "operationGroup_y",
+            "name_s": "OpOneOrMoreOf_Y",
+            "text_s": "operationGroup_y One or more objects of the listed types are required to appear",
+            "type_b": "A212"
         },
         {
             "dict_i": 70,
-            "group_y": "DC42",
-            "name_s": "ActorDef_o",
-            "text_s": "protocolDefGroup_y A single Actor definition",
-            "type_y": "A000"
+            "group_s": "operationGroup_y",
+            "name_s": "OpGreaterThan_Y",
+            "text_s": "operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be greater than all",
+            "type_b": "A032"
         },
         {
             "dict_i": 71,
-            "group_y": "DC42",
-            "name_s": "OutgoingItemsList_O",
-            "text_s": "protocolDefGroup_y A list items this actor publishes",
-            "type_y": "A170"
+            "group_s": "operationGroup_y",
+            "name_s": "OpLessThan_Y",
+            "text_s": "operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be less than all",
+            "type_b": "A052"
         },
         {
             "dict_i": 72,
-            "group_y": "DC42",
-            "name_s": "IncomingItemsList_O",
-            "text_s": "protocolDefGroup_y A list items this actor consumes",
-            "type_y": "A150"
+            "group_s": "operationGroup_y",
+            "name_s": "OpTimeValue_y",
+            "text_s": "operationGroup_y The specified object should be assigned a time value, RCD_time_i indicates the time should be the current time - other values may be used in the future to indicate other types of time values.",
+            "type_b": "A042"
         },
         {
             "dict_i": 73,
-            "group_y": "DC42",
-            "name_s": "SubItemDefs_O",
-            "text_s": "protocolDefGroup_y inside _o or _O items, SubItemDefs_O defines the requirements for sub-items which may appear",
-            "type_y": "A050"
+            "group_s": "operationGroup_y",
+            "name_s": "OpHash_O",
+            "text_s": "operationGroup_y Three parameters follow, describing inputs to the hash function",
+            "type_b": "A130"
         },
         {
             "dict_i": 74,
-            "group_y": "DC42",
-            "name_s": "DefinedSubItems_Y",
-            "text_s": "protocolDefGroup_y DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)",
-            "type_y": "A072"
+            "group_s": "structNavGroup_y",
+            "name_s": "itemRelAddr_Y",
+            "text_s": "structNavGroup_y Navigation from the current itemDef to an operand in an operation, sequence of item types when navigating deeper, relative step back or to root to get higher in the hiearchy",
+            "type_b": "FFF552"
         },
         {
             "dict_i": 75,
-            "group_y": "DC42",
-            "name_s": "DefinedSubItemsDesc_S",
-            "text_s": "protocolDefGroup_y DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context",
-            "type_y": "A076"
+            "group_s": "structNavGroup_y",
+            "name_s": "navUpOne_y",
+            "text_s": "structNavGroup_y Navigate 'up one' level in a nested block, used in operand relative addressing.",
+            "type_b": "FFF562"
         },
         {
             "dict_i": 76,
-            "group_y": "DC42",
-            "name_s": "OperReqList_O",
-            "text_s": "protocolDefGroup_y USE inside SubItemDefs_O Operational requirements / constraints on values found in Required or Optional items",
-            "type_y": "A250"
+            "group_s": "structNavGroup_y",
+            "name_s": "navChainBlock_y",
+            "text_s": "structNavGroup_y Navigate to the 'root' of this chain block, used in operand absolute addressing.",
+            "type_b": "FFF502"
         },
         {
             "dict_i": 77,
-            "group_y": "DC42",
-            "name_s": "OperReq_o",
-            "text_s": "protocolDefGroup_y USE inside SubItemDefs_O A single operational requirement / constraint on value found in an item",
-            "type_y": "A240"
+            "group_s": "structNavGroup_y",
+            "name_s": "navJumpToBlock_y",
+            "text_s": "structNavGroup_y The next item in the itemRelAddr_Y array contains a chainBlock index, navigation will continue from that block.",
+            "type_b": "FFF522"
         },
         {
             "dict_i": 78,
-            "group_y": "DC22",
-            "name_s": "OpMemberOf_Y",
-            "text_s": "operationGroup_y List of possible values for an RCODE",
-            "type_y": "A012"
+            "group_s": "structNavGroup_y",
+            "name_s": "navIfPresent_y",
+            "text_s": "structNavGroup_y If the next item is present, then proceed - otherwise this condition is satisfied by the absence of the optional item.",
+            "type_b": "FFF542"
         },
         {
             "dict_i": 79,
-            "group_y": "DC22",
-            "name_s": "OpOneOrMoreOf_Y",
-            "text_s": "operationGroup_y One or more objects of the listed types are required to appear",
-            "type_y": "A212"
+            "group_s": "serviceDescriptors_y",
+            "name_s": "requestAvailServices_o",
+            "text_s": "serviceDescriptors_y Object contains the protocol name and/or uid (some protocols will require uid, early ones will go by name).",
+            "type_b": "AAA540"
         },
         {
             "dict_i": 80,
-            "group_y": "DC22",
-            "name_s": "OpGreaterThan_Y",
-            "text_s": "operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be greater than all",
-            "type_y": "A032"
+            "group_s": "serviceDescriptors_y",
+            "name_s": "availServicesList_O",
+            "text_s": "serviceDescriptors_y List of services provided, objects contain a type_y: service descriptor and possibly additional info like lists of items, database names, etc.",
+            "type_b": "AAA550"
         },
         {
             "dict_i": 81,
-            "group_y": "DC22",
-            "name_s": "OpLessThan_Y",
-            "text_s": "operationGroup_y Path defining a value, or array of values, to compare - the targeted value must be less than all",
-            "type_y": "A052"
+            "group_s": "serviceDescriptors_y",
+            "name_s": "requestRecordStorage_o",
+            "text_s": "serviceDescriptors_y Object describes the id of the requestor, id of the database to record in, and the data to record",
+            "type_b": "AAA520"
         },
         {
             "dict_i": 82,
-            "group_y": "DC22",
-            "name_s": "OpTimeValue_y",
-            "text_s": "operationGroup_y The specified object should be assigned a time value, RCD_time_i indicates the time should be the current time - other values may be used in the future to indicate other types of time values.",
-            "type_y": "A042"
+            "group_s": "serviceDescriptors_y",
+            "name_s": "recordStorageResult_o",
+            "text_s": "serviceDescriptors_y Object describes success or failure of a record storage attempt",
+            "type_b": "AAA500"
         },
         {
             "dict_i": 83,
-            "group_y": "DC22",
-            "name_s": "OpHash_O",
-            "text_s": "operationGroup_y Three parameters follow, describing inputs to the hash function",
-            "type_y": "A130"
+            "group_s": "serviceDescriptors_y",
+            "name_s": "requestRecordRetrieval_o",
+            "text_s": "serviceDescriptors_y Object describes the id of the requestor, id of the database to record in, and id of the record to retrieve",
+            "type_b": "AAA620"
         },
         {
             "dict_i": 84,
-            "group_y": "DB42",
-            "name_s": "itemRelAddr_Y",
-            "text_s": "structNavGroup_y Navigation from the current itemDef to an operand in an operation, sequence of item types when navigating deeper, relative step back or to root to get higher in the hiearchy",
-            "type_y": "FFF552"
+            "group_s": "serviceDescriptors_y",
+            "name_s": "recordRetrievalResult_o",
+            "text_s": "serviceDescriptors_y Object describes success (with data) or failure of a record retrieval attempt",
+            "type_b": "AAA600"
         },
         {
             "dict_i": 85,
-            "group_y": "DB42",
-            "name_s": "navUpOne_y",
-            "text_s": "structNavGroup_y Navigate 'up one' level in a nested block, used in operand relative addressing.",
-            "type_y": "FFF562"
+            "group_s": "dataGroup_y",
+            "name_s": "RangeBounds_O",
+            "text_s": "dataGroup_y Boundaries for valid values",
+            "type_b": "A110"
         },
         {
             "dict_i": 86,
-            "group_y": "DB42",
-            "name_s": "navChainBlock_y",
-            "text_s": "structNavGroup_y Navigate to the 'root' of this chain block, used in operand absolute addressing.",
-            "type_y": "FFF502"
+            "group_s": "dataGroup_y",
+            "name_s": "min_i",
+            "text_s": "dataGroup_y Used in range boundaries",
+            "type_b": "41"
         },
         {
             "dict_i": 87,
-            "group_y": "DB42",
-            "name_s": "navJumpToBlock_y",
-            "text_s": "structNavGroup_y The next item in the itemRelAddr_Y array contains a chainBlock index, navigation will continue from that block.",
-            "type_y": "FFF522"
+            "group_s": "dataGroup_y",
+            "name_s": "min_n",
+            "text_s": "dataGroup_y Used in range boundaries",
+            "type_b": "43"
         },
         {
             "dict_i": 88,
-            "group_y": "DB42",
-            "name_s": "navIfPresent_y",
-            "text_s": "structNavGroup_y If the next item is present, then proceed - otherwise this condition is satisfied by the absence of the optional item.",
-            "type_y": "FFF542"
+            "group_s": "dataGroup_y",
+            "name_s": "min_r",
+            "text_s": "dataGroup_y Used in range boundaries",
+            "type_b": "44"
         },
         {
             "dict_i": 89,
-            "group_y": "DC62",
-            "name_s": "requestAvailServices_o",
-            "text_s": "serviceDescriptors_y Object contains the protocol name and/or uid (some protocols will require uid, early ones will go by name).",
-            "type_y": "AAA540"
+            "group_s": "dataGroup_y",
+            "name_s": "max_i",
+            "text_s": "dataGroup_y Used in range boundaries",
+            "type_b": "61"
         },
         {
             "dict_i": 90,
-            "group_y": "DC62",
-            "name_s": "availServicesList_O",
-            "text_s": "serviceDescriptors_y List of services provided, objects contain a type_y: service descriptor and possibly additional info like lists of items, database names, etc.",
-            "type_y": "AAA550"
+            "group_s": "dataGroup_y",
+            "name_s": "max_n",
+            "text_s": "dataGroup_y Used in range boundaries",
+            "type_b": "63"
         },
         {
             "dict_i": 91,
-            "group_y": "DC62",
-            "name_s": "requestRecordStorage_o",
-            "text_s": "serviceDescriptors_y Object describes the id of the requestor, id of the database to record in, and the data to record",
-            "type_y": "AAA520"
+            "group_s": "dataGroup_y",
+            "name_s": "max_r",
+            "text_s": "dataGroup_y Used in range boundaries",
+            "type_b": "64"
         },
         {
             "dict_i": 92,
-            "group_y": "DC62",
-            "name_s": "recordStorageResult_o",
-            "text_s": "serviceDescriptors_y Object describes success or failure of a record storage attempt",
-            "type_y": "AAA500"
+            "group_s": "dataGroup_y",
+            "name_s": "enum_Y",
+            "text_s": "dataGroup_y Used to define available choices",
+            "type_b": "72"
         },
         {
             "dict_i": 93,
-            "group_y": "DC62",
-            "name_s": "requestRecordRetrieval_o",
-            "text_s": "serviceDescriptors_y Object describes the id of the requestor, id of the database to record in, and id of the record to retrieve",
-            "type_y": "AAA620"
+            "group_s": "dataGroup_y",
+            "name_s": "enum_S",
+            "text_s": "dataGroup_y Used to define available choices",
+            "type_b": "56"
         },
         {
             "dict_i": 94,
-            "group_y": "DC62",
-            "name_s": "recordRetrievalResult_o",
-            "text_s": "serviceDescriptors_y Object describes success (with data) or failure of a record retrieval attempt",
-            "type_y": "AAA600"
+            "group_s": "dataGroup_y",
+            "name_s": "GenesisBlock_o",
+            "text_s": "dataGroup_y An Assign Onward Genesis Block. With a signature_o which includes a timei, and other definitions for the chain.",
+            "type_b": "A0B000"
         },
         {
             "dict_i": 95,
-            "group_y": "DA42",
-            "name_s": "RangeBounds_O",
-            "text_s": "dataGroup_y Boundaries for valid values",
-            "type_y": "A110"
+            "group_s": "dataGroup_y",
+            "name_s": "ChainDesc_o",
+            "text_s": "dataGroup_y Chain Description, generally only found in the Genesis Block - descriptive items like name, symbol, number of coins represented by all shares, etc.",
+            "type_b": "A0CD00"
         },
         {
             "dict_i": 96,
-            "group_y": "DA42",
-            "name_s": "min_i",
-            "text_s": "dataGroup_y Used in range boundaries",
-            "type_y": "41"
+            "group_s": "dataGroup_y",
+            "name_s": "ChainFunc_o",
+            "text_s": "dataGroup_y Chain Functional items description, generally only found in the Genesis Block - functional items like number of shares, expiration rates, recording fees, etc.",
+            "type_b": "A0CF00"
         },
         {
             "dict_i": 97,
-            "group_y": "DA42",
-            "name_s": "min_n",
-            "text_s": "dataGroup_y Used in range boundaries",
-            "type_y": "43"
+            "group_s": "dataGroup_y",
+            "name_s": "EndChain_o",
+            "text_s": "dataGroup_y Used when reporting the last blocks in a chain, this block is a signal that all known blocks are received. Has a pzzzO and zzzO and timei of when it was reported, but contains no transaction information and will (usually) be discarded when appending new transaction blocks to its parent.",
+            "type_b": "A0EC00"
         },
         {
             "dict_i": 98,
-            "group_y": "DA42",
-            "name_s": "min_r",
-            "text_s": "dataGroup_y Used in range boundaries",
-            "type_y": "44"
+            "group_s": "dataGroup_y",
+            "name_s": "Symbol_s",
+            "text_s": "dataGroup_y A short string like ITC representing the chain.",
+            "type_b": "A0CD06"
         },
         {
             "dict_i": 99,
-            "group_y": "DA42",
-            "name_s": "max_i",
-            "text_s": "dataGroup_y Used in range boundaries",
-            "type_y": "61"
+            "group_s": "dataGroup_y",
+            "name_s": "CdName_s",
+            "text_s": "dataGroup_y A longer string like Itcoin representing the chain.",
+            "type_b": "A0CD26"
         },
         {
             "dict_i": 100,
-            "group_y": "DA42",
-            "name_s": "max_n",
-            "text_s": "dataGroup_y Used in range boundaries",
-            "type_y": "63"
+            "group_s": "dataGroup_y",
+            "name_s": "Tagline_s",
+            "text_s": "dataGroup_y A brief sentence like \"The greatest blockchain ever\" describing the chain.",
+            "type_b": "A0CD46"
         },
         {
             "dict_i": 101,
-            "group_y": "DA42",
-            "name_s": "max_r",
-            "text_s": "dataGroup_y Used in range boundaries",
-            "type_y": "64"
+            "group_s": "dataGroup_y",
+            "name_s": "Description_s",
+            "text_s": "dataGroup_y A paragraph (say 1000-ish characters) describing the chain.",
+            "type_b": "A0CD66"
         },
         {
             "dict_i": 102,
-            "group_y": "DA42",
-            "name_s": "enum_Y",
-            "text_s": "dataGroup_y Used to define available choices",
-            "type_y": "72"
+            "group_s": "dataGroup_y",
+            "name_s": "Icon_o",
+            "text_s": "dataGroup_y A square-ish image that looks good small, representing the chain.",
+            "type_b": "A0CD20"
         },
         {
             "dict_i": 103,
-            "group_y": "DA42",
-            "name_s": "enum_S",
-            "text_s": "dataGroup_y Used to define available choices",
-            "type_y": "56"
+            "group_s": "dataGroup_y",
+            "name_s": "Banner_o",
+            "text_s": "dataGroup_y A wide image that might be displayed near the top of a page, representing the chain.",
+            "type_b": "A0CD40"
         },
         {
             "dict_i": 104,
-            "group_y": "DA42",
-            "name_s": "GenesisBlock_o",
-            "text_s": "dataGroup_y An Assign Onward Genesis Block. With a signature_o which includes a timei, and other definitions for the chain.",
-            "type_y": "A0B000"
+            "group_s": "dataGroup_y",
+            "name_s": "Image_o",
+            "text_s": "dataGroup_y A more detailed image representing the chain.",
+            "type_b": "A0CD60"
         },
         {
             "dict_i": 105,
-            "group_y": "DA42",
-            "name_s": "ChainDesc_o",
-            "text_s": "dataGroup_y Chain Description, generally only found in the Genesis Block - descriptive items like name, symbol, number of coins represented by all shares, etc.",
-            "type_y": "A0CD00"
+            "group_s": "dataGroup_y",
+            "name_s": "CfShares_n",
+            "text_s": "dataGroup_y The number of shares recorded in the Genesis block.",
+            "type_b": "A0CF03"
         },
         {
             "dict_i": 106,
-            "group_y": "DA42",
-            "name_s": "ChainFunc_o",
-            "text_s": "dataGroup_y Chain Functional items description, generally only found in the Genesis Block - functional items like number of shares, expiration rates, recording fees, etc.",
-            "type_y": "A0CF00"
+            "group_s": "dataGroup_y",
+            "name_s": "CfCoins_n",
+            "text_s": "dataGroup_y The number of \"coins\" all the shares in this chain represent.",
+            "type_b": "A0CF23"
         },
         {
             "dict_i": 107,
-            "group_y": "DA42",
-            "name_s": "EndChain_o",
-            "text_s": "dataGroup_y Used when reporting the last blocks in a chain, this block is a signal that all known blocks are received. Has a pzzzO and zzzO and timei of when it was reported, but contains no transaction information and will (usually) be discarded when appending new transaction blocks to its parent.",
-            "type_y": "A0EC00"
+            "group_s": "dataGroup_y",
+            "name_s": "CfRecFee_r",
+            "text_s": "dataGroup_y The number of coins per byte charged to record data on this chain (usually 1/a very large number).",
+            "type_b": "A0CF04"
         },
         {
             "dict_i": 108,
-            "group_y": "DA42",
-            "name_s": "Symbol_s",
-            "text_s": "dataGroup_y A short string like ITC representing the chain.",
-            "type_y": "A0CD06"
+            "group_s": "dataGroup_y",
+            "name_s": "ExchAdvert_o",
+            "text_s": "dataGroup_y An exchange advertisement for cross chain exchange swaps (expressed in coins for coins)",
+            "type_b": "AAA000"
         },
         {
             "dict_i": 109,
-            "group_y": "DA42",
-            "name_s": "CdName_s",
-            "text_s": "dataGroup_y A longer string like Itcoin representing the chain.",
-            "type_y": "A0CD26"
+            "group_s": "dataGroup_y",
+            "name_s": "Proposal_o",
+            "text_s": "dataGroup_y A share swap proposal",
+            "type_b": "AAA020"
         },
         {
             "dict_i": 110,
-            "group_y": "DA42",
-            "name_s": "Tagline_s",
-            "text_s": "dataGroup_y A brief sentence like \"The greatest blockchain ever\" describing the chain.",
-            "type_y": "A0CD46"
+            "group_s": "dataGroup_y",
+            "name_s": "Offer_o",
+            "text_s": "dataGroup_y A share swap offer",
+            "type_b": "AAA040"
         },
         {
             "dict_i": 111,
-            "group_y": "DA42",
-            "name_s": "Description_s",
-            "text_s": "dataGroup_y A paragraph (say 1000-ish characters) describing the chain.",
-            "type_y": "A0CD66"
+            "group_s": "dataGroup_y",
+            "name_s": "Acceptance_o",
+            "text_s": "dataGroup_y A share swap acceptance of offer",
+            "type_b": "AAA060"
         },
         {
             "dict_i": 112,
-            "group_y": "DA42",
-            "name_s": "Icon_o",
-            "text_s": "dataGroup_y A square-ish image that looks good small, representing the chain.",
-            "type_y": "A0CD20"
+            "group_s": "dataGroup_y",
+            "name_s": "Cancellation_o",
+            "text_s": "dataGroup_y A share swap notice of cancellation (for cause, usually time expiration)",
+            "type_b": "AAAF00"
         },
         {
             "dict_i": 113,
-            "group_y": "DA42",
-            "name_s": "Banner_o",
-            "text_s": "dataGroup_y A wide image that might be displayed near the top of a page, representing the chain.",
-            "type_y": "A0CD40"
+            "group_s": "dataGroup_y",
+            "name_s": "Identity_o",
+            "text_s": "dataGroup_y A cross chain identity, may be tied to share ownership but carries its own key pair",
+            "type_b": "A100"
         },
         {
             "dict_i": 114,
-            "group_y": "DA42",
-            "name_s": "Image_o",
-            "text_s": "dataGroup_y A more detailed image representing the chain.",
-            "type_y": "A0CD60"
+            "group_s": "dataGroup_y",
+            "name_s": "NineCode_z",
+            "text_s": "dataGroup_y A test code to check a 9 byte ricey code",
+            "type_b": "81808080808080800F"
         },
         {
             "dict_i": 115,
-            "group_y": "DA42",
-            "name_s": "CfShares_n",
-            "text_s": "dataGroup_y The number of shares recorded in the Genesis block.",
-            "type_y": "A0CF03"
-        },
-        {
-            "dict_i": 116,
-            "group_y": "DA42",
-            "name_s": "CfCoins_n",
-            "text_s": "dataGroup_y The number of \"coins\" all the shares in this chain represent.",
-            "type_y": "A0CF23"
-        },
-        {
-            "dict_i": 117,
-            "group_y": "DA42",
-            "name_s": "CfRecFee_r",
-            "text_s": "dataGroup_y The number of coins per byte charged to record data on this chain (usually 1/a very large number).",
-            "type_y": "A0CF04"
-        },
-        {
-            "dict_i": 118,
-            "group_y": "DA42",
-            "name_s": "ExchAdvert_o",
-            "text_s": "dataGroup_y An exchange advertisement for cross chain exchange swaps (expressed in coins for coins)",
-            "type_y": "AAA000"
-        },
-        {
-            "dict_i": 119,
-            "group_y": "DA42",
-            "name_s": "Proposal_o",
-            "text_s": "dataGroup_y A share swap proposal",
-            "type_y": "AAA020"
-        },
-        {
-            "dict_i": 120,
-            "group_y": "DA42",
-            "name_s": "Offer_o",
-            "text_s": "dataGroup_y A share swap offer",
-            "type_y": "AAA040"
-        },
-        {
-            "dict_i": 121,
-            "group_y": "DA42",
-            "name_s": "Acceptance_o",
-            "text_s": "dataGroup_y A share swap acceptance of offer",
-            "type_y": "AAA060"
-        },
-        {
-            "dict_i": 122,
-            "group_y": "DA42",
-            "name_s": "Cancellation_o",
-            "text_s": "dataGroup_y A share swap notice of cancellation (for cause, usually time expiration)",
-            "type_y": "AAAF00"
-        },
-        {
-            "dict_i": 123,
-            "group_y": "DA42",
-            "name_s": "Identity_o",
-            "text_s": "dataGroup_y A cross chain identity, may be tied to share ownership but carries its own key pair",
-            "type_y": "A100"
-        },
-        {
-            "dict_i": 124,
-            "group_y": "DA42",
-            "name_s": "NineCode_z",
-            "text_s": "dataGroup_y A test code to check a 9 byte ricey code",
-            "type_y": "81808080808080800F"
-        },
-        {
-            "dict_i": 125,
-            "group_y": "DA42",
+            "group_s": "dataGroup_y",
             "name_s": "MaxiCode_z",
             "text_s": "dataGroup_y A test code to check a 9 byte ricey code",
-            "type_y": "FFFFFFFFFFFFFFFF6F"
+            "type_b": "FFFFFFFFFFFFFFFF6F"
         }
     ],
     "riceyTypes_O": [
@@ -888,109 +818,109 @@
             "code_s": "o",
             "name_s": "OBJECT",
             "text_s": "in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object",
-            "type_y": "00"
+            "type_b": "00"
         },
         {
             "code_s": "i",
             "name_s": "INT64",
             "text_s": "64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)",
-            "type_y": "01"
+            "type_b": "01"
         },
         {
             "code_s": "y",
             "name_s": "RCODE",
             "text_s": "Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.",
-            "type_y": "02"
+            "type_b": "02"
         },
         {
             "code_s": "n",
             "name_s": "MPZ",
             "text_s": "libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values",
-            "type_y": "03"
+            "type_b": "03"
         },
         {
             "code_s": "r",
             "name_s": "MPQ",
             "text_s": "libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP",
-            "type_y": "04"
+            "type_b": "04"
         },
         {
             "code_s": "b",
             "name_s": "BYTEARRAY",
             "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
-            "type_y": "05"
+            "type_b": "05"
         },
         {
             "code_s": "s",
             "name_s": "STRING",
             "text_s": "UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator",
-            "type_y": "06"
+            "type_b": "06"
         },
         {
             "code_s": "z",
             "name_s": "NULL",
             "text_s": "A null block value type, used as an error flag ",
-            "type_y": "0F"
+            "type_b": "0F"
         },
         {
             "code_s": "O",
             "name_s": "OBJECT_ARRAY",
             "text_s": "array of zero or more objects encased in []",
-            "type_y": "10"
+            "type_b": "10"
         },
         {
             "code_s": "I",
             "name_s": "INT64_ARRAY",
             "text_s": "array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson",
-            "type_y": "11"
+            "type_b": "11"
         },
         {
             "code_s": "Y",
             "name_s": "RCODE_ARRAY",
             "text_s": "array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson",
-            "type_y": "12"
+            "type_b": "12"
         },
         {
             "code_s": "N",
             "name_s": "MPZ_ARRAY",
             "text_s": "array of zero or more libGMP signed integers stored as described above",
-            "type_y": "13"
+            "type_b": "13"
         },
         {
             "code_s": "R",
             "name_s": "MPQ_ARRAY",
             "text_s": "array of zero or more libGMP rational fractions stored as described above",
-            "type_y": "14"
+            "type_b": "14"
         },
         {
             "code_s": "B",
             "name_s": "BYTEARRAY_ARRAY",
             "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
-            "type_y": "15"
+            "type_b": "15"
         },
         {
             "code_s": "S",
             "name_s": "STRING_ARRAY",
             "text_s": "array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator",
-            "type_y": "16"
+            "type_b": "16"
         },
         {
             "code_s": "*",
             "name_s": "ARRAY",
             "text_s": "this bit is always set in array types",
-            "type_y": "10"
+            "type_b": "10"
         },
         {
             "code_s": "*",
             "name_s": "TYPEMASK",
             "text_s": "used to get the contained value type out of an array type ",
-            "type_y": "0F"
+            "type_b": "0F"
         },
         {
             "code_s": "*",
             "name_s": "OBTYPEMASK",
             "text_s": "used to get the contained value type out of an object type",
-            "type_y": "1F"
+            "type_b": "1F"
         }
     ]
 }

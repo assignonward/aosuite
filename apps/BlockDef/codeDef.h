@@ -42,21 +42,11 @@
 #define RDT_TYPEMASK        0x0F // * - used to get the contained value type out of an array type 
 #define RDT_OBTYPEMASK      0x1F // * - used to get the contained value type out of an object type
 
-#define RCD_group_y                                11522 // groupDefGroup_y Identifies what group a definition belongs to
-#define RCD_groupDefGroup_y                        11554 // groupDefGroup_y These codes are used to identify what group a code belongs to
-#define RCD_dataGroup_y                            11586 // groupDefGroup_y Generic data group - many items simply not yet classified
-#define RCD_protocolIdGroup_y                      11618 // groupDefGroup_y These codes identify established protocols
-#define RCD_protocolActorGroup_y                   11650 // groupDefGroup_y These codes identify actors within protocols
-#define RCD_algorithmIdGroup_y                     11682 // groupDefGroup_y These codes identify algorithms
-#define RCD_structNavGroup_y                       11714 // groupDefGroup_y These codes direct protocol operations to operands
-#define RCD_dictionaryGroup_y                      11746 // groupDefGroup_y These codes are used specifically for dictionary containers
-#define RCD_chainGroup_y                           11778 // groupDefGroup_y These codes are used for chain structure items
-#define RCD_operationGroup_y                       11810 // groupDefGroup_y These codes define calculation/operation types
-#define RCD_protocolDefGroup_y                     11842 // groupDefGroup_y These codes are used in protocol definition
-#define RCD_serviceDescriptors_y                   11874 // groupDefGroup_y These codes are used for service requests and responses
 #define RCD_riceyTypes_O                         1336208 // dictionaryGroup_y An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
 #define RCD_riceyCodes_O                         1336240 // dictionaryGroup_y An array object which contains the description, name and ricey code for each defined ricey code in the system.
 #define RCD_dict_i                               1336193 // dictionaryGroup_y Index for the order in which codes appear in this (dictionary) list
+#define RCD_type_b                               1336197 // dictionaryGroup_y In the dictionary definition context, _y is not defined yet, use this instead of type_y
+#define RCD_group_s                              1336198 // dictionaryGroup_y A logical collecting of code names, can become a folder structure if necessary.
 #define RCD_ObTerm_o                                   0 // dataGroup_y Object terminator, indicates no more items in the object in bsonish lists
 #define RCD_int64_i                                    1 // dataGroup_y Generic signed int64, use depends on context.
 #define RCD_type_y                                     2 // dataGroup_y Identifies an algorithm type for hash or crypto key, or other types depending on context

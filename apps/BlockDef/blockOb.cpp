@@ -525,9 +525,8 @@ BsonSerial KeyValueArray::bsonish() const
       elementCount++;
   b.append( intToRice( elementCount ) );
   for ( qint32 i = 0; i < m_values.size(); i++ )
-    { ValueBase *vp = m_values.at(i);
-      if ( vp != nullptr )
-        b.append( vp->bsonish() );
+    { if ( m_values.at(i) != nullptr )
+        b.append( m_values.at(i)->bsonish() );
     }
   return b;
 }
@@ -563,7 +562,8 @@ qint32  KeyValueArray::setBsonish( const BsonSerial &b )
       len = vbo->setBsonish( b.mid(i) );
       if ( len < 1 )
         { delete vbo; qWarning( "problem reading element" ); return -1; }
-      append( vbo );
+      if ( !append( vbo ) )
+        { delete vbo; qWarning( "problem appending element" ); return -1; }
       i += len;
       elementCount--;
     }
@@ -756,7 +756,7 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
           case RDT_STRING:    if (  ( ((BlockValueString    *)vt)->value() !=  ((BlockValueString    *)vv)->value() ) ) return false; break;
           case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;
-          case RDT_OBJECT_ARRAY:
+          case RDT_OBJECT_ARRAY:  // TODO: a lot.
 
           case RDT_INT64_ARRAY:     if (  ( ((BlockArrayInt64     *)vt)->value() !=  ((BlockArrayInt64     *)vv)->value() ) ) return false; break;
 //        case RDT_MPZ_ARRAY:       if (  ( ((BlockArrayMPZ       *)vt)->value() !=  ((BlockArrayMPZ       *)vv)->value() ) ) return false; break;
@@ -764,7 +764,7 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_RCODE_ARRAY:     if (  ( ((BlockArrayRicey     *)vt)->value() !=  ((BlockArrayRicey     *)vv)->value() ) ) return false; break;
           case RDT_STRING_ARRAY:    if (  ( ((BlockArrayString    *)vt)->value() !=  ((BlockArrayString    *)vv)->value() ) ) return false; break;
           case RDT_BYTEARRAY_ARRAY: if (  ( ((BlockArrayByteArray *)vt)->value() !=  ((BlockArrayByteArray *)vv)->value() ) ) return false; break;
-          default: qWarning( "unhandled type %s", dict.nameFromCode( k ).data() ); return false;
+          default: Utf8String n = dict.nameFromCode( k ); qWarning( "unhandled type %s", n.data() ); return false;
         }
     }
   return true;

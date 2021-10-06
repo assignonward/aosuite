@@ -151,13 +151,17 @@ void MainWindow::on_readJson_clicked()
         qWarning( "code %d is not an object", i );
        else
         { QJsonObject cao = jv.toObject();
-          QString name,typ,desc;
+          QString name,typ,group,desc;
           if ( cao.contains( "name_s" ) )
             name =       cao["name_s"].toString();
+          if ( cao.contains( "group_s" ) )
+            group =      cao["group_s"].toString();
           if ( cao.contains( "text_s" ) )
-            desc =       cao["text_s"].toString();
-          if ( cao.contains( "type_y" ) )
-            typ =        cao["type_y"].toString();
+            desc =       cao["text_s"].toString().trimmed();
+          if ( cao.contains( "type_b" ) )
+            typ =        cao["type_b"].toString();
+          if ( !desc.startsWith( group ) )
+            desc.prepend( group.trimmed()+" " );
           codes.append( QString( "%1 0x%2 // %3\n").arg( name, typ, desc ) );
         }
     }
@@ -180,8 +184,8 @@ void MainWindow::on_readJson_clicked()
             name =       tao["name_s"].toString();
           if ( tao.contains( "text_s" ) )
             desc =       tao["text_s"].toString();
-          if ( tao.contains( "type_y" ) )
-            typ =        tao["type_y"].toString();
+          if ( tao.contains( "type_b" ) )
+            typ =        tao["type_b"].toString();
           types.append( QString( "%1 0x%2 // %3 - %4\n").arg( name, typ, code, desc ) );
         }
     }
@@ -452,14 +456,18 @@ QJsonValue MainWindow::riceyLineToJson( QString line, qint32 index )
        else if ( !words.at(1).startsWith( "0x" ) )
         { v.append( QString( "ricey line '%1' code '%2' doesn't start with 0x" ).arg( line, words.at(1) ) ); }
        else
-        rlo.insert( "type_y", words.at(1).mid(2) );
+        { rlo.insert( "type_b", words.at(1).mid(2) );
+        }
       if ( words.at(2) != "//" )
         { v.append( QString( "ricey line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
        else
-        { rlo.insert( "text_s", line.mid( line.indexOf("//") + 3 ) ); }
+        { if ( words.size() == 3 )
+            rlo.insert( "text_s", line.mid( line.indexOf("//") + 3 ) );
+           else
+            rlo.insert( "text_s", line.mid( line.indexOf("//") + 4 + words.at(3).size() ) );
+        }
       if ( words.size() > 3 )
-        if ( riceyCodes.contains( words.at(3) ) )
-          { rlo.insert( "group_y", riceyCodes[words.at(3)].mid(2) ); }
+        rlo.insert( "group_s", words.at(3) );
       if ( index >= 0 )
         rlo.insert( "dict_i", index );
     }
@@ -478,7 +486,8 @@ QJsonValue MainWindow::notesLineToJson( QString line )
        else if ( !words.at(1).startsWith( "0x" ) )
         { v.append( QString( "notes line '%1' code '%2' doesn't start with 0x" ).arg( line, words.at(1) ) ); }
        else
-        nlo.insert( "type_y", words.at(1).mid(2) );
+        { nlo.insert( "type_b", words.at(1).mid(2) );
+        }
       if ( words.at(2) != "//" )
         { v.append( QString( "notes line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
        else
@@ -546,7 +555,9 @@ QString MainWindow::codesLineToHtml( QString line )
       if ( words.at(2) != "//" )
         { v.append( QString( "codes line '%1' doesn't have // as 3rd word" ).arg( line ) ); }
        else
-        { html.append( line.mid( line.indexOf("//") + 2 ) ); }
+        { QString desc = line.mid( line.indexOf("//") + 2 );
+          html.append( desc );
+        }
     }
   html.append( "</font><br/>" );
   return html;
