@@ -23,24 +23,24 @@
 #ifndef CODEDEF_H
 #define CODEDEF_H
 
-#define RDT_NULL            0x00 // z - A null block value type, used as an error flag 
-#define RDT_MPZ             0x01 // n - libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values
-#define RDT_MPQ             0x02 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
-#define RDT_STRING          0x05 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
-#define RDT_INT64           0x06 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
-#define RDT_BYTEARRAY       0x0B // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-#define RDT_RCODE           0x0C // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
-#define RDT_OBJECT          0x0F // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
-#define RDT_MPZ_ARRAY       0x11 // N - array of zero or more libGMP signed integers stored as described above
-#define RDT_MPQ_ARRAY       0x12 // R - array of zero or more libGMP rational fractions stored as described above
-#define RDT_STRING_ARRAY    0x15 // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
-#define RDT_INT64_ARRAY     0x16 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
+#define RDT_NULL 0x00 // z - A null block value type, used as an error flag 
+#define RDT_MPZ 0x01 // n - libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values
+#define RDT_MPQ 0x02 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
+#define RDT_STRING 0x05 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
+#define RDT_INT64 0x06 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
+#define RDT_BYTEARRAY 0x0B // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
+#define RDT_RCODE 0x0C // y - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
+#define RDT_OBJECT 0x0F // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
+#define RDT_MPZ_ARRAY 0x11 // N - array of zero or more libGMP signed integers stored as described above
+#define RDT_MPQ_ARRAY 0x12 // R - array of zero or more libGMP rational fractions stored as described above
+#define RDT_STRING_ARRAY 0x15 // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
+#define RDT_INT64_ARRAY 0x16 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
 #define RDT_BYTEARRAY_ARRAY 0x1B // B - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
-#define RDT_RCODE_ARRAY     0x1C // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
-#define RDT_OBJECT_ARRAY    0x1F // O - array of zero or more objects encased in []
-#define RDT_ARRAY           0x10 // * - this bit is always set in array types
-#define RDT_TYPEMASK        0x0F // * - used to get the contained value type out of an array type 
-#define RDT_OBTYPEMASK      0x1F // * - used to get the contained value type out of an object type
+#define RDT_RCODE_ARRAY 0x1C // Y - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
+#define RDT_OBJECT_ARRAY 0x1F // O - array of zero or more objects encased in []
+#define RDT_ARRAY 0x10 // * - this bit is always set in array types
+#define RDT_TYPEMASK 0x0F // * - used to get the contained value type out of an array type 
+#define RDT_OBTYPEMASK 0x1F // * - used to get the contained value type out of an object type
 
 #define RCD_riceyTypes_O                         1336223 // dictionaryGroup An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
 #define RCD_riceyCodes_O                         1336255 // dictionaryGroup An array object which contains the description, name and ricey code for each defined ricey code in the system.
@@ -58,7 +58,7 @@
 #define RCD_mpqArray_R                                18 // dataGroup A generic array of MPQ elements
 #define RCD_stringArray_S                             21 // dataGroup A generic array of string elements
 #define RCD_int64Array_I                              22 // dataGroup A generic array of int64 elements
-#define RCD_byteArrayArray_B                          27 // dataGroup A generic array of byte array element 
+#define RCD_byteArrayArray_B                          27 // dataGroup A generic array of byte array element
 #define RCD_riceyArray_Y                              28 // dataGroup A generic array of Ricey elements
 #define RCD_objectArray_O                             31 // dataGroup A generic array of object elements
 #define RCD_AOShares_n                                33 // dataGroup A quantity of shares - meaning depends on context
@@ -67,7 +67,7 @@
 #define RCD_desc_s                                    69 // dataGroup Description of the current object, specific use depends on context
 #define RCD_code_s                                   101 // dataGroup Code as a string, use depends on context, often a key type
 #define RCD_userId_b                                  43 // dataGroup Unique user identifier, possibly the 256bit hash of a userID_o that has all kinds of stuff in it
-#define RCD_chainBlock_o                            9615 // chainGroup An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) 
+#define RCD_chainBlock_o                            9615 // chainGroup An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s)
 #define RCD_hashedOb_o                                47 // chainGroup An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.
 #define RCD_hash_o                                   111 // chainGroup Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
 #define RCD_parentHash_O                             127 // chainGroup Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.
@@ -103,11 +103,11 @@
 #define RCD_actorWriterServer_y                   730028 // protocolActorGroup Actor definition: the actor who wants to retrieve a record (from a blockchain)
 #define RCD_actorReaderClient_y                   730060 // protocolActorGroup Actor definition: the actor who handles requests to create records (in a blockchain)
 #define RCD_actorReaderServer_y                   730092 // protocolActorGroup Actor definition: the actor who handles requests to retrieve records (from a blockchain)
-#define RCD_ProtocolList_O                          4223 // protocolDefGroup An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle 
-#define RCD_ProtocolDef_o                           4207 // protocolDefGroup An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) 
+#define RCD_ProtocolList_O                          4223 // protocolDefGroup An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle
+#define RCD_ProtocolDef_o                           4207 // protocolDefGroup An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
 #define RCD_ProtocolSig_o                           4175 // protocolDefGroup A signature on an Assign Onward Protocol Definition, indicating the protocol is "approved" by the signer
 #define RCD_ItemDefList_O                           4159 // protocolDefGroup A list of Assign Onward Protocol Item Definitions
-#define RCD_ItemDef_o                               4143 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) 
+#define RCD_ItemDef_o                               4143 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
 #define RCD_ActorDefList_O                          4127 // protocolDefGroup A list of Actor definitions, a valid protocol definition should contain one or more actor definitions
 #define RCD_ActorDef_o                              4111 // protocolDefGroup A single Actor definition
 #define RCD_OutgoingItemsList_O                     4351 // protocolDefGroup A list items this actor publishes

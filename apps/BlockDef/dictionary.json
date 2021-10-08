@@ -99,7 +99,7 @@
         {
             "group_s": "dataGroup",
             "name_s": "byteArrayArray_B",
-            "text_s": "A generic array of byte array element ",
+            "text_s": "A generic array of byte array element",
             "type_b": "1B"
         },
         {
@@ -153,7 +153,7 @@
         {
             "group_s": "chainGroup",
             "name_s": "chainBlock_o",
-            "text_s": "An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s) ",
+            "text_s": "An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s)",
             "type_b": "CB0F"
         },
         {
@@ -369,13 +369,13 @@
         {
             "group_s": "protocolDefGroup",
             "name_s": "ProtocolList_O",
-            "text_s": "An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle ",
+            "text_s": "An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle",
             "type_b": "A07F"
         },
         {
             "group_s": "protocolDefGroup",
             "name_s": "ProtocolDef_o",
-            "text_s": "An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "text_s": "An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)",
             "type_b": "A06F"
         },
         {
@@ -393,7 +393,7 @@
         {
             "group_s": "protocolDefGroup",
             "name_s": "ItemDef_o",
-            "text_s": "An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.) ",
+            "text_s": "An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)",
             "type_b": "A02F"
         },
         {
