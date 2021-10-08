@@ -97,10 +97,7 @@ void  Dictionary::interpret( const JsonSerial &js )
                     qWarning( "riceyCodes_O at %d has no name_s element.", i );
                    else
                     { ciByName.insert( co["name_s"].toString().toUtf8(), i );
-                      if ( !co.contains("dict_i") )
-                        qWarning( "riceyCodes_O at %d has no dict_i element.", i );
-                       else
-                        diNames.insert( co["dict_i"].toInt(), co["name_s"].toString().toUtf8() );
+                       diNames.insert( i, co["name_s"].toString().toUtf8() );
                     }
                   if ( !co.contains("type_b") )
                     qWarning( "riceyCodes_O at %d has no type_b element.", i );

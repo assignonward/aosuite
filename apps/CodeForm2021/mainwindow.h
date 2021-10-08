@@ -47,7 +47,7 @@ public:
        void  translateRicey();
        void  translateNotes();
        void  translateToJson();
- QJsonValue  riceyLineToJson( QString, qint32 index = -1 );
+ QJsonValue  riceyLineToJson( QString );
  QJsonValue  notesLineToJson( QString );
     QString  codesLineToHtml( QString );
     QString  notesLineToHtml( QString, int );
