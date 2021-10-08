@@ -478,12 +478,12 @@ BsonSerial ValueBase::bsonishNull( qint8 keyType ) const
       case RDT_INT64:     s << (qint64)0;                    break;
       case RDT_MPZ:       s << (quint8)0x0E;                 break;
       case RDT_MPQ:       s << (quint8)0x0E << (quint8)0x1E; break;
-      case RDT_RCODE:     s << intToRice( RCD_ObTerm_o );    break;
+      case RDT_RCODE:     s << intToRice( RCD_null_z );      break;
       case RDT_STRING:    s << intToRice( 0 );               break;
-      case RDT_BYTEARRAY: s << (qint32)0;                    break;
+      case RDT_BYTEARRAY: s << intToRice( 0 );               break;
       default:
       if (( keyType & RDT_ARRAY ) == RDT_ARRAY )
-        { s << intToRice( RCD_ObTerm_o ) << intToRice( 0 ); }
+        { s << intToRice( RCD_ob_o ) << intToRice( 0 ); }
        else
         qWarning( "unrecognized keyType in ValueBase::bsonishNull" );
     }

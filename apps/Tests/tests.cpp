@@ -392,10 +392,10 @@ bool Tests::testRicey( QString &msg, qint32 &tc )
     { msg.append( "FAIL type() test.\n" ); pass = false; }
 
   RiceyInt tv;
-  tv = RCD_ObTerm_o       ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_ob_o           ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_int64_i        ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_code_s         ; pass &= testRicey( v, tv, tc, msg );
-  tv = RCD_separatedItem_o; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_chainBlock_o   ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_ProtocolDAO0_y ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_itemRelAddr_Y  ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_RangeBounds_O  ; pass &= testRicey( v, tv, tc, msg );
@@ -1034,10 +1034,10 @@ bool Tests::testRiceyA( QString &msg, qint32 &tc )
 
   QList<RiceyInt> tv;
                                     pass &= testRiceyA( v, tv, tc, msg ); // Empty Array test
-  tv.append( RCD_ObTerm_o        ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_ob_o            ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_int64_i         ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_code_s          ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append( RCD_separatedItem_o ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_chainBlock_o    ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_ProtocolDAO0_y  ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_itemRelAddr_Y   ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_RangeBounds_O   ); pass &= testRiceyA( v, tv, tc, msg );
@@ -1046,7 +1046,7 @@ bool Tests::testRiceyA( QString &msg, qint32 &tc )
   tv.append( RCD_MaxiCode_z      ); pass &= testRiceyA( v, tv, tc, msg );
   tv.clear();
   for ( qint32 i = 1; i < 1100; i++ )
-    tv.append(RCD_ObTerm_o);
+    tv.append(RCD_ob_o);
                                    pass &= testRiceyA( v, tv, tc, msg );
   tv.clear();
   for ( qint32 i = 1; i < 1101; i++ )

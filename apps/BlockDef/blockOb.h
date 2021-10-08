@@ -73,7 +73,7 @@ class BlockValueNull : public ValueBase
              ~BlockValueNull() {}
         void  clear()         {}
       quint8  type()    const { return RDT_NULL; }
-  BsonSerial  bsonish() const { return intToRice(RCD_ObTerm_o); }
+  BsonSerial  bsonish() const { return BsonSerial(); }
   JsonSerial  json()    const { QString s = "NULL"; return s.toUtf8(); }
       qint32  setBsonish( const BsonSerial &b ) { (void)b; return -1; }  // cannot set a value to a BlockValueNull
         bool  setJson   ( const JsonSerial &j ) { (void)j; return false; }
