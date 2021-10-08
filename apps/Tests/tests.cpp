@@ -506,10 +506,9 @@ bool Tests::testMPZ( BlockValueMPZ &v, const MP_INT &tv, qint32 &tc, QString &ms
   v.set( v2 );
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
-    { msg.append( QString( "FAIL json encode/decode test %4 %1 %2 %3\n" )
+    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" )
                      .arg(QString::fromUtf8(BlockValueMPZ::toStr(tv)))
-                     .arg(ok).arg( QString::fromUtf8(j) )
-                     .arg( v.valueStr() ) ); pass = false; }
+                     .arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
 
   return pass;
 }
@@ -603,10 +602,9 @@ bool Tests::testMPQ( BlockValueMPQ &v, const MP_RAT &tv, qint32 &tc, QString &ms
   v.set( v2 );
   bool ok = v.setJson( j );
   if ( ok && ( v == tv )) tc++; else
-    { msg.append( QString( "FAIL json encode/decode test %4 %1 %2 %3\n" )
+    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" )
                      .arg(QString::fromUtf8(BlockValueMPQ::toStr(tv)))
-                     .arg(ok).arg( QString::fromUtf8(j) )
-                     .arg( v.valueStr() ) ); pass = false; }
+                     .arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
 
   return pass;
 }
@@ -644,10 +642,10 @@ bool Tests::testString( BlockValueString &v, const Utf8String &tv, qint32 &tc, Q
   BsonSerial b = v.bsonish();
   v.set( "?" );
   if  ( v.value() != tv ) tc++; else
-    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv) ).arg( QString::fromUtf8( v.value() ) ) ); pass = false; }
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv), QString::fromUtf8( v.value() ) ) ); pass = false; }
   v.setBsonish( b );
   if ( v.value() == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv)).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv), QString::fromUtf8(b.toHex()) ) ); pass = false; }
   if ( b == v.bsonish() ) tc++; else
     { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
@@ -656,7 +654,7 @@ bool Tests::testString( BlockValueString &v, const Utf8String &tv, qint32 &tc, Q
   JsonSerial j = v.json();
   v.set( "x" );
   if  ( v.value() != tv ) tc++; else
-    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv) ).arg( QString::fromUtf8( v.value() ) ) ); pass = false; }
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv), QString::fromUtf8( v.value() ) ) ); pass = false; }
   bool ok = v.setJson( j );
   if ( ok && ( v.value() == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(QString::fromUtf8(tv)).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }

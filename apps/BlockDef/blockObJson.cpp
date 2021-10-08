@@ -221,6 +221,22 @@ JsonSerial  KeyValuePair::json() const
   return j;
 }
 
+JsonSerial  BlockValueArray::json() const
+{ JsonSerial j = " [ ";
+  bool wroteOne = false;
+  for ( qint32 i = 0; i < m_values.size(); i++ )
+    { ValueBase *vp = m_values.at(i);
+      if ( vp != nullptr )
+        { j.append( vp->json() + " , \n" );
+          wroteOne = true;
+        }
+    }
+  if ( wroteOne )
+    j = j.mid( 0, j.size() - 3 );
+  j.append( "] \n" );
+  return j;
+}
+
 /**
  * @brief KeyValueArray::json
  * @return json array object with the key and the whole array
@@ -243,6 +259,74 @@ JsonSerial  KeyValueArray::json() const
     j = j.mid( 0, j.size() - 3 );
   j.append( "] \n" );
   return j;
+}
+
+bool  BlockValueArray::setJson( const JsonSerial &j )
+{ QJsonDocument jd = QJsonDocument::fromJson( "{ \"ob\": "+j+" }" );
+  if ( !jd.isObject() )
+    { qWarning( "BlockValueArray::document is not a JsonObject '%s'",j.data() ); return false; }
+  QJsonObject jo = jd.object();
+  if ( jo.keys().size() != 1 )
+    { qWarning( "object has %lld keys (should be 1)", jo.keys().size() ); return false; }
+
+  QVector<QString> keys = jo.keys();
+  Utf8String obKey = keys.at(0).toUtf8();
+  if ( obKey != "ob" )
+    { qWarning( "failed to recover array object" ); return false; }
+  QJsonValue jv = jo.value( "ob" );
+
+  if ( !jv.isArray() )
+    { qWarning( "value is not an array" ); return false; }
+  clear();
+  QJsonArray ja = jv.toArray();
+  if ( ja.size() < 1 )  // Empty?
+    return true;        // We're done.
+  if ( type() == RDT_OBJECT_ARRAY )
+    { for ( qint32 i = 0; i < ja.size(); i++ )
+        { QJsonValue jv = ja.at(i);
+          if ( !jv.isObject() )
+            qWarning( "array element is not object in KeyValueArray::setJson() type OBJECT_ARRAY" );
+           else
+            { QJsonObject jo = jv.toObject();
+              QJsonDocument ed( jo );
+              BlockValueObject *bvo = new BlockValueObject( this, ed.toJson() );
+              append( bvo ); bvo->deleteLater();
+            }
+        }
+    }
+   else
+    { QVariantList vl = ja.toVariantList();
+      Utf8String vt;
+      foreach ( QVariant v, vl )
+        { ValueBase *vbo = nullptr;
+          switch ( type() )
+            { case RDT_RCODE_ARRAY:
+                vt = removeQuotes( v.toString().toUtf8() );
+                if ( dict.codesContainName( vt ) )
+                  { vbo = new BlockValueRiceyCode( dict.codeFromCodeName( vt ), this );
+                    append( vbo ); vbo->deleteLater();
+                  }
+                 else
+                  qWarning( "dictionary does not contain %s", vt.data() );
+                break;
+              case RDT_INT64_ARRAY:     vbo = new BlockValueInt64( (qint64)v.toLongLong(), this ); break;
+              case RDT_STRING_ARRAY:    vbo = new BlockValueString( v.toString().toUtf8(), this ); break; // TODO: encode using the same escapes as in the BlockString.json() function
+              case RDT_BYTEARRAY_ARRAY: vbo = new BlockValueByteArray( QByteArray::fromHex( v.toString().toUtf8() ), this ); break;
+              case RDT_MPZ_ARRAY:       vbo = new BlockValueMPZ( v.toString().toUtf8(), this );    break;
+              case RDT_MPQ_ARRAY:       vbo = new BlockValueMPQ( v.toString().toUtf8(), this );    break;
+              default:
+                qWarning( "unhandled type in KeyValueArray::setJson()" );
+                return false;
+            } // switch ( type() )
+          if ( vbo )
+            { append( vbo );
+              vbo->deleteLater();
+            }
+           else
+            qWarning( "unexpected nullptr in vbo" );
+        } // foreach ( QVariant v, vl )
+    }
+  return true;
 }
 
 bool  KeyValueArray::setJson( const JsonSerial &j )
