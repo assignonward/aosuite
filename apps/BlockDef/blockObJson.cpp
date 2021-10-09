@@ -365,18 +365,14 @@ JsonSerial BlockValueObject::json() const
   foreach ( RiceyInt key, keys )
     { ValueBase *vp = m_obMap[key];
       if ( vp != nullptr )
-        { // if ( key & RDT_ARRAY ) // FLAGAK
-          //  j.append( vp->json() + " ,\n" );
-          //  else
-            { if ( !dict.codesContainCode(key) )
-                { j.append( " \""+intToRice(key).toHex()+"\" <!-- unknown key --> : " ); qWarning( "json Object unknown key" ); } // TODO: type extend key with _X
-               else
-                j.append( " \""+dict.nameFromCode(key)+"\": " );
-              if ( vp != nullptr )
-                j.append( vp->json() + " ,\n" );
-               else
-                { j.append( "NULL ,\n" ); qWarning( "json Object conversion encountered NULL" ); }
-            }
+        { if ( !dict.codesContainCode(key) )
+            { j.append( " \""+intToRice(key).toHex()+"\" <!-- unknown key --> : " ); qWarning( "json Object unknown key" ); } // TODO: type extend key with _X
+           else
+            j.append( " \""+dict.nameFromCode(key)+"\": " );
+          if ( vp != nullptr )
+            j.append( vp->json() + " ,\n" );
+           else
+            { j.append( "NULL ,\n" ); qWarning( "json Object conversion encountered NULL" ); }
           wroteOne = true;
         }
     }
@@ -478,7 +474,6 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
       case JDT_ARRAY:
         vbo = newValue( k, parent );
         jd.setArray( jv.toArray() );
-       // if ( !vbo->setJson( " \""+dict.nameFromCode(k)+"\": "+jd.toJson() ) ) FLAGAK
         if ( !vbo->setJson( jd.toJson() ) )
           { vbo->deleteLater();
             qWarning( "problem setting array from json" );

@@ -715,15 +715,9 @@ BsonSerial BlockValueObject::bsonish() const
 { QList<RiceyInt> keys = m_obMap.keys();
   BsonSerial b = intToRice( m_obMap.size() );
   foreach ( RiceyInt key, keys )
-    { if ( m_obMap[key] != nullptr )
-        { // if ( ( m_obMap[key]->type() & RDT_ARRAY ) == 0 )  FLAGAK
-          b.append( intToRice(key) ); // Arrays put out their own keys... annoying.
-          b.append( m_obMap[key]->bsonish() );
-        }
-       else
-        { b.append( intToRice(key) );
-          b.append( bsonishDefaultValue( m_obMap[key]->type() ) );
-        }
+    { b.append( intToRice(key) );
+      b.append( ( m_obMap[key] != nullptr ) ? m_obMap[key]->bsonish() :
+                                              bsonishDefaultValue( m_obMap[key]->type() ) );
     }
   return b;
 }
@@ -751,8 +745,7 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
       RiceyInt k = riceToInt( b.mid(i), &len, &ok );
       if ( !ok )
         { qWarning( "bad key rice code" ); return -1; }
-      // if ( ( k & RDT_ARRAY ) == 0 ) // FLAGAK
-        i += len; // Arrays expect to re-read their key... annoying.
+      i += len;
       if ( b.size() <= i )
         { qWarning( "object key data missing" ); return -1; }
       ValueBase *vbo = bsonishValueByKey( k, b.mid(i), &len, this );
