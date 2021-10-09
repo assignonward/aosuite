@@ -99,6 +99,7 @@ BlockValueArray &operator= ( const BlockValueArray &v ) { clear(); m_values = v.
            bool  setJson( const JsonSerial & );
            bool  append( ValueBase * );
       ValueBase *at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return m_values.at(n); else return nullptr; }
+           bool  operator==( const BlockValueArray & ) const;
 
 public:
      ValueArray  m_values; // Values in this array
@@ -247,7 +248,7 @@ class BlockValueString : public ValueBase
                BlockValueString( const Utf8String &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
               ~BlockValueString() {}
 static qint32  utf8CharSize( const char *, qint32 );
-  static bool  vaildUtf8( const Utf8String & );
+  static bool  validUtf8( const Utf8String & );
          void  clear()         { m_value.clear(); }
        quint8  type()    const { return RDT_STRING; }
    BsonSerial  bsonish() const;

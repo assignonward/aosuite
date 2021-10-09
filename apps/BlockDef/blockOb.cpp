@@ -112,7 +112,7 @@ ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
   if ( t == RDT_STRING_ARRAY    ) vbo = new BlockValueStringArray( parent );
   if ( t == RDT_BYTEARRAY_ARRAY ) vbo = new BlockValueByteArrayArray( parent );
   if ( vbo == nullptr )
-    qWarning( "unhandled type in ValueBase::newValue" );
+    qWarning( "unhandled type %d in ValueBase::newValue", t );
    else if ( vtc )
     { if (( vtc->type() & RDT_OBTYPEMASK ) != t )
         qWarning( "type mismatch with %d vtc %d ValueBase::newValue", t, vtc->type() & RDT_OBTYPEMASK );
@@ -154,7 +154,7 @@ qint32  KeyValuePair::setBsonish( const BsonSerial &b )
   qint32 i = len;
   ValueBase *vbo = bsonishValueByKey( key(), b.mid(i), &len, this );
   if ( vbo == nullptr )
-    { qWarning( "problem reading value" ); setKey( RCD_null_z ); return -1; }
+    { qWarning( "KeyValuePair::setBsonish() problem reading value" ); setKey( RCD_null_z ); return -1; }
   m_value = vbo;
   return i+len;
 }
@@ -453,7 +453,7 @@ qint32 BlockValueString::utf8CharSize( const char *s, qint32 sz )
  * @param s - string to evaluate
  * @return true if s is a valid and complete string of UTF-8 characters
  */
-bool BlockValueString::vaildUtf8( const Utf8String &s )
+bool BlockValueString::validUtf8( const Utf8String &s )
 { const char *sp = s.data();
   qint32 ssz = s.size();
   qint32 len = 0;
@@ -494,8 +494,8 @@ qint32  BlockValueString::setBsonish( const BsonSerial &b )
       return sz;
     }
   QByteArray string = b.mid(sz, length);
-  if ( !vaildUtf8( string ) )
-    { qWarning( "invalid UTF8" ); return -1; }
+  if ( !validUtf8( string ) )
+    { qWarning( "BlockValueString::setBsonish() invalid UTF8 %s", b.mid(sz, length).toHex().data() ); return -1; }
   set( string );
   return sz+length;
 }
@@ -599,11 +599,13 @@ qint32  BlockValueArray::setBsonish( const BsonSerial &b )
     { if ( b.size() <= i )
         { qWarning( "value data missing" ); return -1; }
       ValueBase *vbo = newValue( type() & RDT_TYPEMASK, this );
+      if ( vbo == nullptr )
+        { qWarning( "BlockValueArray::setBsonish() problem making new value for type: %d", type() ); return -1; }
       len = vbo->setBsonish( b.mid(i) );
       if ( len < 1 )
-        { delete vbo; qWarning( "problem reading element" ); return -1; }
+        { delete vbo; qWarning( "BlockValueArray::setBsonish() problem reading element in setBsonsish %s", b.mid(i).toHex().data() ); return -1; }
       if ( !append( vbo ) )
-        { delete vbo; qWarning( "problem appending element" ); return -1; }
+        { delete vbo; qWarning( "BlockValueArray::setBsonish() problem appending element during append()" ); return -1; }
       i += len;
       elementCount--;
     }
@@ -714,8 +716,8 @@ BsonSerial BlockValueObject::bsonish() const
   BsonSerial b = intToRice( m_obMap.size() );
   foreach ( RiceyInt key, keys )
     { if ( m_obMap[key] != nullptr )
-        { if ( ( m_obMap[key]->type() & RDT_ARRAY ) == 0 )
-            b.append( intToRice(key) ); // Arrays put out their own keys... annoying.
+        { // if ( ( m_obMap[key]->type() & RDT_ARRAY ) == 0 )  FLAGAK
+          b.append( intToRice(key) ); // Arrays put out their own keys... annoying.
           b.append( m_obMap[key]->bsonish() );
         }
        else
@@ -749,13 +751,13 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
       RiceyInt k = riceToInt( b.mid(i), &len, &ok );
       if ( !ok )
         { qWarning( "bad key rice code" ); return -1; }
-      if  ( ( k & RDT_ARRAY ) == 0 )
+      // if ( ( k & RDT_ARRAY ) == 0 ) // FLAGAK
         i += len; // Arrays expect to re-read their key... annoying.
       if ( b.size() <= i )
         { qWarning( "object key data missing" ); return -1; }
       ValueBase *vbo = bsonishValueByKey( k, b.mid(i), &len, this );
       if ( vbo == nullptr )
-        { qWarning( "problem reading bsonish value" ); return -1; }
+        { qWarning( "BlockValueObject::setBsonish() problem reading bsonish value" ); return -1; }
       if ( !insert( k, vbo ) )
         { delete vbo; qWarning( "problem inserting value" ); return -1; }
       i += len;
@@ -786,9 +788,11 @@ ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32
 { if ( l != nullptr )
     *l = -1;
   ValueBase *vbo = newValue( k, parent );
+  if ( vbo == nullptr )
+    { qWarning( "problem making new value for key %d", k ); return nullptr; }
   qint32 len = vbo->setBsonish( b );
   if ( len < 1 )
-    { delete vbo; qWarning( "problem reading value" ); return nullptr; }
+    { delete vbo; qWarning( "ValueBase::bsonishValueByKey() problem reading value" ); return nullptr; }
   if ( l != nullptr )
     *l = len;
   return vbo;
@@ -806,7 +810,7 @@ bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
   if (( k & RDT_OBTYPEMASK ) != v->type() )
     { qWarning( "will not insert mismatched type and value" ); return false; }
   if ( !dict.codesContainCode( k ) )
-    { qWarning( "key not recognized, will not insert." ); return false; }
+    { qWarning( "BlockValueObject::insert(RiceyInt,ValueBase) key %llu not recognized, will not insert.", k ); return false; }
   if ( m_obMap.contains( k ) )
     { qWarning( "type collision, insertion blocked." ); return false; }
   m_obMap.insert( k, v );
@@ -819,7 +823,7 @@ bool  BlockValueObject::insert( KeyValueArray *kva )
   if (( kva->key() & RDT_OBTYPEMASK ) != kva->type() )
     { qWarning( "will not insert mismatched type and value" ); return false; }
   if ( !dict.codesContainCode( kva->key() ) )
-    { qWarning( "key not recognized, will not insert." ); return false; }
+    { qWarning( "BlockValueObject::insert(KeyValueArray) key %llu not recognized, will not insert.", kva->key() ); return false; }
   if ( m_obMap.contains( kva->key() ) )
     { qWarning( "type collision, insertion blocked." ); return false; }
   qWarning( "BlockValueArray not yet implemented... need to before this works." );
@@ -843,6 +847,19 @@ qint32  BlockValueObject::insert( const BlockObjectMap &vl )
         qWarning( "insert Failed" );
     }
   return count;
+}
+
+/**
+ * @brief BlockValueArray::operator == for all array types
+ * @param v - array value to compare
+ * @return true if the two are the same size, type, and value in each element
+ */
+bool  BlockValueArray::operator==( const BlockValueArray &v ) const
+{ if ( v.size() != size() ) return false;
+  if ( v.type() != type() ) return false;
+  for ( qint32 i = 0; i < size(); i++ )
+    if ( !( *at(i) == *v.at(i) ) ) return false;
+  return true;
 }
 
 /**
@@ -871,14 +888,13 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
           case RDT_STRING:    if (  ( ((BlockValueString    *)vt)->value() !=  ((BlockValueString    *)vv)->value() ) ) return false; break;
           case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;
-          case RDT_OBJECT_ARRAY:  // TODO: a lot.
-
-//          case RDT_INT64_ARRAY:     if (  ( ((BlockArrayInt64     *)vt)->value() !=  ((BlockArrayInt64     *)vv)->value() ) ) return false; break;
-//        case RDT_MPZ_ARRAY:       if (  ( ((BlockArrayMPZ       *)vt)->value() !=  ((BlockArrayMPZ       *)vv)->value() ) ) return false; break;
-//        case RDT_MPQ_ARRAY:       if (  ( ((BlockArrayMPQ       *)vt)->value() !=  ((BlockArrayMPQ       *)vv)->value() ) ) return false; break;
-//          case RDT_RCODE_ARRAY:     if (  ( ((BlockArrayRicey     *)vt)->value() !=  ((BlockArrayRicey     *)vv)->value() ) ) return false; break;
-//          case RDT_STRING_ARRAY:    if (  ( ((BlockArrayString    *)vt)->value() !=  ((BlockArrayString    *)vv)->value() ) ) return false; break;
-//          case RDT_BYTEARRAY_ARRAY: if (  ( ((BlockArrayByteArray *)vt)->value() !=  ((BlockArrayByteArray *)vv)->value() ) ) return false; break;
+          case RDT_OBJECT_ARRAY:
+          case RDT_INT64_ARRAY:
+          case RDT_MPZ_ARRAY:
+          case RDT_MPQ_ARRAY:
+          case RDT_RCODE_ARRAY:
+          case RDT_STRING_ARRAY:
+          case RDT_BYTEARRAY_ARRAY: if ( !(*((BlockValueArray *)vt) == *((BlockValueArray *)vv) ) ) return false; break;
           default: Utf8String n = dict.nameFromCode( k ); qWarning( "unhandled type %s", n.data() ); return false;
         }
     }

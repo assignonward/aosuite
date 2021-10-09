@@ -66,14 +66,14 @@ void  Tests::on_start_clicked()
   pass &= testMPQ        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testString     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArray  ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
-//  pass &= testObjectA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+ // pass &= testObjectA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPZA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPQA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testRiceyA     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testStringA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArrayA ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
-//  pass &= testObject     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+  pass &= testObject     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
 
   if ( pass )
     ui->report->append( QString( "\nPassed all %1 tests" ).arg( count ) );
@@ -1286,11 +1286,12 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tvo = tv;
   tv.insert( RCD_hashedOb_o  , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   QList<qint64> ta64 = { 0,1,-1,70000,-70000,-5123456789, 5123456789 };
-  tv.insert( RCD_int64Array_I, new BlockValueInt64Array( ta64, this ) ); pass &= testObject( v, tv, tc, msg ); emit newDot( v.dot() );
+  tv.insert( RCD_int64Array_I, new BlockValueInt64Array( ta64, this ) ); pass &= testObject( v, tv, tc, msg );
+  // emit newDot( v.dot() );
   QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_Y, RCD_data_b, RCD_ProtocolA00_y, RCD_RangeBounds_O };
-  tv.insert( RCD_riceyArray_Y, new BlockValueRiceyCodeArray( tari, this ) ); pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_riceyArray_Y, new BlockValueRiceyCodeArray( tari, this ) );     pass &= testObject( v, tv, tc, msg );
   QList<Utf8String> tau8 = { "A", "1", "Stringy" };
-  tv.insert( RCD_stringArray_S, new BlockValueStringArray( tau8, this ) ); pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_stringArray_S, new BlockValueStringArray( tau8, this ) );       pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_byteArrayArray_B, new BlockValueByteArrayArray( tau8, this ) ); pass &= testObject( v, tv, tc, msg );
 
   mpz_clear( &v1 );
