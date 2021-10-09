@@ -56,7 +56,7 @@ bool BlockValueInt64::setJson( const JsonSerial &j )
 { if ( j.size() < 1 )
     { qWarning( "empty json" ); return false; }
   bool ok;
-  qint64 v = j.toLongLong(&ok);
+  qint64 v = removeQuotes(j).toLongLong(&ok);
   if ( ok )
     m_value = v;
    else
@@ -307,7 +307,7 @@ bool  BlockValueArray::setJson( const JsonSerial &j )
                  else
                   qWarning( "dictionary does not contain %s", vt.data() );
                 break;
-              case RDT_INT64_ARRAY:     vbo = new BlockValueInt64( (qint64)v.toLongLong(), this ); break;
+              case RDT_INT64_ARRAY:     vbo = new BlockValueInt64( (qint64)v.toString().toLongLong(), this ); break;
               case RDT_STRING_ARRAY:    vbo = new BlockValueString( v.toString().toUtf8(), this ); break; // TODO: encode using the same escapes as in the BlockString.json() function
               case RDT_BYTEARRAY_ARRAY: vbo = new BlockValueByteArray( QByteArray::fromHex( v.toString().toUtf8() ), this ); break;
               case RDT_MPZ_ARRAY:       vbo = new BlockValueMPZ( v.toString().toUtf8(), this );    break;
@@ -397,7 +397,13 @@ bool  BlockValueObject::setJson( const JsonSerial &j )
     }
   QJsonObject jo   = jd.object();
   QVector<QString> keys = jo.keys();
-  clear();
+  // clear();
+  QList<RiceyInt> kl = m_obMap.keys();
+  foreach( RiceyInt k, kl )
+    { if ( m_obMap[k] != nullptr )
+        m_obMap[k]->deleteLater();
+      m_obMap.remove(k);
+    }
   if ( keys.size() < 1 ) // Empty object?
     return true;         // yes, we're done.
   foreach ( QString kStr, keys )
@@ -432,7 +438,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
   bool typeMatch = false;
   switch ( typ )
     { case RDT_OBJECT:    typeMatch = jv.isObject(); jdt = JDT_OBJECT; break;
-      case RDT_INT64:     typeMatch = jv.isDouble(); jdt = JDT_DOUBLE; break;
+      case RDT_INT64:
       case RDT_MPZ:
       case RDT_MPQ:
       case RDT_RCODE:
@@ -448,7 +454,10 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
       default: qWarning( "typefault" ); return nullptr;
     }
   if ( !typeMatch )
-    { qWarning( "%s value does not match type %d", dict.nameFromCode(k).data(), typ ); return nullptr; }
+    { Utf8String name = dict.nameFromCode(k);
+      qWarning( "%s value does not match type %d", name.data(), typ );
+      return nullptr;
+    }
   ValueBase *vbo;
   QJsonDocument jd;
   // QString str;
@@ -459,13 +468,9 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
         vbo->setJson( jd.toJson() );
         return vbo;
 
-      case JDT_DOUBLE:
-        if ( typ == RDT_INT64 ) { return new BlockValueInt64( jv.toInt(), this ); }
-        return nullptr;
-
       case JDT_STRING:
         vbo = newValue( k, parent );
-        if (( typ == RDT_STRING ) || ( typ == RDT_MPZ ) || ( typ == RDT_MPQ ))
+        if (( typ == RDT_STRING ) || ( typ == RDT_MPZ ) || ( typ == RDT_MPQ ) || ( typ == RDT_INT64 ))
           vbo->setJson( "\""+jv.toString().toUtf8()+"\"" );
          else
           vbo->setJson(      jv.toString().toUtf8()      );

@@ -88,6 +88,18 @@ JsonSerial ValueBase::removeQuotes( const JsonSerial &j )
 }
 
 /**
+ * @brief ValueBase::ensureQuotes
+ * @param j
+ * @return j trimmed and enclosed in quotes (unless it already was enclosed in quotes)
+ */
+JsonSerial ValueBase::ensureQuotes( const JsonSerial &j )
+{ JsonSerial jt = j.trimmed();
+  if ( jt.endsWith( '"' ) && jt.startsWith( '"' ) )
+    return jt;
+  return "\""+jt+"\"";
+}
+
+/**
  * @brief ValueBase::newValue
  * @param key - tells the type of value object to return
  * @param parent - optional, parent for the new value object

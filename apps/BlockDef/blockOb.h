@@ -48,6 +48,7 @@ public:
 virtual            ~ValueBase() {}
 static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
 static  JsonSerial  removeQuotes( const JsonSerial &j );
+static  JsonSerial  ensureQuotes( const JsonSerial &j );
 virtual       void  clear()         = 0;
 virtual     quint8  type()    const = 0;
 virtual BsonSerial  bsonish() const = 0;
@@ -164,7 +165,7 @@ class BlockValueInt64 : public ValueBase
         void  clear()         { m_value = 0; }
       quint8  type()    const { return RDT_INT64; }
   BsonSerial  bsonish() const { BsonSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
-  JsonSerial  json()    const { return QString::number( m_value ).toUtf8(); }
+  JsonSerial  json()    const { return ensureQuotes( QByteArray::number( m_value ) ); }
       qint32  setBsonish( const BsonSerial &b );
         bool  setJson   ( const JsonSerial &j );
       qint64  value()   const { return m_value; }
