@@ -301,11 +301,9 @@ bool  BlockValueArray::setJson( const JsonSerial &j )
         { ValueBase *vbo = nullptr;
           switch ( type() )
             { case RDT_RCODE_ARRAY:
-                vt = removeQuotes( v.toString().toUtf8() );
+                vt = v.toString().toUtf8();
                 if ( dict.codesContainName( vt ) )
-                  { vbo = new BlockValueRiceyCode( dict.codeFromCodeName( vt ), this );
-                    append( vbo ); vbo->deleteLater();
-                  }
+                  vbo = new BlockValueRiceyCode( dict.codeFromCodeName( vt ), this );
                  else
                   qWarning( "dictionary does not contain %s", vt.data() );
                 break;
