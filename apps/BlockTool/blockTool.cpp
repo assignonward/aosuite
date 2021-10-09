@@ -38,9 +38,9 @@ BlockTool::BlockTool( QWidget *cw ) :
   panelA = new BlockPanel( "A", BlockPanel::Mode::build, ui->frameA );
   panelX = new BlockPanel( "X", BlockPanel::Mode::make , ui->frameX );
   panelY = new BlockPanel( "Y", BlockPanel::Mode::idle , ui->frameY );
-  connect( this, SIGNAL(showA(KeyValueBase *)), panelA, SLOT(setBlock(KeyValueBase *)));
-  connect( this, SIGNAL(showX(KeyValueBase *)), panelX, SLOT(setBlock(KeyValueBase *)));
-  connect( this, SIGNAL(showY(KeyValueBase *)), panelY, SLOT(setBlock(KeyValueBase *)));
+  connect( this, SIGNAL(showA(KeyValueBase*)), panelA, SLOT(setBlock(KeyValueBase*)));
+  connect( this, SIGNAL(showX(KeyValueBase*)), panelX, SLOT(setBlock(KeyValueBase*)));
+  connect( this, SIGNAL(showY(KeyValueBase*)), panelY, SLOT(setBlock(KeyValueBase*)));
 
   sortKeys();
 }
@@ -104,18 +104,24 @@ void  BlockTool::on_key_currentTextChanged( const QString &nuKey )
       return;
     }
   quint8 tp = dict.codeFromCodeName( nKey ) & RDT_OBTYPEMASK;
-  if ( (tp & RDT_ARRAY) != 0 )
-    { ui->valueWidget->setCurrentIndex( 7 );
-      return;
+  switch( tp )
+    { case RDT_NULL           : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_null      )); break;
+      case RDT_OBJECT         : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_object    )); break;
+      case RDT_INT64          : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_int       )); break;
+      case RDT_RCODE          : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_rcode     )); break;
+      case RDT_MPZ            : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_mpz       )); break;
+      case RDT_MPQ            : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_mpq       )); break;
+      case RDT_BYTEARRAY      : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_byteArray )); break;
+      case RDT_STRING         : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_string    )); break;
+      case RDT_OBJECT_ARRAY   :
+      case RDT_INT64_ARRAY    :
+      case RDT_RCODE_ARRAY    :
+      case RDT_MPZ_ARRAY      :
+      case RDT_MPQ_ARRAY      :
+      case RDT_BYTEARRAY_ARRAY:
+      case RDT_STRING_ARRAY   : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_array     )); break;
+      default: qWarning( "key comboBox selected unhandled type %d key: %s", tp, nKey.data() );
     }
-  if (( tp & RDT_TYPEMASK ) > 6 )
-    { if ( ( tp & RDT_TYPEMASK ) == RDT_NULL )
-        ui->valueWidget->setCurrentIndex( 8 );
-       else
-        qWarning( "key comboBox selected unhandled type %d key: %s", tp, nKey.data() );
-      return;
-    }
-  ui->valueWidget->setCurrentIndex( tp & RDT_TYPEMASK );
 }
 
 void  BlockTool::on_sortName_toggled(bool) { sortKeys(); }
@@ -153,7 +159,7 @@ void  BlockTool::sortKeys()
     }
    else
     qWarning( "no key sort method checked" );
-
+  on_key_currentTextChanged( ui->key->currentText() );
 }
 
 void  BlockTool::on_makeX_toggled(bool c)
