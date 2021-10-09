@@ -181,7 +181,7 @@ class BlockValueInt64Array : public BlockValueArray
               BlockValueInt64Array( const QList<qint64> &v, QObject *parent = nullptr ) : BlockValueArray( parent ) { set(v); }
              ~BlockValueInt64Array() {}
       quint8  type() const { return RDT_INT64_ARRAY; }
-        bool  append( qint64 v ) { return this->BlockValueArray::append( new BlockValueInt64(v, this) ); }
+        bool  append( qint64 v ) { return append( new BlockValueInt64(v, this) ); }
         bool  append( ValueBase *v ) { return BlockValueArray::append( v ); }
       qint64  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueInt64 *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return 0; }
 QList<qint64> value() const { QList<qint64> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
@@ -224,8 +224,8 @@ class BlockValueRiceyCodeArray : public BlockValueArray
                    BlockValueRiceyCodeArray( QList<RiceyCode> v, QObject *parent = nullptr ) : BlockValueArray( parent ) { set(v); }
                   ~BlockValueRiceyCodeArray() {}
            quint8  type() const { return RDT_RCODE_ARRAY; }
-             bool  append( RiceyInt  v ) { return this->BlockValueArray::append( new BlockValueRiceyCode(v, this) ); }
-             bool  append( RiceyCode v ) { return this->BlockValueArray::append( new BlockValueRiceyCode(v, this) ); }
+             bool  append( RiceyInt  v ) { return append( new BlockValueRiceyCode(v, this) ); }
+             bool  append( RiceyCode v ) { return append( new BlockValueRiceyCode(v, this) ); }
              bool  append( ValueBase *v ) { return BlockValueArray::append( v ); }
         RiceyCode  at( qint32 n )    const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueRiceyCode *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return RiceyCode(); }
          RiceyInt  intAt( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return riceToInt( at(n) );                            qWarning( "array index %d out of bounds %d",n,size() ); return -1; }
@@ -269,7 +269,7 @@ class BlockValueStringArray : public BlockValueArray
                     BlockValueStringArray( const QList<Utf8String> &v, QObject *parent = nullptr ) : BlockValueArray( parent ) { set(v); }
                    ~BlockValueStringArray() {}
             quint8  type() const { return RDT_STRING_ARRAY; }
-              bool  append( Utf8String v ) { return this->BlockValueArray::append( new BlockValueString(v, this) ); }
+              bool  append( Utf8String v ) { return append( new BlockValueString(v, this) ); }
               bool  append( ValueBase *v ) { return BlockValueArray::append( v ); }
         Utf8String  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueString *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return Utf8String(); }
   QList<Utf8String> value() const { QList<Utf8String> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
@@ -307,7 +307,7 @@ class BlockValueByteArrayArray : public BlockValueArray
                     BlockValueByteArrayArray( const QList<QByteArray> &v, QObject *parent = nullptr ) : BlockValueArray( parent ) { set(v); }
                    ~BlockValueByteArrayArray() {}
             quint8  type() const { return RDT_BYTEARRAY_ARRAY; }
-              bool  append( QByteArray v ) { return this->BlockValueArray::append( new BlockValueByteArray(v, this) ); }
+              bool  append( QByteArray v ) { return append( new BlockValueByteArray(v, this) ); }
               bool  append( ValueBase *v ) { return BlockValueArray::append( v ); }
         QByteArray  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueByteArray *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return QByteArray(); }
   QList<QByteArray> value() const { QList<QByteArray> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
@@ -348,7 +348,7 @@ class BlockValueMPZArray : public BlockValueArray
       explicit  BlockValueMPZArray( QObject *parent = nullptr ) : BlockValueArray( parent ) {}
                ~BlockValueMPZArray() {}
         quint8  type() const { return RDT_MPZ_ARRAY; }
-          bool  append( MP_INT v ) { return this->BlockValueArray::append( new BlockValueMPZ(v, this) ); }
+          bool  append( MP_INT v ) { return append( new BlockValueMPZ(v, this) ); }
           bool  append( ValueBase *v ) { return BlockValueArray::append( v ); }
         MP_INT  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueMPZ *)m_values[n])->value(); MP_INT tv = temp; qWarning( "array index %d out of bounds %d",n,size() ); mpz_set_si( &tv, 0 ); return tv; }
   QList<MP_INT> value() const { QList<MP_INT> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
@@ -388,7 +388,7 @@ class BlockValueMPQArray : public BlockValueArray
       explicit  BlockValueMPQArray( QObject *parent = nullptr ) : BlockValueArray( parent ) {}
                ~BlockValueMPQArray() {}
         quint8  type() const { return RDT_MPQ_ARRAY; }
-          bool  append( MP_RAT v ) { return this->BlockValueArray::append( new BlockValueMPQ(v, this) ); }
+          bool  append( MP_RAT v ) { return append( new BlockValueMPQ(v, this) ); }
           bool  append( ValueBase *v ) { return BlockValueArray::append( v ); }
         MP_RAT  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueMPQ *)m_values[n])->value(); MP_RAT tv = temp; qWarning( "array index %d out of bounds %d",n,size() ); mpq_set_si( &tv, 1, 1 ); return tv; }
   QList<MP_RAT> value() const { QList<MP_RAT> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
@@ -472,7 +472,6 @@ class BlockValueObject : public ValueBase
                                                                        case RDT_RCODE:     vr = new BlockValueRiceyCode( v, this ); ok = insert( k, vr ); if ( !ok ) vr->deleteLater(); return ok;
                                                                        default: return false;
                                                                  }   }
-             // TODO: insert array types
         ValueBase *value( const RiceyInt  &k ) const { if ( !contains(k) ) return &glob_null; return m_obMap.value(k); }
         ValueBase *value( const RiceyCode &r ) const { return value( riceToInt( r ) ); }
    BlockObjectMap  value() const { return m_obMap; }
@@ -490,11 +489,11 @@ class BlockValueObjectArray : public BlockValueArray
 //BlockValueObjectArray &operator= ( const QList<BlockObjectMap> &v ) { set(v); return *this; }
 //BlockValueObjectArray &operator+= ( const BlockObjectMap &v )    { append(v); return *this; }
                quint8  type() const { return RDT_OBJECT_ARRAY; }
-                 bool  append( const BlockObjectMap &v ) { return BlockValueArray::append( new BlockValueObject(v, this) ); }
+                 bool  append( const BlockObjectMap &v ) { return append( new BlockValueObject(v, this) ); }
                  bool  append( ValueBase *v ) { return BlockValueArray::append( v ); }
        BlockObjectMap  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueObject *)m_values.at(n))->value(); qWarning( "array index %d out of bounds %d",n,size() ); return BlockObjectMap(); }
  QList<BlockObjectMap> value() const { QList<BlockObjectMap> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
-                 void  set( const QList<BlockObjectMap> &v ) { clear(); for ( qint32 i = 0; i < v.size(); i++ ) { BlockObjectMap m = v.at(i); append( new BlockValueObject(m,this) ); } }
+                 void  set( const QList<BlockObjectMap> &v ) { clear(); for ( qint32 i = 0; i < v.size(); i++ ) { BlockObjectMap m = v.at(i); if ( !append( new BlockValueObject(m,this) ) ) qWarning( "append failed" ); } }
                  bool  operator==(const QList<BlockObjectMap>& l) const;
                  bool  operator==(const BlockValueObjectArray& o) const { return *this == o.value(); }
 };
