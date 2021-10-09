@@ -775,10 +775,10 @@ bool  BlockValueObjectArray::operator==(const QList<BlockObjectMap>& l) const
       if ( mt.size() != ml.size() )
         return false;
       QList<RiceyInt> keys = mt.keys();
-      for ( qint32 j = 0; j < mt.size(); j++ )
-        { ValueBase *vt = mt[keys.at(j)];
-          ValueBase *vl = ml[keys.at(j)];
-          if ( !( *vt == *vl ) )
+      foreach ( RiceyInt key, keys )
+        { if ( !ml.contains( key ) )
+            return false;
+          if ( !( *mt[key] == *ml[key] ) )
             return false;
         }
     }
