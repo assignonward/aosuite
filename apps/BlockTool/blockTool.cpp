@@ -54,8 +54,7 @@ void  BlockTool::on_set_clicked()
     { qWarning( "key comboBox text returns unknown key: %s", nKey.data() );
       return;
     }
-      ValueBase *vbp = nullptr;
-  KeyValueArray *kva = nullptr;
+  ValueBase *vbp = nullptr;
   quint8 tp = dict.codeFromCodeName( nKey ) & RDT_OBTYPEMASK;
   if ( tp == RDT_NULL )
     vbp = new BlockValueNull(this);
@@ -68,27 +67,27 @@ void  BlockTool::on_set_clicked()
           case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit      ->text().toUtf8(), this ); break;
           case RDT_BYTEARRAY: vbp = new BlockValueByteArray( ui->byteArrayEdit->text().toUtf8(), this ); break;
           case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit   ->text().toUtf8(), this ); break;
-          case RDT_OBJECT_ARRAY   : kva = new BlockArrayObject   ( dict.codeFromCodeName( nKey ), this ); break;
-          case RDT_INT64_ARRAY    : kva = new BlockArrayInt64    ( dict.codeFromCodeName( nKey ), this ); break;
-          case RDT_RCODE_ARRAY    : kva = new BlockArrayRicey    ( dict.codeFromCodeName( nKey ), this ); break;
-          case RDT_MPZ_ARRAY      : kva = new BlockArrayMPZ      ( dict.codeFromCodeName( nKey ), this ); break;
-          case RDT_MPQ_ARRAY      : kva = new BlockArrayMPQ      ( dict.codeFromCodeName( nKey ), this ); break;
-          case RDT_BYTEARRAY_ARRAY: kva = new BlockArrayByteArray( dict.codeFromCodeName( nKey ), this ); break;
-          case RDT_STRING_ARRAY   : kva = new BlockArrayString   ( dict.codeFromCodeName( nKey ), this ); break;
+          case RDT_OBJECT_ARRAY   : vbp = new BlockValueObjectArray   ( this ); break;
+          case RDT_INT64_ARRAY    : vbp = new BlockValueInt64Array    ( this ); break;
+          case RDT_RCODE_ARRAY    : vbp = new BlockValueRiceyCodeArray( this ); break;
+          case RDT_MPZ_ARRAY      : vbp = new BlockValueMPZArray      ( this ); break;
+          case RDT_MPQ_ARRAY      : vbp = new BlockValueMPQArray      ( this ); break;
+          case RDT_BYTEARRAY_ARRAY: vbp = new BlockValueByteArrayArray( this ); break;
+          case RDT_STRING_ARRAY   : vbp = new BlockValueStringArray   ( this ); break;
         }
     }
-  ui->report->clear();
-  ui->report->append( "set clicked" );
-  KeyValueBase *kvb = nullptr;
-  if ( vbp )
-    kvb = new KeyValuePair( dict.codeFromCodeName( nKey ), vbp );
-   else if ( kva )
-    kvb = kva;
-   else
+  if ( vbp == nullptr )
     { qWarning( "no value or array established." );
       ui->report->append( "oops" );
       return;
     }
+  ui->report->clear();
+  ui->report->append( "set clicked" );
+  KeyValueBase *kvb = nullptr;
+  if ( ( tp & RDT_ARRAY ) == 0 )
+    kvb = new KeyValuePair( dict.codeFromCodeName( nKey ), vbp, this );
+   else
+    kvb = new KeyValueArray( dict.codeFromCodeName( nKey ), (BlockValueArray *)vbp, this );
   setMake( kvb );
   if ( ui->showJson->isChecked() )ui->report->append( jsonReformat( kvb->json() ) );
   if ( ui->showHex ->isChecked() )ui->report->append( kvb->bsonish().toHex() );
@@ -321,27 +320,27 @@ void  BlockTool::on_DAO0_clicked()
   hdo->insert( RCD_type_y, pcc );
   BlockValueString *stp = new BlockValueString( "DⒶ0", this );
   hdo->insert( RCD_text_s, stp );
-  BlockArrayObject *idl = new BlockArrayObject( RCD_ItemDefList_O, this );
+  BlockValueObjectArray *idl = new BlockValueObjectArray( this );
   hdo->insert( RCD_ItemDefList_O, idl );
 
   BlockValueObject *ido = new BlockValueObject( this );
   idl->append( ido );
   BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_requestRecordStorage_o, this );
   ido->insert( RCD_type_y, idc );
-  BlockArrayRicey *ril = new BlockArrayRicey( RCD_DefinedSubItems_Y, this );
+  BlockValueRiceyCodeArray *ril = new BlockValueRiceyCodeArray( this );
   ido->insert( RCD_DefinedSubItems_Y, ril );
     BlockValueRiceyCode *ri1 = new BlockValueRiceyCode( RCD_data_b, this );
     ril->append( ri1 );
   // BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_userId_b, this );
   // ril->append( ri2 );
-  BlockArrayObject *orl = new BlockArrayObject( RCD_OperReqList_O, this );
+  BlockValueObjectArray *orl = new BlockValueObjectArray( this );
   ido->insert( RCD_OperReqList_O, orl );
 
   BlockValueObject *iro = new BlockValueObject( this );
   idl->append( iro );
   BlockValueRiceyCode *irc = new BlockValueRiceyCode( RCD_recordStorageResult_o, this );
   iro->insert( RCD_type_y, irc );
-  BlockArrayRicey *rilr = new BlockArrayRicey( RCD_DefinedSubItems_Y, this );
+  BlockValueRiceyCodeArray *rilr = new BlockValueRiceyCodeArray( this );
   iro->insert( RCD_DefinedSubItems_Y, rilr );
     BlockValueRiceyCode *ri1r = new BlockValueRiceyCode( RCD_type_y, this );
     rilr->append( ri1r );
@@ -349,27 +348,27 @@ void  BlockTool::on_DAO0_clicked()
     rilr->append( oi1r );
     // BlockValueRiceyCode *ri2r = new BlockValueRiceyCode( RCD_userId_b, this );
     // rilr->append( ri2r );
-  BlockArrayObject *orlr = new BlockArrayObject( RCD_OperReqList_O, this );
+  BlockValueObjectArray *orlr = new BlockValueObjectArray( this );
   iro->insert( RCD_OperReqList_O, orlr );
 
   BlockValueObject *idgo = new BlockValueObject( this );
   idl->append( idgo );
   BlockValueRiceyCode *idg = new BlockValueRiceyCode( RCD_requestRecordRetrieval_o, this );
   idgo->insert( RCD_type_y, idg );
-  BlockArrayRicey *rigl = new BlockArrayRicey( RCD_DefinedSubItems_Y, this );
+  BlockValueRiceyCodeArray *rigl = new BlockValueRiceyCodeArray( this );
   idgo->insert( RCD_DefinedSubItems_Y, rigl );
     BlockValueRiceyCode *rig1 = new BlockValueRiceyCode( RCD_data_b, this );
     rigl->append( rig1 );
     // BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_userId_b, this );
     // ril->append( ri2 );
-  BlockArrayObject *orgl = new BlockArrayObject( RCD_OperReqList_O, this );
+  BlockValueObjectArray *orgl = new BlockValueObjectArray( this );
   idgo->insert( RCD_OperReqList_O, orgl );
 
   BlockValueObject *rro = new BlockValueObject( this );
   idl->append( rro );
   BlockValueRiceyCode *rrc = new BlockValueRiceyCode( RCD_recordRetrievalResult_o, this );
   rro->insert( RCD_type_y, rrc );
-  BlockArrayRicey *rrlr = new BlockArrayRicey( RCD_DefinedSubItems_Y, this );
+  BlockValueRiceyCodeArray *rrlr = new BlockValueRiceyCodeArray( this );
   rro->insert( RCD_DefinedSubItems_Y, rrlr );
     BlockValueRiceyCode *rr1r = new BlockValueRiceyCode( RCD_type_y, this );
     rrlr->append( rr1r );
@@ -377,24 +376,24 @@ void  BlockTool::on_DAO0_clicked()
     rrlr->append( or1r );
     // BlockValueRiceyCode *rr2r = new BlockValueRiceyCode( RCD_userId_b, this );
     // rilr->append( rr2r );
-  BlockArrayObject *orcc = new BlockArrayObject( RCD_OperReqList_O, this );
+  BlockValueObjectArray *orcc = new BlockValueObjectArray( this );
   rro->insert( RCD_OperReqList_O, orcc );
 
 
-  BlockArrayObject *adl = new BlockArrayObject( RCD_ActorDefList_O, this );
+  BlockValueObjectArray *adl = new BlockValueObjectArray( this );
   hdo->insert( RCD_ActorDefList_O, adl );
 
   BlockValueObject *ado1 = new BlockValueObject( this );
   adl->append( ado1 );
   BlockValueRiceyCode *ad1 = new BlockValueRiceyCode( RCD_actorWriterClient_y, this );
   ado1->insert( RCD_type_y, ad1 );
-  BlockArrayObject *ado1o = new BlockArrayObject( RCD_OutgoingItemsList_O, this );
+  BlockValueObjectArray *ado1o = new BlockValueObjectArray( this );
   ado1->insert( RCD_OutgoingItemsList_O, ado1o );
     BlockValueObject *ado1o1 = new BlockValueObject( this );
     ado1o->append( ado1o1 );
     BlockValueRiceyCode *ado1o1i = new BlockValueRiceyCode( RCD_requestRecordStorage_o, this );
     ado1o1->insert( RCD_type_y, ado1o1i );
-  BlockArrayObject *ado1i = new BlockArrayObject( RCD_IncomingItemsList_O, this );
+  BlockValueObjectArray *ado1i = new BlockValueObjectArray( this );
   ado1->insert( RCD_IncomingItemsList_O, ado1i );
     BlockValueObject *ado1i1 = new BlockValueObject( this );
     ado1i->append( ado1i1 );
@@ -442,7 +441,7 @@ void  BlockTool::on_chain_clicked()
   hdo->insert( RCD_data_b, dbp );
   BlockValueString *stp = new BlockValueString( "StringSample", this );
   hdo->insert( RCD_text_s, stp );
-  BlockArrayObject *poa = new BlockArrayObject( RCD_parentHash_O, this );
+  BlockValueObjectArray *poa = new BlockValueObjectArray( this );
   hdo->insert( RCD_parentHash_O, poa );
 
   BlockValueObject *hsop = new BlockValueObject( this );
@@ -454,9 +453,9 @@ void  BlockTool::on_chain_clicked()
   BlockValueByteArray *hdpp = new BlockValueByteArray( "HashTrample", this );
   hsop->insert( RCD_data_b, hdpp );
 
-  BlockArrayObject *sil = new BlockArrayObject( RCD_separableItems_O, this );
+  BlockValueObjectArray *sil = new BlockValueObjectArray( this );
   cbo->insert( RCD_separableItems_O, sil );
-  BlockArrayObject *sih = new BlockArrayObject( RCD_separableItemsHashes_O, this );
+  BlockValueObjectArray *sih = new BlockValueObjectArray( this );
   hdo->insert( RCD_separableItemsHashes_O, sih );
 
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
@@ -486,14 +485,14 @@ void  BlockTool::on_hash_clicked()
   hdo->insert( RCD_type_y, pcc );
   BlockValueString *stp = new BlockValueString( "DⒶ2", this );
   hdo->insert( RCD_text_s, stp );
-  BlockArrayObject *idl = new BlockArrayObject( RCD_ItemDefList_O, this );
+  BlockValueObjectArray *idl = new BlockValueObjectArray( this );
   hdo->insert( RCD_ItemDefList_O, idl );
 
   BlockValueObject *ido = new BlockValueObject( this );
   idl->append( ido );
   BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_hash_o, this );
   ido->insert( RCD_type_y, idc );
-  BlockArrayRicey *ril = new BlockArrayRicey( RCD_DefinedSubItems_Y, this );
+  BlockValueRiceyCodeArray *ril = new BlockValueRiceyCodeArray( this );
   ido->insert( RCD_DefinedSubItems_Y, ril );
   BlockValueRiceyCode *ri1 = new BlockValueRiceyCode( RCD_type_y, this );
   ril->append( ri1 );
@@ -501,14 +500,14 @@ void  BlockTool::on_hash_clicked()
   ril->append( ri2 );
   BlockValueRiceyCode *ri3 = new BlockValueRiceyCode( RCD_time_i, this );
   ril->append( ri3 );
-  BlockArrayObject *orl = new BlockArrayObject( RCD_OperReqList_O, this );
+  BlockValueObjectArray *orl = new BlockValueObjectArray( this );
   ido->insert( RCD_OperReqList_O, orl );
 
   BlockValueObject *or1 = new BlockValueObject( this );
   orl->append( or1 );
     BlockValueRiceyCode *or1t = new BlockValueRiceyCode( RCD_type_y, this );
     or1->insert( RCD_type_y, or1t );
-    BlockArrayRicey *or1o = new BlockArrayRicey( RCD_OpMemberOf_Y, this );
+    BlockValueRiceyCodeArray *or1o = new BlockValueRiceyCodeArray( this );
     or1->insert( RCD_OpMemberOf_Y, or1o );
       BlockValueRiceyCode *or1m1 = new BlockValueRiceyCode( RCD_SHA256_y, this );
       or1o->append( or1m1 );
@@ -525,7 +524,7 @@ void  BlockTool::on_hash_clicked()
   orl->append( or3 );
     BlockValueRiceyCode *or3t = new BlockValueRiceyCode( RCD_time_i, this );
     or3->insert( RCD_type_y, or3t );
-    BlockArrayRicey *or3o = new BlockArrayRicey( RCD_OpGreaterThan_Y, this );
+    BlockValueRiceyCodeArray *or3o = new BlockValueRiceyCodeArray( this );
     or3->insert( RCD_OpGreaterThan_Y, or3o );
       BlockValueRiceyCode *or3s1 = new BlockValueRiceyCode( RCD_navUpOne_y, this );
       or3o->append( or3s1 );
@@ -542,23 +541,23 @@ void  BlockTool::on_hash_clicked()
   orl->append( or4 );
     BlockValueRiceyCode *or4t = new BlockValueRiceyCode( RCD_data_b, this );
     or4->insert( RCD_type_y, or4t );
-    BlockArrayObject *or4o = new BlockArrayObject( RCD_OpHash_O, this );
+    BlockValueObjectArray *or4o = new BlockValueObjectArray( this );
     or4->insert( RCD_OpHash_O, or4o );
       BlockValueObject *or41 = new BlockValueObject( this );
       or4o->append( or41 );
-        BlockArrayRicey *or411 = new BlockArrayRicey( this );
+        BlockValueRiceyCodeArray *or411 = new BlockValueRiceyCodeArray( this );
         or41->insert( RCD_riceyArray_Y, or411 );
           BlockValueRiceyCode *or4111 = new BlockValueRiceyCode( RCD_type_y, this );
           or411->append( or4111 );
       BlockValueObject *or42 = new BlockValueObject( this );
       or4o->append( or42 );
-        BlockArrayRicey *or421 = new BlockArrayRicey( this );
+        BlockValueRiceyCodeArray *or421 = new BlockValueRiceyCodeArray( this );
         or42->insert( RCD_riceyArray_Y, or421 );
           BlockValueRiceyCode *or4211 = new BlockValueRiceyCode( RCD_time_i, this );
           or421->append( or4211 );
      BlockValueObject *or43 = new BlockValueObject( this );
      or4o->append( or43 );
-       BlockArrayRicey *or431 = new BlockArrayRicey( this );
+       BlockValueRiceyCodeArray *or431 = new BlockValueRiceyCodeArray( this );
        or43->insert( RCD_riceyArray_Y, or431 );
          BlockValueRiceyCode *or4311 = new BlockValueRiceyCode( RCD_navUpOne_y, this );
          or431->append( or4311 );

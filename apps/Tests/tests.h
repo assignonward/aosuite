@@ -53,20 +53,20 @@ public:
        bool  testByteArray( QString &, qint32 & );
        bool  testByteArray( BlockValueByteArray &, const QByteArray &, qint32 &, QString & );
        bool  testObjectA( QString &, qint32 & );
-       bool  testObjectA( BlockArrayObject &, const QList<BlockObjectMap> &, qint32 &, QString & );
+       bool  testObjectA( BlockValueObjectArray &, const QList<BlockObjectMap> &, qint32 &, QString & );
        bool  testInt64A( QString &, qint32 & );
-       bool  testInt64A( BlockArrayInt64 &, const QList<qint64> &, qint32 &, QString & );
+       bool  testInt64A( BlockValueInt64Array &, const QList<qint64> &, qint32 &, QString & );
        bool  testMPZA( QString &, qint32 & );
-       bool  testMPZA( BlockArrayMPZ &, const QList<MP_INT> &, qint32 &, QString & );
+       bool  testMPZA( BlockValueMPZArray &, const QList<MP_INT> &, qint32 &, QString & );
        bool  testMPQA( QString &, qint32 & );
-       bool  testMPQA( BlockArrayMPQ &, const QList<MP_RAT> &, qint32 &, QString & );
+       bool  testMPQA( BlockValueMPQArray &, const QList<MP_RAT> &, qint32 &, QString & );
        bool  testRiceyA( QString &, qint32 & );
-       bool  testRiceyA( BlockArrayRicey &, const QList<RiceyCode> &, qint32 &, QString & );
-       bool  testRiceyA( BlockArrayRicey &, const QList<RiceyInt>  &, qint32 &, QString & );
+       bool  testRiceyA( BlockValueRiceyCodeArray &, const QList<RiceyCode> &, qint32 &, QString & );
+       bool  testRiceyA( BlockValueRiceyCodeArray &, const QList<RiceyInt>  &, qint32 &, QString & );
        bool  testStringA( QString &, qint32 & );
-       bool  testStringA( BlockArrayString &, const QList<Utf8String> &, qint32 &, QString & );
+       bool  testStringA( BlockValueStringArray &, const QList<Utf8String> &, qint32 &, QString & );
        bool  testByteArrayA( QString &, qint32 & );
-       bool  testByteArrayA( BlockArrayByteArray &, const QList<QByteArray> &, qint32 &, QString & );
+       bool  testByteArrayA( BlockValueByteArrayArray &, const QList<QByteArray> &, qint32 &, QString & );
        bool  testObject( QString &, qint32 & );
        bool  testObject( BlockValueObject &, const BlockObjectMap &, qint32 &, QString & );
 

@@ -81,6 +81,37 @@ DotSerial KeyValuePair::dot() const
   return d;
 }
 
+DotSerial  BlockValueArray::dot() const
+{ DotSerial d;
+  if ( size() == 0 )
+    d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
+  quint8 t = type();
+  for ( qint32 i = 0; i < size(); i++ )
+    { if ( at(i) )
+        { d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
+          d.append( "  label =\"["+DotSerial::number(i)+"]\";\n" );
+          d.append( "  labeljust = \"l\";\n" );
+          d.append( "  margin = 4;\n" );
+          d.append( "  fontsize = 10;\n\n" );
+            DotSerial v = at(i)->dot();
+            if ( ( at(i)->type() & RDT_TYPEMASK ) == RDT_RCODE )
+              v.replace(DotSerial("\""), DotSerial(""));
+            if ( t == RDT_OBJECT_ARRAY )
+              d.append( v+"\n" );
+             else if ( t == RDT_STRING_ARRAY )
+              d.append( "node_"+DotSerial::number( dex++ )
+                       +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
+             else
+              d.append( "node_"+DotSerial::number( dex++ )
+                       +" [ label=\""+v+"\"; shape=box; style=rounded; fontsize=10; ];\n" );
+          d.append( "  }\n\n" );
+        }
+       else
+        d.append( "    NULL;\n" );
+    }
+  return d;
+}
+
 DotSerial KeyValueArray::dot() const
 { DotSerial d;
   DotSerial kn = dict.nameFromCode(key());

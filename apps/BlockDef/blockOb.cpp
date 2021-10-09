@@ -95,13 +95,7 @@ JsonSerial ValueBase::removeQuotes( const JsonSerial &j )
  * @return pointer to the new value object
  */
 ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
-{ if (( key & RDT_ARRAY ) == RDT_ARRAY )
-    { KeyValueArray *kva = new KeyValueArray( key, parent );
-      if ( vtc )
-        kva->set( ((KeyValueArray *)vtc)->value() );
-      return kva;
-    }
-  qint32 t = key & RDT_OBTYPEMASK;
+{ qint32 t = key & RDT_OBTYPEMASK;
   ValueBase *vbo = nullptr;
   if ( t == RDT_OBJECT          ) vbo = new BlockValueObject( parent );
   if ( t == RDT_INT64           ) vbo = new BlockValueInt64( parent );
@@ -582,15 +576,11 @@ BsonSerial KeyValueArray::bsonish() const
     { qWarning( "unknown key 0x%s", keyHexd() );
       return BsonSerial();
     }
-  quint64 elementCount = 0;
-  for ( qint32 i = 0; i < m_values.size(); i++ )
-    if ( m_values.at(i) != nullptr )
-      elementCount++;
-  b.append( intToRice( elementCount ) );
-  for ( qint32 i = 0; i < m_values.size(); i++ )
-    { if ( m_values.at(i) != nullptr )
-        b.append( m_values.at(i)->bsonish() );
+  if ( m_val == nullptr )
+    { qWarning( "no BlockValueArray allocated" );
+      return BsonSerial();
     }
+  b.append( m_val->bsonish() );
   return b;
 }
 
@@ -608,7 +598,7 @@ qint32  BlockValueArray::setBsonish( const BsonSerial &b )
   while ( elementCount > 0 )
     { if ( b.size() <= i )
         { qWarning( "value data missing" ); return -1; }
-      ValueBase *vbo = newValue( type(), this );
+      ValueBase *vbo = newValue( type() & RDT_TYPEMASK, this );
       len = vbo->setBsonish( b.mid(i) );
       if ( len < 1 )
         { delete vbo; qWarning( "problem reading element" ); return -1; }
@@ -678,7 +668,11 @@ bool  BlockValueArray::append( ValueBase *value )
  * @return true if successful
  */
 bool  KeyValueArray::append( ValueBase *value )
-{ if ( value == nullptr )
+{ if ( !typeMatch( value->type() & RDT_OBTYPEMASK ) )
+    { qWarning( "value does not match type of array" );
+      return false;
+    }
+  if ( value == nullptr )
     { qWarning( "will not append null" );
       return false;
     }
@@ -686,19 +680,28 @@ bool  KeyValueArray::append( ValueBase *value )
     { qWarning( "type mismatch in KeyValueArray::append( ValueBase *value ) %d %d",(int)value->type(),(int)type() );
       return false;
     }
-  m_values.append( value );
+  m_val->append( value );
   return true;
 }
 
 /**
- * @brief KeyValueArray::append
- * @param v - contents ( value() ) of a BlockValueObject
- * @return true if successful
+ * @brief KeyValueArray::typeMatch
+ * @param t - type to check
+ * @return true if the KeyValueArray type stores the passed type
  */
-bool  KeyValueArray::append( const BlockObjectMap &v )
-{ if ( type() == RDT_OBJECT_ARRAY )
-    { return append( new BlockValueObject(v, this) ); }
-  qWarning( "type mismatch O %d",(int)type() );
+bool  KeyValueArray::typeMatch( quint8 t )
+{ if ( m_val )
+    return ( m_val->type() == t );
+  switch ( t )
+    { case RDT_MPZ:       m_val = new BlockValueMPZArray      ( this ); return true;
+      case RDT_MPQ:       m_val = new BlockValueMPQArray      ( this ); return true;
+      case RDT_STRING:    m_val = new BlockValueStringArray   ( this ); return true;
+      case RDT_INT64:     m_val = new BlockValueInt64Array    ( this ); return true;
+      case RDT_BYTEARRAY: m_val = new BlockValueByteArrayArray( this ); return true;
+      case RDT_RCODE:     m_val = new BlockValueRiceyCodeArray( this ); return true;
+      case RDT_OBJECT:    m_val = new BlockValueObjectArray   ( this ); return true;
+    }
+  qWarning( "unrecognized type %d", t );
   return false;
 }
 
@@ -760,6 +763,16 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
     }
   return i;
 }
+
+bool  BlockValueObjectArray::operator==(const QList<BlockObjectMap>& l) const
+{ if ( size() != l.size() )
+    return false;
+  for ( qint32 i = 0; i < size(); i++ )
+    if ( !(at(i) == l.at(i)) )
+      return false;
+  return true;
+}
+
 
 /**
  * @brief ValueBase::bsonishValueByKey
@@ -860,12 +873,12 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;
           case RDT_OBJECT_ARRAY:  // TODO: a lot.
 
-          case RDT_INT64_ARRAY:     if (  ( ((BlockArrayInt64     *)vt)->value() !=  ((BlockArrayInt64     *)vv)->value() ) ) return false; break;
+//          case RDT_INT64_ARRAY:     if (  ( ((BlockArrayInt64     *)vt)->value() !=  ((BlockArrayInt64     *)vv)->value() ) ) return false; break;
 //        case RDT_MPZ_ARRAY:       if (  ( ((BlockArrayMPZ       *)vt)->value() !=  ((BlockArrayMPZ       *)vv)->value() ) ) return false; break;
 //        case RDT_MPQ_ARRAY:       if (  ( ((BlockArrayMPQ       *)vt)->value() !=  ((BlockArrayMPQ       *)vv)->value() ) ) return false; break;
-          case RDT_RCODE_ARRAY:     if (  ( ((BlockArrayRicey     *)vt)->value() !=  ((BlockArrayRicey     *)vv)->value() ) ) return false; break;
-          case RDT_STRING_ARRAY:    if (  ( ((BlockArrayString    *)vt)->value() !=  ((BlockArrayString    *)vv)->value() ) ) return false; break;
-          case RDT_BYTEARRAY_ARRAY: if (  ( ((BlockArrayByteArray *)vt)->value() !=  ((BlockArrayByteArray *)vv)->value() ) ) return false; break;
+//          case RDT_RCODE_ARRAY:     if (  ( ((BlockArrayRicey     *)vt)->value() !=  ((BlockArrayRicey     *)vv)->value() ) ) return false; break;
+//          case RDT_STRING_ARRAY:    if (  ( ((BlockArrayString    *)vt)->value() !=  ((BlockArrayString    *)vv)->value() ) ) return false; break;
+//          case RDT_BYTEARRAY_ARRAY: if (  ( ((BlockArrayByteArray *)vt)->value() !=  ((BlockArrayByteArray *)vv)->value() ) ) return false; break;
           default: Utf8String n = dict.nameFromCode( k ); qWarning( "unhandled type %s", n.data() ); return false;
         }
     }
@@ -876,7 +889,6 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
  * @brief BlockArrayObject::operator ==
  * @param l - list of object values
  * @return true if this list of object values is the same as l's
- */
 bool  BlockArrayObject::operator==(const QList<BlockObjectMap>& l) const
 { if (l.size() != size())
     return false;
@@ -896,4 +908,5 @@ bool  BlockArrayObject::operator==(const QList<BlockObjectMap>& l) const
     }
   return true;
 }
+*/
 

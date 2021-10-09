@@ -248,8 +248,8 @@ JsonSerial  KeyValueArray::json() const
   j.append( dict.nameFromCode(m_key) );
   j.append( "\": [ " );
   bool wroteOne = false;
-  for ( qint32 i = 0; i < m_values.size(); i++ )
-    { ValueBase *vp = m_values.at(i);
+  for ( qint32 i = 0; i < size(); i++ )
+    { ValueBase *vp = at(i);
       if ( vp != nullptr )
         { j.append( vp->json() + " , \n" );
           wroteOne = true;
@@ -347,45 +347,13 @@ bool  KeyValueArray::setJson( const JsonSerial &j )
   if ( !jv.isArray() )
     { qWarning( "value is not an array" ); return false; }
   clear();
-  QJsonArray ja = jv.toArray();
-  if ( ja.size() < 1 )  // Empty?
-    return true;        // We're done.
-  if ( type() == RDT_OBJECT_ARRAY )
-    { for ( qint32 i = 0; i < ja.size(); i++ )
-        { QJsonValue jv = ja.at(i);
-          if ( !jv.isObject() )
-            qWarning( "array element is not object in KeyValueArray::setJson() type OBJECT_ARRAY" );
-           else
-            { QJsonObject jo = jv.toObject();
-              QJsonDocument ed( jo );
-              BlockValueObject *bvo = new BlockValueObject( this, ed.toJson() );
-              append( bvo->value() );
-              delete bvo;
-            }
-        }
+  typeMatch( key() & RDT_TYPEMASK );
+  if ( m_val == nullptr )
+    { qWarning( "unexpected problem allocating BlockValueArray" );
+      return false;
     }
-   else
-    { QVariantList vl = ja.toVariantList();
-      Utf8String vt;
-      foreach ( QVariant v, vl )
-        { switch ( type() )
-            { case RDT_INT64_ARRAY:
-                append( (qint64)v.toLongLong() );
-                break;
-              case RDT_RCODE_ARRAY:
-                vt = removeQuotes( v.toString().toUtf8() );
-                if ( dict.codesContainName( vt ) )
-                  append( dict.codeFromCodeName( vt ) );
-                 else
-                  qWarning( "dictionary does not contain %s", vt.data() );
-                break;
-              case RDT_STRING_ARRAY:    append( v.toString().toUtf8() ); break; // TODO: encode using the same escapes as in the BlockString.json() function
-              case RDT_BYTEARRAY_ARRAY: append( QByteArray::fromHex( v.toString().toUtf8() ) ); break;
-              case RDT_MPZ_ARRAY:
-              case RDT_MPQ_ARRAY:       append( v.toString().toUtf8() ); break;
-              default: qWarning( "unhandled type in KeyValueArray::setJson()" ); return false;
-    }   }   }
-  return true;
+  QJsonDocument jda = QJsonDocument( jv.toArray() );
+  return m_val->setJson( jda.toJson() );
 }
 
 /**
