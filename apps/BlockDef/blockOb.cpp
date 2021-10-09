@@ -653,11 +653,11 @@ qint32  KeyValueArray::setBsonish( const BsonSerial &b )
 
 bool  BlockValueArray::append( ValueBase *value )
 { if ( value == nullptr )
-    { qWarning( "will not append null" );
+    { qWarning( "BlockValueArray will not append nullptr" );
       return false;
     }
   if ( value->type() != ( type() & RDT_TYPEMASK ) )
-    { qWarning( "type mismatch in BlockValueArray::append( ValueBase *value ) %d %d",(int)value->type(),(int)type() );
+    { qWarning( "type mismatch in BlockValueArray::append(ValueBase) %d %d",(int)value->type(),(int)type() );
       return false;
     }
   m_values.append( value );
@@ -770,8 +770,18 @@ bool  BlockValueObjectArray::operator==(const QList<BlockObjectMap>& l) const
 { if ( size() != l.size() )
     return false;
   for ( qint32 i = 0; i < size(); i++ )
-    if ( !(at(i) == l.at(i)) )
-      return false;
+    { BlockObjectMap mt = at(i);
+      BlockObjectMap ml = l.at(i);
+      if ( mt.size() != ml.size() )
+        return false;
+      QList<RiceyInt> keys = mt.keys();
+      for ( qint32 j = 0; j < mt.size(); j++ )
+        { ValueBase *vt = mt[keys.at(j)];
+          ValueBase *vl = ml[keys.at(j)];
+          if ( !( *vt == *vl ) )
+            return false;
+        }
+    }
   return true;
 }
 
@@ -789,7 +799,7 @@ ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32
     *l = -1;
   ValueBase *vbo = newValue( k, parent );
   if ( vbo == nullptr )
-    { qWarning( "problem making new value for key %d", k ); return nullptr; }
+    { qWarning( "problem making new value for key %llu", k ); return nullptr; }
   qint32 len = vbo->setBsonish( b );
   if ( len < 1 )
     { delete vbo; qWarning( "ValueBase::bsonishValueByKey() problem reading value" ); return nullptr; }

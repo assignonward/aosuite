@@ -66,14 +66,14 @@ void  Tests::on_start_clicked()
   pass &= testMPQ        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testString     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArray  ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
- // pass &= testObjectA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+  pass &= testObject     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPZA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPQA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testRiceyA     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testStringA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArrayA ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
-  pass &= testObject     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+  pass &= testObjectA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
 
   if ( pass )
     ui->report->append( QString( "\nPassed all %1 tests" ).arg( count ) );
@@ -745,7 +745,7 @@ bool Tests::testObjectA( QString &msg, qint32 &tc )
 
 bool Tests::testObjectA( BlockValueObjectArray &v, const QList<BlockObjectMap> &tv, qint32 &tc, QString &msg )
 { bool pass = true;
-  v = tv;
+  v.set( tv );
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1 %2\n" ).arg(tv.size()).arg(v.size()) ); pass = false; }
 

@@ -487,14 +487,14 @@ class BlockValueObjectArray : public BlockValueArray
 { public:
              explicit  BlockValueObjectArray( QObject *parent = nullptr ) : BlockValueArray( parent ) {}
                       ~BlockValueObjectArray() {}
-BlockValueObjectArray &operator= ( const QList<BlockObjectMap> &v ) { clear(); foreach( BlockObjectMap m, v ) append( new BlockValueObject(m,this) );  return *this; }
-BlockValueObjectArray &operator+= ( const BlockObjectMap &v ) { append( v ); return *this; }
+//BlockValueObjectArray &operator= ( const QList<BlockObjectMap> &v ) { set(v); return *this; }
+//BlockValueObjectArray &operator+= ( const BlockObjectMap &v )    { append(v); return *this; }
                quint8  type() const { return RDT_OBJECT_ARRAY; }
                  bool  append( const BlockObjectMap &v ) { return BlockValueArray::append( new BlockValueObject(v, this) ); }
                  bool  append( ValueBase *v ) { return BlockValueArray::append( v ); }
-       BlockObjectMap  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueObject *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return BlockObjectMap(); }
+       BlockObjectMap  at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueObject *)m_values.at(n))->value(); qWarning( "array index %d out of bounds %d",n,size() ); return BlockObjectMap(); }
  QList<BlockObjectMap> value() const { QList<BlockObjectMap> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
-                 void  set( const QList<BlockObjectMap> &v ) { clear(); foreach( BlockObjectMap m, v ) append( new BlockValueObject(m,this) ); }
+                 void  set( const QList<BlockObjectMap> &v ) { clear(); for ( qint32 i = 0; i < v.size(); i++ ) { BlockObjectMap m = v.at(i); append( new BlockValueObject(m,this) ); } }
                  bool  operator==(const QList<BlockObjectMap>& l) const;
                  bool  operator==(const BlockValueObjectArray& o) const { return *this == o.value(); }
 };
