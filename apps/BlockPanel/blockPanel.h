@@ -36,14 +36,13 @@ class BlockPanel : public QScrollArea
     Q_OBJECT
 
 public:
-        enum  Mode { make, build, idle };
-    explicit  BlockPanel( QString l, Mode m, QWidget *cw = nullptr );
+    explicit  BlockPanel( QString l, ValueBase::Mode m, QWidget *cw = nullptr );
              ~BlockPanel();
         void  liveDelay( int t );
 KeyValueBase *kvb() { if ( m_kvb == nullptr ) m_kvb = new KeyValuePair( RCD_null_z, this ); return m_kvb; }
      QString  label() { return m_label; }
         void  setLabel( QString );
-        void  setMode( Mode m ) { if ( m != m_mode ) { m_mode = m; update(); } else m_mode = m; }
+        void  setMode( ValueBase::Mode m ) { if ( m != m_mode ) { m_mode = m; update(); } else m_mode = m; }
         void  clear() { if ( m_kvb ) { m_kvb->clear(); m_kvb = nullptr; update(); } }
 
 signals:
@@ -56,7 +55,7 @@ public slots:
     void  graphvizDone(int,QProcess::ExitStatus);
 
 public:
-                   Mode  m_mode;
+        ValueBase::Mode  m_mode;
   QPointer<KeyValueBase> m_kvb;
                 QString  m_label;
       QPointer<QProcess> pp;

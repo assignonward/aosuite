@@ -28,6 +28,7 @@
 #include <QPointer>
 #include <QDataStream>
 #include <QIODevice>
+#include <QColor>
 #include "dictionary.h"
 
 #include <stdio.h>
@@ -44,22 +45,27 @@ class ValueBase : public QObject
 {
     Q_OBJECT
 public:
+              enum  Mode { make, build, idle };
           explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) {}
 virtual            ~ValueBase() {}
 static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
 static  JsonSerial  removeQuotes( const JsonSerial &j );
 static  JsonSerial  ensureQuotes( const JsonSerial &j );
-static   DotSerial  clusterWrap( DotSerial kn, DotSerial v );
+static   DotSerial  clusterWrap( Mode m, qint32 d, const DotSerial &kn, const DotSerial &v );
+static   DotSerial  lineColor( Mode m, qint32 d );
+static   DotSerial  bgColor( Mode m, qint32 d );
+static   DotSerial  wheelColor( const QColor &c, qint32 d );
 static   DotSerial  dotName( RiceyInt k );
 static   DotSerial  dotArrayName( RiceyInt k, qint32 sz );
 static   DotSerial  dotEmptyNode();
+            qint32  depth() const { if ( vbParent == nullptr ) return 0; return vbParent->depth()+1; }
 static  QByteArray  bsonishDefaultValue( qint8 );
 virtual       void  clear()         = 0;
 virtual     quint8  type()    const = 0;
 virtual     qint32  size()    const = 0;
 virtual BsonSerial  bsonish() const = 0;
 virtual JsonSerial  json()    const = 0;
-virtual  DotSerial  dot()     const { return json(); }
+virtual  DotSerial  dot(Mode m) const { (void)m; return json(); }
 virtual     qint32  setBsonish( const BsonSerial & ) = 0;
 virtual       bool  setJson   ( const JsonSerial & ) = 0;
          ValueBase *bsonishValueByKey( RiceyInt, const BsonSerial &, qint32 *l = nullptr, QObject *parent = nullptr ) const;
@@ -102,7 +108,7 @@ ValueBaseArray &operator= ( const ValueBaseArray &v ) { clear(); m_values = v.m_
          qint32  size() const { return m_values.size(); }
      BsonSerial  bsonish() const;
      JsonSerial  json()    const;
-      DotSerial  dot()     const;
+      DotSerial  dot(Mode) const;
          qint32  setBsonish( const BsonSerial & );
            bool  setJson( const JsonSerial & );
            bool  append( ValueBase * );
@@ -131,7 +137,7 @@ public:
              char *keyHexd() const { return keyHex().data();   }
         RiceyCode  keyCode() const { return intToRice( m_key ); }
          RiceyInt  key()     const { return m_key; }
-virtual DotSerial  dot()     const = 0;
+virtual DotSerial  dot(Mode) const = 0;
 
          RiceyInt  m_key; // Ricey code bsonish key
 };
@@ -154,7 +160,7 @@ virtual BsonSerial  bsonish()  const;
 virtual JsonSerial  json()     const;
 virtual     qint32  setBsonish( const BsonSerial & );
 virtual       bool  setJson   ( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
-virtual  DotSerial  dot()      const;
+virtual  DotSerial  dot(Mode)  const;
 
 public:
   QPointer<ValueBase> m_value; // Value of this KeyValuePair
@@ -183,7 +189,7 @@ virtual BsonSerial  bsonish() const;
 virtual JsonSerial  json()    const;
 virtual     qint32  setBsonish( const BsonSerial &b );
 virtual       bool  setJson   ( const JsonSerial &j );
-virtual  DotSerial  dot()      const;
+virtual  DotSerial  dot(Mode)  const;
 
 public:
   QPointer<ValueBaseArray> m_val;
@@ -467,7 +473,7 @@ class BlockValueObject : public ValueBase
        JsonSerial  json()    const;
            qint32  setBsonish(  const BsonSerial &b );
              bool  setJson   (  const JsonSerial &j );
-        DotSerial  dot()      const;
+        DotSerial  dot(Mode) const;
              void  clear()   { QList<RiceyInt> keys = m_obMap.keys(); foreach( RiceyInt k, keys ) { if ( m_obMap[k] != nullptr ) m_obMap[k]->deleteLater(); m_obMap.remove(k); } }
            qint32  size() const { return m_obMap.size(); }
    QList<RiceyInt> keys() const { return m_obMap.keys(); }

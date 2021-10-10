@@ -35,9 +35,9 @@ BlockTool::BlockTool( QWidget *cw ) :
       cw->layout()->addWidget( this );
       vb->setContentsMargins( 0,0,0,0 );
     }
-  panelA = new BlockPanel( "A", BlockPanel::Mode::build, ui->frameA );
-  panelX = new BlockPanel( "X", BlockPanel::Mode::make , ui->frameX );
-  panelY = new BlockPanel( "Y", BlockPanel::Mode::idle , ui->frameY );
+  panelA = new BlockPanel( "A", ValueBase::Mode::build, ui->frameA );
+  panelX = new BlockPanel( "X", ValueBase::Mode::make , ui->frameX );
+  panelY = new BlockPanel( "Y", ValueBase::Mode::idle , ui->frameY );
   connect( this, SIGNAL(showA(KeyValueBase*)), panelA, SLOT(setBlock(KeyValueBase*)));
   connect( this, SIGNAL(showX(KeyValueBase*)), panelX, SLOT(setBlock(KeyValueBase*)));
   connect( this, SIGNAL(showY(KeyValueBase*)), panelY, SLOT(setBlock(KeyValueBase*)));
@@ -91,7 +91,7 @@ void  BlockTool::on_set_clicked()
   setMake( kvb );
   if ( ui->showJson->isChecked() )ui->report->append( jsonReformat( kvb->json() ) );
   if ( ui->showHex ->isChecked() )ui->report->append( kvb->bsonish().toHex() );
-  if ( ui->showDot ->isChecked() )ui->report->append( kvb->dot() );
+  if ( ui->showDot ->isChecked() )ui->report->append( kvb->dot(ValueBase::Mode::idle) ); // TODO: get the current mode from BlockPanel
   // kvp->deleteLater(); child of vbp, no need to delete this
   vbp->deleteLater();
 }
@@ -165,25 +165,25 @@ void  BlockTool::sortKeys()
 void  BlockTool::on_makeX_toggled(bool c)
 { if ( c & ui->buildX->isChecked() )
     ui->buildA->setChecked(true);
-  panelX->setMode( c ? BlockPanel::Mode::make : BlockPanel::Mode::idle );
+  panelX->setMode( c ? ValueBase::Mode::make : ValueBase::Mode::idle );
 }
 void  BlockTool::on_makeY_toggled(bool c)
 { if ( c & ui->buildY->isChecked() )
     ui->buildA->setChecked(true);
-  panelY->setMode( c ? BlockPanel::Mode::make : BlockPanel::Mode::idle );
+  panelY->setMode( c ? ValueBase::Mode::make : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildA_toggled(bool c)
-{ panelA->setMode( c ? BlockPanel::Mode::build : BlockPanel::Mode::idle );
+{ panelA->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildX_toggled(bool c)
 { if ( c & ui->makeX->isChecked() )
     ui->makeY->setChecked(true);
-  panelX->setMode( c ? BlockPanel::Mode::build : BlockPanel::Mode::idle );
+  panelX->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildY_toggled(bool c)
 { if ( c & ui->makeY->isChecked() )
     ui->makeX->setChecked(true);
-  panelY->setMode( c ? BlockPanel::Mode::build : BlockPanel::Mode::idle );
+  panelY->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 
 bool  BlockTool::setBuild( KeyValueBase *kvb )
@@ -423,7 +423,7 @@ void  BlockTool::on_DAO0_clicked()
 
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
   if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
-  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot() );
+  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
   setBuild( kvp );
   kvp->deleteLater();
 }
@@ -466,7 +466,7 @@ void  BlockTool::on_chain_clicked()
 
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
   if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
-  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot() );
+  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
   setBuild( kvp );
   kvp->deleteLater();
 }
@@ -585,7 +585,7 @@ void  BlockTool::on_hash_clicked()
 */
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
   if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
-  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot() );
+  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
   setBuild( kvp );
   kvp->deleteLater();
 }

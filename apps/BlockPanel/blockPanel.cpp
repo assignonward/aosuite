@@ -28,7 +28,7 @@
 
 // TODO: test intentional failures, error checking, length reporting, trailing input data, etc.
 
-BlockPanel::BlockPanel( QString l, Mode m, QWidget *cw ) :
+BlockPanel::BlockPanel( QString l, ValueBase::Mode m, QWidget *cw ) :
     QScrollArea(cw),
     ui(new Ui::BlockPanel)
 { drawingInProgress = false;
@@ -60,7 +60,7 @@ void  BlockPanel::setBlock( KeyValueBase *p )
 
 void  BlockPanel::update()
 { if ( m_kvb )
-    writeWrappedDot( m_kvb->dot() );
+    writeWrappedDot( m_kvb->dot(m_mode) );
    else
     { ui->view->clear();
       ui->view->setText( m_label );
@@ -105,9 +105,9 @@ void  BlockPanel::writeWrappedDot( QByteArray d )
   fd.write( "compound=true;\n" );
   liveDelay( 50 );
   switch ( m_mode )
-    { case make:  fd.write( "node [color=darkgreen]; graph [color=darkgreen] bgcolor=mintcream;\n"  ); break;
-      case build: fd.write( "node [color=darkblue];  graph [color=darkblue]  bgcolor=ghostwhite;\n" ); break;
-      case idle:  fd.write( "node [color=grey];      graph [color=grey]      bgcolor=grey90;\n" ); break;
+    { case ValueBase::make:  fd.write( "node [color=darkgreen]; graph [color=darkgreen] bgcolor=mintcream;\n"  ); break;
+      case ValueBase::build: fd.write( "node [color=darkblue];  graph [color=darkblue]  bgcolor=ghostwhite;\n" ); break;
+      case ValueBase::idle:  fd.write( "node [color=grey];      graph [color=grey]      bgcolor=grey90;\n" ); break;
     }
   fd.write( d );
   fd.write( "}\n" );

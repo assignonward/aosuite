@@ -65,58 +65,94 @@ DotSerial ValueBase::dotName( RiceyInt k )
 DotSerial ValueBase::dotArrayName( RiceyInt k, qint32 sz )
 { return dotName(k) + "["+DotSerial::number( sz )+"]"; }
 
-DotSerial ValueBase::clusterWrap( DotSerial kn, DotSerial v )
-{ DotSerial d;
-  kn = ensureQuotes( removeQuotes( kn ) );
-  d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-  d.append( "  label     = "+kn+";\n" );
-  d.append( "  labeljust = \"l\";\n" );
-  d.append( "  style     = rounded;\n" );
-  d.append( "  margin    = 4;\n" );
-  d.append( "  fontsize  = 10;\n\n" );
+DotSerial ValueBase::clusterWrap( Mode m, qint32 d, const DotSerial &kn, const DotSerial &v )
+{ DotSerial dot;
+  dot.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
+  dot.append( "  label     = "+ensureQuotes( DotSerial::number(d)+":"+removeQuotes( kn ) )+";\n" );
+  dot.append( "  labeljust = \"l\";\n" );
+  dot.append( "  style     = rounded;\n" );
+  dot.append( "  "+lineColor( m, d ) );
+  dot.append( "  "+bgColor( m, d ) );
+  dot.append( "  margin    = 4;\n" );
+  dot.append( "  fontsize  = 10;\n\n" );
   if ( v.size() > 0 )
     { if ( !v.trimmed().startsWith( "subgraph" ) && !v.trimmed().startsWith( "node" ) )
-        { d.append( "node_"+DotSerial::number( dex++ )
-                   +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
+        { dot.append( "node_"+DotSerial::number( dex++ )
+                   +" [ label="+v+"; "+lineColor(m,d)+" shape=box; style=rounded; fontsize=10; ];\n" );
         }
        else
-        { d.append( v );
+        { dot.append( v );
           if ( !v.trimmed().endsWith( ";" ) )
-            d.append( ";" );
-          d.append( "\n" );
+            dot.append( ";" );
+          dot.append( "\n" );
         }
     }
    else
-    d.append( dotEmptyNode() );
-  d.append( "  }\n" );
-  return d;
+    dot.append( dotEmptyNode() );
+  dot.append( "  }\n" );
+  return dot;
 }
 
-DotSerial KeyValuePair::dot() const
-{ return clusterWrap(      dotName( key() )        , value() ? value()->dot() : "" ); }
+DotSerial ValueBase::lineColor( Mode m, qint32 depth )
+{ switch ( m )
+    { case make:  return "color=\""+wheelColor( QColor( "darkgreen"  ), depth)+"\";\n";
+      case build: return "color=\""+wheelColor( QColor( "darkblue"   ), depth)+"\";\n";
+      case idle:  return "color=\""+wheelColor( QColor( "grey"       ), depth)+"\";\n";
+    }
+  return "";
+}
 
-DotSerial KeyValueArray::dot() const
-{ return clusterWrap( dotArrayName( key(), size() ), value() ? value()->dot() : "" ); }
+DotSerial ValueBase::bgColor( Mode m, qint32 depth )
+{ switch ( m )
+    { case make:  return "bgcolor=\""+wheelColor( QColor( "mintcream"  ), depth)+"\";\n";
+      case build: return "bgcolor=\""+wheelColor( QColor( "ghostwhite" ), depth)+"\";\n";
+      case idle:  return "bgcolor=\""+wheelColor( QColor( "gainsboro"  ), depth)+"\";\n";
+    }
+  return "";
+}
 
-DotSerial  ValueBaseArray::dot() const
+DotSerial ValueBase::wheelColor( const QColor &c, qint32 depth )
+{ qreal nHue = c.hslHueF() + ((qreal)(depth*50))/360.0;
+  qreal nSat = c.hslSaturationF();
+  qreal nLig = c.lightnessF();
+  while ( nHue > 1.0 ) { nHue -= 1.0; } if ( nHue < 0.0 ) nHue = 0.0;
+  if ( nSat > 1.0 ) nSat = 1.0;
+  if ( nSat < 0.0 ) nSat = 0.0;
+  if ( nLig > 1.0 ) nLig = 1.0;
+  if ( nLig < 0.0 ) nLig = 0.0;
+  QColor ct; ct.setHslF( nHue, nSat, nLig );
+  DotSerial cs;
+  cs.append( (quint8)ct.red()   );
+  cs.append( (quint8)ct.green() );
+  cs.append( (quint8)ct.blue()  );
+  return "#"+cs.toHex();
+}
+
+DotSerial KeyValuePair::dot(Mode m) const
+{ return clusterWrap( m, depth(),      dotName( key() )        , value() ? value()->dot(m) : "" ); }
+
+DotSerial KeyValueArray::dot(Mode m) const
+{ return clusterWrap( m, depth(), dotArrayName( key(), size() ), value() ? value()->dot(m) : "" ); }
+
+DotSerial  ValueBaseArray::dot(Mode m) const
 { DotSerial d;
   if ( size() == 0 )
     d.append( dotEmptyNode() );
    else for ( qint32 i = 0; i < size(); i++ )
-    d.append( clusterWrap( "["+DotSerial::number(i)+"]", at(i) ? at(i)->dot() : "" ) );
+    d.append( clusterWrap( m, depth(), "["+DotSerial::number(i)+"]", at(i) ? at(i)->dot(m) : "" ) );
   return d;
 }
 
-DotSerial BlockValueObject::dot() const
+DotSerial BlockValueObject::dot(Mode m) const
 { DotSerial d;
   QList<RiceyInt>keys = value().keys();
   if ( keys.size() == 0 )
     d.append( dotEmptyNode() );
    else foreach ( RiceyInt i, keys )
     { if (( value(i)->type() & RDT_ARRAY ) == 0 )
-        d.append( clusterWrap(      dotName( i )                  , value(i) ? value(i)->dot() : "" ) );
+        d.append( clusterWrap( m, depth(),      dotName( i )                  , value(i) ? value(i)->dot(m) : "" ) );
        else
-        d.append( clusterWrap( dotArrayName( i, value(i)->size() ), value(i) ? value(i)->dot() : "" ) );
+        d.append( clusterWrap( m, depth(), dotArrayName( i, value(i)->size() ), value(i) ? value(i)->dot(m) : "" ) );
     }
   return d;
 }
