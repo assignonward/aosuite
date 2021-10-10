@@ -52,101 +52,64 @@
 
 qint32 dex = 0;
 
-DotSerial KeyValuePair::dot() const
+DotSerial ValueBase::dotArrayName( RiceyInt k, qint32 sz )
+{ if ( dict.codesContainCode( k ) )
+    return dict.nameFromCode(k) + "["+DotSerial::number( sz )+"]";
+   else
+    return intToRice( k ).toHex() + "["+DotSerial::number( sz )+"]";
+}
+
+DotSerial ValueBase::clusterWrap( DotSerial kn, DotSerial v )
 { DotSerial d;
-  DotSerial kn = dict.nameFromCode(key());
+  kn = ensureQuotes( removeQuotes( kn ) );
   d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-  d.append( "  label =\""+kn+"\";\n" );
+  d.append( "  label ="+kn+";\n" );
   d.append( "  labeljust = \"l\";\n" );
   d.append( "  style = rounded;\n" );
   d.append( "  margin = 4;\n" );
   d.append( "  fontsize = 10;\n\n" );
-  if ( value() )
-    { DotSerial v = value()->dot();
-      if ( !v.trimmed().startsWith( "subgraph" ) && !v.trimmed().startsWith( "node" ) )
+  if ( v.size() > 0 )
+    { if ( !v.trimmed().startsWith( "subgraph" ) && !v.trimmed().startsWith( "node" ) )
         { d.append( "node_"+DotSerial::number( dex++ )
                    +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
         }
        else
-        { // v.replace(DotSerial("\""), DotSerial(""));
-          d.append( v );
+        { d.append( v );
           if ( !v.trimmed().endsWith( ";" ) )
             d.append( ";" );
           d.append( "\n" );
         }
     }
    else
-    d.append( "NULL;\n" );
+    d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"(empty)\"; shape=plaintext; fontsize=8; ];\n" );
   d.append( "  }\n" );
   return d;
+}
+
+DotSerial KeyValuePair::dot() const
+{ DotSerial v;
+  if ( value() )
+    v = value()->dot();
+  return clusterWrap( dict.nameFromCode(key()), v );
+}
+
+DotSerial KeyValueArray::dot() const
+{ DotSerial v;
+  if ( value() )
+    v = value()->dot();
+  return clusterWrap( dotArrayName( key(), size() ), v );
 }
 
 DotSerial  BlockValueArray::dot() const
 { DotSerial d;
   if ( size() == 0 )
     d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
-  quint8 t = type();
   for ( qint32 i = 0; i < size(); i++ )
-    { if ( at(i) )
-        { d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-          d.append( "  label =\"["+DotSerial::number(i)+"]\";\n" );
-          d.append( "  labeljust = \"l\";\n" );
-          d.append( "  margin = 4;\n" );
-          d.append( "  fontsize = 10;\n\n" );
-            DotSerial v = at(i)->dot();
-            if ( ( at(i)->type() & RDT_TYPEMASK ) == RDT_RCODE )
-              v.replace(DotSerial("\""), DotSerial(""));
-            if ( t == RDT_OBJECT_ARRAY )
-              d.append( v+"\n" );
-             else if ( t == RDT_STRING_ARRAY )
-              d.append( "node_"+DotSerial::number( dex++ )
-                       +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
-             else
-              d.append( "node_"+DotSerial::number( dex++ )
-                       +" [ label=\""+v+"\"; shape=box; style=rounded; fontsize=10; ];\n" );
-          d.append( "  }\n\n" );
-        }
-       else
-        d.append( "    NULL;\n" );
+    { DotSerial v;
+      if ( at(i) )
+        v = at(i)->dot();
+      d.append( clusterWrap( "["+DotSerial::number(i)+"]", v ) );
     }
-  return d;
-}
-
-DotSerial KeyValueArray::dot() const
-{ DotSerial d;
-  DotSerial kn = dict.nameFromCode(key());
-  d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-  d.append( "  label =\""+kn+"["+DotSerial::number( size() )+"]\";\n" );
-  d.append( "  labeljust = \"l\";\n" );
-  d.append( "  margin = 4;\n" );
-  d.append( "  fontsize = 10;\n" );
-  if ( size() == 0 )
-    d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
-  quint8 t = type();
-  for ( qint32 i = 0; i < size(); i++ )
-    { if ( at(i) )
-        { d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-          d.append( "  label =\"["+DotSerial::number(i)+"]\";\n" );
-          d.append( "  labeljust = \"l\";\n" );
-          d.append( "  margin = 4;\n" );
-          d.append( "  fontsize = 10;\n\n" );
-            DotSerial v = at(i)->dot();
-            if ( ( at(i)->type() & RDT_TYPEMASK ) == RDT_RCODE )
-              v.replace(DotSerial("\""), DotSerial(""));
-            if ( t == RDT_OBJECT_ARRAY )
-              d.append( v+"\n" );
-             else if ( t == RDT_STRING_ARRAY )
-              d.append( "node_"+DotSerial::number( dex++ )
-                       +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
-             else
-              d.append( "node_"+DotSerial::number( dex++ )
-                       +" [ label=\""+v+"\"; shape=box; style=rounded; fontsize=10; ];\n" );
-          d.append( "  }\n\n" );
-        }
-       else
-        d.append( "    NULL;\n" );
-    }
-  d.append( "  }\n" );
   return d;
 }
 
@@ -156,38 +119,13 @@ DotSerial BlockValueObject::dot() const
   if ( keys.size() == 0 )
     d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
    else foreach ( RiceyInt i, keys )
-    { bool done = false;
+    { DotSerial v;
       if ( value(i) )
-        if (( value(i)->type() & RDT_ARRAY ) == RDT_ARRAY )
-           { d.append( value(i)->dot() );
-             done = true;
-           }
-      if ( !done )
-        { DotSerial kn = dict.nameFromCode(i);
-          d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-          d.append( "  label =\""+kn+"\";\n" );
-          d.append( "  margin = 4;\n" );
-          d.append( "  style = rounded;\n" );
-          d.append( "  fontsize = 10;\n\n" );
-          if ( value(i) )
-            { DotSerial v = value(i)->dot();
-              quint8 t = value(i)->type();
-              //if ( t == RDT_STRING )
-              //  v.replace(DotSerial("!"), DotSerial(""));
-              if (( t == RDT_STRING ) || ( t == RDT_MPZ ) || ( t == RDT_MPQ ) || ( t == RDT_RCODE ) || ( t == RDT_BYTEARRAY ))
-                d.append( "node_"+DotSerial::number( dex++ )
-                         +" [ label="+v+"; shape=box; style=rounded; fontsize=10; ];\n" );
-               else if (( t == RDT_OBJECT ) || (( t & RDT_ARRAY ) == RDT_ARRAY ))
-                d.append( v+"\n" );
-               else
-                d.append( "node_"+DotSerial::number( dex++ )
-                         +" [ label=\""+v+"\"; shape=box; style=rounded; fontsize=10; ];\n" );
-            }
-           else
-            d.append( "node_"+DotSerial::number( dex++ )
-                     +" [ label=\"NULL\"; shape=box; style=rounded; fontsize=10; ];\n" );
-          d.append( "  }\n" );
-        }
+        v = value(i)->dot();
+      if (( value(i)->type() & RDT_ARRAY ) == 0 )
+        d.append( clusterWrap( dict.nameFromCode(i), v ) );
+       else
+        d.append( clusterWrap( dotArrayName( i, value(i)->size() ), v ) );
     }
   return d;
 }

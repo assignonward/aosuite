@@ -80,9 +80,10 @@ BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls 
  */
 JsonSerial ValueBase::removeQuotes( const JsonSerial &j )
 { JsonSerial jt = j.trimmed();
-  if ( jt.endsWith( '"' ) && jt.startsWith( '"' ) )
+  while ( jt.endsWith( '"' ) && jt.startsWith( '"' ) )
     { jt.chop(1);
-      return jt.mid(1);
+      jt = jt.mid(1);
+      jt = jt.trimmed();
     }
   return jt;
 }

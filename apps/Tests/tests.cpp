@@ -311,9 +311,9 @@ bool Tests::testDict( QString &msg, qint32 &tc )
        else
         msg.append( QString( "FAIL i %1 j %2 k %3 cc1 %4 cc2 %5 cc3 %6 code %7 name %8 cnme %9 rti %10 itr %11\n" )
                                .arg(i).arg(j).arg(k).arg(cc1).arg(cc2).arg(cc3)
-                               .arg(QString::fromUtf8(code.toHex()))
-                               .arg(QString::fromUtf8(name))
-                               .arg(QString::fromUtf8(cnme))
+                               .arg(QString::fromUtf8(code.toHex()),
+                                    QString::fromUtf8(name),
+                                    QString::fromUtf8(cnme))
                                .arg(riceToInt(code))
                                .arg(QString::fromUtf8(intToRice(i).toHex()))
                             );
@@ -372,8 +372,8 @@ bool Tests::testInt64( BlockValueInt64 &v, qint64 tv, qint32 &tc, QString &msg )
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
   if ( b == v.bsonish() ) tc++; else
     { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
-            .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(b.toHex()),
+                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( tv - 1 );
@@ -436,8 +436,8 @@ bool Tests::testRicey( BlockValueRiceyCode &v, RiceyInt tv, qint32 &tc, QString 
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
   if ( b == v.bsonish() ) tc++; else
     { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
-            .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(b.toHex()),
+                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( tv + 1 );
@@ -500,8 +500,8 @@ bool Tests::testMPZ( BlockValueMPZ &v, const MP_INT &tv, qint32 &tc, QString &ms
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(BlockValueMPZ::toStr(tv))).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
   if ( b == v.bsonish() ) tc++; else
     { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
-            .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(b.toHex()),
+                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   v.set( tv );
   JsonSerial j = v.json();
@@ -596,8 +596,8 @@ bool Tests::testMPQ( BlockValueMPQ &v, const MP_RAT &tv, qint32 &tc, QString &ms
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
   if ( b == v.bsonish() ) tc++; else
     { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
-            .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(b.toHex()),
+                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   v.set( tv );
   JsonSerial j = v.json();
@@ -650,8 +650,8 @@ bool Tests::testString( BlockValueString &v, const Utf8String &tv, qint32 &tc, Q
     { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv), QString::fromUtf8(b.toHex()) ) ); pass = false; }
   if ( b == v.bsonish() ) tc++; else
     { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
-            .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(b.toHex()),
+                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( "x" );
