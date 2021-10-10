@@ -49,6 +49,7 @@ KeyValueBase *buildKvb();
 KeyValueBase *makeKvb();
         bool  makeClear();
         void  sortKeys();
+        void  selectRoot(BlockPanel *);
 
 signals:
         void  showA( KeyValueBase * );
@@ -79,6 +80,7 @@ public:
    QPointer<BlockPanel> panelY;
                QString  fileDir;
          Ui::BlockTool *ui;
+    QPointer<ValueBase> selBB;
      QPointer<QProcess> pp;
 };
 

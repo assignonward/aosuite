@@ -48,14 +48,15 @@ BlockPanel::~BlockPanel()
     m_kvb->deleteLater();
 }
 
-void  BlockPanel::setBlock( KeyValueBase *p )
+void BlockPanel::setBlock( KeyValueBase *p, bool updateNow )
 { if ( m_kvb )
     m_kvb->deleteLater();
   if ( p->key() & RDT_ARRAY )
     m_kvb = new KeyValueArray( p->bsonish(), this );
    else
     m_kvb = new KeyValuePair( p->bsonish(), this );
-  update();
+  if ( updateNow )
+    update();
 }
 
 void  BlockPanel::update()
@@ -105,9 +106,10 @@ void  BlockPanel::writeWrappedDot( QByteArray d )
   fd.write( "compound=true;\n" );
   liveDelay( 50 );
   switch ( m_mode )
-    { case ValueBase::make:  fd.write( "node [color=darkgreen]; graph [color=darkgreen] bgcolor=mintcream;\n"  ); break;
-      case ValueBase::build: fd.write( "node [color=darkblue];  graph [color=darkblue]  bgcolor=ghostwhite;\n" ); break;
-      case ValueBase::idle:  fd.write( "node [color=grey];      graph [color=grey]      bgcolor=grey90;\n" ); break;
+    { case ValueBase::make:     fd.write( "node [color=darkgreen]; graph [color=darkgreen] bgcolor=mintcream;\n"  ); break;
+      case ValueBase::build:    fd.write( "node [color=darkblue];  graph [color=darkblue]  bgcolor=ghostwhite;\n" ); break;
+      case ValueBase::idle:     fd.write( "node [color=grey];      graph [color=grey]      bgcolor=grey90;\n"     ); break;
+      case ValueBase::selected: fd.write( "node [color=red];       graph [color=red]       bgcolor=white;\n"      ); break;
     }
   fd.write( "labeljust = \"l\";\n" );
   fd.write( "style     = rounded;\n" );

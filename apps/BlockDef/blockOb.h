@@ -45,8 +45,8 @@ class ValueBase : public QObject
 {
     Q_OBJECT
 public:
-              enum  Mode { make, build, idle };
-          explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) {}
+              enum  Mode { make, build, idle, selected };
+          explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) { m_sel = false; }
 virtual            ~ValueBase() {}
 static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
 static  JsonSerial  removeQuotes( const JsonSerial &j );
@@ -58,6 +58,9 @@ static   DotSerial  wheelColor( const QColor &c, qreal hDep, qreal sDep, qreal l
 static   DotSerial  dotName( RiceyInt k );
 static   DotSerial  dotArrayName( RiceyInt k, qint32 sz );
 static   DotSerial  dotEmptyNode( qint32 i = 0 );
+              bool  sel()   const { return m_sel; }
+              void  setSel()      { m_sel = true; }
+              void  clearSel()    { m_sel = false; }
             qint32  depth() const { if ( vbParent == nullptr ) return 0; return vbParent->depth()+1; }
 virtual Utf8String  id()    const { if ( vbParent == nullptr ) return "_"; return vbParent->id()+idx(); }
 virtual Utf8String  idx()   const { return m_idx; }
@@ -76,6 +79,7 @@ virtual       bool  operator==( const ValueBase &v ) const { if ( v.type() != ty
 
 QPointer<ValueBase> vbParent;
         Utf8String  m_idx;
+              bool  m_sel;
 };
 
 /**

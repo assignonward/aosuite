@@ -173,23 +173,43 @@ void  BlockTool::on_makeY_toggled(bool c)
   panelY->setMode( c ? ValueBase::Mode::make : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildA_toggled(bool c)
-{ panelA->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
+{ if ( !c ) if ( selBB ) selBB->clearSel();
+  if ( c )
+    selectRoot( panelA );
+  panelA->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildX_toggled(bool c)
-{ if ( c & ui->makeX->isChecked() )
+{ if ( !c ) if ( selBB ) selBB->clearSel();
+  if ( c & ui->makeX->isChecked() )
     ui->makeY->setChecked(true);
+  if ( c )
+    selectRoot( panelX );
   panelX->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildY_toggled(bool c)
-{ if ( c & ui->makeY->isChecked() )
+{ if ( !c ) if ( selBB ) selBB->clearSel();
+  if ( c & ui->makeY->isChecked() )
     ui->makeX->setChecked(true);
+  if ( c )
+    selectRoot( panelY );
   panelY->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
+}
+void  BlockTool::selectRoot(BlockPanel *bp)
+{ if ( bp->m_kvb == nullptr )
+    return;
+  KeyValueBase *p_kvb = bp->m_kvb;
+  if (( p_kvb->key() & RDT_ARRAY ) == 0 )
+    selBB = ( (KeyValuePair *)p_kvb)->value();
+   else
+    selBB = ((KeyValueArray *)p_kvb)->value();
+   if ( selBB )
+     selBB->setSel();
 }
 
 bool  BlockTool::setBuild( KeyValueBase *kvb )
-{ if ( ui->buildA->isChecked() ) { panelA->setBlock( kvb ); return true; }
-  if ( ui->buildX->isChecked() ) { panelX->setBlock( kvb ); return true; }
-  if ( ui->buildY->isChecked() ) { panelY->setBlock( kvb ); return true; }
+{ if ( ui->buildA->isChecked() ) { panelA->setBlock( kvb, false ); selectRoot( panelA ); panelA->update(); return true; }
+  if ( ui->buildX->isChecked() ) { panelX->setBlock( kvb, false ); selectRoot( panelX ); panelX->update(); return true; }
+  if ( ui->buildY->isChecked() ) { panelY->setBlock( kvb, false ); selectRoot( panelY ); panelY->update(); return true; }
   qWarning( "BlockTool::setBuild() no build panel checked" );
   return false;
 }

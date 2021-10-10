@@ -67,6 +67,7 @@ DotSerial ValueBase::dotArrayName( RiceyInt k, qint32 sz )
 
 DotSerial ValueBase::clusterWrap( Mode m, ValueBase *vb, const DotSerial &kn )
 { DotSerial dot;
+       Mode sm  = vb ? (vb->sel() ? selected : m ) : m;
      qint32 d   = vb ? vb->depth() : 0;
   DotSerial uid = vb ? vb->id()    : "_z"+DotSerial::number( dex++ );
   DotSerial v   = vb ? vb->dot(m)  : "";
@@ -74,8 +75,8 @@ DotSerial ValueBase::clusterWrap( Mode m, ValueBase *vb, const DotSerial &kn )
   qint32 i = 2; // indent spaces per depth level
   dot.append( DotSerial(d*i,' ')+"subgraph cluster"+uid+" {\n" );
   dot.append( DotSerial(2+d*i,' ')+"label = "+lab+";\n" );
-  dot.append( DotSerial(2+d*i,' ')+lineColor( m, d )+"\n" );
-  dot.append( DotSerial(2+d*i,' ')+bgColor( m, d )+"\n" );
+  dot.append( DotSerial(2+d*i,' ')+lineColor( sm, d )+"\n" );
+  dot.append( DotSerial(2+d*i,' ')+  bgColor( sm, d )+"\n" );
   dot.append( DotSerial(2+d*i,' ')+"margin = 4;\n\n" );
   if ( v.size() > 0 )
     { if ( !v.trimmed().startsWith( "subgraph" ) && !v.trimmed().startsWith( "node" ) )
@@ -96,18 +97,20 @@ DotSerial ValueBase::clusterWrap( Mode m, ValueBase *vb, const DotSerial &kn )
 
 DotSerial ValueBase::lineColor( Mode m, qint32 depth )
 { switch ( m )
-    { case make:  return "color=\""+wheelColor( QColor( "darkgreen"  ), 0.05, 0.15, 0.1, depth)+"\";";
-      case build: return "color=\""+wheelColor( QColor( "darkblue"   ), 0.05, 0.15, 0.1, depth)+"\";";
-      case idle:  return "color=\""+wheelColor( QColor( "grey"       ), 0.05, 0.0 , 0.1, depth)+"\";";
+    { case make:     return "color=\""+wheelColor( QColor( "darkgreen"  ), 0.05, 0.15, 0.1, depth)+"\";";
+      case build:    return "color=\""+wheelColor( QColor( "darkblue"   ), 0.05, 0.15, 0.1, depth)+"\";";
+      case idle:     return "color=\""+wheelColor( QColor( "grey"       ), 0.05, 0.0 , 0.1, depth)+"\";";
+      case selected: return "color=\""+wheelColor( QColor( "red"        ), 0.05, 0.0 , 0.1, depth)+"\";";
     }
   return "";
 }
 
 DotSerial ValueBase::bgColor( Mode m, qint32 depth )
 { switch ( m )
-    { case make:  return "bgcolor=\""+wheelColor( QColor( "mintcream" ), 0.05, 0.05, 0.1, depth)+"\";";
-      case build: return "bgcolor=\""+wheelColor( QColor( "#F0F8FF"   ), 0.05, 0.05, 0.1, depth)+"\";";
-      case idle:  return "bgcolor=\""+wheelColor( QColor( "gainsboro" ), 0.05, 0.05, 0.1, depth)+"\";";
+    { case make:     return "bgcolor=\""+wheelColor( QColor( "mintcream" ), 0.05, 0.05, 0.1, depth)+"\";";
+      case build:    return "bgcolor=\""+wheelColor( QColor( "#F0F8FF"   ), 0.05, 0.05, 0.1, depth)+"\";";
+      case idle:     return "bgcolor=\""+wheelColor( QColor( "gainsboro" ), 0.05, 0.05, 0.1, depth)+"\";";
+      case selected: return "bgcolor=\""+wheelColor( QColor( "#FFF8F0"   ), 0.05, 0.05, 0.1, depth)+"\";";
     }
   return "";
 }

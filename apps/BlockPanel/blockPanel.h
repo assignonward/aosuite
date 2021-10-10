@@ -48,11 +48,11 @@ KeyValueBase *kvb() { if ( m_kvb == nullptr ) m_kvb = new KeyValuePair( RCD_null
 signals:
 
 public slots:
-    void  update();
-    void  setBlock( KeyValueBase * );
-    void  writeWrappedDot( QByteArray d );
-    void  updateGraph();
-    void  graphvizDone(int,QProcess::ExitStatus);
+        void  update();
+        void  setBlock( KeyValueBase *, bool updateNow = true );
+        void  writeWrappedDot( QByteArray d );
+        void  updateGraph();
+        void  graphvizDone(int,QProcess::ExitStatus);
 
 public:
         ValueBase::Mode  m_mode;
