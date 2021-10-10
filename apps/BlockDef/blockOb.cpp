@@ -674,6 +674,7 @@ bool  ValueBaseArray::append( ValueBase *value )
       return false;
     }
   value->vbParent = this;
+  value->m_idx    = "i"+Utf8String::number( size() );
   m_values.append( value );
   return true;
 }
@@ -832,6 +833,7 @@ bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
     { qWarning( "type collision, insertion blocked." ); return false; }
   m_obMap.insert( k, v );
   v->vbParent = this;
+  v->m_idx = "k" + intToRice( k ).toHex();;
   return true;
 }
 
@@ -847,6 +849,7 @@ bool  BlockValueObject::insert( KeyValueArray *kva )
   if ( m_obMap.contains( kva->key() ) )
     { qWarning( "type collision, insertion blocked." ); return false; }
   kva->value()->vbParent = this;
+  kva->value()->m_idx = "k" + intToRice( kva->key() ).toHex();
   m_obMap.insert( kva->key(), kva->value() );
   return true;
 }

@@ -53,7 +53,7 @@
 qint32 dex = 0;
 
 DotSerial ValueBase::dotEmptyNode( qint32 i )
-{ return DotSerial(i,' ')+"node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n"; }
+{ return DotSerial(i,' ')+"node_m"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n"; }
 
 DotSerial ValueBase::dotName( RiceyInt k )
 { if ( dict.codesContainCode( k ) )
@@ -65,22 +65,21 @@ DotSerial ValueBase::dotName( RiceyInt k )
 DotSerial ValueBase::dotArrayName( RiceyInt k, qint32 sz )
 { return dotName(k) + "["+DotSerial::number( sz )+"]"; }
 
-DotSerial ValueBase::clusterWrap( Mode m, qint32 d, const DotSerial &kn, const DotSerial &v )
+DotSerial ValueBase::clusterWrap( Mode m, ValueBase *vb, const DotSerial &kn )
 { DotSerial dot;
+     qint32 d   = vb ? vb->depth() : 0;
+  DotSerial uid = vb ? vb->id()    : "_z"+DotSerial::number( dex++ );
+  DotSerial v   = vb ? vb->dot(m)  : "";
+  DotSerial lab = ensureQuotes( /* uid+":" +DotSerial::number(d)+":"+ */ removeQuotes( kn ) );
   qint32 i = 2; // indent spaces per depth level
-  dot.append( DotSerial(d*i,' ')+"subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-  dot.append( DotSerial(2+d*i,' ')+"label = "+ensureQuotes( /* DotSerial::number(d)+":"+ */ removeQuotes( kn ) )+";\n" );
-// These (commented out) appear in BlockPanel::writeWrappedDot
-//  dot.append( "labeljust = \"l\";\n" );
-//  dot.append( "style     = rounded;\n" );
-//  dot.append( "fontsize  = 10;\n" );
+  dot.append( DotSerial(d*i,' ')+"subgraph cluster"+uid+" {\n" );
+  dot.append( DotSerial(2+d*i,' ')+"label = "+lab+";\n" );
   dot.append( DotSerial(2+d*i,' ')+lineColor( m, d )+"\n" );
   dot.append( DotSerial(2+d*i,' ')+bgColor( m, d )+"\n" );
   dot.append( DotSerial(2+d*i,' ')+"margin = 4;\n\n" );
   if ( v.size() > 0 )
     { if ( !v.trimmed().startsWith( "subgraph" ) && !v.trimmed().startsWith( "node" ) )
-        { dot.append( DotSerial(3+d*i,' ')+"node_"+DotSerial::number( dex++ )
-                   +" [ label="+v+"; "+lineColor(m,d)+" ];\n" );
+        { dot.append( DotSerial(4+d*i,' ')+"node"+uid+" [ label="+v+"; "+lineColor(m,d)+" ];\n" );
         }
        else
         { dot.append( v );
@@ -90,7 +89,7 @@ DotSerial ValueBase::clusterWrap( Mode m, qint32 d, const DotSerial &kn, const D
         }
     }
    else
-    dot.append( dotEmptyNode(3+d*i) );
+    dot.append( dotEmptyNode(4+d*i) );
   dot.append( DotSerial(d*i,' ')+"}\n" );
   return dot;
 }
@@ -140,17 +139,17 @@ DotSerial ValueBase::wheelColor( const QColor &c, qreal hDep, qreal sDep, qreal 
 }
 
 DotSerial KeyValuePair::dot(Mode m) const
-{ return clusterWrap( m, depth(),      dotName( key() )        , value() ? value()->dot(m) : "" ); }
+{ return clusterWrap( m, value(),      dotName( key() )         ); }
 
 DotSerial KeyValueArray::dot(Mode m) const
-{ return clusterWrap( m, depth(), dotArrayName( key(), size() ), value() ? value()->dot(m) : "" ); }
+{ return clusterWrap( m, value(), dotArrayName( key(), size() ) ); }
 
 DotSerial  ValueBaseArray::dot(Mode m) const
 { DotSerial d;
   if ( size() == 0 )
-    d.append( dotEmptyNode(depth()*2+3) );
+    d.append( dotEmptyNode(depth()*2+4) );
    else for ( qint32 i = 0; i < size(); i++ )
-    d.append( clusterWrap( m, depth()+1, "["+DotSerial::number(i)+"]", at(i) ? at(i)->dot(m) : "" ) );
+    d.append( clusterWrap( m, at(i), "["+DotSerial::number(i)+"]" ) );
   return d;
 }
 
@@ -158,12 +157,12 @@ DotSerial BlockValueObject::dot(Mode m) const
 { DotSerial d;
   QList<RiceyInt>keys = value().keys();
   if ( keys.size() == 0 )
-    d.append( dotEmptyNode(depth()*2+3) );
+    d.append( dotEmptyNode(depth()*2+4) );
    else foreach ( RiceyInt i, keys )
     { if (( value(i)->type() & RDT_ARRAY ) == 0 )
-        d.append( clusterWrap( m, depth()+1,      dotName( i )                  , value(i) ? value(i)->dot(m) : "" ) );
+        d.append( clusterWrap( m, value(i),     dotName( i )                   ) );
        else
-        d.append( clusterWrap( m, depth()+1, dotArrayName( i, value(i)->size() ), value(i) ? value(i)->dot(m) : "" ) );
+        d.append( clusterWrap( m, value(i),dotArrayName( i, value(i)->size() ) ) );
     }
   return d;
 }
