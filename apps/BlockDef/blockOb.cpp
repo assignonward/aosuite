@@ -830,8 +830,8 @@ bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
     { qWarning( "BlockValueObject::insert(RiceyInt,ValueBase) key %llu not recognized, will not insert.", k ); return false; }
   if ( m_obMap.contains( k ) )
     { qWarning( "type collision, insertion blocked." ); return false; }
-  v->vbParent = this;
   m_obMap.insert( k, v );
+  v->vbParent = this;
   return true;
 }
 

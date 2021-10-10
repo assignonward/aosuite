@@ -148,7 +148,7 @@ DotSerial  ValueBaseArray::dot(Mode m) const
   if ( size() == 0 )
     d.append( dotEmptyNode() );
    else for ( qint32 i = 0; i < size(); i++ )
-    d.append( clusterWrap( m, depth(), "["+DotSerial::number(i)+"]", at(i) ? at(i)->dot(m) : "" ) );
+    d.append( clusterWrap( m, depth()+1, "["+DotSerial::number(i)+"]", at(i) ? at(i)->dot(m) : "" ) );
   return d;
 }
 
@@ -159,9 +159,9 @@ DotSerial BlockValueObject::dot(Mode m) const
     d.append( dotEmptyNode() );
    else foreach ( RiceyInt i, keys )
     { if (( value(i)->type() & RDT_ARRAY ) == 0 )
-        d.append( clusterWrap( m, depth(),      dotName( i )                  , value(i) ? value(i)->dot(m) : "" ) );
+        d.append( clusterWrap( m, depth()+1,      dotName( i )                  , value(i) ? value(i)->dot(m) : "" ) );
        else
-        d.append( clusterWrap( m, depth(), dotArrayName( i, value(i)->size() ), value(i) ? value(i)->dot(m) : "" ) );
+        d.append( clusterWrap( m, depth()+1, dotArrayName( i, value(i)->size() ), value(i) ? value(i)->dot(m) : "" ) );
     }
   return d;
 }
