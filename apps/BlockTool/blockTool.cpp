@@ -87,7 +87,7 @@ void  BlockTool::on_set_clicked()
   if ( ( tp & RDT_ARRAY ) == 0 )
     kvb = new KeyValuePair( dict.codeFromCodeName( nKey ), vbp, this );
    else
-    kvb = new KeyValueArray( dict.codeFromCodeName( nKey ), (BlockValueArray *)vbp, this );
+    kvb = new KeyValueArray( dict.codeFromCodeName( nKey ), (ValueBaseArray *)vbp, this );
   setMake( kvb );
   if ( ui->showJson->isChecked() )ui->report->append( jsonReformat( kvb->json() ) );
   if ( ui->showHex ->isChecked() )ui->report->append( kvb->bsonish().toHex() );

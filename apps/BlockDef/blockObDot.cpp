@@ -52,7 +52,7 @@
 
 qint32 dex = 0;
 
-DotSerial  ValueBase::dotEmptyNode()
+DotSerial ValueBase::dotEmptyNode()
 { return "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n"; }
 
 DotSerial ValueBase::dotName( RiceyInt k )
@@ -98,7 +98,7 @@ DotSerial KeyValuePair::dot() const
 DotSerial KeyValueArray::dot() const
 { return clusterWrap( dotArrayName( key(), size() ), value() ? value()->dot() : "" ); }
 
-DotSerial  BlockValueArray::dot() const
+DotSerial  ValueBaseArray::dot() const
 { DotSerial d;
   if ( size() == 0 )
     d.append( dotEmptyNode() );

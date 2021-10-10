@@ -518,7 +518,7 @@ qint32  BlockValueString::setBsonish( const BsonSerial &b )
  * @param keyType - key type to make the value for
  * @return a default bsonish value for the type
  */
-BsonSerial ValueBase::bsonishDefaultValue( qint8 keyType ) const
+BsonSerial ValueBase::bsonishDefaultValue( qint8 keyType )
 { QByteArray b;
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
@@ -563,7 +563,7 @@ BsonSerial  KeyValuePair::bsonish() const
  * @return bsonish representation of the array value, including size and each element
  *   key must be prepended before this can be sensibly decoded
  */
-BsonSerial BlockValueArray::bsonish() const
+BsonSerial ValueBaseArray::bsonish() const
 { BsonSerial b;
   quint64 elementCount = 0; // Fitering out empty values to prevent nullptr reference
   for ( qint32 i = 0; i < m_values.size(); i++ )
@@ -597,7 +597,7 @@ BsonSerial KeyValueArray::bsonish() const
   return b;
 }
 
-qint32  BlockValueArray::setBsonish( const BsonSerial &b )
+qint32  ValueBaseArray::setBsonish( const BsonSerial &b )
 { if ( b.size() < 1 )
     { qWarning( "empty BsonSerial" ); return -1; }
   qint32 len = 0;
@@ -664,7 +664,7 @@ qint32  KeyValueArray::setBsonish( const BsonSerial &b )
   return i;
 }
 
-bool  BlockValueArray::append( ValueBase *value )
+bool  ValueBaseArray::append( ValueBase *value )
 { if ( value == nullptr )
     { qWarning( "BlockValueArray will not append nullptr" );
       return false;
@@ -673,6 +673,7 @@ bool  BlockValueArray::append( ValueBase *value )
     { qWarning( "type mismatch in BlockValueArray::append(ValueBase) %d %d",(int)value->type(),(int)type() );
       return false;
     }
+  value->vbParent = this;
   m_values.append( value );
   return true;
 }
@@ -800,7 +801,7 @@ bool  BlockValueObjectArray::operator==(const QList<BlockObjectMap>& l) const
  * @param parent - parent for the value object
  * @return length of stream read to get the value, or -1 if there was a problem
  */
-ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32 *l, QObject *parent )
+ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32 *l, QObject *parent ) const
 { if ( l != nullptr )
     *l = -1;
   ValueBase *vbo = newValue( k, parent );
@@ -829,22 +830,24 @@ bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
     { qWarning( "BlockValueObject::insert(RiceyInt,ValueBase) key %llu not recognized, will not insert.", k ); return false; }
   if ( m_obMap.contains( k ) )
     { qWarning( "type collision, insertion blocked." ); return false; }
+  v->vbParent = this;
   m_obMap.insert( k, v );
   return true;
 }
 
 bool  BlockValueObject::insert( KeyValueArray *kva )
 { if ( kva == nullptr )
-    { qWarning( "will not insert null kva" ); return false; }
+    { qWarning( "will not insert nullptr kva" ); return false; }
+  if ( kva->value() == nullptr )
+    { qWarning( "will not insert nullptr kva->value()" ); return false; }
   if (( kva->key() & RDT_OBTYPEMASK ) != kva->type() )
     { qWarning( "will not insert mismatched type and value" ); return false; }
   if ( !dict.codesContainCode( kva->key() ) )
     { qWarning( "BlockValueObject::insert(KeyValueArray) key %llu not recognized, will not insert.", kva->key() ); return false; }
   if ( m_obMap.contains( kva->key() ) )
     { qWarning( "type collision, insertion blocked." ); return false; }
-  qWarning( "BlockValueArray not yet implemented... need to before this works." );
-  return false;
-  // m_obMap.insert( kva->key(), kva->value() );
+  kva->value()->vbParent = this;
+  m_obMap.insert( kva->key(), kva->value() );
   return true;
 }
 
@@ -856,11 +859,15 @@ bool  BlockValueObject::insert( KeyValueArray *kva )
 qint32  BlockValueObject::insert( const BlockObjectMap &vl )
 { qint32 count = 0;
   QList<RiceyInt> keys = vl.keys();
+  ValueBase *vb;
   foreach( RiceyInt k, keys )
-    { if ( insert( k, newValue( k, this, vl[k] ) ) )
+    { vb = newValue( k, this, vl[k] );
+      if ( insert( k, vb ) )
         count++;
        else
-        qWarning( "insert Failed" );
+        { vb->deleteLater();
+          qWarning( "insert Failed" );
+        }
     }
   return count;
 }
@@ -870,7 +877,7 @@ qint32  BlockValueObject::insert( const BlockObjectMap &vl )
  * @param v - array value to compare
  * @return true if the two are the same size, type, and value in each element
  */
-bool  BlockValueArray::operator==( const BlockValueArray &v ) const
+bool  ValueBaseArray::operator==( const ValueBaseArray &v ) const
 { if ( v.size() != size() ) return false;
   if ( v.type() != type() ) return false;
   for ( qint32 i = 0; i < size(); i++ )
@@ -910,7 +917,7 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_MPQ_ARRAY:
           case RDT_RCODE_ARRAY:
           case RDT_STRING_ARRAY:
-          case RDT_BYTEARRAY_ARRAY: if ( !(*((BlockValueArray *)vt) == *((BlockValueArray *)vv) ) ) return false; break;
+          case RDT_BYTEARRAY_ARRAY: if ( !(*((ValueBaseArray *)vt) == *((ValueBaseArray *)vv) ) ) return false; break;
           default: Utf8String n = dict.nameFromCode( k ); qWarning( "unhandled type %s", n.data() ); return false;
         }
     }

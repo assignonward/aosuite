@@ -221,7 +221,7 @@ JsonSerial  KeyValuePair::json() const
   return j;
 }
 
-JsonSerial  BlockValueArray::json() const
+JsonSerial  ValueBaseArray::json() const
 { JsonSerial j = " [ ";
   bool wroteOne = false;
   for ( qint32 i = 0; i < m_values.size(); i++ )
@@ -261,7 +261,7 @@ JsonSerial  KeyValueArray::json() const
   return j;
 }
 
-bool  BlockValueArray::setJson( const JsonSerial &j )
+bool  ValueBaseArray::setJson( const JsonSerial &j )
 { QJsonDocument jd = QJsonDocument::fromJson( "{ \"ob\": "+j+" }" );
   if ( !jd.isObject() )
     { qWarning( "BlockValueArray::document is not a JsonObject '%s'",j.data() ); return false; }
@@ -432,7 +432,7 @@ bool  BlockValueObject::setJson( const JsonSerial &j )
  * @param parent - object parent for the ValueBase object created
  * @return pointer to a ValueBase object with the value of the JsonValue, nullptr if there is a problem
  */
-ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject *parent )
+ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject *parent ) const
 { qint32 typ = k & RDT_OBTYPEMASK;
   qint32 jdt = 0;
   bool typeMatch = false;
