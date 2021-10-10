@@ -52,22 +52,28 @@
 
 qint32 dex = 0;
 
-DotSerial ValueBase::dotArrayName( RiceyInt k, qint32 sz )
+DotSerial  ValueBase::dotEmptyNode()
+{ return "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n"; }
+
+DotSerial ValueBase::dotName( RiceyInt k )
 { if ( dict.codesContainCode( k ) )
-    return dict.nameFromCode(k) + "["+DotSerial::number( sz )+"]";
+    return dict.nameFromCode(k);
    else
-    return intToRice( k ).toHex() + "["+DotSerial::number( sz )+"]";
+    return intToRice( k ).toHex();
 }
+
+DotSerial ValueBase::dotArrayName( RiceyInt k, qint32 sz )
+{ return dotName(k) + "["+DotSerial::number( sz )+"]"; }
 
 DotSerial ValueBase::clusterWrap( DotSerial kn, DotSerial v )
 { DotSerial d;
   kn = ensureQuotes( removeQuotes( kn ) );
   d.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-  d.append( "  label ="+kn+";\n" );
+  d.append( "  label     = "+kn+";\n" );
   d.append( "  labeljust = \"l\";\n" );
-  d.append( "  style = rounded;\n" );
-  d.append( "  margin = 4;\n" );
-  d.append( "  fontsize = 10;\n\n" );
+  d.append( "  style     = rounded;\n" );
+  d.append( "  margin    = 4;\n" );
+  d.append( "  fontsize  = 10;\n\n" );
   if ( v.size() > 0 )
     { if ( !v.trimmed().startsWith( "subgraph" ) && !v.trimmed().startsWith( "node" ) )
         { d.append( "node_"+DotSerial::number( dex++ )
@@ -81,35 +87,23 @@ DotSerial ValueBase::clusterWrap( DotSerial kn, DotSerial v )
         }
     }
    else
-    d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"(empty)\"; shape=plaintext; fontsize=8; ];\n" );
+    d.append( dotEmptyNode() );
   d.append( "  }\n" );
   return d;
 }
 
 DotSerial KeyValuePair::dot() const
-{ DotSerial v;
-  if ( value() )
-    v = value()->dot();
-  return clusterWrap( dict.nameFromCode(key()), v );
-}
+{ return clusterWrap(      dotName( key() )        , value() ? value()->dot() : "" ); }
 
 DotSerial KeyValueArray::dot() const
-{ DotSerial v;
-  if ( value() )
-    v = value()->dot();
-  return clusterWrap( dotArrayName( key(), size() ), v );
-}
+{ return clusterWrap( dotArrayName( key(), size() ), value() ? value()->dot() : "" ); }
 
 DotSerial  BlockValueArray::dot() const
 { DotSerial d;
   if ( size() == 0 )
-    d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
-  for ( qint32 i = 0; i < size(); i++ )
-    { DotSerial v;
-      if ( at(i) )
-        v = at(i)->dot();
-      d.append( clusterWrap( "["+DotSerial::number(i)+"]", v ) );
-    }
+    d.append( dotEmptyNode() );
+   else for ( qint32 i = 0; i < size(); i++ )
+    d.append( clusterWrap( "["+DotSerial::number(i)+"]", at(i) ? at(i)->dot() : "" ) );
   return d;
 }
 
@@ -117,15 +111,12 @@ DotSerial BlockValueObject::dot() const
 { DotSerial d;
   QList<RiceyInt>keys = value().keys();
   if ( keys.size() == 0 )
-    d.append( "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n" );
+    d.append( dotEmptyNode() );
    else foreach ( RiceyInt i, keys )
-    { DotSerial v;
-      if ( value(i) )
-        v = value(i)->dot();
-      if (( value(i)->type() & RDT_ARRAY ) == 0 )
-        d.append( clusterWrap( dict.nameFromCode(i), v ) );
+    { if (( value(i)->type() & RDT_ARRAY ) == 0 )
+        d.append( clusterWrap(      dotName( i )                  , value(i) ? value(i)->dot() : "" ) );
        else
-        d.append( clusterWrap( dotArrayName( i, value(i)->size() ), v ) );
+        d.append( clusterWrap( dotArrayName( i, value(i)->size() ), value(i) ? value(i)->dot() : "" ) );
     }
   return d;
 }

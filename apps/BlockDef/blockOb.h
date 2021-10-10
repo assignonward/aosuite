@@ -49,7 +49,9 @@ virtual            ~ValueBase() {}
 static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
 static  JsonSerial  removeQuotes( const JsonSerial &j );
 static   DotSerial  clusterWrap( DotSerial kn, DotSerial v );
+static   DotSerial  dotName( RiceyInt k );
 static   DotSerial  dotArrayName( RiceyInt k, qint32 sz );
+static   DotSerial  dotEmptyNode();
 static  JsonSerial  ensureQuotes( const JsonSerial &j );
 virtual       void  clear()         = 0;
 virtual     quint8  type()    const = 0;
