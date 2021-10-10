@@ -57,7 +57,7 @@ static   DotSerial  bgColor( Mode m, qint32 d );
 static   DotSerial  wheelColor( const QColor &c, qreal hDep, qreal sDep, qreal lDep, qint32 d );
 static   DotSerial  dotName( RiceyInt k );
 static   DotSerial  dotArrayName( RiceyInt k, qint32 sz );
-static   DotSerial  dotEmptyNode();
+static   DotSerial  dotEmptyNode( qint32 i = 0 );
             qint32  depth() const { if ( vbParent == nullptr ) return 0; return vbParent->depth()+1; }
 static  QByteArray  bsonishDefaultValue( qint8 );
 virtual       void  clear()         = 0;

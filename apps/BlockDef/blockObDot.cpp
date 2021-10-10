@@ -52,8 +52,8 @@
 
 qint32 dex = 0;
 
-DotSerial ValueBase::dotEmptyNode()
-{ return "    node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n"; }
+DotSerial ValueBase::dotEmptyNode( qint32 i )
+{ return DotSerial(i,' ')+"node_"+DotSerial::number( dex++ )+" [ label=\"\"; shape=plaintext; ];\n"; }
 
 DotSerial ValueBase::dotName( RiceyInt k )
 { if ( dict.codesContainCode( k ) )
@@ -67,46 +67,48 @@ DotSerial ValueBase::dotArrayName( RiceyInt k, qint32 sz )
 
 DotSerial ValueBase::clusterWrap( Mode m, qint32 d, const DotSerial &kn, const DotSerial &v )
 { DotSerial dot;
-  dot.append( "subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
-  dot.append( "  label     = "+ensureQuotes( /* DotSerial::number(d)+":"+ */ removeQuotes( kn ) )+";\n" );
-  dot.append( "  labeljust = \"l\";\n" );
-  dot.append( "  style     = rounded;\n" );
-  dot.append( "  "+lineColor( m, d ) );
-  dot.append( "  "+bgColor( m, d ) );
-  dot.append( "  margin    = 4;\n" );
-  dot.append( "  fontsize  = 10;\n\n" );
+  qint32 i = 2; // indent spaces per depth level
+  dot.append( DotSerial(d*i,' ')+"subgraph cluster_"+DotSerial::number( dex++ )+" {\n" );
+  dot.append( DotSerial(2+d*i,' ')+"label = "+ensureQuotes( /* DotSerial::number(d)+":"+ */ removeQuotes( kn ) )+";\n" );
+// These (commented out) appear in BlockPanel::writeWrappedDot
+//  dot.append( "labeljust = \"l\";\n" );
+//  dot.append( "style     = rounded;\n" );
+//  dot.append( "fontsize  = 10;\n" );
+  dot.append( DotSerial(2+d*i,' ')+lineColor( m, d )+"\n" );
+  dot.append( DotSerial(2+d*i,' ')+bgColor( m, d )+"\n" );
+  dot.append( DotSerial(2+d*i,' ')+"margin = 4;\n\n" );
   if ( v.size() > 0 )
     { if ( !v.trimmed().startsWith( "subgraph" ) && !v.trimmed().startsWith( "node" ) )
-        { dot.append( "node_"+DotSerial::number( dex++ )
-                   +" [ label="+v+"; "+lineColor(m,d)+" shape=box; style=rounded; fontsize=10; ];\n" );
+        { dot.append( DotSerial(3+d*i,' ')+"node_"+DotSerial::number( dex++ )
+                   +" [ label="+v+"; "+lineColor(m,d)+" ];\n" );
         }
        else
         { dot.append( v );
           if ( !v.trimmed().endsWith( ";" ) )
-            dot.append( ";" );
+            dot.append( DotSerial(3+d*i,' ')+";" );
           dot.append( "\n" );
         }
     }
    else
-    dot.append( dotEmptyNode() );
-  dot.append( "  }\n" );
+    dot.append( dotEmptyNode(3+d*i) );
+  dot.append( DotSerial(d*i,' ')+"}\n" );
   return dot;
 }
 
 DotSerial ValueBase::lineColor( Mode m, qint32 depth )
 { switch ( m )
-    { case make:  return "color=\""+wheelColor( QColor( "darkgreen"  ), 0.05, 0.15, 0.1, depth)+"\";\n";
-      case build: return "color=\""+wheelColor( QColor( "darkblue"   ), 0.05, 0.15, 0.1, depth)+"\";\n";
-      case idle:  return "color=\""+wheelColor( QColor( "grey"       ), 0.05, 0.0 , 0.1, depth)+"\";\n";
+    { case make:  return "color=\""+wheelColor( QColor( "darkgreen"  ), 0.05, 0.15, 0.1, depth)+"\";";
+      case build: return "color=\""+wheelColor( QColor( "darkblue"   ), 0.05, 0.15, 0.1, depth)+"\";";
+      case idle:  return "color=\""+wheelColor( QColor( "grey"       ), 0.05, 0.0 , 0.1, depth)+"\";";
     }
   return "";
 }
 
 DotSerial ValueBase::bgColor( Mode m, qint32 depth )
 { switch ( m )
-    { case make:  return "bgcolor=\""+wheelColor( QColor( "mintcream" ), 0.05, 0.05, 0.1, depth)+"\";\n";
-      case build: return "bgcolor=\""+wheelColor( QColor( "#F0F8FF"   ), 0.05, 0.05, 0.1, depth)+"\";\n";
-      case idle:  return "bgcolor=\""+wheelColor( QColor( "gainsboro" ), 0.05, 0.05, 0.1, depth)+"\";\n";
+    { case make:  return "bgcolor=\""+wheelColor( QColor( "mintcream" ), 0.05, 0.05, 0.1, depth)+"\";";
+      case build: return "bgcolor=\""+wheelColor( QColor( "#F0F8FF"   ), 0.05, 0.05, 0.1, depth)+"\";";
+      case idle:  return "bgcolor=\""+wheelColor( QColor( "gainsboro" ), 0.05, 0.05, 0.1, depth)+"\";";
     }
   return "";
 }
@@ -146,7 +148,7 @@ DotSerial KeyValueArray::dot(Mode m) const
 DotSerial  ValueBaseArray::dot(Mode m) const
 { DotSerial d;
   if ( size() == 0 )
-    d.append( dotEmptyNode() );
+    d.append( dotEmptyNode(depth()*2+3) );
    else for ( qint32 i = 0; i < size(); i++ )
     d.append( clusterWrap( m, depth()+1, "["+DotSerial::number(i)+"]", at(i) ? at(i)->dot(m) : "" ) );
   return d;
@@ -156,7 +158,7 @@ DotSerial BlockValueObject::dot(Mode m) const
 { DotSerial d;
   QList<RiceyInt>keys = value().keys();
   if ( keys.size() == 0 )
-    d.append( dotEmptyNode() );
+    d.append( dotEmptyNode(depth()*2+3) );
    else foreach ( RiceyInt i, keys )
     { if (( value(i)->type() & RDT_ARRAY ) == 0 )
         d.append( clusterWrap( m, depth()+1,      dotName( i )                  , value(i) ? value(i)->dot(m) : "" ) );

@@ -109,6 +109,10 @@ void  BlockPanel::writeWrappedDot( QByteArray d )
       case ValueBase::build: fd.write( "node [color=darkblue];  graph [color=darkblue]  bgcolor=ghostwhite;\n" ); break;
       case ValueBase::idle:  fd.write( "node [color=grey];      graph [color=grey]      bgcolor=grey90;\n" ); break;
     }
+  fd.write( "labeljust = \"l\";\n" );
+  fd.write( "style     = rounded;\n" );
+  fd.write( "fontsize  = 10;\n" );
+  fd.write( "node[ shape = box; style = rounded; fontsize = 10; ];\n\n" );
   fd.write( d );
   fd.write( "}\n" );
   fd.flush();
