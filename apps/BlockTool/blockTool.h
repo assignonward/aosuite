@@ -41,6 +41,8 @@ public:
              ~BlockTool();
         void  liveDelay( int t );
   QByteArray  jsonReformat( QByteArray );
+        void  updateBB( ValueBase * );
+        void  updateBuild();
         bool  setBuild( KeyValueBase * );
         bool  setMake( KeyValueBase * );
      QString  buildLabel();
@@ -57,6 +59,8 @@ signals:
         void  showY( KeyValueBase * );
 
 public slots:
+        void  on_prev_clicked();
+        void  on_next_clicked();
         void  on_set_clicked();
         void  on_key_currentTextChanged(const QString &);
         void  on_read_clicked();

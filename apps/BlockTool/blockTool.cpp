@@ -35,6 +35,7 @@ BlockTool::BlockTool( QWidget *cw ) :
       cw->layout()->addWidget( this );
       vb->setContentsMargins( 0,0,0,0 );
     }
+  ui->navGroup->setEnabled( false );
   panelA = new BlockPanel( "A", ValueBase::Mode::build, ui->frameA );
   panelX = new BlockPanel( "X", ValueBase::Mode::make , ui->frameX );
   panelY = new BlockPanel( "Y", ValueBase::Mode::idle , ui->frameY );
@@ -173,13 +174,13 @@ void  BlockTool::on_makeY_toggled(bool c)
   panelY->setMode( c ? ValueBase::Mode::make : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildA_toggled(bool c)
-{ if ( !c ) if ( selBB ) selBB->clearSel();
+{ if ( !c ) if ( selBB ) { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
   if ( c )
     selectRoot( panelA );
   panelA->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildX_toggled(bool c)
-{ if ( !c ) if ( selBB ) selBB->clearSel();
+{ if ( !c ) if ( selBB ) { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
   if ( c & ui->makeX->isChecked() )
     ui->makeY->setChecked(true);
   if ( c )
@@ -187,7 +188,7 @@ void  BlockTool::on_buildX_toggled(bool c)
   panelX->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildY_toggled(bool c)
-{ if ( !c ) if ( selBB ) selBB->clearSel();
+{ if ( !c ) if ( selBB ) { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
   if ( c & ui->makeY->isChecked() )
     ui->makeX->setChecked(true);
   if ( c )
@@ -203,7 +204,54 @@ void  BlockTool::selectRoot(BlockPanel *bp)
    else
     selBB = ((KeyValueArray *)p_kvb)->value();
    if ( selBB )
-     selBB->setSel();
+     { selBB->setSel(); ui->navGroup->setEnabled( true ); }
+}
+
+void  BlockTool::on_prev_clicked()
+{ if ( selBB == nullptr )
+    { qWarning( "navGroup not disabled when selBB null" );
+      ui->navGroup->setEnabled( false );
+      return;
+    }
+}
+
+/**
+ * @brief BlockTool::on_next_clicked - depth first search
+ */
+void  BlockTool::on_next_clicked()
+{ if ( selBB == nullptr )
+    { qWarning( "navGroup not disabled when selBB null" );
+      ui->navGroup->setEnabled( false );
+      return;
+    }
+  ValueBase *vb = nullptr;
+  if ( selBB->isContainer() )
+    if ( selBB->size() > 0 )
+      vb = selBB->firstChild();
+
+  if ( vb == nullptr )
+   if ( selBB->vbParent )
+     vb = selBB->vbParent->nextChild( selBB );
+
+  if ( vb )
+    { updateBB( vb );
+      updateBuild();
+    }
+}
+
+void  BlockTool::updateBB( ValueBase *vb )
+{ if ( selBB )
+    selBB->clearSel();
+  selBB = vb;
+  if ( selBB )
+    selBB->setSel();
+}
+
+void  BlockTool::updateBuild()
+{ if ( ui->buildA->isChecked() ) { panelA->update(); return; }
+  if ( ui->buildX->isChecked() ) { panelX->update(); return; }
+  if ( ui->buildY->isChecked() ) { panelY->update(); return; }
+  qWarning( "BlockTool::updateBuild() no build panel checked" );
 }
 
 bool  BlockTool::setBuild( KeyValueBase *kvb )

@@ -107,10 +107,10 @@ DotSerial ValueBase::lineColor( Mode m, qint32 depth )
 
 DotSerial ValueBase::bgColor( Mode m, qint32 depth )
 { switch ( m )
-    { case make:     return "bgcolor=\""+wheelColor( QColor( "mintcream" ), 0.05, 0.05, 0.1, depth)+"\";";
-      case build:    return "bgcolor=\""+wheelColor( QColor( "#F0F8FF"   ), 0.05, 0.05, 0.1, depth)+"\";";
-      case idle:     return "bgcolor=\""+wheelColor( QColor( "gainsboro" ), 0.05, 0.05, 0.1, depth)+"\";";
-      case selected: return "bgcolor=\""+wheelColor( QColor( "#FFF8F0"   ), 0.05, 0.05, 0.1, depth)+"\";";
+    { case make:     return "bgcolor=\""+wheelColor( QColor( "mintcream" ), 0.05, 0.05, 0.1 , depth)+"\";";
+      case build:    return "bgcolor=\""+wheelColor( QColor( "#F0F8FF"   ), 0.05, 0.05, 0.1 , depth)+"\";";
+      case idle:     return "bgcolor=\""+wheelColor( QColor( "gainsboro" ), 0.05, 0.05, 0.1 , depth)+"\";";
+      case selected: return "bgcolor=\""+wheelColor( QColor( "#FFD8D8"   ), 0.02, 0.05, 0.02, depth)+"\";";
     }
   return "";
 }

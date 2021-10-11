@@ -664,6 +664,16 @@ qint32  KeyValueArray::setBsonish( const BsonSerial &b )
   return i;
 }
 
+ValueBase *ValueBaseArray::nextChild( ValueBase *v )
+{ if ( m_values.size() > 0 )
+    if ( m_values.contains( v ) )
+      if ( (m_values.indexOf( v ) + 1) < m_values.size() )
+        return m_values.at( m_values.indexOf( v ) + 1 );
+  if ( vbParent )
+    return vbParent->nextChild( this );
+  return nullptr;
+}
+
 bool  ValueBaseArray::append( ValueBase *value )
 { if ( value == nullptr )
     { qWarning( "BlockValueArray will not append nullptr" );
@@ -720,6 +730,17 @@ bool  KeyValueArray::typeMatch( quint8 t )
     }
   qWarning( "unrecognized type %d", t );
   return false;
+}
+
+ValueBase *BlockValueObject::nextChild( ValueBase *v )
+{ QList<RiceyInt> omk = m_obMap.keys();
+  for ( qint32 i = 0; i < omk.size() - 1; i++ )
+    { if ( v == m_obMap[omk.at(i)] )
+        return m_obMap[omk.at(i+1)];
+    }
+  if ( vbParent )
+    return vbParent->nextChild( this );
+  return nullptr;
 }
 
 /**
