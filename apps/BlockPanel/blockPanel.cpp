@@ -146,5 +146,6 @@ void  BlockPanel::graphvizDone(int code,QProcess::ExitStatus status)
     pp->deleteLater();
   pp = nullptr;
   drawingInProgress = false;
+  emit drawingComplete();
 }
 

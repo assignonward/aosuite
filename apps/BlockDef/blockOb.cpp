@@ -674,6 +674,14 @@ ValueBase *ValueBaseArray::nextChild( ValueBase *v )
   return nullptr;
 }
 
+ValueBase *ValueBaseArray::prevChild( ValueBase *v )
+{ if ( m_values.size() > 0 )
+    if ( m_values.contains( v ) )
+      if ( (m_values.indexOf( v ) ) > 0 )
+        return m_values.at( m_values.indexOf( v ) - 1 );
+  return this;
+}
+
 bool  ValueBaseArray::append( ValueBase *value )
 { if ( value == nullptr )
     { qWarning( "BlockValueArray will not append nullptr" );
@@ -741,6 +749,15 @@ ValueBase *BlockValueObject::nextChild( ValueBase *v )
   if ( vbParent )
     return vbParent->nextChild( this );
   return nullptr;
+}
+
+ValueBase *BlockValueObject::prevChild( ValueBase *v )
+{ QList<RiceyInt> omk = m_obMap.keys();
+  for ( qint32 i = 1; i < omk.size(); i++ )
+    { if ( v == m_obMap[omk.at(i)] )
+        return m_obMap[omk.at(i-1)];
+    }
+  return this;
 }
 
 /**

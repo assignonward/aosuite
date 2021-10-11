@@ -46,6 +46,7 @@ KeyValueBase *kvb() { if ( m_kvb == nullptr ) m_kvb = new KeyValuePair( RCD_null
         void  clear() { if ( m_kvb ) { m_kvb->clear(); m_kvb = nullptr; update(); } }
 
 signals:
+        void  drawingComplete();
 
 public slots:
         void  update();

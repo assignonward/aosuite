@@ -65,8 +65,8 @@ static   DotSerial  dotEmptyNode( qint32 i = 0 );
 virtual Utf8String  id()    const { if ( vbParent == nullptr ) return "_"; return vbParent->id()+idx(); }
 virtual Utf8String  idx()   const { return m_idx; }
 static  QByteArray  bsonishDefaultValue( qint8 );
-virtual  ValueBase *firstChild()  const { return nullptr; }
-virtual  ValueBase *prevChild( ValueBase * ) { return this; }
+virtual  ValueBase *firstChild()  const      { return nullptr; }
+virtual  ValueBase *prevChild( ValueBase * ) { return nullptr; }
 virtual  ValueBase *nextChild( ValueBase * ) { return nullptr; }
 virtual       bool  isContainer() const = 0;
 virtual       void  clear()             = 0;
@@ -121,6 +121,7 @@ class ValueBaseArray : public ValueBase
               bool  isContainer() const { return true; }
          ValueBase *firstChild()  const { if ( m_values.size() > 0 ) return m_values.at(0); return nullptr; }
 virtual  ValueBase *nextChild( ValueBase * );
+virtual  ValueBase *prevChild( ValueBase * );
               void  clear() { m_values.clear(); }
             qint32  size()        const { return m_values.size(); }
         BsonSerial  bsonish()     const;
@@ -173,6 +174,7 @@ public:
                    ~KeyValuePair() { if ( m_value ) m_value->deleteLater(); }
          ValueBase *firstChild()  const { return m_value; }
          ValueBase *nextChild( ValueBase *v ) { if ( m_value ) return m_value->nextChild(v); return nullptr; }
+         ValueBase *prevChild( ValueBase *v ) { if ( m_value ) return m_value->prevChild(v); return nullptr; }
 virtual     qint32  size()     const { return 1; }
               void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning("kvp type mismatch"); else { if ( m_value ) m_value->deleteLater(); m_value = vp; } }
          ValueBase *value() const { return m_value; }
@@ -498,6 +500,7 @@ class BlockValueObject : public ValueBase
              bool  isContainer() const { return true; }
         ValueBase *firstChild()  const { if ( m_obMap.size() > 0 ) return m_obMap.first(); return nullptr; }
 virtual ValueBase *nextChild( ValueBase * );
+virtual ValueBase *prevChild( ValueBase * );
            quint8  type()    const { return RDT_OBJECT; }
        BsonSerial  bsonish() const;
        JsonSerial  json()    const;

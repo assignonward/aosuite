@@ -213,6 +213,29 @@ void  BlockTool::on_prev_clicked()
       ui->navGroup->setEnabled( false );
       return;
     }
+  ValueBase *vb = nullptr;
+  ValueBase *vbp = selBB->vbParent;
+  if ( vbp == nullptr )
+    { qWarning( "TODO: handle the case where the top level container is a KeyValueArray..." );
+    }
+   else
+    { if ( vbp->isContainer() )
+        vb = vbp->prevChild( selBB );
+       else
+        qWarning( "when is a parent not a container?" );
+    }
+
+  if ( vb )
+    { ui->navGroup->setEnabled( false );
+      updateBB( vb );
+      bldPan = updateBuild();
+      connect( bldPan, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+    }
+}
+
+void  BlockTool::navDrawComplete()
+{ disconnect( bldPan, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+  ui->navGroup->setEnabled( true );
 }
 
 /**
@@ -234,8 +257,10 @@ void  BlockTool::on_next_clicked()
      vb = selBB->vbParent->nextChild( selBB );
 
   if ( vb )
-    { updateBB( vb );
-      updateBuild();
+    { ui->navGroup->setEnabled( false );
+      updateBB( vb );
+      bldPan = updateBuild();
+      connect( bldPan, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
     }
 }
 
@@ -247,11 +272,12 @@ void  BlockTool::updateBB( ValueBase *vb )
     selBB->setSel();
 }
 
-void  BlockTool::updateBuild()
-{ if ( ui->buildA->isChecked() ) { panelA->update(); return; }
-  if ( ui->buildX->isChecked() ) { panelX->update(); return; }
-  if ( ui->buildY->isChecked() ) { panelY->update(); return; }
+BlockPanel *BlockTool::updateBuild()
+{ if ( ui->buildA->isChecked() ) { panelA->update(); return panelA; }
+  if ( ui->buildX->isChecked() ) { panelX->update(); return panelX; }
+  if ( ui->buildY->isChecked() ) { panelY->update(); return panelY; }
   qWarning( "BlockTool::updateBuild() no build panel checked" );
+  return nullptr;
 }
 
 bool  BlockTool::setBuild( KeyValueBase *kvb )

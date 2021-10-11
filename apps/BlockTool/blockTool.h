@@ -42,7 +42,7 @@ public:
         void  liveDelay( int t );
   QByteArray  jsonReformat( QByteArray );
         void  updateBB( ValueBase * );
-        void  updateBuild();
+  BlockPanel *updateBuild();
         bool  setBuild( KeyValueBase * );
         bool  setMake( KeyValueBase * );
      QString  buildLabel();
@@ -77,6 +77,7 @@ public slots:
         void  on_sortName_toggled(bool);
         void  on_sortId_toggled(bool);
         void  on_sortDict_toggled(bool);
+        void  navDrawComplete();
 
 public:
    QPointer<BlockPanel> panelA;
@@ -86,6 +87,7 @@ public:
          Ui::BlockTool *ui;
     QPointer<ValueBase> selBB;
      QPointer<QProcess> pp;
+            BlockPanel *bldPan;
 };
 
 #endif // BLOCKTOOL_H
