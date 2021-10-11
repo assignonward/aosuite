@@ -770,6 +770,23 @@ QGroupBox::title {
           <number>0</number>
          </property>
          <item>
+          <widget class="QRadioButton" name="navMake">
+           <property name="text">
+            <string>Make</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="navBuild">
+           <property name="text">
+            <string>Build</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="prev">
            <property name="text">
             <string>Prev</string>
