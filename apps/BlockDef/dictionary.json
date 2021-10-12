@@ -749,43 +749,43 @@
         {
             "code_s": "n",
             "name_s": "MPZ",
-            "text_s": "libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values",
+            "text_s": "libGMP signed integer - json as a quoted ASCII decimal string, bao as an object carrying the native GMP values",
             "type_b": "01"
         },
         {
             "code_s": "r",
             "name_s": "MPQ",
-            "text_s": "libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP",
+            "text_s": "libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bao as an object carrying the native GMP",
             "type_b": "02"
         },
         {
             "code_s": "s",
             "name_s": "STRING",
-            "text_s": "UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator",
+            "text_s": "UTF8 encoded string - json as UTF8 string, bao as int32_t length (includes terminator) followed by UTF8 string plus null terminator",
             "type_b": "05"
         },
         {
             "code_s": "i",
             "name_s": "INT64",
-            "text_s": "64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)",
+            "text_s": "64 bit signed integer - json in an unquoted ASCII decimal string, bao as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)",
             "type_b": "06"
         },
         {
             "code_s": "b",
             "name_s": "BYTEARRAY",
-            "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
+            "text_s": "ByteArray (aka octet stream) - json as hex string, bao as int32_t length followed by length octets",
             "type_b": "0B"
         },
         {
             "code_s": "y",
             "name_s": "RCODE",
-            "text_s": "Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.",
+            "text_s": "Ricey code - json as the table defined name, bao as a list of bytes: last byte has 0 in most significant bit.",
             "type_b": "0C"
         },
         {
             "code_s": "o",
             "name_s": "OBJECT",
-            "text_s": "in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object",
+            "text_s": "in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bao there are no separators, a key of Obterm ends the current object",
             "type_b": "0F"
         },
         {
@@ -803,25 +803,25 @@
         {
             "code_s": "S",
             "name_s": "STRING_ARRAY",
-            "text_s": "array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator",
+            "text_s": "array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bao as int32_t length followed by UTF-8 string, no null terminator",
             "type_b": "15"
         },
         {
             "code_s": "I",
             "name_s": "INT64_ARRAY",
-            "text_s": "array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson",
+            "text_s": "array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bao",
             "type_b": "16"
         },
         {
             "code_s": "B",
             "name_s": "BYTEARRAY_ARRAY",
-            "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
+            "text_s": "ByteArray (aka octet stream) - json as hex string, bao as int32_t length followed by length octets",
             "type_b": "1B"
         },
         {
             "code_s": "Y",
             "name_s": "RCODE_ARRAY",
-            "text_s": "array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson",
+            "text_s": "array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bao",
             "type_b": "1C"
         },
         {

@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/data">
-        <file>protocolList.bson</file>
+        <file>protocolList.bao</file>
     </qresource>
 </RCC>

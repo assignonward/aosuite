@@ -24,10 +24,10 @@
 
 ProtocolDemo::ProtocolDemo(QObject *parent) : QObject(parent)
 {
-  connect( this, SIGNAL( setProtocol(BsonSerial) ), &wc, SLOT( setProtocol(BsonSerial) ) );
-  connect( this, SIGNAL( setProtocol(BsonSerial) ), &rc, SLOT( setProtocol(BsonSerial) ) );
-  connect( this, SIGNAL( setProtocol(BsonSerial) ), &ws, SLOT( setProtocol(BsonSerial) ) );
-  connect( this, SIGNAL( setProtocol(BsonSerial) ), &rs, SLOT( setProtocol(BsonSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ), &wc, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ), &rc, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ), &ws, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ), &rs, SLOT( setProtocol(BaoSerial) ) );
 }
 
 void WriterClient::receiveResponse( QByteArray resp )

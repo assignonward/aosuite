@@ -396,7 +396,7 @@ bool MainWindow::rulesCheck( QString name, QString num )
       return false;
     }
   QChar namelc = name.at(name.size()-1);
-  if ( notesNumChar[numlc] != namelc ) // A kind of post-fix Hungarian notation to make the json/bson strictly typed
+  if ( notesNumChar[numlc] != namelc ) // A kind of post-fix Hungarian notation to make the json/bao strictly typed
     { v.append( QString( "rulesCheck: name '%1' does not end '%2' with the expected %3 %4 character %4.\n" )
                    .arg( name ).arg( namelc ).arg( numlc ).arg( num )
                    .arg( notesNumChar[numlc] ) );

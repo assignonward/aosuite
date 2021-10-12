@@ -33,9 +33,9 @@
 //   readable form for the block data.  Although json is not the primary form for
 //   block data, it should be possible to serialize a block as json, edit it, then
 //   deserialize the edited json data back into a block object.  Operations like
-//   hash and digital signatures require the bsonish representation of the data, so
+//   hash and digital signatures require the bao representation of the data, so
 //   they cannot be calculated directly on json representations without first
-//   translating to bsonish.
+//   translating to bao.
 //
 // State of the code:
 //

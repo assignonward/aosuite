@@ -36,11 +36,11 @@ signals:
     void sendRequest( QByteArray );
 
 public slots:
-    void setProtocol( BsonSerial p ) { protocol = p; }
+    void setProtocol(  BaoSerial p ) { protocol = p; }
     void receiveResponse( QByteArray );
 
 public:
-  BsonSerial protocol;
+   BaoSerial protocol;
 };
 
 class WriterServer : public QObject
@@ -53,11 +53,11 @@ signals:
     void sendResponse( QByteArray );
 
 public slots:
-    void setProtocol( BsonSerial p ) { protocol = p; }
+    void setProtocol(  BaoSerial p ) { protocol = p; }
     void receiveRequest( QByteArray );
 
 public:
-  BsonSerial protocol;
+   BaoSerial protocol;
 };
 
 class ReaderClient : public QObject
@@ -70,11 +70,11 @@ signals:
     void sendRequest( QByteArray );
 
 public slots:
-    void setProtocol( BsonSerial p ) { protocol = p; }
+    void setProtocol(  BaoSerial p ) { protocol = p; }
     void receiveResponse( QByteArray );
 
 public:
-  BsonSerial protocol;
+   BaoSerial protocol;
 };
 
 class ReaderServer : public QObject
@@ -87,11 +87,11 @@ signals:
     void sendResponse( QByteArray );
 
 public slots:
-    void setProtocol( BsonSerial p ) { protocol = p; }
+    void setProtocol(  BaoSerial p ) { protocol = p; }
     void receiveRequest( QByteArray );
 
 public:
-  BsonSerial protocol;
+   BaoSerial protocol;
 };
 
 class ProtocolDemo : public QObject
@@ -101,7 +101,7 @@ public:
     explicit ProtocolDemo(QObject *parent = nullptr);
 
 signals:
-    void setProtocol( BsonSerial );
+    void setProtocol(  BaoSerial );
 
 public:
     WriterClient  wc;

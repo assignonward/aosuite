@@ -34,14 +34,14 @@
 //   than standard .json does.  Nonetheless, a block data structure can be expressed
 //   in standard .json format and manipulated with common .json tools.
 //
-// The intended form for operations and communications is designated "bsonish" - a
+// The intended form for operations and communications is designated "bao" - a
 //   binary form of the json structures which is both more compact and more specific,
-//   there is only one correct bsonish representation of a given object because:
+//   there is only one correct bao representation of a given object because:
 //   1) duplicate key values are not allowed in a single level of an object container
 //   2) key-value elements in an object container are listed in key sort order
 //   3) array elements are always listed in the order in which they are saved
 //   4) sparse arrays are not allowed, they always start with element 0 (or can be empty)
-//   (designated bsonish because bson implies a certain translation of json which bsonish is not.)
+//   (designated bao because bson implies a certain translation of json which bao is not.)
 //
 // Further, in a given protocol, only recognized keys (defined in the protocol) are allowed.
 //
@@ -52,7 +52,7 @@
 //   3) MPZ, arbitrary precision integers stored MSB first in BCD, terminated with F for negative and E for positive
 //   4) MPQ, arbitrary precision ratio of two integers stored as two MPZ: numerator / denominator
 //   5) RCODE, when used as a key - a rice code value which appears in the protocol dictionary
-//      note that the following data types use rice code numbers (positive integers from 0 to 2^63) to specify lengths in bsonish code
+//      note that the following data types use rice code numbers (positive integers from 0 to 2^63) to specify lengths in bao code
 //   6) String, any valid UTF-8 string stored as a rice code length followed by the characters - not including null terminator
 //   7) Data, any octet stream stored as a rice code length followed by the data
 //   8-15) arrays of the above, stored as a rice code specifying 0 or more elements, followed by that number of elements stored as above
@@ -130,7 +130,7 @@ ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
     { if (( vtc->type() & RDT_OBTYPEMASK ) != t )
         qWarning( "type mismatch with %d vtc %d ValueBase::newValue", t, vtc->type() & RDT_OBTYPEMASK );
        else
-        vbo->setBsonish( vtc->bsonish() );
+        vbo->setBao( vtc->bao() );
     }
   return vbo;
 }
@@ -153,11 +153,11 @@ qint32 KeyValueBase::setKey( const RiceyCode &key )
 }
 
 /**
- * @brief KeyValuePair::setBsonish
+ * @brief KeyValuePair::setBao
  * @param b - key followed by a value of type matching the key type
  * @return length of all data read from b to get key and value, or -1 if there was a problem
  */
-qint32  KeyValuePair::setBsonish( const BsonSerial &b )
+qint32  KeyValuePair::setBao( const  BaoSerial &b )
 { if ( m_value )
     m_value->deleteLater();
   m_value = nullptr;
@@ -165,21 +165,21 @@ qint32  KeyValuePair::setBsonish( const BsonSerial &b )
   if ( len < 1 )
     { qWarning( "problem reading key" ); setKey( RCD_null_z ); return -1; }
   qint32 i = len;
-  ValueBase *vbo = bsonishValueByKey( key(), b.mid(i), &len, this );
+  ValueBase *vbo = baoValueByKey( key(), b.mid(i), &len, this );
   if ( vbo == nullptr )
-    { qWarning( "KeyValuePair::setBsonish() problem reading value" ); setKey( RCD_null_z ); return -1; }
+    { qWarning( "KeyValuePair::setBao() problem reading value" ); setKey( RCD_null_z ); return -1; }
   m_value = vbo;
   return i+len;
 }
 
 /**
- * @brief BlockValueInt64::setBsonish
+ * @brief BlockValueInt64::setBao
  * @param b - byte array which starts with 8 bytes of LittleEndian encoded integer
- * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
+ * @return number of bytes converted from the BaoSerial stream, -1 if there was a problem
  */
-qint32 BlockValueInt64::setBsonish( const BsonSerial &b )
+qint32 BlockValueInt64::setBao( const BaoSerial &b )
 { if ( b.size() < 8 )
-    { qWarning( "undersized array pased to BlockValueInt64::setBsonish" ); return -1; }
+    { qWarning( "undersized array pased to BlockValueInt64::setBao" ); return -1; }
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
   s >> m_value;
@@ -206,8 +206,8 @@ Utf8String  BlockValueMPZ::toStr( const MP_INT &in )
  * @param in - signed integer to convert
  * @return BCD string, terminated with an xE/ED if positive or xF/FD if negative, EC/FC if there is a problem
  */
-BsonSerial  BlockValueMPZ::toBCD( const MP_INT &in )
-{ BsonSerial bcd;
+ BaoSerial  BlockValueMPZ::toBCD( const MP_INT &in )
+{  BaoSerial bcd;
   qint32 sz = mpz_sizeinbase( &in, 10 );
   if ( sz > MAX_MPINT_LEN )
     { qWarning( "oversized MP_INT %d digits", (int)sz ); return Utf8String( "" ); }
@@ -260,7 +260,7 @@ BsonSerial  BlockValueMPZ::toBCD( const MP_INT &in )
  * @param in - (initialized) MP_INT to set the
  * @return number of bytes read from bcd, or -1 if an error was encountered
  */
-qint32 BlockValueMPZ::fromBCD( const BsonSerial &bcd, mpz_t in )
+qint32 BlockValueMPZ::fromBCD( const  BaoSerial &bcd, mpz_t in )
 { if ( bcd.size() < 1 )
     { qWarning( "fromBCD was passed an empty array" );
       return 0;
@@ -333,14 +333,14 @@ Utf8String  BlockValueMPQ::toStr( const MP_RAT &in )
 }
 
 /**
- * @brief BlockValueMPQ::bsonish
+ * @brief BlockValueMPQ::bao
  * @return numerator followed by denominator both in sign terminated BCD
  */
-BsonSerial  BlockValueMPQ::bsonish() const
+BaoSerial  BlockValueMPQ::bao() const
 { MP_INT n;
   mpz_init( &n );
   mpq_get_num( &n, &m_value );
-  BsonSerial b = BlockValueMPZ::toBCD( n );
+  BaoSerial b = BlockValueMPZ::toBCD( n );
   mpq_get_den( &n, &m_value );
   b.append( BlockValueMPZ::toBCD( n ) );
   mpz_clear( &n );
@@ -348,17 +348,17 @@ BsonSerial  BlockValueMPQ::bsonish() const
 }
 
 /**
- * @brief BlockValueMPQ::setBsonish
- * @param b - bsonish stream which should have two sign terminated BCD numbers
+ * @brief BlockValueMPQ::setBao
+ * @param b - bao stream which should have two sign terminated BCD numbers
  * @return number of bytes read in total, or -1 if there was a problem
  */
-qint32  BlockValueMPQ::setBsonish( const BsonSerial &b )
+qint32  BlockValueMPQ::setBao( const BaoSerial &b )
 { MP_INT n;
   mpz_init( &n );
   qint32 len = BlockValueMPZ::fromBCD( b, &n );
   if ( len < 1 )
     { mpz_clear( &n );
-      qWarning( "problem reading BCD numerator in BlockValueMPQ::setBsonish()" );
+      qWarning( "problem reading BCD numerator in BlockValueMPQ::setBao()" );
       return -1;
     }
   MP_INT d;
@@ -367,7 +367,7 @@ qint32  BlockValueMPQ::setBsonish( const BsonSerial &b )
   if ( led < 1 )
     { mpz_clear( &n );
       mpz_clear( &d );
-      qWarning( "problem reading BCD denominator in BlockValueMPQ::setBsonish()" );
+      qWarning( "problem reading BCD denominator in BlockValueMPQ::setBao()" );
       return -1;
     }
   mpq_set_num( &m_value, &n );
@@ -378,11 +378,11 @@ qint32  BlockValueMPQ::setBsonish( const BsonSerial &b )
 }
 
 /**
- * @brief BlockValueRiceyCode::setBsonish
+ * @brief BlockValueRiceyCode::setBao
  * @param b - ricey code in octets
- * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
+ * @return number of bytes converted from the BaoSerial stream, -1 if there was a problem
  */
-qint32  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
+qint32  BlockValueRiceyCode::setBao( const BaoSerial &b )
 { qint32 len = 0;
   bool ok = false;
   riceToInt( b, &len, &ok );
@@ -393,10 +393,10 @@ qint32  BlockValueRiceyCode::setBsonish( const BsonSerial &b )
 }
 
 /**
- * @brief BlockValueByteArray::bsonish
- * @return the bsonish representation of this byte array
+ * @brief BlockValueByteArray::bao
+ * @return the bao representation of this byte array
  */
-BsonSerial  BlockValueByteArray::bsonish() const
+BaoSerial  BlockValueByteArray::bao() const
 { RiceyCode b = intToRice( value().size() );
   b.append( value() );
   return b;
@@ -404,18 +404,18 @@ BsonSerial  BlockValueByteArray::bsonish() const
 
 
 /**
- * @brief BlockValueByteArray::setBsonish
+ * @brief BlockValueByteArray::setBao
  * @param b - Rice Code length plus byte array data
- * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
+ * @return number of bytes converted from the BaoSerial stream, -1 if there was a problem
  */
-qint32  BlockValueByteArray::setBsonish( const BsonSerial &b )
+qint32  BlockValueByteArray::setBao( const  BaoSerial &b )
 { if ( b.size() < 1 )
-    { qWarning( "undersized array passed to BlockValueByteArray::setBsonish" ); return -1; }
+    { qWarning( "undersized array passed to BlockValueByteArray::setBao" ); return -1; }
   qint32 sz;
   bool ok;
   qint64 length = (qint64)riceToInt( b, &sz, &ok );
   if ( !ok || ( b.size() < (sz + length) ) || (length > MAX_LENGTH) || ( sz < 0 ) || ( length < 0 ) )
-    { qWarning( "riceConversion %d size %d length %lld problem in BlockValueByteArray::setBsonish",ok,sz,length );
+    { qWarning( "riceConversion %d size %d length %lld problem in BlockValueByteArray::setBao",ok,sz,length );
       return -1;
     }
   if ( length == 0 )
@@ -480,45 +480,45 @@ bool BlockValueString::validUtf8( const Utf8String &s )
 }
 
 /**
- * @brief BlockValueString::bsonish
+ * @brief BlockValueString::bao
  * @return rice code length (in bytes, not characters) followed by UTF-8 encoded string
  */
-BsonSerial  BlockValueString::bsonish() const
+BaoSerial  BlockValueString::bao() const
 { RiceyCode b = intToRice( value().size() );
   b.append( value() );
   return b;
 }
 
 /**
- * @brief BlockValueString::setBsonish
+ * @brief BlockValueString::setBao
  * @param b - rice coded length in bytes followed by UTF-8 encoded string
- * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
+ * @return number of bytes converted from the BaoSerial stream, -1 if there was a problem
  */
-qint32  BlockValueString::setBsonish( const BsonSerial &b )
+qint32  BlockValueString::setBao( const  BaoSerial &b )
 { if ( b.size() < 1 )
-    { qWarning( "empty array passed to BlockValueString::setBsonish" ); return -1; }
+    { qWarning( "empty array passed to BlockValueString::setBao" ); return -1; }
   qint32 sz;
   bool ok;
   qint64 length = (qint64)riceToInt( b, &sz, &ok );
   if ( !ok || ( b.size() < (sz + length) ) || (length > MAX_LENGTH) )
-    { qWarning( "riceConversion %d size %d problem in BlockValueString::setBsonish",ok,sz ); return -1; }
+    { qWarning( "riceConversion %d size %d problem in BlockValueString::setBao",ok,sz ); return -1; }
   if ( length == 0 )  // empty string is a valid construct
     { set( Utf8String() );
       return sz;
     }
   QByteArray string = b.mid(sz, length);
   if ( !validUtf8( string ) )
-    { qWarning( "BlockValueString::setBsonish() invalid UTF8 %s", b.mid(sz, length).toHex().data() ); return -1; }
+    { qWarning( "BlockValueString::setBao() invalid UTF8 %s", b.mid(sz, length).toHex().data() ); return -1; }
   set( string );
   return sz+length;
 }
 
 /**
- * @brief bsonishDefaultValue - used to prevent bson parse errors when a value is missing
+ * @brief baoDefaultValue - used to prevent bao parse errors when a value is missing
  * @param keyType - key type to make the value for
- * @return a default bsonish value for the type
+ * @return a default bao value for the type
  */
-BsonSerial ValueBase::bsonishDefaultValue( qint8 keyType )
+BaoSerial ValueBase::baoDefaultValue( qint8 keyType )
 { QByteArray b;
   QDataStream s(b);
   s.setByteOrder(QDataStream::LittleEndian);
@@ -534,37 +534,37 @@ BsonSerial ValueBase::bsonishDefaultValue( qint8 keyType )
       if (( keyType & RDT_ARRAY ) == RDT_ARRAY )
         { s << intToRice( 0 ); }
        else
-        qWarning( "unrecognized keyType in ValueBase::bsonishDefaultValue" );
+        qWarning( "unrecognized keyType in ValueBase::baoDefaultValue" );
     }
   return b;
 }
 
 /**
- * @brief KeyValuePair::bsonish
- * @return the bsonish representation of a single key-value pair
+ * @brief KeyValuePair::bao
+ * @return the bao representation of a single key-value pair
  */
-BsonSerial  KeyValuePair::bsonish() const
-{ BsonSerial b = keyCode();
+BaoSerial  KeyValuePair::bao() const
+{ BaoSerial b = keyCode();
   if ( !dict.codesContainCode(m_key) )
     { qWarning( "unknown key 0x%s", keyHexd() );
-      return BsonSerial();
+      return BaoSerial();
     }
   if ( m_value )
-    b.append( m_value->bsonish() );
+    b.append( m_value->bao() );
    else
     { qWarning( "null value with 0x%s key", keyHexd() );
-      b.append( bsonishDefaultValue( type() & RDT_TYPEMASK ) );  // Mask off the array bit too
+      b.append( baoDefaultValue( type() & RDT_TYPEMASK ) );  // Mask off the array bit too
     }
   return b;
 }
 
 /**
- * @brief BlockValueArray::bsonish
- * @return bsonish representation of the array value, including size and each element
+ * @brief BlockValueArray::bao
+ * @return bao representation of the array value, including size and each element
  *   key must be prepended before this can be sensibly decoded
  */
-BsonSerial ValueBaseArray::bsonish() const
-{ BsonSerial b;
+BaoSerial ValueBaseArray::bao() const
+{  BaoSerial b;
   quint64 elementCount = 0; // Fitering out empty values to prevent nullptr reference
   for ( qint32 i = 0; i < m_values.size(); i++ )
     if ( m_values.at(i) != nullptr )
@@ -574,32 +574,32 @@ BsonSerial ValueBaseArray::bsonish() const
   b.append( intToRice( elementCount ) );
   for ( qint32 i = 0; i < m_values.size(); i++ )
     { if ( m_values.at(i) != nullptr )
-        b.append( m_values.at(i)->bsonish() );
+        b.append( m_values.at(i)->bao() );
     }
   return b;
 }
 
 /**
- * @brief KeyValueArray::bsonish
+ * @brief KeyValueArray::bao
  * @return The entire array as a key plus list of values (matching the type of the key)
  */
-BsonSerial KeyValueArray::bsonish() const
-{ BsonSerial b = keyCode();
+BaoSerial KeyValueArray::bao() const
+{  BaoSerial b = keyCode();
   if ( !dict.codesContainCode(b) )
     { qWarning( "unknown key 0x%s", keyHexd() );
-      return BsonSerial();
+      return BaoSerial();
     }
   if ( m_val == nullptr )
     { qWarning( "no BlockValueArray allocated" );
-      return BsonSerial();
+      return BaoSerial();
     }
-  b.append( m_val->bsonish() );
+  b.append( m_val->bao() );
   return b;
 }
 
-qint32  ValueBaseArray::setBsonish( const BsonSerial &b )
+qint32  ValueBaseArray::setBao( const BaoSerial &b )
 { if ( b.size() < 1 )
-    { qWarning( "empty BsonSerial" ); return -1; }
+    { qWarning( "empty BaoSerial" ); return -1; }
   qint32 len = 0;
   bool ok = false;
   qint32 i = len;
@@ -613,12 +613,12 @@ qint32  ValueBaseArray::setBsonish( const BsonSerial &b )
         { qWarning( "value data missing" ); return -1; }
       ValueBase *vbo = newValue( type() & RDT_TYPEMASK, this );
       if ( vbo == nullptr )
-        { qWarning( "BlockValueArray::setBsonish() problem making new value for type: %d", type() ); return -1; }
-      len = vbo->setBsonish( b.mid(i) );
+        { qWarning( "BlockValueArray::setBao() problem making new value for type: %d", type() ); return -1; }
+      len = vbo->setBao( b.mid(i) );
       if ( len < 1 )
-        { delete vbo; qWarning( "BlockValueArray::setBsonish() problem reading element in setBsonsish %s", b.mid(i).toHex().data() ); return -1; }
+        { delete vbo; qWarning( "BlockValueArray::setBao() problem reading element in setBao %s", b.mid(i).toHex().data() ); return -1; }
       if ( !append( vbo ) )
-        { delete vbo; qWarning( "BlockValueArray::setBsonish() problem appending element during append()" ); return -1; }
+        { delete vbo; qWarning( "BlockValueArray::setBao() problem appending element during append()" ); return -1; }
       i += len;
       elementCount--;
     }
@@ -626,13 +626,13 @@ qint32  ValueBaseArray::setBsonish( const BsonSerial &b )
 }
 
 /**
- * @brief KeyValueArray::setBsonish
- * @param b - bsonish code for a KeyValueArray to be set into this object
- * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
+ * @brief KeyValueArray::setBao
+ * @param b - bao code for a KeyValueArray to be set into this object
+ * @return number of bytes converted from the BaoSerial stream, -1 if there was a problem
  */
-qint32  KeyValueArray::setBsonish( const BsonSerial &b )
+qint32  KeyValueArray::setBao( const BaoSerial &b )
 { if ( b.size() < 1 )
-    { qWarning( "empty BsonSerial" ); return -1; }
+    { qWarning( "empty BaoSerial" ); return -1; }
   qint32 len = 0;
   bool ok = false;
   RiceyInt k = riceToInt( b, &len, &ok );
@@ -653,7 +653,7 @@ qint32  KeyValueArray::setBsonish( const BsonSerial &b )
     { if ( b.size() <= i )
         { qWarning( "value data missing" ); return -1; }
       ValueBase *vbo = newValue( key() & RDT_TYPEMASK, this );
-      len = vbo->setBsonish( b.mid(i) );
+      len = vbo->setBao( b.mid(i) );
       if ( len < 1 )
         { delete vbo; qWarning( "problem reading element" ); return -1; }
       if ( !append( vbo ) )
@@ -761,28 +761,28 @@ ValueBase *BlockValueObject::prevChild( ValueBase *v )
 }
 
 /**
- * @brief BlockValueObject::bsonish
+ * @brief BlockValueObject::bao
  * @return The entire object as a list of key-values
  */
-BsonSerial BlockValueObject::bsonish() const
+BaoSerial BlockValueObject::bao() const
 { QList<RiceyInt> keys = m_obMap.keys();
-  BsonSerial b = intToRice( m_obMap.size() );
+  BaoSerial b = intToRice( m_obMap.size() );
   foreach ( RiceyInt key, keys )
     { b.append( intToRice(key) );
-      b.append( ( m_obMap[key] != nullptr ) ? m_obMap[key]->bsonish() :
-                                              bsonishDefaultValue( m_obMap[key]->type() ) );
+      b.append( ( m_obMap[key] != nullptr ) ? m_obMap[key]->bao() :
+                                              baoDefaultValue( m_obMap[key]->type() ) );
     }
   return b;
 }
 
 /**
- * @brief BlockValueObject::setBsonish
- * @param b - bsonish code for a BlockValueObject to be set into this object
- * @return number of bytes converted from the BsonSerial stream, -1 if there was a problem
+ * @brief BlockValueObject::setBao
+ * @param b - bao code for a BlockValueObject to be set into this object
+ * @return number of bytes converted from the BaoSerial stream, -1 if there was a problem
  */
-qint32  BlockValueObject::setBsonish( const BsonSerial &b )
+qint32  BlockValueObject::setBao( const BaoSerial &b )
 { if ( b.size() < 1 )
-    { qWarning( "empty BsonSerial" ); return -1; }
+    { qWarning( "empty BaoSerial" ); return -1; }
   qint32 len = 0;
   bool ok = false;
   qint32 obCount = riceToInt( b, &len, &ok );
@@ -801,9 +801,9 @@ qint32  BlockValueObject::setBsonish( const BsonSerial &b )
       i += len;
       if ( b.size() <= i )
         { qWarning( "object key data missing" ); return -1; }
-      ValueBase *vbo = bsonishValueByKey( k, b.mid(i), &len, this );
+      ValueBase *vbo = baoValueByKey( k, b.mid(i), &len, this );
       if ( vbo == nullptr )
-        { qWarning( "BlockValueObject::setBsonish() problem reading bsonish value" ); return -1; }
+        { qWarning( "BlockValueObject::setBao() problem reading bao value" ); return -1; }
       if ( !insert( k, vbo ) )
         { delete vbo; qWarning( "problem inserting value" ); return -1; }
       i += len;
@@ -833,22 +833,22 @@ bool  BlockValueObjectArray::operator==(const QList<BlockObjectMap>& l) const
 
 
 /**
- * @brief ValueBase::bsonishValueByKey
+ * @brief ValueBase::baoValueByKey
  * @param k - key as a RiceyInt which tells the type of the value to be read
  * @param b - bytestream ready to read a value from
  * @param l - when not null, return length of stream read here, -1 if there is a problem
  * @param parent - parent for the value object
  * @return length of stream read to get the value, or -1 if there was a problem
  */
-ValueBase *ValueBase::bsonishValueByKey( RiceyInt k, const BsonSerial &b, qint32 *l, QObject *parent ) const
+ValueBase *ValueBase::baoValueByKey( RiceyInt k, const  BaoSerial &b, qint32 *l, QObject *parent ) const
 { if ( l != nullptr )
     *l = -1;
   ValueBase *vbo = newValue( k, parent );
   if ( vbo == nullptr )
     { qWarning( "problem making new value for key %llu", k ); return nullptr; }
-  qint32 len = vbo->setBsonish( b );
+  qint32 len = vbo->setBao( b );
   if ( len < 1 )
-    { delete vbo; qWarning( "ValueBase::bsonishValueByKey() problem reading value" ); return nullptr; }
+    { delete vbo; qWarning( "ValueBase::baoValueByKey() problem reading value" ); return nullptr; }
   if ( l != nullptr )
     *l = len;
   return vbo;

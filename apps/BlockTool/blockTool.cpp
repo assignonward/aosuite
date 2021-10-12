@@ -93,7 +93,7 @@ void  BlockTool::on_set_clicked()
     kvb = new KeyValueArray( dict.codeFromCodeName( nKey ), (ValueBaseArray *)vbp, this );
   setMake( kvb );
   if ( ui->showJson->isChecked() )ui->report->append( jsonReformat( kvb->json() ) );
-  if ( ui->showHex ->isChecked() )ui->report->append( kvb->bsonish().toHex() );
+  if ( ui->showHex ->isChecked() )ui->report->append( kvb->bao().toHex() );
   if ( ui->showDot ->isChecked() )ui->report->append( kvb->dot(ValueBase::Mode::idle) ); // TODO: get the current mode from BlockPanel
   // kvp->deleteLater(); child of vbp, no need to delete this
   vbp->deleteLater();
@@ -478,10 +478,10 @@ void  BlockTool::on_read_clicked()
         }
       return;
     }
-  BsonSerial bs = file.readAll();
+   BaoSerial bs = file.readAll();
   if ( bs.size() > 0 )
     { KeyValueBase *kvb = makeKvb();
-      kvb->setBsonish( bs );
+      kvb->setBao( bs );
       setMake( kvb );
     }
 }
@@ -506,7 +506,7 @@ void  BlockTool::on_save_clicked()
       ts << jsonReformat( kvb->json() );
       return;
     }
-  file.write( kvb->bsonish() );
+  file.write( kvb->bao() );
 }
 
 void BlockTool::liveDelay( int t )
@@ -641,7 +641,7 @@ void  BlockTool::on_DAO0_clicked()
   ado4->insert( RCD_type_y, ad4 );
 
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
-  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
+  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bao().toHex() );
   if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
   setBuild( kvp ); updateMake();
   kvp->deleteLater();
@@ -684,7 +684,7 @@ void  BlockTool::on_chain_clicked()
   hdo->insert( RCD_separableItemsHashes_O, sih );
 
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
-  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
+  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bao().toHex() );
   if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
   setBuild( kvp ); updateMake();
   kvp->deleteLater();
@@ -803,7 +803,7 @@ void  BlockTool::on_hash_clicked()
   hdo->insert( RCD_riceyArray_Y, bar );
 */
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
-  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
+  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bao().toHex() );
   if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
   setBuild( kvp ); updateMake();
   kvp->deleteLater();

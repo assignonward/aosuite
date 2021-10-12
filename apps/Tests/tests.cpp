@@ -167,7 +167,7 @@ bool Tests::testGmp( QString &msg, qint32 &tc )
   if ( strcmp( str, "333333333333333333333333333333333333333333333" ) == 0 ) tc++; else
     { msg.append( "FAIL set/get 333333333333333333333333333333333333333333333 str test.\n" ); pass = false; }
 
-  BsonSerial bcd;
+   BaoSerial bcd;
 
   mpz_set_str( &i1, "0", 10 );
   bcd = BlockValueMPZ::toBCD( i1 );
@@ -363,17 +363,17 @@ bool Tests::testInt64( BlockValueInt64 &v, qint64 tv, qint32 &tc, QString &msg )
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.set( tv + 1 );
   if  ( v.value() != tv ) tc++; else
     { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.value() ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v.value() == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()),
-                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+                  QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( tv - 1 );
@@ -429,15 +429,15 @@ bool Tests::testRicey( BlockValueRiceyCode &v, RiceyInt tv, qint32 &tc, QString 
   if ( v.valueInt() == tv ) tc++; else
     { msg.append( QString( "FAIL code set test %1\n" ).arg(tv) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.set( tv + 1 );
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v.valueInt() == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()),
-                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+                  QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( tv + 1 );
@@ -493,15 +493,15 @@ bool Tests::testMPZ( BlockValueMPZ &v, const MP_INT &tv, qint32 &tc, QString &ms
     { msg.append( QString( "FAIL value set/get == operator other test %1\n" ).arg(QString::fromUtf8(BlockValueMPZ::toStr(tv))) ); pass = false; }
 
   v.set( tv );
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.set( v2 );
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(BlockValueMPZ::toStr(tv))).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(QString::fromUtf8(BlockValueMPZ::toStr(tv))).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()),
-                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+                  QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   v.set( tv );
   JsonSerial j = v.json();
@@ -589,15 +589,15 @@ bool Tests::testMPQ( BlockValueMPQ &v, const MP_RAT &tv, qint32 &tc, QString &ms
     { msg.append( QString( "FAIL value set/get == operator other test %1\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))) ); pass = false; }
 
   v.set( tv );
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.set( v2 );
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(QString::fromUtf8(BlockValueMPQ::toStr(tv))).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()),
-                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+                  QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   v.set( tv );
   JsonSerial j = v.json();
@@ -641,17 +641,17 @@ bool Tests::testString( BlockValueString &v, const Utf8String &tv, qint32 &tc, Q
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(QString::fromUtf8(tv)) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.set( "?" );
   if  ( v.value() != tv ) tc++; else
     { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv), QString::fromUtf8( v.value() ) ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v.value() == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv), QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv), QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()),
-                  QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+                  QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( "x" );
@@ -697,17 +697,17 @@ bool Tests::testByteArray( BlockValueByteArray &v, const QByteArray &tv, qint32 
   if ( v.value() == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(QString::fromUtf8(tv)) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.set( "?" );
   if  ( v.value() != tv ) tc++; else
     { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg( QString::fromUtf8(tv.toHex()) ).arg( QString::fromUtf8( v.value().toHex() ) ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v.value() == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv)).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(QString::fromUtf8(tv)).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.set( "x" );
@@ -754,19 +754,19 @@ bool Tests::testObjectA( BlockValueObjectArray &v, const QList<BlockObjectMap> &
   BlockObjectMap  dob;
   dob.insert( RCD_text_s, new BlockValueString( "Dummy Object", this) );
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.clear();
   if ( v.append( dob ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v.value() == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
   JsonSerial j = v.json();
   if ( v.append( dob ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
@@ -827,19 +827,19 @@ bool Tests::testInt64A( BlockValueInt64Array &v, const QList<qint64> &tv, qint32
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.clear();
   if ( v.append( (qint64)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v.value() == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -897,19 +897,19 @@ bool Tests::testMPZA( BlockValueMPZArray &v, const QList<MP_INT> &tv, qint32 &tc
 
   MP_INT other;
   mpz_init_set_str( &other, "5551212", 10 );
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.clear();
   if ( v.append( other ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -979,19 +979,19 @@ bool Tests::testMPQA( BlockValueMPQArray &v, const QList<MP_RAT> &tv, qint32 &tc
   mpq_init( &other );
   mpq_set_num( &other, &oNum );
   mpq_set_den( &other, &oDen );
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.clear();
   if ( v.append( other ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -1061,18 +1061,18 @@ bool Tests::testRiceyA( BlockValueRiceyCodeArray &v, const QList<RiceyInt> &tv, 
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   if ( v.append( (RiceyInt)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v.valueInt() == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   if ( v.append( (RiceyInt)321 ) ) tc++; else
@@ -1091,19 +1091,19 @@ bool Tests::testRiceyA( BlockValueRiceyCodeArray &v, const QList<RiceyCode> &tv,
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.clear();
   if ( v.append( (RiceyInt)123 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v.value() == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -1148,19 +1148,19 @@ bool Tests::testStringA( BlockValueStringArray &v, const QList<Utf8String> &tv, 
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.clear();
   if ( v.append( "?" ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v.value() == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -1217,19 +1217,19 @@ bool Tests::testByteArrayA( BlockValueByteArrayArray &v, const QList<QByteArray>
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.clear();
   if ( v.append( "?" ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v.value() == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  v.setBsonish( b );
+  v.setBao( b );
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();
@@ -1311,20 +1311,20 @@ bool  Tests::testObject( BlockValueObject &v, const BlockObjectMap &tv, qint32 &
   if ( v == tv ) tc++; else
     { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
 
-  BsonSerial b = v.bsonish();
+   BaoSerial b = v.bao();
   v.clear();
   if ( v.insert( RCD_text_s, "?" ) ) tc++; else
     { pass = false; msg.append( "FAIL during insert()\n" ); }
   if  ( !( v.value() == tv ) ) tc++; else
     { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
-  if ( v.setBsonish( b ) > 0 ) tc++; else
-    { msg.append( QString( "FAIL during setBsonish\n" ) ); pass = false; }
+  if ( v.setBao( b ) > 0 ) tc++; else
+    { msg.append( QString( "FAIL during setBao\n" ) ); pass = false; }
   if ( v == tv ) tc++; else
-    { msg.append( QString( "FAIL bson encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
-  if ( b == v.bsonish() ) tc++; else
-    { msg.append( QString( "FAIL bsonish repeat test %1 %2\n" )
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
             .arg( QString::fromUtf8(b.toHex()) )
-            .arg( QString::fromUtf8(v.bsonish().toHex()) ) ); pass = false; }
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
 
   JsonSerial j = v.json();
   v.clear();

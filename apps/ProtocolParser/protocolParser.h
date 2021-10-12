@@ -34,7 +34,7 @@ class ProtocolParser : public QObject
 {
     Q_OBJECT
 public:
-     ProtocolParser( const BsonSerial &b, QObject *parent = nullptr) : QObject( parent ) { pr = new KeyValuePair( b, this ); }
+     ProtocolParser( const  BaoSerial &b, QObject *parent = nullptr) : QObject( parent ) { pr = new KeyValuePair( b, this ); }
     ~ProtocolParser() {}
 
   QPointer<KeyValuePair> pr;
