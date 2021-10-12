@@ -42,6 +42,8 @@ public:
         void  liveDelay( int t );
   QByteArray  jsonReformat( QByteArray );
         void  updateBB( ValueBase * );
+  BlockPanel *buildPanel();
+  BlockPanel *makePanel();
   BlockPanel *updateBuild();
   BlockPanel *updateMake();
         bool  setBuild( KeyValueBase * );
@@ -58,10 +60,11 @@ signals:
         void  showA( KeyValueBase * );
         void  showX( KeyValueBase * );
         void  showY( KeyValueBase * );
+        void  setNavBuild( bool );
+        void  setNavMake( bool );
 
 public slots:
-        void  on_navMake_toggled(bool);
-        void  on_navBuild_toggled(bool);
+        void  on_swap_clicked();
         void  on_prev_clicked();
         void  on_next_clicked();
         void  on_set_clicked();
@@ -72,6 +75,8 @@ public slots:
         void  on_chain_clicked();
         void  on_hash_clicked();
         void  on_DAO0_clicked();
+        void  on_navMake_toggled(bool);
+        void  on_navBuild_toggled(bool);
         void  on_makeX_toggled(bool);
         void  on_makeY_toggled(bool);
         void  on_buildA_toggled(bool);
@@ -91,6 +96,7 @@ public:
     QPointer<ValueBase> selBB;
      QPointer<QProcess> pp;
             BlockPanel *navPanel;
+                  bool  swapping;
 };
 
 #endif // BLOCKTOOL_H

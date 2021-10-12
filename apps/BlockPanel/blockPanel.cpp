@@ -65,6 +65,7 @@ void  BlockPanel::update()
    else
     { ui->view->clear();
       ui->view->setText( m_label );
+      emit drawingComplete();
     }
 }
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1045</width>
+    <width>1180</width>
     <height>485</height>
    </rect>
   </property>
@@ -31,8 +31,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1049</width>
-     <height>469</height>
+     <width>1178</width>
+     <height>483</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -322,6 +322,13 @@ QGroupBox::title {
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="swap">
+        <property name="text">
+         <string>Swap</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGroupBox" name="groupBox_2">
         <property name="maximumSize">
          <size>
@@ -357,27 +364,27 @@ QGroupBox::title {
          <property name="spacing">
           <number>0</number>
          </property>
-         <item row="0" column="0">
-          <widget class="QRadioButton" name="buildX">
-           <property name="text">
-            <string>X</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
+         <item row="0" column="2">
           <widget class="QRadioButton" name="buildY">
            <property name="text">
             <string>Y</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item row="0" column="3">
           <widget class="QRadioButton" name="buildA">
            <property name="text">
             <string>A</string>
            </property>
            <property name="checked">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QRadioButton" name="buildX">
+           <property name="text">
+            <string>X</string>
            </property>
           </widget>
          </item>

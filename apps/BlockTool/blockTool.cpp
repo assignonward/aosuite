@@ -29,7 +29,8 @@
 BlockTool::BlockTool( QWidget *cw ) :
     QScrollArea(cw),
     ui(new Ui::BlockTool)
-{ ui->setupUi(this);
+{ swapping = false;
+  ui->setupUi(this);
   if ( cw )
     { QVBoxLayout *vb = new QVBoxLayout( cw );
       cw->layout()->addWidget( this );
@@ -42,7 +43,8 @@ BlockTool::BlockTool( QWidget *cw ) :
   connect( this, SIGNAL(showA(KeyValueBase*)), panelA, SLOT(setBlock(KeyValueBase*)));
   connect( this, SIGNAL(showX(KeyValueBase*)), panelX, SLOT(setBlock(KeyValueBase*)));
   connect( this, SIGNAL(showY(KeyValueBase*)), panelY, SLOT(setBlock(KeyValueBase*)));
-
+  connect( this, SIGNAL(setNavBuild(bool)), ui->navBuild, SLOT(setChecked(bool)));
+  connect( this, SIGNAL(setNavMake (bool)), ui->navMake , SLOT(setChecked(bool)));
   sortKeys();
 }
 
@@ -128,17 +130,17 @@ void  BlockTool::on_key_currentTextChanged( const QString &nuKey )
 void  BlockTool::on_navMake_toggled( bool make )
 { if ( !make )
     return;
-  if ( ui->makeX->isChecked() ) { selectRoot( panelX ); panelX->update(); }
-  if ( ui->makeY->isChecked() ) { selectRoot( panelY ); panelY->update(); }
+  if ( ui->makeX->isChecked() ) { if ( !swapping ) selectRoot( panelX ); panelX->update(); }
+  if ( ui->makeY->isChecked() ) { if ( !swapping ) selectRoot( panelY ); panelY->update(); }
   updateBuild();
 }
 
 void  BlockTool::on_navBuild_toggled( bool build )
 { if ( !build )
     return;
-  if ( ui->buildA->isChecked() ) { selectRoot( panelA ); panelA->update(); }
-  if ( ui->buildX->isChecked() ) { selectRoot( panelX ); panelX->update(); }
-  if ( ui->buildY->isChecked() ) { selectRoot( panelY ); panelY->update(); }
+  if ( ui->buildA->isChecked() ) { if ( !swapping ) selectRoot( panelA ); panelA->update(); }
+  if ( ui->buildX->isChecked() ) { if ( !swapping ) selectRoot( panelX ); panelX->update(); }
+  if ( ui->buildY->isChecked() ) { if ( !swapping ) selectRoot( panelY ); panelY->update(); }
   updateMake();
 }
 
@@ -227,7 +229,9 @@ void  BlockTool::selectRoot(BlockPanel *bp)
 { if ( bp == nullptr )
     return;
   if ( bp->m_kvb == nullptr )
-    return;
+    { updateBB( nullptr );
+      return;
+    }
   KeyValueBase *p_kvb = bp->m_kvb;
   ValueBase *vb = nullptr;
   if (( p_kvb->key() & RDT_ARRAY ) == 0 )
@@ -238,10 +242,32 @@ void  BlockTool::selectRoot(BlockPanel *bp)
    updateBB( vb );
 }
 
+void  BlockTool::on_swap_clicked()
+{ BlockPanel *mp = makePanel();
+  BlockPanel *bp = buildPanel();
+  if (( mp == nullptr ) || ( bp == nullptr ))
+    { qWarning( "swap - cannot swap, panel undefined" );
+      return;
+    }
+  swapping = true;
+  KeyValueBase *vb = mp->m_kvb;
+  mp->m_kvb = bp->m_kvb;
+  bp->m_kvb = vb;
+  // Setting the opposite nav mode true (instead of setting the current one false)
+  //  is important to the order of operations that results during updates and redraws.
+  if ( ui->navBuild->isChecked() )
+    ui->navMake ->setChecked( true );
+   else
+    ui->navBuild->setChecked( true );
+  swapping = false;
+}
+
 void  BlockTool::on_prev_clicked()
 { if ( selBB == nullptr )
-    { qWarning( "navGroup not disabled when selBB null" );
-      ui->navGroup->setEnabled( false );
+    { if ( ui->navBuild->isChecked() )
+        ui->navMake->setChecked( true );
+       else
+        ui->navBuild->setChecked( true );
       return;
     }
   ValueBase *vb = nullptr;
@@ -260,12 +286,12 @@ void  BlockTool::on_prev_clicked()
     { ui->navGroup->setEnabled( false );
       updateBB( vb );
       navPanel = nullptr;
-      if ( ui->navBuild->isChecked() )
-        navPanel = updateBuild();
-      if ( ui->navMake->isChecked() )
-        navPanel = updateMake();
+      if ( ui->navBuild->isChecked() ) navPanel = buildPanel();
+      if ( ui->navMake ->isChecked() ) navPanel = makePanel();
       if ( navPanel )
-        connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+        { connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+          navPanel->update();
+        }
        else
         qWarning( "neither nav button checked." );
     }
@@ -281,8 +307,10 @@ void  BlockTool::navDrawComplete()
  */
 void  BlockTool::on_next_clicked()
 { if ( selBB == nullptr )
-    { qWarning( "navGroup not disabled when selBB null" );
-      ui->navGroup->setEnabled( false );
+    { if ( ui->navBuild->isChecked() )
+        ui->navMake->setChecked( true );
+       else
+        ui->navBuild->setChecked( true );
       return;
     }
   ValueBase *vb = nullptr;
@@ -315,6 +343,21 @@ void  BlockTool::updateBB( ValueBase *vb )
   selBB = vb;
   if ( selBB )
     selBB->setSel();
+}
+
+BlockPanel *BlockTool::makePanel()
+{ if ( ui->makeX->isChecked() ) return panelX;
+  if ( ui->makeY->isChecked() ) return panelY;
+  qWarning( "BlockTool::makePanel() no make panel checked" );
+  return nullptr;
+}
+
+BlockPanel *BlockTool::buildPanel()
+{ if ( ui->buildA->isChecked() ) return panelA;
+  if ( ui->buildX->isChecked() ) return panelX;
+  if ( ui->buildY->isChecked() ) return panelY;
+  qWarning( "BlockTool::buildPanel() no build panel checked" );
+  return nullptr;
 }
 
 BlockPanel *BlockTool::updateMake()
