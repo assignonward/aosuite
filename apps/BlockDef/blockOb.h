@@ -46,7 +46,7 @@ class ValueBase : public QObject
     Q_OBJECT
 public:
               enum  Mode { make, build, idle, selected };
-          explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) { m_sel = false; }
+          explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) { m_sel = false; m_key = RCD_null_z; }
 virtual            ~ValueBase() {}
 static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
 static  JsonSerial  removeQuotes( const JsonSerial &j );
@@ -84,6 +84,7 @@ virtual       bool  operator==( const ValueBase &v ) const { if ( v.type() != ty
 QPointer<ValueBase> vbParent;
         Utf8String  m_idx;
               bool  m_sel;
+          RiceyInt  m_key; // Copy of information at time of insertion
 };
 
 /**

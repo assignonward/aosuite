@@ -46,6 +46,7 @@ public:
   BlockPanel *makePanel();
   BlockPanel *updateBuild();
   BlockPanel *updateMake();
+  BlockPanel *updateNav();
         bool  setBuild( KeyValueBase * );
         bool  setMake( KeyValueBase * );
      QString  buildLabel();
@@ -55,6 +56,9 @@ KeyValueBase *makeKvb();
         bool  makeClear();
         void  sortKeys();
         void  selectRoot(BlockPanel *);
+        void  updateValueEditor();
+        void  valueEditorNoNav();
+        void  insertKeyName( Utf8String );
 
 signals:
         void  showA( KeyValueBase * );

@@ -52,8 +52,24 @@ BlockTool::~BlockTool()
 { delete ui; }
 
 void  BlockTool::on_set_clicked()
-{ Utf8String nKey = ui->key->currentText().toUtf8();
-  if ( !dict.codesContainName( nKey ) )
+{ ValueBase *vb = selBB;
+  switch ( vb->type() & RDT_TYPEMASK )
+    { case RDT_INT64:     ((BlockValueInt64     *)vb)->set( ui->intEdit->value()            ); updateNav(); break;
+      case RDT_STRING:    ((BlockValueString    *)vb)->set( ui->stringEdit->text().toUtf8() ); updateNav(); break;
+      case RDT_BYTEARRAY: ((BlockValueByteArray *)vb)->set( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ) ); updateNav(); break;
+      case RDT_RCODE:
+        if ( dict.codesContainName( ui->rcodeEdit->currentText().toUtf8() ) )
+          { RiceyInt c = dict.codeFromCodeName( ui->rcodeEdit->currentText().toUtf8() );
+            ((BlockValueRiceyCode *)vb)->set(c);
+            updateNav();
+          }
+        break;
+      // TODO: MPZ & MPQ
+    }
+}
+
+void  BlockTool::insertKeyName( Utf8String nKey )
+{ if ( !dict.codesContainName( nKey ) )
     { qWarning( "key comboBox text returns unknown key: %s", nKey.data() );
       return;
     }
@@ -125,6 +141,51 @@ void  BlockTool::on_key_currentTextChanged( const QString &nuKey )
       case RDT_STRING_ARRAY   : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_array     )); break;
       default: qWarning( "key comboBox selected unhandled type %d key: %s", tp, nKey.data() );
     }
+}
+
+void  BlockTool::updateValueEditor()
+{ if ( selBB == nullptr ) // No navigation point active
+    { valueEditorNoNav();
+      return;
+    }
+  if ( selBB->isContainer() )
+    { // Setup for container insertion
+      valueEditorNoNav();
+      return;
+    }
+   else
+    { if (( selBB->m_key == RCD_null_z ) || ( !dict.codesContainCode( selBB->m_key ) ))
+        { valueEditorNoNav();
+          return;
+        }
+      int i = ui->key->findText( dict.nameFromCode( selBB->m_key ) );
+      if ( i < 0 )
+        { valueEditorNoNav();
+          return;
+        }
+      ui->key->setEnabled( false );
+      ui->key->setCurrentIndex( i ); // this also selects the correct valueWidget page
+      ValueBase *vb = selBB;
+      switch ( vb->type() & RDT_TYPEMASK )
+        { case RDT_INT64:     ui->intEdit->     setValue( ((BlockValueInt64     *)vb)->value()         ); break;
+          case RDT_STRING:    ui->stringEdit->   setText( ((BlockValueString    *)vb)->value()         ); break;
+          case RDT_BYTEARRAY: ui->byteArrayEdit->setText( ((BlockValueByteArray *)vb)->value().toHex() ); break;
+          case RDT_RCODE:
+            i = ui->rcodeEdit->findText( dict.nameFromCode( ((BlockValueRiceyCode *)vb)->value()) );
+            if ( i > 0 )
+              ui->rcodeEdit->setCurrentIndex( i );
+            break;
+          // TODO: MPZ & MPQ
+        }
+      ui->valueWidget->setEnabled( true  );
+      ui->set        ->setVisible( true  );
+    }
+}
+
+void  BlockTool::valueEditorNoNav()
+{ ui->key        ->setEnabled( true  );
+  ui->valueWidget->setEnabled( true  );
+  ui->set        ->setVisible( false );
 }
 
 void  BlockTool::on_navMake_toggled( bool make )
@@ -342,7 +403,9 @@ void  BlockTool::updateBB( ValueBase *vb )
     selBB->clearSel();
   selBB = vb;
   if ( selBB )
-    selBB->setSel();
+    { selBB->setSel();
+      updateValueEditor();
+    }
 }
 
 BlockPanel *BlockTool::makePanel()
@@ -374,6 +437,14 @@ BlockPanel *BlockTool::updateBuild()
   qWarning( "BlockTool::updateBuild() no build panel checked" );
   return nullptr;
 }
+
+BlockPanel *BlockTool::updateNav()
+{ if ( ui->navBuild->isChecked() ) return updateBuild();
+  if ( ui->navMake ->isChecked() ) return updateMake();
+  qWarning( "BlockTool::updateBuild() no nav choice checked" );
+  return nullptr;
+}
+
 
 bool  BlockTool::setBuild( KeyValueBase *kvb )
 { if ( ui->buildA->isChecked() )

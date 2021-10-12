@@ -871,7 +871,8 @@ bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
     { qWarning( "type collision, insertion blocked." ); return false; }
   m_obMap.insert( k, v );
   v->vbParent = this;
-  v->m_idx = "k" + intToRice( k ).toHex();;
+  v->m_idx = "k" + intToRice( k ).toHex();
+  v->m_key = k;
   return true;
 }
 
@@ -888,6 +889,7 @@ bool  BlockValueObject::insert( KeyValueArray *kva )
     { qWarning( "type collision, insertion blocked." ); return false; }
   kva->value()->vbParent = this;
   kva->value()->m_idx = "k" + intToRice( kva->key() ).toHex();
+  kva->value()->m_key = kva->key();
   m_obMap.insert( kva->key(), kva->value() );
   return true;
 }
