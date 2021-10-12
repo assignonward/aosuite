@@ -125,6 +125,23 @@ void  BlockTool::on_key_currentTextChanged( const QString &nuKey )
     }
 }
 
+void  BlockTool::on_navMake_toggled( bool make )
+{ if ( !make )
+    return;
+  if ( ui->makeX->isChecked() ) { selectRoot( panelX ); panelX->update(); }
+  if ( ui->makeY->isChecked() ) { selectRoot( panelY ); panelY->update(); }
+  updateBuild();
+}
+
+void  BlockTool::on_navBuild_toggled( bool build )
+{ if ( !build )
+    return;
+  if ( ui->buildA->isChecked() ) { selectRoot( panelA ); panelA->update(); }
+  if ( ui->buildX->isChecked() ) { selectRoot( panelX ); panelX->update(); }
+  if ( ui->buildY->isChecked() ) { selectRoot( panelY ); panelY->update(); }
+  updateMake();
+}
+
 void  BlockTool::on_sortName_toggled(bool) { sortKeys(); }
 void  BlockTool::on_sortId_toggled  (bool) { sortKeys(); }
 void  BlockTool::on_sortDict_toggled(bool) { sortKeys(); }
@@ -164,47 +181,61 @@ void  BlockTool::sortKeys()
 }
 
 void  BlockTool::on_makeX_toggled(bool c)
-{ if ( c & ui->buildX->isChecked() )
+{ if ( !c && selBB && ui->navMake->isChecked() )
+    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+  if ( c && ui->buildX->isChecked() )
     ui->buildA->setChecked(true);
+  if ( c && ui->navMake->isChecked() )
+    selectRoot( panelX );
   panelX->setMode( c ? ValueBase::Mode::make : ValueBase::Mode::idle );
 }
 void  BlockTool::on_makeY_toggled(bool c)
-{ if ( c & ui->buildY->isChecked() )
+{ if ( !c && selBB && ui->navMake->isChecked() )
+    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+  if ( c && ui->buildY->isChecked() )
     ui->buildA->setChecked(true);
+  if ( c && ui->navMake->isChecked() )
+    selectRoot( panelY );
   panelY->setMode( c ? ValueBase::Mode::make : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildA_toggled(bool c)
-{ if ( !c ) if ( selBB ) { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
-  if ( c )
+{ if ( !c && selBB && ui->navBuild->isChecked() )
+    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+  if ( c && ui->navBuild->isChecked() )
     selectRoot( panelA );
   panelA->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildX_toggled(bool c)
-{ if ( !c ) if ( selBB ) { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
-  if ( c & ui->makeX->isChecked() )
+{ if ( !c && selBB && ui->navBuild->isChecked() )
+    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+  if ( c && ui->makeX->isChecked() )
     ui->makeY->setChecked(true);
-  if ( c )
+  if ( c && ui->navBuild->isChecked() )
     selectRoot( panelX );
   panelX->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildY_toggled(bool c)
-{ if ( !c ) if ( selBB ) { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
-  if ( c & ui->makeY->isChecked() )
+{ if ( !c && selBB && ui->navBuild->isChecked() )
+    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+  if ( c && ui->makeY->isChecked() )
     ui->makeX->setChecked(true);
-  if ( c )
+  if ( c && ui->navBuild->isChecked() )
     selectRoot( panelY );
   panelY->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::selectRoot(BlockPanel *bp)
-{ if ( bp->m_kvb == nullptr )
+{ if ( bp == nullptr )
+    return;
+  if ( bp->m_kvb == nullptr )
     return;
   KeyValueBase *p_kvb = bp->m_kvb;
+  ValueBase *vb = nullptr;
   if (( p_kvb->key() & RDT_ARRAY ) == 0 )
-    selBB = ( (KeyValuePair *)p_kvb)->value();
+    vb = ( (KeyValuePair *)p_kvb)->value();
    else
-    selBB = ((KeyValueArray *)p_kvb)->value();
-   if ( selBB )
-     { selBB->setSel(); ui->navGroup->setEnabled( true ); }
+    vb = ((KeyValueArray *)p_kvb)->value();
+   ui->navGroup->setEnabled( vb != nullptr );
+   updateBB( vb );
 }
 
 void  BlockTool::on_prev_clicked()
@@ -228,13 +259,20 @@ void  BlockTool::on_prev_clicked()
   if ( vb )
     { ui->navGroup->setEnabled( false );
       updateBB( vb );
-      bldPan = updateBuild();
-      connect( bldPan, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+      navPanel = nullptr;
+      if ( ui->navBuild->isChecked() )
+        navPanel = updateBuild();
+      if ( ui->navMake->isChecked() )
+        navPanel = updateMake();
+      if ( navPanel )
+        connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+       else
+        qWarning( "neither nav button checked." );
     }
 }
 
 void  BlockTool::navDrawComplete()
-{ disconnect( bldPan, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+{ disconnect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
   ui->navGroup->setEnabled( true );
 }
 
@@ -259,8 +297,15 @@ void  BlockTool::on_next_clicked()
   if ( vb )
     { ui->navGroup->setEnabled( false );
       updateBB( vb );
-      bldPan = updateBuild();
-      connect( bldPan, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+      navPanel = nullptr;
+      if ( ui->navBuild->isChecked() )
+        navPanel = updateBuild();
+      if ( ui->navMake->isChecked() )
+        navPanel = updateMake();
+      if ( navPanel )
+        connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+       else
+        qWarning( "neither nav button checked." );
     }
 }
 
@@ -272,6 +317,13 @@ void  BlockTool::updateBB( ValueBase *vb )
     selBB->setSel();
 }
 
+BlockPanel *BlockTool::updateMake()
+{ if ( ui->makeX->isChecked() ) { panelX->update(); return panelX; }
+  if ( ui->makeY->isChecked() ) { panelY->update(); return panelY; }
+  qWarning( "BlockTool::updateMake() no make panel checked" );
+  return nullptr;
+}
+
 BlockPanel *BlockTool::updateBuild()
 { if ( ui->buildA->isChecked() ) { panelA->update(); return panelA; }
   if ( ui->buildX->isChecked() ) { panelX->update(); return panelX; }
@@ -281,16 +333,46 @@ BlockPanel *BlockTool::updateBuild()
 }
 
 bool  BlockTool::setBuild( KeyValueBase *kvb )
-{ if ( ui->buildA->isChecked() ) { panelA->setBlock( kvb, false ); selectRoot( panelA ); panelA->update(); return true; }
-  if ( ui->buildX->isChecked() ) { panelX->setBlock( kvb, false ); selectRoot( panelX ); panelX->update(); return true; }
-  if ( ui->buildY->isChecked() ) { panelY->setBlock( kvb, false ); selectRoot( panelY ); panelY->update(); return true; }
+{ if ( ui->buildA->isChecked() )
+    { panelA->setBlock( kvb, false );
+      if ( ui->navBuild->isChecked() )
+        selectRoot( panelA );
+      panelA->update();
+      return true;
+    }
+  if ( ui->buildX->isChecked() )
+    { panelX->setBlock( kvb, false );
+      if ( ui->navBuild->isChecked() )
+        selectRoot( panelX );
+      panelX->update();
+      return true;
+    }
+  if ( ui->buildY->isChecked() )
+    { panelY->setBlock( kvb, false );
+      if ( ui->navBuild->isChecked() )
+        selectRoot( panelY );
+      panelY->update();
+      return true;
+    }
   qWarning( "BlockTool::setBuild() no build panel checked" );
   return false;
 }
 
 bool  BlockTool::setMake( KeyValueBase *kvb )
-{ if ( ui->makeX->isChecked() ) { panelX->setBlock( kvb ); return true; }
-  if ( ui->makeY->isChecked() ) { panelY->setBlock( kvb ); return true; }
+{ if ( ui->makeX->isChecked() )
+    { panelX->setBlock( kvb );
+      if ( ui->navMake->isChecked() )
+        selectRoot( panelX );
+      panelX->update();
+      return true;
+    }
+  if ( ui->makeY->isChecked() )
+    { panelY->setBlock( kvb );
+      if ( ui->navMake->isChecked() )
+        selectRoot( panelY );
+      panelY->update();
+      return true;
+    }
   qWarning( "BlockTool::setMake() no make panel checked" );
   return false;
 }
@@ -518,7 +600,7 @@ void  BlockTool::on_DAO0_clicked()
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
   if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
   if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
-  setBuild( kvp );
+  setBuild( kvp ); updateMake();
   kvp->deleteLater();
 }
 
@@ -561,7 +643,7 @@ void  BlockTool::on_chain_clicked()
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
   if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
   if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
-  setBuild( kvp );
+  setBuild( kvp ); updateMake();
   kvp->deleteLater();
 }
 
@@ -680,7 +762,7 @@ void  BlockTool::on_hash_clicked()
   if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
   if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bsonish().toHex() );
   if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
-  setBuild( kvp );
+  setBuild( kvp ); updateMake();
   kvp->deleteLater();
 }
 

@@ -43,6 +43,7 @@ public:
   QByteArray  jsonReformat( QByteArray );
         void  updateBB( ValueBase * );
   BlockPanel *updateBuild();
+  BlockPanel *updateMake();
         bool  setBuild( KeyValueBase * );
         bool  setMake( KeyValueBase * );
      QString  buildLabel();
@@ -59,6 +60,8 @@ signals:
         void  showY( KeyValueBase * );
 
 public slots:
+        void  on_navMake_toggled(bool);
+        void  on_navBuild_toggled(bool);
         void  on_prev_clicked();
         void  on_next_clicked();
         void  on_set_clicked();
@@ -87,7 +90,7 @@ public:
          Ui::BlockTool *ui;
     QPointer<ValueBase> selBB;
      QPointer<QProcess> pp;
-            BlockPanel *bldPan;
+            BlockPanel *navPanel;
 };
 
 #endif // BLOCKTOOL_H
