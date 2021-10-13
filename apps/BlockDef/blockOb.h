@@ -158,6 +158,7 @@ public:
          RiceyCode  keyCode() const { return intToRice( m_key ); }
           RiceyInt  key()     const { return m_key; }
  virtual DotSerial  dot(Mode) const = 0;
+ virtual      void  setValueKey(RiceyInt) = 0;
 
           RiceyInt  m_key; // Ricey code bao key
 };
@@ -184,6 +185,7 @@ virtual JsonSerial  json()    const;
 virtual     qint32  setBao ( const  BaoSerial & );
 virtual       bool  setJson( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
 virtual  DotSerial  dot(Mode) const;
+              void  setValueKey(RiceyInt k) { m_value->m_key = k; }
 
 public:
   QPointer<ValueBase> m_value; // Value of this KeyValuePair
@@ -214,7 +216,11 @@ virtual JsonSerial  json()    const;
 virtual     qint32  setBao ( const  BaoSerial &b );
 virtual       bool  setJson( const JsonSerial &j );
 virtual  DotSerial  dot(Mode) const;
-
+              void  setValueKey(RiceyInt k) { if ( m_val == nullptr ) return;
+                                              qint32 sz = m_val->m_values.size();
+                                              for ( qint32 i = 0; i < sz; i++ )
+                                                m_val->m_values.at(i)->m_key = k;
+                                            }
 public:
   QPointer<ValueBaseArray> m_val;
 };

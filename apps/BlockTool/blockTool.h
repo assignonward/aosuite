@@ -64,10 +64,9 @@ signals:
         void  showA( KeyValueBase * );
         void  showX( KeyValueBase * );
         void  showY( KeyValueBase * );
-        void  setNavBuild( bool );
-        void  setNavMake( bool );
 
 public slots:
+        void  on_insert_clicked();
         void  on_swap_clicked();
         void  on_prev_clicked();
         void  on_next_clicked();

@@ -39,7 +39,7 @@ public:
     explicit  BlockPanel( QString l, ValueBase::Mode m, QWidget *cw = nullptr );
              ~BlockPanel();
         void  liveDelay( int t );
-KeyValueBase *kvb() { if ( m_kvb == nullptr ) m_kvb = new KeyValuePair( RCD_null_z, this ); return m_kvb; }
+KeyValueBase *kvb() { return m_kvb; }
      QString  label() { return m_label; }
         void  setLabel( QString );
         void  setMode( ValueBase::Mode m ) { if ( m != m_mode ) { m_mode = m; update(); } else m_mode = m; }
