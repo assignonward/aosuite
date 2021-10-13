@@ -294,6 +294,8 @@ void  BlockTool::on_makeX_toggled(bool c)
     ui->buildA->setChecked(true);
   if ( c && ui->navMake->isChecked() )
     selectRoot( panelX );
+   else
+    updateValueEditor();
   panelX->setMode( c ? ValueBase::Mode::make : ValueBase::Mode::idle );
 }
 void  BlockTool::on_makeY_toggled(bool c)
@@ -304,6 +306,7 @@ void  BlockTool::on_makeY_toggled(bool c)
   if ( c && ui->navMake->isChecked() )
     selectRoot( panelY );
   panelY->setMode( c ? ValueBase::Mode::make : ValueBase::Mode::idle );
+  // updateValueEditor(); will happen on the makeX_toggled side
 }
 void  BlockTool::on_buildA_toggled(bool c)
 { if ( !c && selBB && ui->navBuild->isChecked() )
