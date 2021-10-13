@@ -38,7 +38,7 @@
       </property>
       <widget class="QWidget" name="blockToolTab">
        <attribute name="title">
-        <string>Block Tool</string>
+        <string>Block Assembly Tool</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="tab">

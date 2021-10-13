@@ -54,7 +54,7 @@ static  JsonSerial  ensureQuotes( const JsonSerial &j );
 static   DotSerial  clusterWrap( Mode m, ValueBase *vb, const DotSerial &k );
 static   DotSerial  lineColor( Mode m, qint32 d );
 static   DotSerial  bgColor( Mode m, qint32 d );
-static   DotSerial  wheelColor( const QColor &c, qreal hDep, qreal sDep, qreal lDep, qint32 d );
+static   DotSerial  wheelColor( const QColor &c, qreal hDep, qreal sDep, qreal lDep, qreal phase, qint32 d );
 static   DotSerial  dotName( RiceyInt k );
 static   DotSerial  dotArrayName( RiceyInt k, qint32 sz );
 static   DotSerial  dotEmptyNode( qint32 i = 0 );

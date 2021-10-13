@@ -98,25 +98,25 @@ DotSerial ValueBase::clusterWrap( Mode m, ValueBase *vb, const DotSerial &kn )
 
 DotSerial ValueBase::lineColor( Mode m, qint32 depth )
 { switch ( m )
-    { case make:     return "color=\""+wheelColor( QColor( "darkgreen"  ), 0.10, 0.15, 0.15, depth)+"\";";
-      case build:    return "color=\""+wheelColor( QColor( "darkblue"   ), 0.05, 0.15, 0.1 , depth)+"\";";
-      case idle:     return "color=\""+wheelColor( QColor( "grey"       ), 0.05, 0.0 , 0.1 , depth)+"\";";
-      case selected: return "color=\""+wheelColor( QColor( "crimson"    ), 0.05, 0.02, 0.1 , depth)+"\";";
+    { case make:     return "color=\""+wheelColor( QColor( "darkgreen"  ), 0.10, 0.15, 0.15, 1.6, depth)+"\";";
+      case build:    return "color=\""+wheelColor( QColor( "darkblue"   ), 0.05, 0.15, 0.1 , 1.6, depth)+"\";";
+      case idle:     return "color=\""+wheelColor( QColor( "grey"       ), 0.05, 0.0 , 0.1 , 1.6, depth)+"\";";
+      case selected: return "color=\""+wheelColor( QColor( "crimson"    ), 0.05, 0.02, 0.1 , 1.6, depth)+"\";";
     }
   return "";
 }
 
 DotSerial ValueBase::bgColor( Mode m, qint32 depth )
 { switch ( m )
-    { case make:     return "bgcolor=\""+wheelColor( QColor( "mintcream" ), 0.05, 0.12, 0.07, depth)+"\";";
-      case build:    return "bgcolor=\""+wheelColor( QColor( "#D4E6F8"   ), 0.04, 0.10, 0.06, depth)+"\";";
-      case idle:     return "bgcolor=\""+wheelColor( QColor( "gainsboro" ), 0.05, 0.05, 0.1 , depth)+"\";";
-      case selected: return "bgcolor=\""+wheelColor( QColor( "#FFD8D8"   ), 0.02, 0.05, 0.02, depth)+"\";";
+    { case make:     return "bgcolor=\""+wheelColor( QColor( "mintcream" ), 0.05, 0.12, 0.07, 0.0, depth)+"\";";
+      case build:    return "bgcolor=\""+wheelColor( QColor( "#D4E6F8"   ), 0.04, 0.10, 0.06, 0.0, depth)+"\";";
+      case idle:     return "bgcolor=\""+wheelColor( QColor( "gainsboro" ), 0.05, 0.05, 0.1 , 0.0, depth)+"\";";
+      case selected: return "bgcolor=\""+wheelColor( QColor( "#FFD8D8"   ), 0.02, 0.05, 0.02, 0.0, depth)+"\";";
     }
   return "";
 }
 
-DotSerial ValueBase::wheelColor( const QColor &c, qreal hDep, qreal sDep, qreal lDep, qint32 depth )
+DotSerial ValueBase::wheelColor( const QColor &c, qreal hDep, qreal sDep, qreal lDep, qreal ph, qint32 depth )
 { if ( hDep > 0.5 ) hDep = 0.5;
   if ( hDep < 0.0 ) hDep = 0.0;
   if ( sDep > 0.5 ) sDep = 0.5;
@@ -126,9 +126,9 @@ DotSerial ValueBase::wheelColor( const QColor &c, qreal hDep, qreal sDep, qreal 
   qreal nHue = c.hslHueF();
   qreal nSat = c.hslSaturationF(); if (nSat < sDep) nSat = sDep; if ( (nSat + sDep) > 1.0 ) nSat = 1.0 - sDep;
   qreal nLig = c.lightnessF();     if (nLig < lDep) nLig = lDep; if ( (nLig + lDep) > 1.0 ) nLig = 1.0 - lDep;
-  nHue += hDep * cos( ((qreal)depth)* 70.0*6.28318530718/360.0 );
-  nSat += sDep * cos( ((qreal)depth)* 25.0*6.28318530718/360.0 );
-  nLig += lDep * sin( ((qreal)depth)*130.0*6.28318530718/360.0 );
+  nHue += hDep * cos( ((qreal)depth)* 70.0*6.28318530718/360.0 + ph );
+  nSat += sDep * cos( ((qreal)depth)* 25.0*6.28318530718/360.0 + ph );
+  nLig += lDep * sin( ((qreal)depth)*130.0*6.28318530718/360.0 + ph );
   while ( nHue > 1.0 ) { nHue -= 1.0; } if ( nHue < 0.0 ) nHue = 0.0;
   if ( nSat > 1.0 ) nSat = 1.0;
   if ( nSat < 0.0 ) nSat = 0.0;
