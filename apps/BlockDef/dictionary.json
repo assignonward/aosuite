@@ -62,7 +62,7 @@
         },
         {
             "group_s": "dataGroup",
-            "name_s": "type_y",
+            "name_s": "type_c",
             "text_s": "Identifies an algorithm type for hash or crypto key, or other types depending on context",
             "type_b": "0C"
         },
@@ -104,7 +104,7 @@
         },
         {
             "group_s": "dataGroup",
-            "name_s": "riceyArray_Y",
+            "name_s": "riceyArray_C",
             "text_s": "A generic array of Ricey elements",
             "type_b": "1C"
         },
@@ -188,181 +188,181 @@
         },
         {
             "group_s": "algorithmIdGroup",
-            "name_s": "SHA256_y",
+            "name_s": "SHA256_c",
             "text_s": "algorithm ID for SHA2 - 256",
             "type_b": "810C"
         },
         {
             "group_s": "algorithmIdGroup",
-            "name_s": "ECB256_y",
+            "name_s": "ECB256_c",
             "text_s": "algorithm ID for Elliptic Curve ECDSA curve BrainpoolP256r1",
             "type_b": "812C"
         },
         {
             "group_s": "algorithmIdGroup",
-            "name_s": "RSA3072_y",
+            "name_s": "RSA3072_c",
             "text_s": "algorithm ID for 3072 bit RSA - less commonly used algorithms get longer ricey codes",
             "type_b": "814C"
         },
         {
             "group_s": "algorithmIdGroup",
-            "name_s": "SHA3b512_y",
+            "name_s": "SHA3b512_c",
             "text_s": "algorithm ID for SHA3 - 512",
             "type_b": "816C"
         },
         {
             "group_s": "algorithmIdGroup",
-            "name_s": "jpg_y",
+            "name_s": "jpg_c",
             "text_s": "Found in image objects, tells what format the data_b is to be interpreted as",
             "type_b": "820C"
         },
         {
             "group_s": "algorithmIdGroup",
-            "name_s": "png_y",
+            "name_s": "png_c",
             "text_s": "Found in image objects, tells what format the data_b is to be interpreted as",
             "type_b": "824C"
         },
         {
             "group_s": "dataGroup",
-            "name_s": "success_y",
+            "name_s": "success_c",
             "text_s": "success code",
             "type_b": "C00C"
         },
         {
             "group_s": "dataGroup",
-            "name_s": "failure_y",
+            "name_s": "failure_c",
             "text_s": "failure code",
             "type_b": "F00C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO0_y",
+            "name_s": "ProtocolDAO0_c",
             "text_s": "Development protocol, symbol: DⒶ0",
             "type_b": "DDA0800C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO1_y",
+            "name_s": "ProtocolDAO1_c",
             "text_s": "Development protocol, symbol: DⒶ1",
             "type_b": "DDA0802C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO2_y",
+            "name_s": "ProtocolDAO2_c",
             "text_s": "Development protocol, symbol: DⒶ2",
             "type_b": "DDA0804C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO3_y",
+            "name_s": "ProtocolDAO3_c",
             "text_s": "Development protocol, symbol: DⒶ3",
             "type_b": "DDA0806C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO4_y",
+            "name_s": "ProtocolDAO4_c",
             "text_s": "Development protocol, symbol: DⒶ4",
             "type_b": "DDA0810C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO5_y",
+            "name_s": "ProtocolDAO5_c",
             "text_s": "Development protocol, symbol: DⒶ5",
             "type_b": "DDA0812C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO6_y",
+            "name_s": "ProtocolDAO6_c",
             "text_s": "Development protocol, symbol: DⒶ6",
             "type_b": "DDA0814C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO7_y",
+            "name_s": "ProtocolDAO7_c",
             "text_s": "Development protocol, symbol: DⒶ7",
             "type_b": "DDA0816C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO8_y",
+            "name_s": "ProtocolDAO8_c",
             "text_s": "Development protocol, symbol: DⒶ8",
             "type_b": "DDA0820C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO9_y",
+            "name_s": "ProtocolDAO9_c",
             "text_s": "Development protocol, symbol: DⒶ9",
             "type_b": "DDA0822C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO10_y",
+            "name_s": "ProtocolDAO10_c",
             "text_s": "Development protocol, symbol: DⒶ10",
             "type_b": "DDA0824C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO11_y",
+            "name_s": "ProtocolDAO11_c",
             "text_s": "Development protocol, symbol: DⒶ11",
             "type_b": "DDA0826C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO12_y",
+            "name_s": "ProtocolDAO12_c",
             "text_s": "Development protocol, symbol: DⒶ12",
             "type_b": "DDA0840C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolDAO13_y",
+            "name_s": "ProtocolDAO13_c",
             "text_s": "Development protocol, symbol: DⒶ13",
             "type_b": "DDA0842C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolTAO1_y",
+            "name_s": "ProtocolTAO1_c",
             "text_s": "Test protocol, symbol: TⒶ2021.9.22",
             "type_b": "A7A0800C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolTAO2_y",
+            "name_s": "ProtocolTAO2_c",
             "text_s": "Test protocol, symbol: TⒶ2021.10.13",
             "type_b": "A7A0802C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolA00_y",
+            "name_s": "ProtocolA00_c",
             "text_s": "Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin",
             "type_b": "A00C"
         },
         {
             "group_s": "protocolIdGroup",
-            "name_s": "ProtocolA01_y",
+            "name_s": "ProtocolA01_c",
             "text_s": "Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees",
             "type_b": "A02C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorWriterClient_y",
+            "name_s": "actorWriterClient_c",
             "text_s": "Actor definition: the actor who wants to create a record (in a blockchain)",
             "type_b": "ACC70C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorWriterServer_y",
+            "name_s": "actorWriterServer_c",
             "text_s": "Actor definition: the actor who wants to retrieve a record (from a blockchain)",
             "type_b": "ACC72C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorReaderClient_y",
+            "name_s": "actorReaderClient_c",
             "text_s": "Actor definition: the actor who handles requests to create records (in a blockchain)",
             "type_b": "ACC74C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorReaderServer_y",
+            "name_s": "actorReaderServer_c",
             "text_s": "Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
             "type_b": "ACC76C"
         },
@@ -428,7 +428,7 @@
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "DefinedSubItems_Y",
+            "name_s": "DefinedSubItems_C",
             "text_s": "DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)",
             "type_b": "A07C"
         },
@@ -452,31 +452,31 @@
         },
         {
             "group_s": "operationGroup",
-            "name_s": "OpMemberOf_Y",
+            "name_s": "OpMemberOf_C",
             "text_s": "List of possible values for an RCODE",
             "type_b": "A01C"
         },
         {
             "group_s": "operationGroup",
-            "name_s": "OpOneOrMoreOf_Y",
+            "name_s": "OpOneOrMoreOf_C",
             "text_s": "One or more objects of the listed types are required to appear",
             "type_b": "A21C"
         },
         {
             "group_s": "operationGroup",
-            "name_s": "OpGreaterThan_Y",
+            "name_s": "OpGreaterThan_C",
             "text_s": "Path defining a value, or array of values, to compare - the targeted value must be greater than all",
             "type_b": "A03C"
         },
         {
             "group_s": "operationGroup",
-            "name_s": "OpLessThan_Y",
+            "name_s": "OpLessThan_C",
             "text_s": "Path defining a value, or array of values, to compare - the targeted value must be less than all",
             "type_b": "A05C"
         },
         {
             "group_s": "operationGroup",
-            "name_s": "OpTimeValue_y",
+            "name_s": "OpTimeValue_c",
             "text_s": "The specified object should be assigned a time value, RCD_time_i indicates the time should be the current time - other values may be used in the future to indicate other types of time values.",
             "type_b": "A04C"
         },
@@ -488,31 +488,31 @@
         },
         {
             "group_s": "structNavGroup",
-            "name_s": "itemRelAddr_Y",
+            "name_s": "itemRelAddr_C",
             "text_s": "Navigation from the current itemDef to an operand in an operation, sequence of item types when navigating deeper, relative step back or to root to get higher in the hiearchy",
             "type_b": "FFF55C"
         },
         {
             "group_s": "structNavGroup",
-            "name_s": "navUpOne_y",
+            "name_s": "navUpOne_c",
             "text_s": "Navigate 'up one' level in a nested block, used in operand relative addressing.",
             "type_b": "FFF56C"
         },
         {
             "group_s": "structNavGroup",
-            "name_s": "navChainBlock_y",
+            "name_s": "navChainBlock_c",
             "text_s": "Navigate to the 'root' of this chain block, used in operand absolute addressing.",
             "type_b": "FFF50C"
         },
         {
             "group_s": "structNavGroup",
-            "name_s": "navJumpToBlock_y",
+            "name_s": "navJumpToBlock_c",
             "text_s": "The next item in the itemRelAddr_Y array contains a chainBlock index, navigation will continue from that block.",
             "type_b": "FFF52C"
         },
         {
             "group_s": "structNavGroup",
-            "name_s": "navIfPresent_y",
+            "name_s": "navIfPresent_c",
             "text_s": "If the next item is present, then proceed - otherwise this condition is satisfied by the absence of the optional item.",
             "type_b": "FFF54C"
         },
@@ -596,7 +596,7 @@
         },
         {
             "group_s": "dataGroup",
-            "name_s": "enum_Y",
+            "name_s": "enum_C",
             "text_s": "Used to define available choices",
             "type_b": "5C"
         },
@@ -749,43 +749,43 @@
         {
             "code_s": "n",
             "name_s": "MPZ",
-            "text_s": "libGMP signed integer - json as a quoted ASCII decimal string, bao as an object carrying the native GMP values",
+            "text_s": "libGMP signed integer - json as a quoted ASCII decimal string, bson as an object carrying the native GMP values",
             "type_b": "01"
         },
         {
             "code_s": "r",
             "name_s": "MPQ",
-            "text_s": "libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bao as an object carrying the native GMP",
+            "text_s": "libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP",
             "type_b": "02"
         },
         {
             "code_s": "s",
             "name_s": "STRING",
-            "text_s": "UTF8 encoded string - json as UTF8 string, bao as int32_t length (includes terminator) followed by UTF8 string plus null terminator",
+            "text_s": "UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator",
             "type_b": "05"
         },
         {
             "code_s": "i",
             "name_s": "INT64",
-            "text_s": "64 bit signed integer - json in an unquoted ASCII decimal string, bao as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)",
+            "text_s": "64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)",
             "type_b": "06"
         },
         {
             "code_s": "b",
             "name_s": "BYTEARRAY",
-            "text_s": "ByteArray (aka octet stream) - json as hex string, bao as int32_t length followed by length octets",
+            "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
             "type_b": "0B"
         },
         {
-            "code_s": "y",
+            "code_s": "c",
             "name_s": "RCODE",
-            "text_s": "Ricey code - json as the table defined name, bao as a list of bytes: last byte has 0 in most significant bit.",
+            "text_s": "Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.",
             "type_b": "0C"
         },
         {
             "code_s": "o",
             "name_s": "OBJECT",
-            "text_s": "in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bao there are no separators, a key of Obterm ends the current object",
+            "text_s": "in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object",
             "type_b": "0F"
         },
         {
@@ -803,25 +803,25 @@
         {
             "code_s": "S",
             "name_s": "STRING_ARRAY",
-            "text_s": "array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bao as int32_t length followed by UTF-8 string, no null terminator",
+            "text_s": "array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator",
             "type_b": "15"
         },
         {
             "code_s": "I",
             "name_s": "INT64_ARRAY",
-            "text_s": "array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bao",
+            "text_s": "array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson",
             "type_b": "16"
         },
         {
             "code_s": "B",
             "name_s": "BYTEARRAY_ARRAY",
-            "text_s": "ByteArray (aka octet stream) - json as hex string, bao as int32_t length followed by length octets",
+            "text_s": "ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets",
             "type_b": "1B"
         },
         {
-            "code_s": "Y",
+            "code_s": "C",
             "name_s": "RCODE_ARRAY",
-            "text_s": "array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bao",
+            "text_s": "array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson",
             "type_b": "1C"
         },
         {

@@ -398,8 +398,8 @@ bool Tests::testRicey( QString &msg, qint32 &tc )
   tv = RCD_int64_i        ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_code_s         ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_chainBlock_o   ; pass &= testRicey( v, tv, tc, msg );
-  tv = RCD_ProtocolDAO0_y ; pass &= testRicey( v, tv, tc, msg );
-  tv = RCD_itemRelAddr_Y  ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_ProtocolDAO0_c ; pass &= testRicey( v, tv, tc, msg );
+  tv = RCD_itemRelAddr_C  ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_RangeBounds_O  ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_Identity_o     ; pass &= testRicey( v, tv, tc, msg );
   tv = RCD_NineCode_z     ; pass &= testRicey( v, tv, tc, msg );
@@ -731,7 +731,7 @@ bool Tests::testObjectA( QString &msg, qint32 &tc )
   QList<BlockObjectMap> tv;
   pass &= testObjectA( v, tv, tc, msg ); // Empty Array test
   to.insert( RCD_int64_i, new BlockValueInt64    (           -456789, this) );
-  to.insert( RCD_type_y , new BlockValueRiceyCode( RCD_ProtocolA00_y, this) );
+  to.insert( RCD_type_c , new BlockValueRiceyCode( RCD_ProtocolA00_c, this) );
   to.insert( RCD_text_s , new BlockValueString   (        "Stringy!", this) );
   to.insert( RCD_data_b , new BlockValueByteArray(       "123456789", this) );
   tv.append( to ); pass &= testObjectA( v, tv, tc, msg ); // Array with one varied object
@@ -1034,8 +1034,8 @@ bool Tests::testRiceyA( QString &msg, qint32 &tc )
   tv.append( RCD_int64_i         ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_code_s          ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_chainBlock_o    ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append( RCD_ProtocolDAO0_y  ); pass &= testRiceyA( v, tv, tc, msg );
-  tv.append( RCD_itemRelAddr_Y   ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_ProtocolDAO0_c  ); pass &= testRiceyA( v, tv, tc, msg );
+  tv.append( RCD_itemRelAddr_C   ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_RangeBounds_O   ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_Identity_o      ); pass &= testRiceyA( v, tv, tc, msg );
   tv.append( RCD_NineCode_z      ); pass &= testRiceyA( v, tv, tc, msg );
@@ -1271,7 +1271,7 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tv.insert( RCD_int64_i, new BlockValueInt64    (           -456789, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_mpz_n  , new BlockValueMPZ      (                v1, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_mpq_r  , new BlockValueMPQ      (                vr, this) );  pass &= testObject( v, tv, tc, msg );
-  tv.insert( RCD_type_y , new BlockValueRiceyCode( RCD_ProtocolA00_y, this) );  pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_type_c , new BlockValueRiceyCode( RCD_ProtocolA00_c, this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_text_s , new BlockValueString   (        "Stringy!", this) );  pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_data_b , new BlockValueByteArray(       "123456789", this) );  pass &= testObject( v, tv, tc, msg );
 
@@ -1286,8 +1286,8 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   QList<qint64> ta64 = { 0,1,-1,70000,-70000,-5123456789, 5123456789 };
   tv.insert( RCD_int64Array_I, new BlockValueInt64Array( ta64, this ) ); pass &= testObject( v, tv, tc, msg );
   // emit newDot( v.dot() );
-  QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_Y, RCD_data_b, RCD_ProtocolA00_y, RCD_RangeBounds_O };
-  tv.insert( RCD_riceyArray_Y, new BlockValueRiceyCodeArray( tari, this ) );     pass &= testObject( v, tv, tc, msg );
+  QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_C, RCD_data_b, RCD_ProtocolA00_c, RCD_RangeBounds_O };
+  tv.insert( RCD_riceyArray_C, new BlockValueRiceyCodeArray( tari, this ) );     pass &= testObject( v, tv, tc, msg );
   QList<Utf8String> tau8 = { "A", "1", "Stringy" };
   tv.insert( RCD_stringArray_S, new BlockValueStringArray( tau8, this ) );       pass &= testObject( v, tv, tc, msg );
   tv.insert( RCD_byteArrayArray_B, new BlockValueByteArrayArray( tau8, this ) ); pass &= testObject( v, tv, tc, msg );
