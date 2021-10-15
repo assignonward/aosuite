@@ -56,11 +56,14 @@ void  BlockTool::updateValueEditor()
       qWarning( "selBB nullptr" );
       return;
     }
-  if ( selBB->isContainer() )
+  if ( !selBB->isContainer() || selBB->isArray() )
+    { editSelectedElement(); }
+   else
     { // Setup for container insertion
       qWarning( "selBB isContainer" );
       if ( ui->navBuild->isChecked() )
-        { ui->key        ->setVisible( false );
+        { ui->index      ->setVisible( false );
+          ui->key        ->setVisible( false );
           ui->valueWidget->setVisible( false );
           ui->set        ->setVisible( false );
           ui->insert     ->setVisible( true  );
@@ -70,47 +73,15 @@ void  BlockTool::updateValueEditor()
         valueEditorNoNav();
       return;
     }
-   else
-    { // Editing value of selected element
-      if (( selBB->m_key == RCD_null_z ) || ( !dict.codesContainCode( selBB->m_key ) ))
-        { if ( selBB->m_key == RCD_null_z )
-            qWarning( "null key" );
-           else
-            qWarning( "unknown key %llu", selBB->m_key );
-          valueEditorNoNav();
-          return;
-        }
-      int i = ui->key->findText( dict.nameFromCode( selBB->m_key ) );
-      if ( i < 0 )
-        { qWarning( "key not found in ui" );
-          valueEditorNoNav();
-          return;
-        }
-      ui->key->setVisible( true  );
-      ui->key->setEnabled( false );
-      ui->key->setCurrentIndex( i ); // this also selects the correct valueWidget page
-      ValueBase *vb = selBB;
-      switch ( vb->type() & RDT_TYPEMASK )
-        { case RDT_INT64: ui->intEdit->setText( Utf8String::number(((BlockValueInt64 *)vb)->value())   ); break;
-          case RDT_MPZ:   ui->mpzEdit->setText( ValueBase::removeQuotes(((BlockValueMPZ *)vb)->json()) ); break;
-          case RDT_MPQ:   ui->mpqEdit->setText( ValueBase::removeQuotes(((BlockValueMPQ *)vb)->json()) ); break;
-          case RDT_STRING:    ui->stringEdit->   setText( ((BlockValueString    *)vb)->value()         ); break;
-          case RDT_BYTEARRAY: ui->byteArrayEdit->setText( ((BlockValueByteArray *)vb)->value().toHex() ); break;
-          case RDT_RCODE:
-            i = ui->rcodeEdit->findText( dict.nameFromCode( ((BlockValueRiceyCode *)vb)->value()) );
-            if ( i > 0 )
-              ui->rcodeEdit->setCurrentIndex( i );
-            break;
-        }
-      ui->valueWidget->setVisible( true  );
-      ui->valueWidget->setEnabled( true  );
-      ui->set        ->setVisible( true  );
-      ui->insert     ->setVisible( false );
-    }
 }
 
+/**
+ * @brief BlockTool::valueEditorNoNav - default configuration
+ *   for when nothing is selected by the navigator.
+ */
 void  BlockTool::valueEditorNoNav()
-{ ui->key        ->setVisible( true  );
+{ ui->index      ->setVisible( false );
+  ui->key        ->setVisible( true  );
   ui->key        ->setEnabled( true  );
   ui->valueWidget->setVisible( true  );
   ui->valueWidget->setEnabled( true  );
@@ -119,10 +90,62 @@ void  BlockTool::valueEditorNoNav()
   ui->insert     ->setEnabled( true  );
 }
 
+/**
+ * @brief BlockTool::editSelectedElement - an atomic value element is selected
+ *   enable changing of that value with the set button
+ */
+void  BlockTool::editSelectedElement()
+{ // Editing value of selected element
+  if (( selBB->m_key == RCD_null_z ) || ( !dict.codesContainCode( selBB->m_key ) ))
+    { if ( selBB->m_key == RCD_null_z )
+        qWarning( "null key" );
+       else
+        qWarning( "unknown key %llu", selBB->m_key );
+      valueEditorNoNav();
+      return;
+    }
+  int i = ui->key->findText( dict.nameFromCode( selBB->m_key ) );
+  if ( i < 0 )
+    { qWarning( "key not found in ui" );
+      valueEditorNoNav();
+      return;
+    }
+  ui->index->setVisible( selBB->isArray() );
+  if ( selBB->isArray() ) // set index value range to array current size
+    ui->index->setMaximum( ((ValueBaseArray *)((ValueBase *)selBB))->size() );
+  ui->key->setVisible( true  );
+  ui->key->setEnabled( false );
+  ui->key->setCurrentIndex( i ); // this also selects the correct valueWidget page
+  ValueBase *vb = selBB;
+  if ( !vb->isArray() )  // Why are we getting isArray for array elements?
+    switch ( vb->type() & RDT_TYPEMASK )
+      { case RDT_INT64: ui->intEdit->setText( Utf8String::number(((BlockValueInt64 *)vb)->value())   ); break;
+        case RDT_MPZ:   ui->mpzEdit->setText( ValueBase::removeQuotes(((BlockValueMPZ *)vb)->json()) ); break;
+        case RDT_MPQ:   ui->mpqEdit->setText( ValueBase::removeQuotes(((BlockValueMPQ *)vb)->json()) ); break;
+        case RDT_STRING:    ui->stringEdit->   setText( ((BlockValueString    *)vb)->value()         ); break;
+        case RDT_BYTEARRAY: ui->byteArrayEdit->setText( ((BlockValueByteArray *)vb)->value().toHex() ); break;
+        case RDT_RCODE:
+          i = ui->rcodeEdit->findText( dict.nameFromCode( ((BlockValueRiceyCode *)vb)->value()) );
+          if ( i > 0 )
+            ui->rcodeEdit->setCurrentIndex( i );
+          break;
+      }
+  ui->valueWidget->setVisible( true );
+  ui->valueWidget->setEnabled( true );
+  ui->set        ->setVisible( !selBB->isArray() );
+  ui->set        ->setEnabled( true );
+  ui->insert     ->setVisible(  selBB->isArray() );
+  ui->insert     ->setEnabled( true );
+}
+
 void  BlockTool::on_set_clicked()
 { ValueBase *vb = selBB;
+  if ( vb->isArray() )
+    { qWarning( "shouldn't be able to set in an array element (only insert)" );
+      return;
+    }
   switch ( vb->type() & RDT_TYPEMASK )
-    { case RDT_INT64:     ((BlockValueInt64 *)vb)->set( ui->intEdit->text().toLongLong() );                             updateNav(); break;
+    { case RDT_INT64:     ((BlockValueInt64 *)vb)->set( ui->intEdit->text().toLongLong() );                              updateNav(); break;
       case RDT_MPZ:       ((BlockValueMPZ *)vb)->setJson( ValueBase::ensureQuotes( ui->mpzEdit->text().toUtf8() ) );     updateNav(); break;
       case RDT_MPQ:       ((BlockValueMPQ *)vb)->setJson( ValueBase::ensureQuotes( ui->mpqEdit->text().toUtf8() ) );     updateNav(); break;
       case RDT_STRING:    ((BlockValueString *)vb)->set( ui->stringEdit->text().toUtf8()  );                             updateNav(); break;
@@ -211,20 +234,21 @@ void  BlockTool::on_key_currentTextChanged( const QString &nuKey )
   quint8 tp = dict.codeFromCodeName( nKey ) & RDT_OBTYPEMASK;
   switch( tp )
     { case RDT_NULL           : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_null      )); break;
-      case RDT_OBJECT         : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_object    )); break;
-      case RDT_INT64          : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_int       )); break;
-      case RDT_RCODE          : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_rcode     )); break;
-      case RDT_MPZ            : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_mpz       )); break;
-      case RDT_MPQ            : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_mpq       )); break;
-      case RDT_BYTEARRAY      : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_byteArray )); break;
-      case RDT_STRING         : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_string    )); break;
       case RDT_OBJECT_ARRAY   :
+      case RDT_OBJECT         : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_object    )); break;
       case RDT_INT64_ARRAY    :
+      case RDT_INT64          : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_int       )); break;
       case RDT_RCODE_ARRAY    :
+      case RDT_RCODE          : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_rcode     )); break;
       case RDT_MPZ_ARRAY      :
+      case RDT_MPZ            : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_mpz       )); break;
       case RDT_MPQ_ARRAY      :
+      case RDT_MPQ            : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_mpq       )); break;
       case RDT_BYTEARRAY_ARRAY:
-      case RDT_STRING_ARRAY   : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_array     )); break;
+      case RDT_BYTEARRAY      : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_byteArray )); break;
+      case RDT_STRING_ARRAY   :
+      case RDT_STRING         : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_string    )); break;
+//      case X_ARRAY   : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_array     )); break;
       default: qWarning( "key comboBox selected unhandled type %d key: %s", tp, nKey.data() );
     }
 }

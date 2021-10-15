@@ -69,6 +69,7 @@ virtual  ValueBase *firstChild()  const      { return nullptr; }
 virtual  ValueBase *prevChild( ValueBase * ) { return nullptr; }
 virtual  ValueBase *nextChild( ValueBase * ) { return nullptr; }
 virtual       bool  isContainer() const = 0;
+virtual       bool  isArray()     const { return false; }
 virtual       void  clear()             = 0;
 virtual     quint8  type()        const = 0;
 virtual     qint32  size()        const = 0;
@@ -94,16 +95,17 @@ QPointer<ValueBase> vbParent;
  */
 class BlockValueNull : public ValueBase
 { public:
-    explicit  BlockValueNull( QObject *parent = nullptr ) : ValueBase( parent ) {}
-             ~BlockValueNull() {}
-        bool  isContainer() const { return false; }
-        void  clear()             {}
-      quint8  type()        const { return RDT_NULL; }
-      qint32  size()        const { return 0; }
-   BaoSerial  bao()         const { return BaoSerial(); }
-  JsonSerial  json()        const { QString s = "NULL"; return s.toUtf8(); }
-      qint32  setBao ( const  BaoSerial &b ) { (void)b; return -1;    }  // cannot set a value to a BlockValueNull
-        bool  setJson( const JsonSerial &j ) { (void)j; return false; }
+     explicit  BlockValueNull( QObject *parent = nullptr ) : ValueBase( parent ) {}
+              ~BlockValueNull() {}
+ virtual bool  isContainer() const { return false; }
+ virtual bool  isArray()     const { return false; }
+         void  clear()             {}
+       quint8  type()        const { return RDT_NULL; }
+       qint32  size()        const { return 0; }
+    BaoSerial  bao()         const { return BaoSerial(); }
+   JsonSerial  json()        const { QString s = "NULL"; return s.toUtf8(); }
+       qint32  setBao ( const  BaoSerial &b ) { (void)b; return -1;    }  // cannot set a value to a BlockValueNull
+         bool  setJson( const JsonSerial &j ) { (void)j; return false; }
 };
 
 extern BlockValueNull  glob_null;   // Returned when BlockValueObject::valueAt() calls an invalid index
@@ -119,7 +121,8 @@ class ValueBaseArray : public ValueBase
                     ValueBaseArray( const ValueBaseArray &v, QObject *parent = nullptr ) : ValueBase( parent ) { m_values = v.m_values; }
                    ~ValueBaseArray() {}
     ValueBaseArray &operator= ( const ValueBaseArray &v ) { clear(); m_values = v.m_values; return *this; }
-              bool  isContainer() const { return true; }
+virtual       bool  isContainer() const { return true; }
+virtual       bool  isArray()     const { return true; }
          ValueBase *firstChild()  const { if ( m_values.size() > 0 ) return m_values.at(0); return nullptr; }
 virtual  ValueBase *nextChild( ValueBase * );
 virtual  ValueBase *prevChild( ValueBase * );
@@ -148,7 +151,8 @@ public:
           explicit  KeyValueBase( const RiceyCode &r, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( r ); }
           explicit  KeyValueBase( const RiceyInt  &k, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
                    ~KeyValueBase() {}
-              bool  isContainer() const { return true; }
+    virtual   bool  isContainer() const { return true;  }
+    virtual   bool  isArray()     const =0;
     virtual   void  clear()        {}
     virtual quint8  type()    const { return (m_key & RDT_OBTYPEMASK); }
             qint32  setKey( const RiceyCode &r );
@@ -174,6 +178,7 @@ public:
                     KeyValuePair( const RiceyInt  &k, ValueBase *vp, QObject *parent = nullptr ) : KeyValueBase( k,            parent ) { set(vp); }
                     KeyValuePair( const BaoSerial &b,                QObject *parent = nullptr ) : KeyValueBase( riceToInt(b), parent ) { setBao(b); }
                    ~KeyValuePair() { if ( m_value ) m_value->deleteLater(); }
+virtual       bool  isArray()     const { return false; }
          ValueBase *firstChild()  const { return m_value; }
          ValueBase *nextChild( ValueBase *v ) { if ( m_value ) return m_value->nextChild(v); return nullptr; }
          ValueBase *prevChild( ValueBase *v ) { if ( m_value ) return m_value->prevChild(v); return nullptr; }
@@ -204,6 +209,7 @@ public:
           explicit  KeyValueArray( RiceyInt  k, ValueBaseArray *bva, QObject *parent = nullptr ) : KeyValueBase(            k, parent ) { m_val = bva;     }
           explicit  KeyValueArray( RiceyCode r, QObject *parent = nullptr )                      : KeyValueBase( riceToInt(r), parent ) { m_val = nullptr; }
                    ~KeyValueArray() { clear(); }
+virtual       bool  isArray()     const { return true; }
          ValueBase *firstChild()  const { if ( m_val ) if ( m_val->size() > 0 ) return m_val->at(0); return nullptr; }
 virtual       void  clear() { if ( m_val ) { m_val->clear(); m_val->deleteLater(); } m_val = nullptr; }
 virtual     qint32  size() const { if ( m_val ) return m_val->size(); return 0; }
@@ -235,7 +241,8 @@ class BlockValueInt64 : public ValueBase
       explicit  BlockValueInt64( QObject *parent = nullptr ) : ValueBase( parent ) { set( 0 ); }
                 BlockValueInt64( const qint64 &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
                ~BlockValueInt64() {}
-          bool  isContainer() const { return false; }
+virtual   bool  isContainer() const { return false; }
+virtual   bool  isArray()     const { return false; }
           void  clear()             { m_value = 0; }
         quint8  type()        const { return RDT_INT64; }
 virtual qint32  size()        const { return 1; }
@@ -276,7 +283,8 @@ class BlockValueRiceyCode : public ValueBase
                 BlockValueRiceyCode( const RiceyCode &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
                 BlockValueRiceyCode( const RiceyInt &r , QObject *parent = nullptr ) : ValueBase( parent ) { set(r); }
                ~BlockValueRiceyCode() {}
-          bool  isContainer() const { return false; }
+virtual   bool  isContainer() const { return false; }
+virtual   bool  isArray()     const { return false; }
           void  clear()             { m_value = 0; }
         quint8  type()        const { return RDT_RCODE; }
 virtual qint32  size()        const { return 1; }
@@ -327,7 +335,8 @@ class BlockValueString : public ValueBase
                ~BlockValueString() {}
  static qint32  utf8CharSize( const char *, qint32 );
    static bool  validUtf8( const Utf8String & );
-          bool  isContainer() const { return false; }
+virtual   bool  isContainer() const { return false; }
+virtual   bool  isArray()     const { return false; }
           void  clear()             { m_value.clear(); }
         quint8  type()        const { return RDT_STRING; }
 virtual qint32  size()        const { return 1; }
@@ -367,7 +376,8 @@ class BlockValueByteArray : public ValueBase
       explicit  BlockValueByteArray( QObject *parent = nullptr ) : ValueBase( parent ) {}
                 BlockValueByteArray( const QByteArray &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
                ~BlockValueByteArray() {}
-          bool  isContainer() const { return false; }
+virtual   bool  isContainer() const { return false; }
+virtual   bool  isArray()     const { return false; }
           void  clear()             { m_value.clear(); }
         quint8  type()        const { return RDT_BYTEARRAY; }
 virtual qint32  size()        const { return 1; }
@@ -408,7 +418,8 @@ class BlockValueMPZ : public ValueBase
                     BlockValueMPZ( const     MP_INT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); set(v); }
                     BlockValueMPZ( const Utf8String &s, QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); setJson( ensureQuotes( s ) ); }
                    ~BlockValueMPZ() { clear(); }
-              bool  isContainer() const { return false; }
+virtual       bool  isContainer() const { return false; }
+virtual       bool  isArray()     const { return false; }
               void  clear()             { mpz_clear( &m_value ); }
             quint8  type()        const { return RDT_MPZ; }
     virtual qint32  size()        const { return 1; }
@@ -452,7 +463,8 @@ class BlockValueMPQ : public ValueBase
                 BlockValueMPQ( const     MP_RAT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); set(v); }
                 BlockValueMPQ( const Utf8String &s, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); setJson( ensureQuotes( s ) ); }
                ~BlockValueMPQ() { clear(); }
-          bool  isContainer() const { return false; }
+virtual   bool  isContainer() const { return false; }
+virtual   bool  isArray()     const { return false; }
           void  clear()             { mpq_clear( &m_value ); }
         quint8  type()        const { return RDT_MPQ; }
 virtual qint32  size()        const { return 1; }
@@ -504,7 +516,8 @@ class BlockValueObject : public ValueBase
                    BlockValueObject( const      BaoSerial &b, QObject *parent = nullptr ) : ValueBase( parent ) { setBao(b);  }
                    BlockValueObject( QObject *parent, const JsonSerial &j )               : ValueBase( parent ) { setJson(j); }
                   ~BlockValueObject() { clear(); }
-             bool  isContainer() const { return true; }
+virtual      bool  isContainer() const { return true; }
+virtual      bool  isArray()     const { return false; }
         ValueBase *firstChild()  const { if ( m_obMap.size() > 0 ) return m_obMap.first(); return nullptr; }
 virtual ValueBase *nextChild( ValueBase * );
 virtual ValueBase *prevChild( ValueBase * );
