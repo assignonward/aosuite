@@ -756,7 +756,7 @@ ValueBase *BlockValueObject::nextChild( ValueBase *v )
         return m_obMap[omk.at(i+1)];
     }
   if ( vbParent )
-    if ( vbParent->size() > 1 )
+    if ( !vbParent->isKeyValuePair() )
       return vbParent->nextChild( this );
   return nullptr;
 }

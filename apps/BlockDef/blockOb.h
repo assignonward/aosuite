@@ -73,6 +73,7 @@ virtual  ValueBase *prevChild( ValueBase * ) { return nullptr; }
 virtual  ValueBase *nextChild( ValueBase * ) { return nullptr; }
 virtual       bool  isContainer() const = 0;
 virtual       bool  isArray()     const { return false; }
+virtual       bool  isKeyValuePair() const { return false; }
 virtual       void  clear()             = 0;
 virtual     quint8  type()        const = 0;
 virtual     qint32  size()        const = 0;
@@ -182,6 +183,7 @@ public:
                     KeyValuePair( const BaoSerial &b,                QObject *parent = nullptr ) : KeyValueBase( riceToInt(b), parent ) { setBao(b); }
                    ~KeyValuePair() { if ( m_value ) m_value->deleteLater(); }
 virtual       bool  isArray()     const { return false; }
+virtual       bool  isKeyValuePair() const { return true; }
 virtual  ValueBase *firstChild()  const { return m_value; }
 virtual  ValueBase *nextChild( ValueBase *v ) { if ( m_value ) return m_value->nextChild(v); return nullptr; }
 virtual  ValueBase *prevChild( ValueBase *v ) { if ( m_value ) return m_value->prevChild(v); return nullptr; }
