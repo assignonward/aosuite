@@ -107,30 +107,33 @@ JsonSerial ValueBase::ensureQuotes( const JsonSerial &j )
  * @param vtc - optional, value to copy - when not nullptr, copy the value from this
  * @return pointer to the new value object
  */
-ValueBase *ValueBase::newValue( RiceyInt key, QObject *parent, ValueBase *vtc )
+ValueBase *ValueBase::newValue( RiceyInt key, ValueBase *vbp, ValueBase *vtc )
 { qint32 t = key & RDT_OBTYPEMASK;
   ValueBase *vbo = nullptr;
-  if ( t == RDT_OBJECT          ) vbo = new BlockValueObject( parent );
-  if ( t == RDT_INT64           ) vbo = new BlockValueInt64( parent );
-  if ( t == RDT_MPZ             ) vbo = new BlockValueMPZ( parent );
-  if ( t == RDT_MPQ             ) vbo = new BlockValueMPQ( parent );
-  if ( t == RDT_RCODE           ) vbo = new BlockValueRiceyCode( parent );
-  if ( t == RDT_STRING          ) vbo = new BlockValueString( parent );
-  if ( t == RDT_BYTEARRAY       ) vbo = new BlockValueByteArray( parent );
-  if ( t == RDT_OBJECT_ARRAY    ) vbo = new BlockValueObjectArray( parent );
-  if ( t == RDT_INT64_ARRAY     ) vbo = new BlockValueInt64Array( parent );
-  if ( t == RDT_MPZ_ARRAY       ) vbo = new BlockValueMPZArray( parent );
-  if ( t == RDT_MPQ_ARRAY       ) vbo = new BlockValueMPQArray( parent );
-  if ( t == RDT_RCODE_ARRAY     ) vbo = new BlockValueRiceyCodeArray( parent );
-  if ( t == RDT_STRING_ARRAY    ) vbo = new BlockValueStringArray( parent );
-  if ( t == RDT_BYTEARRAY_ARRAY ) vbo = new BlockValueByteArrayArray( parent );
+  if ( t == RDT_OBJECT          ) vbo = new BlockValueObject( vbp );
+  if ( t == RDT_INT64           ) vbo = new BlockValueInt64( vbp );
+  if ( t == RDT_MPZ             ) vbo = new BlockValueMPZ( vbp );
+  if ( t == RDT_MPQ             ) vbo = new BlockValueMPQ( vbp );
+  if ( t == RDT_RCODE           ) vbo = new BlockValueRiceyCode( vbp );
+  if ( t == RDT_STRING          ) vbo = new BlockValueString( vbp );
+  if ( t == RDT_BYTEARRAY       ) vbo = new BlockValueByteArray( vbp );
+  if ( t == RDT_OBJECT_ARRAY    ) vbo = new BlockValueObjectArray( vbp );
+  if ( t == RDT_INT64_ARRAY     ) vbo = new BlockValueInt64Array( vbp );
+  if ( t == RDT_MPZ_ARRAY       ) vbo = new BlockValueMPZArray( vbp );
+  if ( t == RDT_MPQ_ARRAY       ) vbo = new BlockValueMPQArray( vbp );
+  if ( t == RDT_RCODE_ARRAY     ) vbo = new BlockValueRiceyCodeArray( vbp );
+  if ( t == RDT_STRING_ARRAY    ) vbo = new BlockValueStringArray( vbp );
+  if ( t == RDT_BYTEARRAY_ARRAY ) vbo = new BlockValueByteArrayArray( vbp );
   if ( vbo == nullptr )
     qWarning( "unhandled type %d in ValueBase::newValue", t );
-   else if ( vtc )
-    { if (( vtc->type() & RDT_OBTYPEMASK ) != t )
-        qWarning( "type mismatch with %d vtc %d ValueBase::newValue", t, vtc->type() & RDT_OBTYPEMASK );
-       else
-        vbo->setBao( vtc->bao() );
+   else
+    { if ( vtc )
+        { if (( vtc->type() & RDT_OBTYPEMASK ) != t )
+            qWarning( "type mismatch with %d vtc %d ValueBase::newValue", t, vtc->type() & RDT_OBTYPEMASK );
+           else
+            vbo->setBao( vtc->bao() );
+        }
+      vbo->setMetaData( key, vbp );
     }
   return vbo;
 }
@@ -158,7 +161,8 @@ qint32 KeyValueBase::setKey( const RiceyCode &key )
  * @return length of all data read from b to get key and value, or -1 if there was a problem
  */
 qint32  KeyValuePair::setBao( const  BaoSerial &b )
-{ if ( m_value )
+{ // qWarning( "KeyValuePair::setBao" );
+  if ( m_value )
     m_value->deleteLater();
   m_value = nullptr;
   qint32 len = setKey( b );
@@ -169,6 +173,7 @@ qint32  KeyValuePair::setBao( const  BaoSerial &b )
   if ( vbo == nullptr )
     { qWarning( "KeyValuePair::setBao() problem reading value" ); setKey( RCD_null_z ); return -1; }
   m_value = vbo;
+  m_value->setMetaData( key(), this );
   return i+len;
 }
 
@@ -614,6 +619,12 @@ qint32  ValueBaseArray::setBao( const BaoSerial &b )
       ValueBase *vbo = newValue( type() & RDT_TYPEMASK, this );
       if ( vbo == nullptr )
         { qWarning( "BlockValueArray::setBao() problem making new value for type: %d", type() ); return -1; }
+      // if ( vbParent != nullptr )
+      //   { vbo->m_key = vbParent->m_key;
+      //     // qWarning( "copying key %llx", vbParent->m_key );
+      //   }
+      //  else
+      //   qWarning( "vbParent nullptr" );
       len = vbo->setBao( b.mid(i) );
       if ( len < 1 )
         { delete vbo; qWarning( "BlockValueArray::setBao() problem reading element in setBao %s", b.mid(i).toHex().data() ); return -1; }
@@ -691,8 +702,11 @@ bool  ValueBaseArray::append( ValueBase *value )
     { qWarning( "type mismatch in BlockValueArray::append(ValueBase) %d %d",(int)value->type(),(int)type() );
       return false;
     }
+  // Setting metadata for new array element
   value->vbParent = this;
   value->m_idx    = "i"+Utf8String::number( size() );
+  value->setVKey( vKey() );
+  // qWarning( "appending to %s to %llx", m_idx.data(), m_key );
   m_values.append( value );
   return true;
 }
@@ -837,13 +851,13 @@ bool  BlockValueObjectArray::operator==(const QList<BlockObjectMap>& l) const
  * @param k - key as a RiceyInt which tells the type of the value to be read
  * @param b - bytestream ready to read a value from
  * @param l - when not null, return length of stream read here, -1 if there is a problem
- * @param parent - parent for the value object
+ * @param vbp - parent for the value object
  * @return length of stream read to get the value, or -1 if there was a problem
  */
-ValueBase *ValueBase::baoValueByKey( RiceyInt k, const  BaoSerial &b, qint32 *l, QObject *parent ) const
+ValueBase *ValueBase::baoValueByKey( RiceyInt k, const  BaoSerial &b, qint32 *l, ValueBase *vbp ) const
 { if ( l != nullptr )
     *l = -1;
-  ValueBase *vbo = newValue( k, parent );
+  ValueBase *vbo = newValue( k, vbp );
   if ( vbo == nullptr )
     { qWarning( "problem making new value for key %llu", k ); return nullptr; }
   qint32 len = vbo->setBao( b );
@@ -869,10 +883,8 @@ bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
     { qWarning( "BlockValueObject::insert(RiceyInt,ValueBase) key %llu not recognized, will not insert.", k ); return false; }
   if ( m_obMap.contains( k ) )
     { qWarning( "type collision, insertion blocked." ); return false; }
+  v->setMetaData( k, this );
   m_obMap.insert( k, v );
-  v->vbParent = this;
-  v->m_idx = "k" + intToRice( k ).toHex();
-  v->m_key = k;
   return true;
 }
 
@@ -887,11 +899,15 @@ bool  BlockValueObject::insert( KeyValueArray *kva )
     { qWarning( "BlockValueObject::insert(KeyValueArray) key %llu not recognized, will not insert.", kva->key() ); return false; }
   if ( m_obMap.contains( kva->key() ) )
     { qWarning( "type collision, insertion blocked." ); return false; }
-  kva->value()->vbParent = this;
-  kva->value()->m_idx = "k" + intToRice( kva->key() ).toHex();
-  kva->value()->m_key = kva->key();
+  kva->value()->setMetaData( kva->key(), this );
   m_obMap.insert( kva->key(), kva->value() );
   return true;
+}
+
+void  ValueBase::setMetaData( RiceyInt k, ValueBase *vbp )
+{ vbParent = vbp;
+  m_idx = "k" + intToRice( k ).toHex();
+  m_key = k;
 }
 
 /**

@@ -50,17 +50,17 @@ BlockTool::~BlockTool()
 { delete ui; }
 
 void  BlockTool::updateValueEditor()
-{ qWarning( "updateValueEditor" );
+{ qWarning( "updateValueEditor type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->m_key,selBB->m_idx.data() );
   if ( selBB == nullptr ) // No navigation point active
     { valueEditorNoNav();
       qWarning( "selBB nullptr" );
       return;
     }
-  if ( !selBB->isContainer() || selBB->isArray() )
+  if ( (!selBB->isContainer()) || selBB->isArray() )
     { editSelectedElement(); }
    else
     { // Setup for container insertion
-      qWarning( "selBB isContainer" );
+      qWarning( "selBB is an Object" );
       if ( ui->navBuild->isChecked() )
         { ui->index      ->setVisible( false );
           ui->key        ->setVisible( false );
@@ -110,32 +110,38 @@ void  BlockTool::editSelectedElement()
       valueEditorNoNav();
       return;
     }
-  ui->index->setVisible( selBB->isArray() );
-  if ( selBB->isArray() ) // set index value range to array current size
-    ui->index->setMaximum( ((ValueBaseArray *)((ValueBase *)selBB))->size() );
+  ValueBase *vb = selBB;
   ui->key->setVisible( true  );
   ui->key->setEnabled( false );
   ui->key->setCurrentIndex( i ); // this also selects the correct valueWidget page
-  ValueBase *vb = selBB;
+  if ( selBB->isArray() ) // set index value range to array current size
+    { ui->index->setVisible( true );
+      ui->index->setMaximum( ((ValueBaseArray *)((ValueBase *)selBB))->size() );
+    }
   if ( !vb->isArray() )  // Why are we getting isArray for array elements?
-    switch ( vb->type() & RDT_TYPEMASK )
-      { case RDT_INT64: ui->intEdit->setText( Utf8String::number(((BlockValueInt64 *)vb)->value())   ); break;
-        case RDT_MPZ:   ui->mpzEdit->setText( ValueBase::removeQuotes(((BlockValueMPZ *)vb)->json()) ); break;
-        case RDT_MPQ:   ui->mpqEdit->setText( ValueBase::removeQuotes(((BlockValueMPQ *)vb)->json()) ); break;
-        case RDT_STRING:    ui->stringEdit->   setText( ((BlockValueString    *)vb)->value()         ); break;
-        case RDT_BYTEARRAY: ui->byteArrayEdit->setText( ((BlockValueByteArray *)vb)->value().toHex() ); break;
-        case RDT_RCODE:
-          i = ui->rcodeEdit->findText( dict.nameFromCode( ((BlockValueRiceyCode *)vb)->value()) );
-          if ( i > 0 )
-            ui->rcodeEdit->setCurrentIndex( i );
-          break;
-      }
+    setEditorValue( vb );
   ui->valueWidget->setVisible( true );
   ui->valueWidget->setEnabled( true );
   ui->set        ->setVisible( !selBB->isArray() );
   ui->set        ->setEnabled( true );
   ui->insert     ->setVisible(  selBB->isArray() );
   ui->insert     ->setEnabled( true );
+}
+
+void  BlockTool::setEditorValue( ValueBase *vb )
+{ qint32 i;
+  switch ( vb->type() & RDT_TYPEMASK )
+   { case RDT_INT64: ui->intEdit->setText( Utf8String::number(((BlockValueInt64 *)vb)->value())   ); break;
+     case RDT_MPZ:   ui->mpzEdit->setText( ValueBase::removeQuotes(((BlockValueMPZ *)vb)->json()) ); break;
+     case RDT_MPQ:   ui->mpqEdit->setText( ValueBase::removeQuotes(((BlockValueMPQ *)vb)->json()) ); break;
+     case RDT_STRING:    ui->stringEdit->   setText( ((BlockValueString    *)vb)->value()         ); break;
+     case RDT_BYTEARRAY: ui->byteArrayEdit->setText( ((BlockValueByteArray *)vb)->value().toHex() ); break;
+     case RDT_RCODE:
+       i = ui->rcodeEdit->findText( dict.nameFromCode( ((BlockValueRiceyCode *)vb)->value()) );
+       if ( i > 0 )
+         ui->rcodeEdit->setCurrentIndex( i );
+       break;
+   }
 }
 
 void  BlockTool::on_set_clicked()
@@ -869,79 +875,79 @@ void  BlockTool::on_hash_clicked()
 
   BlockValueObject *ido = new BlockValueObject( this );
   idl->append( ido );
-  BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_hash_o, this );
-  ido->insert( RCD_type_c, idc );
-  BlockValueRiceyCodeArray *ril = new BlockValueRiceyCodeArray( this );
-  ido->insert( RCD_DefinedSubItems_C, ril );
-  BlockValueRiceyCode *ri1 = new BlockValueRiceyCode( RCD_type_c, this );
-  ril->append( ri1 );
-  BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_data_b, this );
-  ril->append( ri2 );
-  BlockValueRiceyCode *ri3 = new BlockValueRiceyCode( RCD_time_i, this );
-  ril->append( ri3 );
-  BlockValueObjectArray *orl = new BlockValueObjectArray( this );
-  ido->insert( RCD_OperReqList_O, orl );
+    BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_hash_o, this );
+    ido->insert( RCD_type_c, idc );
+    BlockValueRiceyCodeArray *ril = new BlockValueRiceyCodeArray( this );
+    ido->insert( RCD_DefinedSubItems_C, ril );
+      BlockValueRiceyCode *ri1 = new BlockValueRiceyCode( RCD_type_c, this );
+      ril->append( ri1 );
+      BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_data_b, this );
+      ril->append( ri2 );
+      BlockValueRiceyCode *ri3 = new BlockValueRiceyCode( RCD_time_i, this );
+      ril->append( ri3 );
+    BlockValueObjectArray *orl = new BlockValueObjectArray( this );
+    ido->insert( RCD_OperReqList_O, orl );
 
-  BlockValueObject *or1 = new BlockValueObject( this );
-  orl->append( or1 );
-    BlockValueRiceyCode *or1t = new BlockValueRiceyCode( RCD_type_c, this );
-    or1->insert( RCD_type_c, or1t );
-    BlockValueRiceyCodeArray *or1o = new BlockValueRiceyCodeArray( this );
-    or1->insert( RCD_OpMemberOf_C, or1o );
-      BlockValueRiceyCode *or1m1 = new BlockValueRiceyCode( RCD_SHA256_c, this );
-      or1o->append( or1m1 );
-      BlockValueRiceyCode *or1m2 = new BlockValueRiceyCode( RCD_SHA3b512_c, this );
-      or1o->append( or1m2 );
-  BlockValueObject *or2 = new BlockValueObject( this );
-  orl->append( or2 );
-    BlockValueRiceyCode *or2t = new BlockValueRiceyCode( RCD_time_i, this );
-    or2->insert( RCD_type_c, or2t );
-    BlockValueRiceyCode *or2to = new BlockValueRiceyCode( RCD_time_i, this );
-    or2->insert( RCD_OpTimeValue_c, or2to );
+      BlockValueObject *or1 = new BlockValueObject( this );
+      orl->append( or1 );
+        BlockValueRiceyCode *or1t = new BlockValueRiceyCode( RCD_type_c, this );
+        or1->insert( RCD_type_c, or1t );
+        BlockValueRiceyCodeArray *or1o = new BlockValueRiceyCodeArray( this );
+        or1->insert( RCD_OpMemberOf_C, or1o );
+          BlockValueRiceyCode *or1m1 = new BlockValueRiceyCode( RCD_SHA256_c, this );
+          or1o->append( or1m1 );
+          BlockValueRiceyCode *or1m2 = new BlockValueRiceyCode( RCD_SHA3b512_c, this );
+          or1o->append( or1m2 );
+      BlockValueObject *or2 = new BlockValueObject( this );
+      orl->append( or2 );
+        BlockValueRiceyCode *or2t = new BlockValueRiceyCode( RCD_time_i, this );
+        or2->insert( RCD_type_c, or2t );
+        BlockValueRiceyCode *or2to = new BlockValueRiceyCode( RCD_time_i, this );
+        or2->insert( RCD_OpTimeValue_c, or2to );
 
-  BlockValueObject *or3 = new BlockValueObject( this );
-  orl->append( or3 );
-    BlockValueRiceyCode *or3t = new BlockValueRiceyCode( RCD_time_i, this );
-    or3->insert( RCD_type_c, or3t );
-    BlockValueRiceyCodeArray *or3o = new BlockValueRiceyCodeArray( this );
-    or3->insert( RCD_OpGreaterThan_C, or3o );
-      BlockValueRiceyCode *or3s1 = new BlockValueRiceyCode( RCD_navUpOne_c, this );
-      or3o->append( or3s1 );
-      BlockValueRiceyCode *or3s2 = new BlockValueRiceyCode( RCD_hashedOb_o, this );
-      or3o->append( or3s2 );
-      BlockValueRiceyCode *or3s3 = new BlockValueRiceyCode( RCD_navIfPresent_c, this );
-      or3o->append( or3s3 );
-      BlockValueRiceyCode *or3s4 = new BlockValueRiceyCode( RCD_parentHash_O, this );
-      or3o->append( or3s4 );
-      BlockValueRiceyCode *or3s5 = new BlockValueRiceyCode( RCD_time_i, this );
-      or3o->append( or3s5 );
+      BlockValueObject *or3 = new BlockValueObject( this );
+      orl->append( or3 );
+        BlockValueRiceyCode *or3t = new BlockValueRiceyCode( RCD_time_i, this );
+        or3->insert( RCD_type_c, or3t );
+        BlockValueRiceyCodeArray *or3o = new BlockValueRiceyCodeArray( this );
+        or3->insert( RCD_OpGreaterThan_C, or3o );
+          BlockValueRiceyCode *or3s1 = new BlockValueRiceyCode( RCD_navUpOne_c, this );
+          or3o->append( or3s1 );
+          BlockValueRiceyCode *or3s2 = new BlockValueRiceyCode( RCD_hashedOb_o, this );
+          or3o->append( or3s2 );
+          BlockValueRiceyCode *or3s3 = new BlockValueRiceyCode( RCD_navIfPresent_c, this );
+          or3o->append( or3s3 );
+          BlockValueRiceyCode *or3s4 = new BlockValueRiceyCode( RCD_parentHash_O, this );
+          or3o->append( or3s4 );
+          BlockValueRiceyCode *or3s5 = new BlockValueRiceyCode( RCD_time_i, this );
+          or3o->append( or3s5 );
 
-  BlockValueObject *or4 = new BlockValueObject( this );
-  orl->append( or4 );
-    BlockValueRiceyCode *or4t = new BlockValueRiceyCode( RCD_data_b, this );
-    or4->insert( RCD_type_c, or4t );
-    BlockValueObjectArray *or4o = new BlockValueObjectArray( this );
-    or4->insert( RCD_OpHash_O, or4o );
-      BlockValueObject *or41 = new BlockValueObject( this );
-      or4o->append( or41 );
-        BlockValueRiceyCodeArray *or411 = new BlockValueRiceyCodeArray( this );
-        or41->insert( RCD_riceyArray_C, or411 );
-          BlockValueRiceyCode *or4111 = new BlockValueRiceyCode( RCD_type_c, this );
-          or411->append( or4111 );
-      BlockValueObject *or42 = new BlockValueObject( this );
-      or4o->append( or42 );
-        BlockValueRiceyCodeArray *or421 = new BlockValueRiceyCodeArray( this );
-        or42->insert( RCD_riceyArray_C, or421 );
-          BlockValueRiceyCode *or4211 = new BlockValueRiceyCode( RCD_time_i, this );
-          or421->append( or4211 );
-     BlockValueObject *or43 = new BlockValueObject( this );
-     or4o->append( or43 );
-       BlockValueRiceyCodeArray *or431 = new BlockValueRiceyCodeArray( this );
-       or43->insert( RCD_riceyArray_C, or431 );
-         BlockValueRiceyCode *or4311 = new BlockValueRiceyCode( RCD_navUpOne_c, this );
-         or431->append( or4311 );
-         BlockValueRiceyCode *or4312 = new BlockValueRiceyCode( RCD_hashedOb_o, this );
-         or431->append( or4312 );
+      BlockValueObject *or4 = new BlockValueObject( this );
+      orl->append( or4 );
+        BlockValueRiceyCode *or4t = new BlockValueRiceyCode( RCD_data_b, this );
+        or4->insert( RCD_type_c, or4t );
+        BlockValueObjectArray *or4o = new BlockValueObjectArray( this );
+        or4->insert( RCD_OpHash_O, or4o );
+          BlockValueObject *or41 = new BlockValueObject( this );
+          or4o->append( or41 );
+            BlockValueRiceyCodeArray *or411 = new BlockValueRiceyCodeArray( this );
+            or41->insert( RCD_riceyArray_C, or411 );
+              BlockValueRiceyCode *or4111 = new BlockValueRiceyCode( RCD_type_c, this );
+              or411->append( or4111 );
+          BlockValueObject *or42 = new BlockValueObject( this );
+          or4o->append( or42 );
+            BlockValueRiceyCodeArray *or421 = new BlockValueRiceyCodeArray( this );
+            or42->insert( RCD_riceyArray_C, or421 );
+              BlockValueRiceyCode *or4211 = new BlockValueRiceyCode( RCD_time_i, this );
+              or421->append( or4211 );
+         BlockValueObject *or43 = new BlockValueObject( this );
+         or4o->append( or43 );
+           BlockValueRiceyCodeArray *or431 = new BlockValueRiceyCodeArray( this );
+           or43->insert( RCD_riceyArray_C, or431 );
+             BlockValueRiceyCode *or4311 = new BlockValueRiceyCode( RCD_navUpOne_c, this );
+             or431->append( or4311 );
+             BlockValueRiceyCode *or4312 = new BlockValueRiceyCode( RCD_hashedOb_o, this );
+             or431->append( or4312 );
 
 /*
   BlockValueByteArray *dbp = new BlockValueByteArray( "BinarySample", this );

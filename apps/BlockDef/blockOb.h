@@ -48,7 +48,7 @@ public:
               enum  Mode { make, build, idle, selected };
           explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) { m_sel = false; m_key = RCD_null_z; }
 virtual            ~ValueBase() {}
-static   ValueBase *newValue( RiceyInt k, QObject *parent = nullptr, ValueBase *vtc = nullptr );
+static   ValueBase *newValue( RiceyInt k, ValueBase *vbp = nullptr, ValueBase *vtc = nullptr );
 static  JsonSerial  removeQuotes( const JsonSerial &j );
 static  JsonSerial  ensureQuotes( const JsonSerial &j );
 static   DotSerial  clusterWrap( Mode m, ValueBase *vb, const DotSerial &k );
@@ -64,6 +64,9 @@ static   DotSerial  dotEmptyNode( qint32 i = 0 );
             qint32  depth() const { if ( vbParent == nullptr ) return 0; return vbParent->depth()+1; }
 virtual Utf8String  id()    const { if ( vbParent == nullptr ) return "_"; return vbParent->id()+idx(); }
 virtual Utf8String  idx()   const { return m_idx; }
+          RiceyInt  vKey()  const { return m_key; }
+              void  setVKey( RiceyInt k ) { m_key = k; }
+virtual       void  setMetaData( RiceyInt, ValueBase * );
 static  QByteArray  baoDefaultValue( qint8 );
 virtual  ValueBase *firstChild()  const      { return nullptr; }
 virtual  ValueBase *prevChild( ValueBase * ) { return nullptr; }
@@ -78,8 +81,8 @@ virtual JsonSerial  json()        const = 0;
 virtual  DotSerial  dot(Mode m) const { (void)m; return json(); }
 virtual     qint32  setBao ( const  BaoSerial & ) = 0;
 virtual       bool  setJson( const JsonSerial & ) = 0;
-         ValueBase *baoValueByKey( RiceyInt, const  BaoSerial &, qint32 *l = nullptr, QObject *parent = nullptr ) const;
-         ValueBase *jsonValueByKey   ( RiceyInt, const QJsonValue &, QObject * ) const;
+         ValueBase *baoValueByKey( RiceyInt, const  BaoSerial &, qint32 *l = nullptr, ValueBase *vbp = nullptr ) const;
+         ValueBase *jsonValueByKey   ( RiceyInt, const QJsonValue &, ValueBase * ) const;
 virtual       bool  operator==( const ValueBase &v ) const { if ( v.type() != type() ) return false;  return v.bao() == bao(); };
 
 QPointer<ValueBase> vbParent;

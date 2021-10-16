@@ -432,7 +432,7 @@ bool  BlockValueObject::setJson( const JsonSerial &j )
  * @param parent - object parent for the ValueBase object created
  * @return pointer to a ValueBase object with the value of the JsonValue, nullptr if there is a problem
  */
-ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject *parent ) const
+ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, ValueBase *vbp ) const
 { qint32 typ = k & RDT_OBTYPEMASK;
   qint32 jdt = 0;
   bool typeMatch = false;
@@ -463,13 +463,13 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
   // QString str;
   switch ( jdt )
     { case JDT_OBJECT:
-        vbo = newValue( k, parent );
+        vbo = newValue( k, vbp );
         jd.setObject( jv.toObject() );
         vbo->setJson( jd.toJson() );
         return vbo;
 
       case JDT_STRING:
-        vbo = newValue( k, parent );
+        vbo = newValue( k, vbp );
         if (( typ == RDT_STRING ) || ( typ == RDT_MPZ ) || ( typ == RDT_MPQ ) || ( typ == RDT_INT64 ))
           vbo->setJson( "\""+jv.toString().toUtf8()+"\"" );
          else
@@ -477,7 +477,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, QObject 
         return vbo;
 
       case JDT_ARRAY:
-        vbo = newValue( k, parent );
+        vbo = newValue( k, vbp );
         jd.setArray( jv.toArray() );
         if ( !vbo->setJson( jd.toJson() ) )
           { vbo->deleteLater();

@@ -52,7 +52,7 @@ void BlockPanel::setBlock( KeyValueBase *p, bool updateNow )
 { if ( m_kvb )
     m_kvb->deleteLater();
   if ( p->key() & RDT_ARRAY )
-    m_kvb = new KeyValueArray( p->bao(), this );
+    m_kvb = new KeyValueArray( p->bao(), this );  // TODO: implement an actual KVA copy from bao!!!
    else
     m_kvb = new KeyValuePair( p->bao(), this );
   if ( updateNow )

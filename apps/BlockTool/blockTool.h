@@ -59,6 +59,7 @@ KeyValueBase *makeKvb();
         void  updateValueEditor();
         void  valueEditorNoNav();
         void  editSelectedElement();
+        void  setEditorValue( ValueBase *vb );
         void  insertKeyName( Utf8String );
 
 signals:
