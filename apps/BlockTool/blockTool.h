@@ -58,6 +58,7 @@ KeyValueBase *makeKvb();
         void  selectRoot(BlockPanel *);
         void  updateValueEditor();
         void  valueEditorNoNav();
+        void  editSelectedElement();
         void  insertKeyName( Utf8String );
 
 signals:
