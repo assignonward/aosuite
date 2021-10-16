@@ -58,6 +58,7 @@ KeyValueBase *makeKvb();
         void  selectRoot(BlockPanel *);
         void  updateValueEditor();
         void  valueEditorNoNav();
+        void  selectObjectForInsertion();
         void  editSelectedElement();
         void  setEditorValue( ValueBase *vb );
         void  insertKeyName( Utf8String );

@@ -182,9 +182,9 @@ public:
                     KeyValuePair( const BaoSerial &b,                QObject *parent = nullptr ) : KeyValueBase( riceToInt(b), parent ) { setBao(b); }
                    ~KeyValuePair() { if ( m_value ) m_value->deleteLater(); }
 virtual       bool  isArray()     const { return false; }
-         ValueBase *firstChild()  const { return m_value; }
-         ValueBase *nextChild( ValueBase *v ) { if ( m_value ) return m_value->nextChild(v); return nullptr; }
-         ValueBase *prevChild( ValueBase *v ) { if ( m_value ) return m_value->prevChild(v); return nullptr; }
+virtual  ValueBase *firstChild()  const { return m_value; }
+virtual  ValueBase *nextChild( ValueBase *v ) { if ( m_value ) return m_value->nextChild(v); return nullptr; }
+virtual  ValueBase *prevChild( ValueBase *v ) { if ( m_value ) return m_value->prevChild(v); return nullptr; }
 virtual     qint32  size()    const { return 1; }
               void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning("kvp type mismatch"); else { if ( m_value ) m_value->deleteLater(); m_value = vp; } }
          ValueBase *value()   const { return m_value; }
@@ -419,7 +419,7 @@ class BlockValueMPZ : public ValueBase
 { public:
           explicit  BlockValueMPZ( QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); }
                     BlockValueMPZ( const     MP_INT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); set(v); }
-                    BlockValueMPZ( const Utf8String &s, QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); setJson( ensureQuotes( s ) ); }
+                    BlockValueMPZ( const Utf8String &s, QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); set(s); }
                    ~BlockValueMPZ() { clear(); }
 virtual       bool  isContainer() const { return false; }
 virtual       bool  isArray()     const { return false; }
@@ -435,6 +435,7 @@ virtual       bool  isArray()     const { return false; }
               bool  setJson( const JsonSerial &j );
             MP_INT  value()       const { return m_value; }
               void  set( const MP_INT &v ) { mpz_set( &m_value, &v ); }
+              void  set( const Utf8String &v ) { setJson( ensureQuotes( v ) ); }
               bool  operator==( const MP_INT &v ) const { return ( mpz_cmp( &m_value, &v ) == 0 ); }
               bool  operator==( const BlockValueMPZ &v  ) const { MP_INT v1 = v.value(); return ( mpz_cmp( &m_value, &v1 ) == 0 ); }
 
@@ -464,7 +465,7 @@ class BlockValueMPQ : public ValueBase
 { public:
       explicit  BlockValueMPQ( QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); }
                 BlockValueMPQ( const     MP_RAT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); set(v); }
-                BlockValueMPQ( const Utf8String &s, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); setJson( ensureQuotes( s ) ); }
+                BlockValueMPQ( const Utf8String &s, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); set(s); }
                ~BlockValueMPQ() { clear(); }
 virtual   bool  isContainer() const { return false; }
 virtual   bool  isArray()     const { return false; }
@@ -478,6 +479,7 @@ static Utf8String  toStr( const MP_RAT & );
           bool  setJson( const JsonSerial &j );
         MP_RAT  value()       const { return m_value; }
           void  set( const MP_RAT &v ) { mpq_set( &m_value, &v ); }
+          void  set( const Utf8String &v ) { setJson( ensureQuotes( v ) ); }
           bool  operator==( const MP_RAT &v ) const { return ( mpq_cmp( &m_value, &v ) == 0 ); }
           bool  operator==( const BlockValueMPQ &v  ) const { MP_RAT v1 = v.value(); return ( mpq_cmp( &m_value, &v1 ) == 0 ); }
 
@@ -521,7 +523,7 @@ class BlockValueObject : public ValueBase
                   ~BlockValueObject() { clear(); }
 virtual      bool  isContainer() const { return true; }
 virtual      bool  isArray()     const { return false; }
-        ValueBase *firstChild()  const { if ( m_obMap.size() > 0 ) return m_obMap.first(); return nullptr; }
+virtual ValueBase *firstChild()  const { if ( m_obMap.size() > 0 ) return m_obMap.first(); return nullptr; }
 virtual ValueBase *nextChild( ValueBase * );
 virtual ValueBase *prevChild( ValueBase * );
            quint8  type()        const { return RDT_OBJECT; }

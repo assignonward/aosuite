@@ -756,7 +756,8 @@ ValueBase *BlockValueObject::nextChild( ValueBase *v )
         return m_obMap[omk.at(i+1)];
     }
   if ( vbParent )
-    return vbParent->nextChild( this );
+    if ( vbParent->size() > 1 )
+      return vbParent->nextChild( this );
   return nullptr;
 }
 

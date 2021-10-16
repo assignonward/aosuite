@@ -50,29 +50,17 @@ BlockTool::~BlockTool()
 { delete ui; }
 
 void  BlockTool::updateValueEditor()
-{ qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->m_key,selBB->m_idx.data() );
-  if ( selBB == nullptr ) // No navigation point active
+{ if ( selBB == nullptr ) // No navigation point active
     { valueEditorNoNav();
       qWarning( "selBB nullptr" );
       return;
     }
+    qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
+               selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->m_key,selBB->m_idx.data() );
   if ( (!selBB->isContainer()) || selBB->isArray() )
-    { editSelectedElement(); }
+    editSelectedElement();
    else
-    { // Setup for container insertion
-      qWarning( "selBB is an Object" );
-      if ( ui->navBuild->isChecked() )
-        { ui->index      ->setVisible( false );
-          ui->key        ->setVisible( false );
-          ui->valueWidget->setVisible( false );
-          ui->set        ->setVisible( false );
-          ui->insert     ->setVisible( true  );
-          ui->insert     ->setEnabled( makeKvb() != nullptr );
-        }
-       else
-        valueEditorNoNav();
-      return;
-    }
+    selectObjectForInsertion();
 }
 
 /**
@@ -91,6 +79,24 @@ void  BlockTool::valueEditorNoNav()
   ui->insert     ->setEnabled( true  );
 }
 
+void  BlockTool::selectObjectForInsertion()
+{ ValueBase *vb = selBB;
+  if ( vb == nullptr )
+    { qWarning( "BlockTool::selectObjectForInsertion() needs a valid selBB" );
+      valueEditorNoNav();
+      return;
+    }
+  qWarning( "selBB is an Object" );
+  if ( ui->navBuild->isChecked() )
+    { ui->index      ->setVisible( false );
+      ui->key        ->setVisible( false );
+      ui->valueWidget->setVisible( false );
+      ui->set        ->setVisible( false );
+      ui->insert     ->setVisible( true  );
+      ui->insert     ->setEnabled( makeKvb() != nullptr );
+    }
+}
+
 /**
  * @brief BlockTool::editSelectedElement - an atomic value element is selected
  *   enable changing of that value with the set button
@@ -99,6 +105,7 @@ void  BlockTool::editSelectedElement()
 { ValueBase *vb = selBB;
   if ( vb == nullptr )
     { qWarning( "BlockTool::editSelectedElement() needs a valid selBB" );
+      valueEditorNoNav();
       return;
     }
   // Editing value of selected element
@@ -137,6 +144,10 @@ void  BlockTool::editSelectedElement()
   ui->insert     ->setEnabled( true );
 }
 
+/**
+ * @brief BlockTool::setEditorValue - set the editor to show the current value of the selected object (atomic values)
+ * @param vb - object to copy the current value from
+ */
 void  BlockTool::setEditorValue( ValueBase *vb )
 { qint32 i;
   switch ( vb->type() & RDT_TYPEMASK )
@@ -153,24 +164,35 @@ void  BlockTool::setEditorValue( ValueBase *vb )
    }
 }
 
+/**
+ * @brief BlockTool::on_set_clicked - set has been clicked, hopefully while one of the atomic
+ *   value types is selected.  Update its value with that from the ui edit field, or throw a
+ *   warning message if there is a problem.
+ */
 void  BlockTool::on_set_clicked()
 { ValueBase *vb = selBB;
   if ( vb->isArray() )
     { qWarning( "shouldn't be able to set in an array element (only insert)" );
       return;
     }
+  Utf8String codeName;
   switch ( vb->type() & RDT_TYPEMASK )
-    { case RDT_INT64:     ((BlockValueInt64 *)vb)->set( ui->intEdit->text().toLongLong() );                              updateNav(); break;
-      case RDT_MPZ:       ((BlockValueMPZ *)vb)->setJson( ValueBase::ensureQuotes( ui->mpzEdit->text().toUtf8() ) );     updateNav(); break;
-      case RDT_MPQ:       ((BlockValueMPQ *)vb)->setJson( ValueBase::ensureQuotes( ui->mpqEdit->text().toUtf8() ) );     updateNav(); break;
-      case RDT_STRING:    ((BlockValueString *)vb)->set( ui->stringEdit->text().toUtf8()  );                             updateNav(); break;
+    { case RDT_MPZ:       ((BlockValueMPZ       *)vb)->set( ui->mpzEdit->text().toUtf8() );     updateNav(); break;
+      case RDT_MPQ:       ((BlockValueMPQ       *)vb)->set( ui->mpqEdit->text().toUtf8() );     updateNav(); break;
+      case RDT_INT64:     ((BlockValueInt64     *)vb)->set( ui->intEdit->text().toLongLong() ); updateNav(); break;
+      case RDT_STRING:    ((BlockValueString    *)vb)->set( ui->stringEdit->text().toUtf8()  ); updateNav(); break;
       case RDT_BYTEARRAY: ((BlockValueByteArray *)vb)->set( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ) ); updateNav(); break;
       case RDT_RCODE:
-        if ( dict.codesContainName( ui->rcodeEdit->currentText().toUtf8() ) )
-          { ((BlockValueRiceyCode *)vb)->set( dict.codeFromCodeName( ui->rcodeEdit->currentText().toUtf8() ) );
+        codeName = ui->rcodeEdit->currentText().toUtf8();
+        if ( dict.codesContainName( codeName ) )
+          { ((BlockValueRiceyCode *)vb)->set( dict.codeFromCodeName( codeName ) );
             updateNav();
           }
+         else
+          qWarning( "dictionary does not contain %s", codeName.data() );
         break;
+      default:
+        qWarning( "BlockTool::on_set_clicked() unrecognized type %x", vb->type() & RDT_TYPEMASK );
     }
 }
 
