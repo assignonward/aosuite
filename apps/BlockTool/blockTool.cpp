@@ -50,7 +50,7 @@ BlockTool::~BlockTool()
 { delete ui; }
 
 void  BlockTool::updateValueEditor()
-{ qWarning( "updateValueEditor type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->m_key,selBB->m_idx.data() );
+{ qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->m_key,selBB->m_idx.data() );
   if ( selBB == nullptr ) // No navigation point active
     { valueEditorNoNav();
       qWarning( "selBB nullptr" );
@@ -80,7 +80,8 @@ void  BlockTool::updateValueEditor()
  *   for when nothing is selected by the navigator.
  */
 void  BlockTool::valueEditorNoNav()
-{ ui->index      ->setVisible( false );
+{ qWarning( "BlockTool::valueEditorNoNav()" );
+  ui->index      ->setVisible( false );
   ui->key        ->setVisible( true  );
   ui->key        ->setEnabled( true  );
   ui->valueWidget->setVisible( true  );
@@ -95,36 +96,44 @@ void  BlockTool::valueEditorNoNav()
  *   enable changing of that value with the set button
  */
 void  BlockTool::editSelectedElement()
-{ // Editing value of selected element
-  if (( selBB->m_key == RCD_null_z ) || ( !dict.codesContainCode( selBB->m_key ) ))
-    { if ( selBB->m_key == RCD_null_z )
+{ ValueBase *vb = selBB;
+  if ( vb == nullptr )
+    { qWarning( "BlockTool::editSelectedElement() needs a valid selBB" );
+      return;
+    }
+  // Editing value of selected element
+  RiceyInt k = vb->m_key;
+  if (( k == RCD_null_z ) || ( !dict.codesContainCode( k ) ))
+    { if ( k == RCD_null_z )
         qWarning( "null key" );
        else
-        qWarning( "unknown key %llu", selBB->m_key );
+        qWarning( "unknown key %llu", k );
       valueEditorNoNav();
       return;
     }
-  int i = ui->key->findText( dict.nameFromCode( selBB->m_key ) );
+  int i = ui->key->findText( dict.nameFromCode( k ) );
   if ( i < 0 )
-    { qWarning( "key not found in ui" );
+    { Utf8String keyName = dict.nameFromCode( k );
+      qWarning( "key %s not found in ui", keyName.data() );
       valueEditorNoNav();
       return;
     }
-  ValueBase *vb = selBB;
+  qWarning( "editSelectedElement type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
+             vb->type(),vb->isArray(),vb->isContainer(),k,vb->m_idx.data() );
   ui->key->setVisible( true  );
   ui->key->setEnabled( false );
   ui->key->setCurrentIndex( i ); // this also selects the correct valueWidget page
-  if ( selBB->isArray() ) // set index value range to array current size
-    { ui->index->setVisible( true );
-      ui->index->setMaximum( ((ValueBaseArray *)((ValueBase *)selBB))->size() );
-    }
-  if ( !vb->isArray() )  // Why are we getting isArray for array elements?
+
+  ui->index->setVisible( vb->isArray() );
+  if ( vb->isArray() ) // set index value range to array current size
+    ui->index->setMaximum( ((ValueBaseArray *)vb)->size() );
+   else   // Why are we getting isArray for array elements?
     setEditorValue( vb );
   ui->valueWidget->setVisible( true );
   ui->valueWidget->setEnabled( true );
-  ui->set        ->setVisible( !selBB->isArray() );
+  ui->set        ->setVisible( !vb->isArray() );
   ui->set        ->setEnabled( true );
-  ui->insert     ->setVisible(  selBB->isArray() );
+  ui->insert     ->setVisible(  vb->isArray() );
   ui->insert     ->setEnabled( true );
 }
 

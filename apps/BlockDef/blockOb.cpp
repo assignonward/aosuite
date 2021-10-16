@@ -46,24 +46,19 @@
 // Further, in a given protocol, only recognized keys (defined in the protocol) are allowed.
 //
 // Defined data types include:
-//   0) Objects, contain 0 or more key-value pairs
-//   1) int64, 8 byte signed integers stored LSB first
-//   2) int32, 4 byte signed integers stored LSB first (potentially deprecated)
-//   3) MPZ, arbitrary precision integers stored MSB first in BCD, terminated with F for negative and E for positive
-//   4) MPQ, arbitrary precision ratio of two integers stored as two MPZ: numerator / denominator
-//   5) RCODE, when used as a key - a rice code value which appears in the protocol dictionary
+//   1) MPZ, arbitrary precision integers stored MSB first in BCD, terminated with F for negative and E for positive
+//   2) MPQ, arbitrary precision ratio of two integers stored as two MPZ: numerator / denominator
+//   5) String, any valid UTF-8 string stored as a rice code length followed by the characters - not including null terminator
+//   6) int64, 8 byte signed integers stored LSB first
+//   11) Data, any octet stream stored as a rice code length followed by the data
+//   12) RCODE, when used as a key - a rice code value which appears in the protocol dictionary
 //      note that the following data types use rice code numbers (positive integers from 0 to 2^63) to specify lengths in bao code
-//   6) String, any valid UTF-8 string stored as a rice code length followed by the characters - not including null terminator
-//   7) Data, any octet stream stored as a rice code length followed by the data
-//   8-15) arrays of the above, stored as a rice code specifying 0 or more elements, followed by that number of elements stored as above
+//   15) Objects, contain 0 or more key-value pairs
+//   16-31) arrays of the above, stored as a rice code specifying 0 or more elements, followed by that number of elements stored as above
 //
 // State of the code:
 //
-// Functional, but not my proudest work.  Could be refactored to make more sensible inheritance
-//   of the values into arrays of values, I think that would streamline the implementation and
-//   reduce the abundance of special case handling code.
-//
-
+// In progress...
 
 size_t strnlength (const char* s, size_t n)
 { const char *found = (char *)memchr(s, '\0', n);
