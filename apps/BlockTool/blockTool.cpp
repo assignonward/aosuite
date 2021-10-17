@@ -36,7 +36,7 @@ BlockTool::BlockTool( QWidget *cw ) :
       cw->layout()->addWidget( this );
       vb->setContentsMargins( 0,0,0,0 );
     }
-  ui->navGroup->setEnabled( false );
+  // ui->navGroup->setEnabled( false );
   panelA = new BlockPanel( "A", ValueBase::Mode::build, ui->frameA );
   panelX = new BlockPanel( "X", ValueBase::Mode::make , ui->frameX );
   panelY = new BlockPanel( "Y", ValueBase::Mode::idle , ui->frameY );
@@ -174,10 +174,8 @@ void  BlockTool::setEditorValue( ValueBase *vb )
  */
 void  BlockTool::on_set_clicked()
 { ValueBase *vb = selBB;
-  if ( vb->isArray() )
-    { qWarning( "shouldn't be able to set in an array element (only insert)" );
-      return;
-    }
+  if ( vb == nullptr ) { qWarning( "attempt to set when nothing is selected" );                    return; }
+  if ( vb->isArray() ) { qWarning( "shouldn't be able to set in an array element (only insert)" ); return; }
   Utf8String codeName;
   switch ( vb->type() & RDT_TYPEMASK )
     { case RDT_MPZ:       ((BlockValueMPZ       *)vb)->set( ui->mpzEdit->text().toUtf8() );     updateNav(); break;
@@ -201,7 +199,16 @@ void  BlockTool::on_set_clicked()
 
 void  BlockTool::on_remove_clicked()
 { qWarning( "BlockTool::on_remove_clicked()" );
-
+  ValueBase *vb = selBB;
+  if ( vb           == nullptr )     { qWarning( "BlockTool::on_remove_clicked() needs a valid selBB" );                              return; }
+  if ( vb->vbParent == nullptr )     { qWarning( "BlockTool::on_remove_clicked() will not remove the root object, just use Clear." ); return; }
+  if (!vb->vbParent->isContainer() ) { qWarning( "BlockTool::on_remove_clicked() Cannot remove from non-containers" );                return; }
+  if ( vb->vbParent->isArray() )     { qWarning( "BlockTool::on_remove_clicked() TODO: handle removal from arrays" );                 return; }
+  BlockValueObject *pbvo = (BlockValueObject *)((ValueBase *)vb->vbParent);
+  RiceyInt key = vb->vKey();
+  if ( !pbvo->contains( key ) ) { qWarning( "BlockTool::on_remove_clicked() key %llx not found in parent object", key ); return; }
+  pbvo->remove( key );
+  updateNav();
 }
 
 void  BlockTool::on_insert_clicked()
@@ -221,8 +228,7 @@ void  BlockTool::on_insert_clicked()
       if ( selBB->type() != RDT_OBJECT ) { qWarning( "Selected block not object" ); return; }
       BlockValueObject *bvo = (BlockValueObject *)((ValueBase *)selBB);
       RiceyInt key = makeKvb()->key();
-      QList<RiceyInt> keys = bvo->m_obMap.keys();
-      if ( keys.contains(key) )
+      if ( bvo->contains(key) )
         { qWarning( "selected object already contains a member with type %llx", key );
           return;
         }
@@ -379,7 +385,9 @@ void  BlockTool::sortKeys()
 
 void  BlockTool::on_makeX_toggled(bool c)
 { if ( !c && selBB && ui->navMake->isChecked() )
-    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+    { selBB->clearSel();
+   //   ui->navGroup->setEnabled( false );
+    }
   if ( c && ui->buildX->isChecked() )
     ui->buildA->setChecked(true);
   if ( c && ui->navMake->isChecked() )
@@ -390,7 +398,9 @@ void  BlockTool::on_makeX_toggled(bool c)
 }
 void  BlockTool::on_makeY_toggled(bool c)
 { if ( !c && selBB && ui->navMake->isChecked() )
-    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+    { selBB->clearSel();
+   // ui->navGroup->setEnabled( false );
+    }
   if ( c && ui->buildY->isChecked() )
     ui->buildA->setChecked(true);
   if ( c && ui->navMake->isChecked() )
@@ -400,14 +410,18 @@ void  BlockTool::on_makeY_toggled(bool c)
 }
 void  BlockTool::on_buildA_toggled(bool c)
 { if ( !c && selBB && ui->navBuild->isChecked() )
-    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+    { selBB->clearSel();
+     // ui->navGroup->setEnabled( false );
+    }
   if ( c && ui->navBuild->isChecked() )
     selectRoot( panelA );
   panelA->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
 void  BlockTool::on_buildX_toggled(bool c)
 { if ( !c && selBB && ui->navBuild->isChecked() )
-    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+    { selBB->clearSel();
+    //  ui->navGroup->setEnabled( false );
+    }
   if ( c && ui->makeX->isChecked() )
     ui->makeY->setChecked(true);
   if ( c && ui->navBuild->isChecked() )
@@ -416,13 +430,16 @@ void  BlockTool::on_buildX_toggled(bool c)
 }
 void  BlockTool::on_buildY_toggled(bool c)
 { if ( !c && selBB && ui->navBuild->isChecked() )
-    { selBB->clearSel(); ui->navGroup->setEnabled( false ); }
+    { selBB->clearSel();
+    //  ui->navGroup->setEnabled( false );
+    }
   if ( c && ui->makeY->isChecked() )
     ui->makeX->setChecked(true);
   if ( c && ui->navBuild->isChecked() )
     selectRoot( panelY );
   panelY->setMode( c ? ValueBase::Mode::build : ValueBase::Mode::idle );
 }
+
 void  BlockTool::selectRoot(BlockPanel *bp)
 { if ( bp == nullptr )
     return;
@@ -436,7 +453,7 @@ void  BlockTool::selectRoot(BlockPanel *bp)
     vb = ( (KeyValuePair *)p_kvb)->value();
    else
     vb = ((KeyValueArray *)p_kvb)->value();
-   ui->navGroup->setEnabled( vb != nullptr );
+//   ui->navGroup->setEnabled( vb != nullptr );
    updateBB( vb );
 }
 

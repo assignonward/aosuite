@@ -538,6 +538,7 @@ virtual ValueBase *prevChild( ValueBase * );
            qint32  size()        const { return m_obMap.size(); }
    QList<RiceyInt> keys()        const { return m_obMap.keys(); }
              bool  contains( RiceyInt k ) const { return m_obMap.contains( k ); }
+             bool  remove( RiceyInt k );
            qint32  insert    ( const BlockObjectMap & );
              bool  insert    ( RiceyInt, ValueBase * );
              bool  insert    ( KeyValueArray * );
