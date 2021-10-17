@@ -199,13 +199,34 @@ void  BlockTool::on_set_clicked()
 void  BlockTool::on_insert_clicked()
 { if ( ui->navMake->isChecked() )
     { if ( makeKvb() == nullptr )
-        { insertKeyName( ui->key->currentText().toUtf8() );
+        { // New kvb in make register
+          insertKeyName( ui->key->currentText().toUtf8() );
           updateValueEditor();
           ui->navGroup->setEnabled( true );
           return;
         }
     }
-      // TODO: compatibility check between selBB and the current key
+  if ( ui->navBuild->isChecked() )
+    { // TODO: compatibility check between selBB and the current key
+      if ( makeKvb()     == nullptr    ) { qWarning( "Make is empty"             ); return; }
+      if ( selBB         == nullptr    ) { qWarning( "Nothing selected"          ); return; }
+      if ( selBB->type() != RDT_OBJECT ) { qWarning( "Selected block not object" ); return; }
+      BlockValueObject *bvo = (BlockValueObject *)((ValueBase *)selBB);
+      RiceyInt key = makeKvb()->key();
+      QList<RiceyInt> keys = bvo->m_obMap.keys();
+      if ( keys.contains(key) )
+        { qWarning( "selected object already contains a member with type %llx", key );
+          return;
+        }
+      if ( makeKvb()->isKeyValuePair() )
+        { KeyValuePair *kvp = (KeyValuePair *)makeKvb();
+          bvo->insert( kvp->key(), kvp->value() );
+        }
+       else
+        { bvo->insert( (KeyValueArray *)makeKvb() );
+        }
+      updateBuild();
+    }
 }
 
 void  BlockTool::insertKeyName( Utf8String nKey )
