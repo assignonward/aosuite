@@ -57,7 +57,7 @@
     <property name="horizontalSpacing">
      <number>3</number>
     </property>
-    <item row="1" column="9" rowspan="5">
+    <item row="1" column="10" rowspan="5">
      <widget class="QFrame" name="frameA">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -78,29 +78,6 @@
        <enum>QFrame::Raised</enum>
       </property>
      </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Keys</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="4">
-     <spacer name="horizontalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item row="3" column="3">
      <widget class="QStackedWidget" name="valueWidget">
@@ -302,90 +279,7 @@
       </widget>
      </widget>
     </item>
-    <item row="1" column="8" rowspan="5">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QFrame" name="frameX">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFrame" name="frameY">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="QComboBox" name="key"/>
-    </item>
-    <item row="4" column="0" rowspan="2" colspan="7">
-     <widget class="QTextEdit" name="report">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <family>DejaVu Sans Mono</family>
-       </font>
-      </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="7" rowspan="2">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>4</width>
-        <height>4000</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="3" column="5">
-     <widget class="QPushButton" name="insert">
-      <property name="text">
-       <string>Insert</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="8">
+    <item row="1" column="0" colspan="9">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
        <number>6</number>
@@ -677,6 +571,16 @@ QGroupBox::title {
       </item>
      </layout>
     </item>
+    <item row="3" column="2">
+     <widget class="QSpinBox" name="index"/>
+    </item>
+    <item row="3" column="5">
+     <widget class="QPushButton" name="insert">
+      <property name="text">
+       <string>Insert</string>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="1">
      <widget class="QGroupBox" name="groupBox_4">
       <property name="styleSheet">
@@ -737,7 +641,17 @@ QGroupBox::title {
       </layout>
      </widget>
     </item>
-    <item row="2" column="3" colspan="4">
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Keys</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3" colspan="5">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="spacing">
        <number>12</number>
@@ -831,15 +745,108 @@ QGroupBox::title {
       </item>
      </layout>
     </item>
-    <item row="3" column="6">
+    <item row="4" column="0" rowspan="2" colspan="8">
+     <widget class="QTextEdit" name="report">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>DejaVu Sans Mono</family>
+       </font>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="9" rowspan="5">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="frameX">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frameY">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="QComboBox" name="key"/>
+    </item>
+    <item row="3" column="4">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="3" column="7">
      <widget class="QPushButton" name="set">
       <property name="text">
        <string>Set</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="2">
-     <widget class="QSpinBox" name="index"/>
+    <item row="4" column="8" rowspan="2">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>4</width>
+        <height>4000</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="3" column="6">
+     <widget class="QPushButton" name="remove">
+      <property name="text">
+       <string>Remove</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

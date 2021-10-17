@@ -77,6 +77,7 @@ void  BlockTool::valueEditorNoNav()
   ui->set        ->setVisible( false );
   ui->insert     ->setVisible( true  );
   ui->insert     ->setEnabled( true  );
+  ui->remove     ->setVisible( false );
 }
 
 void  BlockTool::selectObjectForInsertion()
@@ -87,6 +88,7 @@ void  BlockTool::selectObjectForInsertion()
       return;
     }
   qWarning( "selBB is an Object" );
+  ui->remove->setVisible( true );
   if ( ui->navBuild->isChecked() )
     { ui->index      ->setVisible( false );
       ui->key        ->setVisible( false );
@@ -142,6 +144,7 @@ void  BlockTool::editSelectedElement()
   ui->set        ->setEnabled( true );
   ui->insert     ->setVisible(  vb->isArray() );
   ui->insert     ->setEnabled( true );
+  ui->remove     ->setVisible( true );
 }
 
 /**
@@ -194,6 +197,11 @@ void  BlockTool::on_set_clicked()
       default:
         qWarning( "BlockTool::on_set_clicked() unrecognized type %x", vb->type() & RDT_TYPEMASK );
     }
+}
+
+void  BlockTool::on_remove_clicked()
+{ qWarning( "BlockTool::on_remove_clicked()" );
+
 }
 
 void  BlockTool::on_insert_clicked()

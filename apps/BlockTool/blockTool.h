@@ -69,6 +69,7 @@ signals:
         void  showY( KeyValueBase * );
 
 public slots:
+        void  on_remove_clicked();
         void  on_insert_clicked();
         void  on_swap_clicked();
         void  on_prev_clicked();
