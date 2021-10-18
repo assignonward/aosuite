@@ -207,6 +207,7 @@ void  BlockTool::on_remove_clicked()
   BlockValueObject *pbvo = (BlockValueObject *)((ValueBase *)vb->vbParent);
   RiceyInt key = vb->vKey();
   if ( !pbvo->contains( key ) ) { qWarning( "BlockTool::on_remove_clicked() key %llx not found in parent object", key ); return; }
+  on_prev_clicked();
   pbvo->remove( key );
   updateNav();
 }
@@ -239,6 +240,7 @@ void  BlockTool::on_insert_clicked()
        else
         { bvo->insert( (KeyValueArray *)makeKvb() );
         }
+      on_clear_clicked();
       updateBuild();
     }
 }
@@ -560,6 +562,12 @@ void  BlockTool::updateBB( ValueBase *vb )
     { selBB->setSel();
       updateValueEditor();
     }
+}
+
+void  BlockTool::on_now_clicked()
+{ // TODO: parse and add time in the plus line edit
+  qint64 t = QDateTime::currentMSecsSinceEpoch()*1000;
+  ui->intEdit->setText( QString::number(t) );
 }
 
 BlockPanel *BlockTool::makePanel()

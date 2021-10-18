@@ -74,6 +74,7 @@ public slots:
         void  on_swap_clicked();
         void  on_prev_clicked();
         void  on_next_clicked();
+        void  on_now_clicked();
         void  on_set_clicked();
         void  on_key_currentTextChanged(const QString &);
         void  on_read_clicked();
