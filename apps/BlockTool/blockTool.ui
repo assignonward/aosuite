@@ -148,6 +148,12 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QPushButton" name="prev">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="text">
             <string>Prev</string>
            </property>
@@ -155,6 +161,12 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QPushButton" name="next">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="text">
             <string>Next</string>
            </property>
@@ -235,6 +247,12 @@ QGroupBox::title {
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="now">
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text">
            <string>Now+</string>
           </property>
@@ -568,40 +586,6 @@ QGroupBox::title {
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="label_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Samples:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="DAO0">
-        <property name="text">
-         <string>DⒶ0</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="hash">
-        <property name="text">
-         <string>Hash</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="chain">
-        <property name="text">
-         <string>Chain</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QGroupBox" name="groupBox_3">
         <property name="styleSheet">
          <string notr="true">QGroupBox { 
@@ -642,9 +626,9 @@ QGroupBox::title {
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="showHex">
+          <widget class="QCheckBox" name="showBao">
            <property name="text">
-            <string>hex</string>
+            <string>bao</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -655,6 +639,19 @@ QGroupBox::title {
           <widget class="QCheckBox" name="showDot">
            <property name="text">
             <string>dot</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="show">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Show</string>
            </property>
           </widget>
          </item>
@@ -679,13 +676,28 @@ QGroupBox::title {
       </item>
       <item>
        <widget class="QPushButton" name="read">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Read</string>
         </property>
        </widget>
       </item>
       <item>
+       <widget class="QComboBox" name="readFile"/>
+      </item>
+      <item>
        <widget class="QPushButton" name="clear">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Clear</string>
         </property>
@@ -752,6 +764,12 @@ QGroupBox::title {
       </item>
       <item>
        <widget class="QPushButton" name="swap">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Swap</string>
         </property>
@@ -822,6 +840,12 @@ QGroupBox::title {
       </item>
       <item>
        <widget class="QPushButton" name="save">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Save</string>
         </property>

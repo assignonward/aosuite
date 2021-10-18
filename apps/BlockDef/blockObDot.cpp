@@ -170,3 +170,24 @@ DotSerial BlockValueObject::dot(Mode m) const
     }
   return d;
 }
+
+/**
+ * @brief BlockValueByteArray::dot
+ * @param m - mode, unused here
+ * @return hex representation of byte array, maxed out at 20 bytes shown, show size when > 20
+ */
+DotSerial  BlockValueByteArray::dot(Mode m) const
+{ (void)m;
+  DotSerial s = removeQuotes( json() );
+  qint32 sz = s.size()/2; // sz = Number of bytes represented
+  if ( sz <= 12 )
+    return ensureQuotes( s );
+  if ( sz <= 20 )
+    { qint32 m = 2*(sz/2);
+      return  ensureQuotes( s.mid( 0,m )+"\n"+s.mid(m) );
+    }
+  return ensureQuotes( s.mid( 0,20 )+
+         QString( "...\n%1 bytes total\n..." ).arg( sz ).toUtf8()+
+                       s.mid( s.size()-20 ) );
+}
+

@@ -43,6 +43,7 @@ BlockTool::BlockTool( QWidget *cw ) :
   connect( this, SIGNAL(showA(KeyValueBase*)), panelA, SLOT(setBlock(KeyValueBase*)));
   connect( this, SIGNAL(showX(KeyValueBase*)), panelX, SLOT(setBlock(KeyValueBase*)));
   connect( this, SIGNAL(showY(KeyValueBase*)), panelY, SLOT(setBlock(KeyValueBase*)));
+  initReadFile();
   sortKeys();
 }
 
@@ -56,7 +57,7 @@ void  BlockTool::updateValueEditor()
       return;
     }
     qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
-               selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->m_key,selBB->m_idx.data() );
+               selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->vKey(),selBB->idx().data() );
   if ( (!selBB->isContainer()) || selBB->isArray() )
     editSelectedElement();
    else
@@ -111,7 +112,7 @@ void  BlockTool::editSelectedElement()
       return;
     }
   // Editing value of selected element
-  RiceyInt k = vb->m_key;
+  RiceyInt k = vb->vKey();
   if (( k == RCD_null_z ) || ( !dict.codesContainCode( k ) ))
     { if ( k == RCD_null_z )
         qWarning( "null key" );
@@ -127,8 +128,8 @@ void  BlockTool::editSelectedElement()
       valueEditorNoNav();
       return;
     }
-  qWarning( "editSelectedElement type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
-             vb->type(),vb->isArray(),vb->isContainer(),k,vb->m_idx.data() );
+  //qWarning( "editSelectedElement type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
+  //           vb->type(),vb->isArray(),vb->isContainer(),k,vb->idx().data() );
   ui->key->setVisible( true  );
   ui->key->setEnabled( false );
   ui->key->setCurrentIndex( i ); // this also selects the correct valueWidget page
@@ -224,24 +225,37 @@ void  BlockTool::on_insert_clicked()
     }
   if ( ui->navBuild->isChecked() )
     { // TODO: compatibility check between selBB and the current key
-      if ( makeKvb()     == nullptr    ) { qWarning( "Make is empty"             ); return; }
-      if ( selBB         == nullptr    ) { qWarning( "Nothing selected"          ); return; }
-      if ( selBB->type() != RDT_OBJECT ) { qWarning( "Selected block not object" ); return; }
-      BlockValueObject *bvo = (BlockValueObject *)((ValueBase *)selBB);
+      if ( makeKvb()     == nullptr    ) { qWarning( "Make is empty"    ); return; }
+      if ( selBB         == nullptr    ) { qWarning( "Nothing selected" ); return; }
       RiceyInt key = makeKvb()->key();
-      if ( bvo->contains(key) )
-        { qWarning( "selected object already contains a member with type %llx", key );
-          return;
+      if ( selBB->type() == RDT_OBJECT )
+        { BlockValueObject *bvo = (BlockValueObject *)((ValueBase *)selBB);
+          if ( bvo->contains(key) )
+            { qWarning( "selected object already contains a member with type %llx", key );
+              return;
+            }
+          if ( makeKvb()->isKeyValuePair() )
+            { KeyValuePair *kvp = (KeyValuePair *)makeKvb();
+              bvo->insert( kvp->key(), kvp->value() );
+            }
+           else
+            { bvo->insert( (KeyValueArray *)makeKvb() );
+            }
+          on_clear_clicked();
+          updateBuild();
         }
-      if ( makeKvb()->isKeyValuePair() )
-        { KeyValuePair *kvp = (KeyValuePair *)makeKvb();
-          bvo->insert( kvp->key(), kvp->value() );
+       else if ( selBB->isArray() )
+        { ValueBaseArray *vba = (ValueBaseArray *)((ValueBase *)selBB);
+          if ( (vba->vKey() & RDT_TYPEMASK) != (key & RDT_TYPEMASK) ) { qWarning( "Make item key %llx incompatible with array key %llx", key, vba->vKey() ); return; }
+          if ( !makeKvb()->isKeyValuePair() ) { qWarning( "Cannot insert an array directly into another array" ); return; }
+          qint32 i = ui->index->value();
+          if ( !vba->insertAt( ((KeyValuePair *)makeKvb())->value(), i ) )
+            qWarning( "insertAt(%d) failed", i );
+          on_clear_clicked();
+          updateBuild();
         }
        else
-        { bvo->insert( (KeyValueArray *)makeKvb() );
-        }
-      on_clear_clicked();
-      updateBuild();
+        { qWarning( "Selected item type %x not suitable for insertion", selBB->type() ); return; }
     }
 }
 
@@ -292,7 +306,7 @@ void  BlockTool::insertKeyName( Utf8String nKey )
   setMake( kvb );
   makeKvb()->setValueKey( kc );
   if ( ui->showJson->isChecked() )ui->report->append( jsonReformat( kvb->json() ) );
-  if ( ui->showHex ->isChecked() )ui->report->append( kvb->bao().toHex() );
+  if ( ui->showBao ->isChecked() )ui->report->append( kvb->bao().toHex() );
   if ( ui->showDot ->isChecked() )ui->report->append( kvb->dot(ValueBase::Mode::idle) ); // TODO: get the current mode from BlockPanel
   // kvp->deleteLater(); child of vbp, no need to delete this
   vbp->deleteLater();
@@ -501,10 +515,8 @@ void  BlockTool::on_prev_clicked()
 
   if ( vb )
     { ui->navGroup->setEnabled( false );
+      navPanel = curNavPanel();
       updateBB( vb );
-      navPanel = nullptr;
-      if ( ui->navBuild->isChecked() ) navPanel = buildPanel();
-      if ( ui->navMake ->isChecked() ) navPanel = makePanel();
       if ( navPanel )
         { connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
           navPanel->update();
@@ -517,6 +529,12 @@ void  BlockTool::on_prev_clicked()
 void  BlockTool::navDrawComplete()
 { disconnect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
   ui->navGroup->setEnabled( true );
+}
+
+BlockPanel *BlockTool::curNavPanel()
+{ if ( ui->navBuild->isChecked() ) return buildPanel();
+  if ( ui->navMake ->isChecked() ) return makePanel();
+  return nullptr;
 }
 
 /**
@@ -541,14 +559,12 @@ void  BlockTool::on_next_clicked()
 
   if ( vb )
     { ui->navGroup->setEnabled( false );
+      navPanel = curNavPanel();
       updateBB( vb );
-      navPanel = nullptr;
-      if ( ui->navBuild->isChecked() )
-        navPanel = updateBuild();
-      if ( ui->navMake->isChecked() )
-        navPanel = updateMake();
       if ( navPanel )
-        connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+        { connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
+          navPanel->update();
+        }
        else
         qWarning( "neither nav button checked." );
     }
@@ -609,25 +625,12 @@ BlockPanel *BlockTool::updateNav()
 
 
 bool  BlockTool::setBuild( KeyValueBase *kvb )
-{ if ( ui->buildA->isChecked() )
-    { panelA->setBlock( kvb, false );
+{ BlockPanel *bp = buildPanel();
+  if ( bp )
+    { bp->setBlock( kvb, false );
       if ( ui->navBuild->isChecked() )
-        selectRoot( panelA );
-      panelA->update();
-      return true;
-    }
-  if ( ui->buildX->isChecked() )
-    { panelX->setBlock( kvb, false );
-      if ( ui->navBuild->isChecked() )
-        selectRoot( panelX );
-      panelX->update();
-      return true;
-    }
-  if ( ui->buildY->isChecked() )
-    { panelY->setBlock( kvb, false );
-      if ( ui->navBuild->isChecked() )
-        selectRoot( panelY );
-      panelY->update();
+        selectRoot( bp );
+      bp->update();
       return true;
     }
   qWarning( "BlockTool::setBuild() no build panel checked" );
@@ -635,18 +638,12 @@ bool  BlockTool::setBuild( KeyValueBase *kvb )
 }
 
 bool  BlockTool::setMake( KeyValueBase *kvb )
-{ if ( ui->makeX->isChecked() )
-    { panelX->setBlock( kvb );
+{ BlockPanel *bp = makePanel();
+  if ( bp )
+    { bp->setBlock( kvb, false );
       if ( ui->navMake->isChecked() )
-        selectRoot( panelX );
-      panelX->update();
-      return true;
-    }
-  if ( ui->makeY->isChecked() )
-    { panelY->setBlock( kvb );
-      if ( ui->navMake->isChecked() )
-        selectRoot( panelY );
-      panelY->update();
+        selectRoot( bp );
+      bp->update();
       return true;
     }
   qWarning( "BlockTool::setMake() no make panel checked" );
@@ -672,38 +669,51 @@ KeyValueBase *BlockTool::buildKvb()
 { if ( ui->buildA->isChecked() ) { return panelA->kvb(); }
   if ( ui->buildX->isChecked() ) { return panelX->kvb(); }
   if ( ui->buildY->isChecked() ) { return panelY->kvb(); }
-  qWarning( "BlockTool::buildKvp() no build panel checked" );
+  qWarning( "BlockTool::buildKvb() no build panel checked" );
   return nullptr;
 }
 
 KeyValueBase *BlockTool::makeKvb()
 { if ( ui->makeX->isChecked() ) { return panelX->kvb(); }
   if ( ui->makeY->isChecked() ) { return panelY->kvb(); }
-  qWarning( "BlockTool::makeKvp() no make panel checked" );
+  qWarning( "BlockTool::makeKvb() no make panel checked" );
   return nullptr;
 }
 
+KeyValueBase *BlockTool::curNavKvb()
+{ if ( ui->navBuild->isChecked() ) return buildKvb();
+  if ( ui->navMake ->isChecked() ) return makeKvb();
+  qWarning( "BlockTool::curNavKvb() no nav mode checked" );
+  return nullptr;
+}
+
+/**
+ * @brief BlockTool::makeClear - clear the make window
+ * @return true if successful
+ */
 bool  BlockTool::makeClear()
-{ if ( ui->makeX->isChecked() )
-    { panelX->clear();
+{ BlockPanel *bp = makePanel();
+  if ( bp )
+    { bp->clear();
       if ( ui->navMake->isChecked() )
         updateBB( nullptr );
       updateValueEditor();
       return true;
     }
-  if ( ui->makeY->isChecked() )
-    { panelY->clear();
-      if ( ui->navMake->isChecked() )
-        updateBB( nullptr );
-      updateValueEditor();
-      return true;
-    }
-  qWarning( "no make panel checked" );
+  qWarning( "BlockTool::makeClear() no make panel checked" );
   return false;
 }
 
+/**
+ * @brief BlockTool::on_read_clicked - read either from any file or the selected
+ *   resource .bao file into the Make window
+ */
 void  BlockTool::on_read_clicked()
-{ QString readFile = QFileDialog::getOpenFileName(this,QString("Read Into %1").arg( makeLabel() ), fileDir );
+{ QString readFile;
+  if ( ui->readFile->currentText() == "Open File" )
+    readFile = QFileDialog::getOpenFileName(this,QString("Read Into %1").arg( makeLabel() ), fileDir );
+   else
+    readFile = ":/files/"+ui->readFile->currentText()+".bao";
   if ( readFile.size() < 1 )
     return;
   QFile file(readFile);
@@ -711,8 +721,9 @@ void  BlockTool::on_read_clicked()
     { qWarning( "could not open %s for reading", readFile.toUtf8().data() );
       return;
     }
-  QFileInfo fi = QFileInfo( file );
-  QDir di = fi.dir();
+   QFileInfo fi = QFileInfo( file );
+  Utf8String fn = fi.fileName().toUtf8();
+        QDir di = fi.dir();
   fileDir = di.absolutePath();
   if ( readFile.endsWith( ".json", Qt::CaseInsensitive ) )
     { JsonSerial js = file.readAll();
@@ -721,16 +732,26 @@ void  BlockTool::on_read_clicked()
           kvb->setJson( js );
           setMake( kvb );
         }
+       else
+        qWarning( "valid json not found in %s", fn.data() );
       return;
     }
-   BaoSerial bs = file.readAll();
+  BaoSerial bs = file.readAll();
   if ( bs.size() > 0 )
     { KeyValueBase *kvb = makeKvb();
-      kvb->setBao( bs );
+      if ( kvb )
+        on_clear_clicked();
+      kvb = KeyValueBase::readBao( bs, this );
       setMake( kvb );
     }
+   else
+    qWarning( "read no data from %s", fn.data() );
 }
 
+/**
+ * @brief BlockTool::on_save_clicked - write a serialized representation
+ *   of the Build window to a file.
+ */
 void  BlockTool::on_save_clicked()
 { KeyValueBase *kvb = buildKvb();
   if ( kvb == nullptr )
@@ -754,6 +775,10 @@ void  BlockTool::on_save_clicked()
   file.write( kvb->bao() );
 }
 
+/**
+ * @brief BlockTool::liveDelay - allow UI to update while delaying this thread's execution
+ * @param t - milliseconds to delay
+ */
 void BlockTool::liveDelay( int t )
 { QTimer timer;
   timer.setSingleShot( true );
@@ -765,292 +790,53 @@ void BlockTool::liveDelay( int t )
     }
 }
 
+/**
+ * @brief BlockTool::jsonReformat
+ * @param j - json stream to reformat
+ * @return j - prettified by the QJsonDocument default output format (alphabetized keys, indented)
+ */
 QByteArray  BlockTool::jsonReformat( QByteArray j )
 { QJsonDocument jd = QJsonDocument::fromJson( j );
   return jd.toJson();
 }
 
-void  BlockTool::on_DAO0_clicked()
-{ ui->report->clear();
-  ui->report->append( "DⒶ0 protocol" );
-  BlockValueObject *pdo = new BlockValueObject( this );
-  KeyValuePair     *kvp = new KeyValuePair(RCD_ProtocolDef_o,pdo,this);
-  BlockValueObject *hdo = new BlockValueObject( this );
-  pdo->insert( RCD_hashedOb_o, hdo );
-  BlockValueObject *hso = new BlockValueObject( this );
-  pdo->insert( RCD_hash_o, hso );
-  BlockValueRiceyCode *htc = new BlockValueRiceyCode( RCD_SHA3b512_c, this );
-  hso->insert( RCD_type_c, htc );
-  BlockValueInt64 *hti = new BlockValueInt64( 123, this );
-  hso->insert( RCD_time_i, hti );
-  BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
-  hso->insert( RCD_data_b, hdp );
-
-  BlockValueRiceyCode *pcc = new BlockValueRiceyCode( RCD_ProtocolDAO0_c, this );
-  hdo->insert( RCD_type_c, pcc );
-  BlockValueString *stp = new BlockValueString( "DⒶ0", this );
-  hdo->insert( RCD_text_s, stp );
-  BlockValueObjectArray *idl = new BlockValueObjectArray( this );
-  hdo->insert( RCD_ItemDefList_O, idl );
-
-  BlockValueObject *ido = new BlockValueObject( this );
-  idl->append( ido );
-  BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_requestRecordStorage_o, this );
-  ido->insert( RCD_type_c, idc );
-  BlockValueRiceyCodeArray *ril = new BlockValueRiceyCodeArray( this );
-  ido->insert( RCD_DefinedSubItems_C, ril );
-    BlockValueRiceyCode *ri1 = new BlockValueRiceyCode( RCD_data_b, this );
-    ril->append( ri1 );
-  // BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_userId_b, this );
-  // ril->append( ri2 );
-  BlockValueObjectArray *orl = new BlockValueObjectArray( this );
-  ido->insert( RCD_OperReqList_O, orl );
-
-  BlockValueObject *iro = new BlockValueObject( this );
-  idl->append( iro );
-  BlockValueRiceyCode *irc = new BlockValueRiceyCode( RCD_recordStorageResult_o, this );
-  iro->insert( RCD_type_c, irc );
-  BlockValueRiceyCodeArray *rilr = new BlockValueRiceyCodeArray( this );
-  iro->insert( RCD_DefinedSubItems_C, rilr );
-    BlockValueRiceyCode *ri1r = new BlockValueRiceyCode( RCD_type_c, this );
-    rilr->append( ri1r );
-    BlockValueRiceyCode *oi1r = new BlockValueRiceyCode( RCD_data_b, this );
-    rilr->append( oi1r );
-    // BlockValueRiceyCode *ri2r = new BlockValueRiceyCode( RCD_userId_b, this );
-    // rilr->append( ri2r );
-  BlockValueObjectArray *orlr = new BlockValueObjectArray( this );
-  iro->insert( RCD_OperReqList_O, orlr );
-
-  BlockValueObject *idgo = new BlockValueObject( this );
-  idl->append( idgo );
-  BlockValueRiceyCode *idg = new BlockValueRiceyCode( RCD_requestRecordRetrieval_o, this );
-  idgo->insert( RCD_type_c, idg );
-  BlockValueRiceyCodeArray *rigl = new BlockValueRiceyCodeArray( this );
-  idgo->insert( RCD_DefinedSubItems_C, rigl );
-    BlockValueRiceyCode *rig1 = new BlockValueRiceyCode( RCD_data_b, this );
-    rigl->append( rig1 );
-    // BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_userId_b, this );
-    // ril->append( ri2 );
-  BlockValueObjectArray *orgl = new BlockValueObjectArray( this );
-  idgo->insert( RCD_OperReqList_O, orgl );
-
-  BlockValueObject *rro = new BlockValueObject( this );
-  idl->append( rro );
-  BlockValueRiceyCode *rrc = new BlockValueRiceyCode( RCD_recordRetrievalResult_o, this );
-  rro->insert( RCD_type_c, rrc );
-  BlockValueRiceyCodeArray *rrlr = new BlockValueRiceyCodeArray( this );
-  rro->insert( RCD_DefinedSubItems_C, rrlr );
-    BlockValueRiceyCode *rr1r = new BlockValueRiceyCode( RCD_type_c, this );
-    rrlr->append( rr1r );
-    BlockValueRiceyCode *or1r = new BlockValueRiceyCode( RCD_data_b, this );
-    rrlr->append( or1r );
-    // BlockValueRiceyCode *rr2r = new BlockValueRiceyCode( RCD_userId_b, this );
-    // rilr->append( rr2r );
-  BlockValueObjectArray *orcc = new BlockValueObjectArray( this );
-  rro->insert( RCD_OperReqList_O, orcc );
-
-
-  BlockValueObjectArray *adl = new BlockValueObjectArray( this );
-  hdo->insert( RCD_ActorDefList_O, adl );
-
-  BlockValueObject *ado1 = new BlockValueObject( this );
-  adl->append( ado1 );
-  BlockValueRiceyCode *ad1 = new BlockValueRiceyCode( RCD_actorWriterClient_c, this );
-  ado1->insert( RCD_type_c, ad1 );
-  BlockValueObjectArray *ado1o = new BlockValueObjectArray( this );
-  ado1->insert( RCD_OutgoingItemsList_O, ado1o );
-    BlockValueObject *ado1o1 = new BlockValueObject( this );
-    ado1o->append( ado1o1 );
-    BlockValueRiceyCode *ado1o1i = new BlockValueRiceyCode( RCD_requestRecordStorage_o, this );
-    ado1o1->insert( RCD_type_c, ado1o1i );
-  BlockValueObjectArray *ado1i = new BlockValueObjectArray( this );
-  ado1->insert( RCD_IncomingItemsList_O, ado1i );
-    BlockValueObject *ado1i1 = new BlockValueObject( this );
-    ado1i->append( ado1i1 );
-    BlockValueRiceyCode *ado1i1i = new BlockValueRiceyCode( RCD_recordStorageResult_o, this );
-    ado1i1->insert( RCD_type_c, ado1i1i );
-
-  BlockValueObject *ado2 = new BlockValueObject( this );
-  adl->append( ado2 );
-  BlockValueRiceyCode *ad2 = new BlockValueRiceyCode( RCD_actorWriterServer_c, this );
-  ado2->insert( RCD_type_c, ad2 );
-
-  BlockValueObject *ado3 = new BlockValueObject( this );
-  adl->append( ado3 );
-  BlockValueRiceyCode *ad3 = new BlockValueRiceyCode( RCD_actorReaderClient_c, this );
-  ado3->insert( RCD_type_c, ad3 );
-
-  BlockValueObject *ado4 = new BlockValueObject( this );
-  adl->append( ado4 );
-  BlockValueRiceyCode *ad4 = new BlockValueRiceyCode( RCD_actorReaderServer_c, this );
-  ado4->insert( RCD_type_c, ad4 );
-
-  if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
-  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bao().toHex() );
-  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
-  setBuild( kvp ); updateMake();
-  kvp->deleteLater();
+/**
+ * @brief BlockTool::curNavMode
+ * @return mode that the Navigation tool is active on
+ */
+ValueBase::Mode BlockTool::curNavMode()
+{                  ValueBase::Mode mode = ValueBase::Mode::idle ;
+  if ( ui->navBuild->isChecked() ) mode = ValueBase::Mode::build;
+  if ( ui->navMake ->isChecked() ) mode = ValueBase::Mode::make ;
+  return mode;
 }
 
-void  BlockTool::on_chain_clicked()
+/**
+ * @brief BlockTool::on_show_clicked - show the selected text representations of
+ *   the currently navigating keyValue object.
+ */
+void  BlockTool::on_show_clicked()
 { ui->report->clear();
-  ui->report->append( "Sample chain block" );
-  BlockValueObject *cbo = new BlockValueObject( this );
-  KeyValuePair     *kvp = new KeyValuePair(RCD_chainBlock_o,cbo,this);
-  BlockValueObject *hdo = new BlockValueObject( this );
-  cbo->insert( RCD_hashedOb_o, hdo );
-  BlockValueObject *hso = new BlockValueObject( this );
-  cbo->insert( RCD_hash_o, hso );
-  BlockValueRiceyCode *htc = new BlockValueRiceyCode( RCD_SHA3b512_c, this );
-  hso->insert( RCD_type_c, htc );
-  BlockValueInt64 *hti = new BlockValueInt64( 1234, this );
-  hso->insert( RCD_time_i, hti );
-  BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
-  hso->insert( RCD_data_b, hdp );
-  BlockValueByteArray *dbp = new BlockValueByteArray( "BinarySample", this );
-  hdo->insert( RCD_data_b, dbp );
-  BlockValueString *stp = new BlockValueString( "StringSample", this );
-  hdo->insert( RCD_text_s, stp );
-  BlockValueObjectArray *poa = new BlockValueObjectArray( this );
-  hdo->insert( RCD_parentHash_O, poa );
-
-  BlockValueObject *hsop = new BlockValueObject( this );
-  poa->append( hsop );
-  BlockValueRiceyCode *htcp = new BlockValueRiceyCode( RCD_SHA3b512_c, this );
-  hsop->insert( RCD_type_c, htcp );
-  BlockValueInt64 *htip = new BlockValueInt64( 1122, this );
-  hsop->insert( RCD_time_i, htip );
-  BlockValueByteArray *hdpp = new BlockValueByteArray( "HashTrample", this );
-  hsop->insert( RCD_data_b, hdpp );
-
-  BlockValueObjectArray *sil = new BlockValueObjectArray( this );
-  cbo->insert( RCD_separableItems_O, sil );
-  BlockValueObjectArray *sih = new BlockValueObjectArray( this );
-  hdo->insert( RCD_separableItemsHashes_O, sih );
-
-  if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
-  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bao().toHex() );
-  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
-  setBuild( kvp ); updateMake();
-  kvp->deleteLater();
+  KeyValueBase *kvb = curNavKvb();
+  if ( kvb == nullptr )
+    return;
+  if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvb->json() ) );
+  if ( ui->showBao ->isChecked() ) ui->report->append( QString::fromUtf8( kvb->bao().toHex() ) );
+  if ( ui->showDot ->isChecked() ) ui->report->append( kvb->dot(curNavMode()) );
 }
 
-void  BlockTool::on_hash_clicked()
-{ ui->report->clear();
-  ui->report->append( "Sample protocol block" );
-  BlockValueObject *pdo = new BlockValueObject( this );
-  KeyValuePair     *kvp = new KeyValuePair(RCD_ProtocolDef_o,pdo,this);
-  BlockValueObject *hdo = new BlockValueObject( this );
-  pdo->insert( RCD_hashedOb_o, hdo );
-  BlockValueObject *hso = new BlockValueObject( this );
-  pdo->insert( RCD_hash_o, hso );
-  BlockValueRiceyCode *htc = new BlockValueRiceyCode( RCD_SHA3b512_c, this );
-  hso->insert( RCD_type_c, htc );
-  BlockValueInt64 *hti = new BlockValueInt64( 123, this );
-  hso->insert( RCD_time_i, hti );
-  BlockValueByteArray *hdp = new BlockValueByteArray( "SampleHash", this );
-  hso->insert( RCD_data_b, hdp );
-
-  BlockValueRiceyCode *pcc = new BlockValueRiceyCode( RCD_ProtocolDAO2_c, this );
-  hdo->insert( RCD_type_c, pcc );
-  BlockValueString *stp = new BlockValueString( "DⒶ2", this );
-  hdo->insert( RCD_text_s, stp );
-  BlockValueObjectArray *idl = new BlockValueObjectArray( this );
-  hdo->insert( RCD_ItemDefList_O, idl );
-
-  BlockValueObject *ido = new BlockValueObject( this );
-  idl->append( ido );
-    BlockValueRiceyCode *idc = new BlockValueRiceyCode( RCD_hash_o, this );
-    ido->insert( RCD_type_c, idc );
-    BlockValueRiceyCodeArray *ril = new BlockValueRiceyCodeArray( this );
-    ido->insert( RCD_DefinedSubItems_C, ril );
-      BlockValueRiceyCode *ri1 = new BlockValueRiceyCode( RCD_type_c, this );
-      ril->append( ri1 );
-      BlockValueRiceyCode *ri2 = new BlockValueRiceyCode( RCD_data_b, this );
-      ril->append( ri2 );
-      BlockValueRiceyCode *ri3 = new BlockValueRiceyCode( RCD_time_i, this );
-      ril->append( ri3 );
-    BlockValueObjectArray *orl = new BlockValueObjectArray( this );
-    ido->insert( RCD_OperReqList_O, orl );
-
-      BlockValueObject *or1 = new BlockValueObject( this );
-      orl->append( or1 );
-        BlockValueRiceyCode *or1t = new BlockValueRiceyCode( RCD_type_c, this );
-        or1->insert( RCD_type_c, or1t );
-        BlockValueRiceyCodeArray *or1o = new BlockValueRiceyCodeArray( this );
-        or1->insert( RCD_OpMemberOf_C, or1o );
-          BlockValueRiceyCode *or1m1 = new BlockValueRiceyCode( RCD_SHA256_c, this );
-          or1o->append( or1m1 );
-          BlockValueRiceyCode *or1m2 = new BlockValueRiceyCode( RCD_SHA3b512_c, this );
-          or1o->append( or1m2 );
-      BlockValueObject *or2 = new BlockValueObject( this );
-      orl->append( or2 );
-        BlockValueRiceyCode *or2t = new BlockValueRiceyCode( RCD_time_i, this );
-        or2->insert( RCD_type_c, or2t );
-        BlockValueRiceyCode *or2to = new BlockValueRiceyCode( RCD_time_i, this );
-        or2->insert( RCD_OpTimeValue_c, or2to );
-
-      BlockValueObject *or3 = new BlockValueObject( this );
-      orl->append( or3 );
-        BlockValueRiceyCode *or3t = new BlockValueRiceyCode( RCD_time_i, this );
-        or3->insert( RCD_type_c, or3t );
-        BlockValueRiceyCodeArray *or3o = new BlockValueRiceyCodeArray( this );
-        or3->insert( RCD_OpGreaterThan_C, or3o );
-          BlockValueRiceyCode *or3s1 = new BlockValueRiceyCode( RCD_navUpOne_c, this );
-          or3o->append( or3s1 );
-          BlockValueRiceyCode *or3s2 = new BlockValueRiceyCode( RCD_hashedOb_o, this );
-          or3o->append( or3s2 );
-          BlockValueRiceyCode *or3s3 = new BlockValueRiceyCode( RCD_navIfPresent_c, this );
-          or3o->append( or3s3 );
-          BlockValueRiceyCode *or3s4 = new BlockValueRiceyCode( RCD_parentHash_O, this );
-          or3o->append( or3s4 );
-          BlockValueRiceyCode *or3s5 = new BlockValueRiceyCode( RCD_time_i, this );
-          or3o->append( or3s5 );
-
-      BlockValueObject *or4 = new BlockValueObject( this );
-      orl->append( or4 );
-        BlockValueRiceyCode *or4t = new BlockValueRiceyCode( RCD_data_b, this );
-        or4->insert( RCD_type_c, or4t );
-        BlockValueObjectArray *or4o = new BlockValueObjectArray( this );
-        or4->insert( RCD_OpHash_O, or4o );
-          BlockValueObject *or41 = new BlockValueObject( this );
-          or4o->append( or41 );
-            BlockValueRiceyCodeArray *or411 = new BlockValueRiceyCodeArray( this );
-            or41->insert( RCD_riceyArray_C, or411 );
-              BlockValueRiceyCode *or4111 = new BlockValueRiceyCode( RCD_type_c, this );
-              or411->append( or4111 );
-          BlockValueObject *or42 = new BlockValueObject( this );
-          or4o->append( or42 );
-            BlockValueRiceyCodeArray *or421 = new BlockValueRiceyCodeArray( this );
-            or42->insert( RCD_riceyArray_C, or421 );
-              BlockValueRiceyCode *or4211 = new BlockValueRiceyCode( RCD_time_i, this );
-              or421->append( or4211 );
-         BlockValueObject *or43 = new BlockValueObject( this );
-         or4o->append( or43 );
-           BlockValueRiceyCodeArray *or431 = new BlockValueRiceyCodeArray( this );
-           or43->insert( RCD_riceyArray_C, or431 );
-             BlockValueRiceyCode *or4311 = new BlockValueRiceyCode( RCD_navUpOne_c, this );
-             or431->append( or4311 );
-             BlockValueRiceyCode *or4312 = new BlockValueRiceyCode( RCD_hashedOb_o, this );
-             or431->append( or4312 );
-
-/*
-  BlockValueByteArray *dbp = new BlockValueByteArray( "BinarySample", this );
-  hdo->insert( RCD_data_b, dbp );
-  BlockValueString *stp = new BlockValueString( "StringSample", this );
-  hdo->insert( RCD_text_s, stp );
-
-  QList<RiceyInt> ta;
-  ta.append( RCD_ProtocolDef_o );
-  ta.append( RCD_RequiredItems_O );
-  ta.append( RCD_OptionalItems_O );
-  BlockArrayRicey *bar = new BlockArrayRicey( RCD_riceyArray_C, ta, this );
-  hdo->insert( RCD_riceyArray_C, bar );
-*/
-  if ( ui->showJson->isChecked() ) ui->report->append( jsonReformat( kvp->json() ) );
-  if ( ui->showHex ->isChecked() ) ui->report->append( kvp->bao().toHex() );
-  if ( ui->showDot ->isChecked() ) ui->report->append( kvp->dot(ValueBase::Mode::build) );
-  setBuild( kvp ); updateMake();
-  kvp->deleteLater();
+/**
+ * @brief BlockTool::initReadFile - readFile is a comboBox which either specifies
+ *   a resource file, or to open a file selection dialog.
+ */
+void  BlockTool::initReadFile()
+{ ui->readFile->clear();
+  ui->readFile->addItem( "Open File" );
+  QDir d(":/files");
+  QFileInfoList fil = d.entryInfoList();
+  foreach( QFileInfo fi, fil )
+    { QString fn = fi.fileName();
+      if ( fn.endsWith( ".bao" ) )
+        ui->readFile->addItem( fn.mid( 0, fn.size()-4) );
+    }
 }
-

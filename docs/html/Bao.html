@@ -99,7 +99,7 @@
 
 <h2>What is bao?</h2>
 
-The basic format Assign Onward uses to communicate<div class="tooltip"><sup>*</sup><span class="tooltiptext">Bao is also well suited for compact data storage, but the specifics of data storage and retrieval implementations are outside the Ⓐ protocol scope, at the discretion of the application architects.</span></div> messages is called bao.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Could stand for "Binary Assign Onward" format, or "Basic Assign Onward" format, or "<a href="https://redhousespice.com/steamed-bao-buns/">Tasty, juicy filling with soft, fluffy wrappers</a>."  Take your pick, although I'd say the bao wrappers used in Ⓐ protocol are more thin than fluffy.</a></span></div>  It is a strongly typed binary encoding which can be easily translated to and from json,<div class="tooltip"><sup>*</sup><span class="tooltiptext">Although bao can be translated to json, and back again, not all json can be represented in bao - due first to the strong type definition, and also to dictionary references required for keys and key codes.</span></div> and to <a href="https://graphviz.org/doc/info/lang.html">dot</a> representation.
+The basic format Assign Onward uses to communicate<div class="tooltip"><sup>*</sup><span class="tooltiptext">Bao is also well suited for compact data storage, but the specifics of data storage and retrieval implementations are outside the Ⓐ protocol scope, at the discretion of the application architects.</span></div> messages is called bao.<div class="tooltip"><sup>*</sup><span class="tooltiptext">Could stand for "Binary Assign Onward" format, or "Basic Assign Onward" format, or "<a href="https://redhousespice.com/steamed-bao-buns/">Tasty, juicy filling with soft, fluffy wrappers</a>."  Take your pick, although I'd say the bao wrappers used in Ⓐ protocol are more thin than fluffy.  Also, probably best represented as 包 in Chinese.</a></span></div>  It is a strongly typed binary encoding which can be easily translated to and from json,<div class="tooltip"><sup>*</sup><span class="tooltiptext">Although bao can be translated to json, and back again, not all json can be represented in bao - due first to the strong type definition, and also to dictionary references required for keys and key codes.</span></div> and to <a href="https://graphviz.org/doc/info/lang.html">dot</a> representation.
 
 <h2>What is in bao?</h2>
 
@@ -137,10 +137,10 @@ Bao arrays are a single key followed by an integer size zero or larger which spe
 Bao encoding is a fairly straightforward system where the outermost key is followed by the binary encode of the value belonging to that key.  Object values start with a coded integer telling how many key-value elements are in the following object, then each key + value of the key in the object follows.  Arrays similarly start with a coded integer telling how many value elements follow and then each value follows.  Remember that values may themselves be objects which then nest further...  The atomic types are encoded as follows:
 
 <ul>
-<li>signed int_64 - 8 bytes lsb first.</li>
+<li>signed int64 - 8 bytes lsb first.</li>
 <li>arbitrary length integer - bcd digits, terminated by hex E for a positive and F for a negative number.  If the terminator is the first nybble of a byte, it is followed by hex D.</li>
 <li>ratio of two arbitrary length integers - two arbitrary length integers as above, numerator first.</li>
-<li>key <a href="VariableByteCoding.html">code</a> - a string of bytes, most significant bits first, where the seven lsb of each byte are part of the value, and the first byte with a 0 in the most significant bit is the final byte of the string.</li>
+<li>key <a href="VariableByteCoding.html">code</a> - a string of one to nine bytes, most significant bits first, where the seven lsb of each byte are part of the value, and the first byte with a 0 in the most significant bit is the final byte of the string.</li>
 <li>octet stream - an <a href="VariableByteCoding.html">encoded</a> length followed by that number of bytes.</li>
 <li>UTF-8 string - exactly as the octet stream, but the contents are required to be valid UTF-8.</li>
 </ul>

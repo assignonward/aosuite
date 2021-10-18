@@ -205,11 +205,11 @@ JsonSerial  BlockValueString::json() const
  */
 JsonSerial  KeyValuePair::json() const
 { JsonSerial j = "{ \"";
-  if ( !dict.codesContainCode(m_key) )
+  if ( !dict.codesContainCode(key()) )
     { qWarning( "unknown key 0x%s", keyHexd() );
       return "{<!-- unknown key 0x"+keyHex()+" -->}";
     }
-  j.append( dict.nameFromCode(m_key) );
+  j.append( dict.nameFromCode(key()) );
   j.append( "\": " );
   if ( m_value )
     j.append( m_value->json() );
@@ -243,9 +243,9 @@ JsonSerial  ValueBaseArray::json() const
  */
 JsonSerial  KeyValueArray::json() const
 { JsonSerial j = " \"";
-  if ( !dict.codesContainCode(m_key) )
+  if ( !dict.codesContainCode(key()) )
     return "{<!-- unknown key -->}";
-  j.append( dict.nameFromCode(m_key) );
+  j.append( dict.nameFromCode(key()) );
   j.append( "\": [ " );
   bool wroteOne = false;
   for ( qint32 i = 0; i < size(); i++ )

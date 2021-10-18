@@ -34,7 +34,7 @@
 //   than standard .json does.  Nonetheless, a block data structure can be expressed
 //   in standard .json format and manipulated with common .json tools.
 //
-// The intended form for operations and communications is designated "bao" - a
+// The intended form for operations and communications is designated "bao" 包 - a
 //   binary form of the json structures which is both more compact and more specific,
 //   there is only one correct bao representation of a given object because:
 //   1) duplicate key values are not allowed in a single level of an object container
@@ -134,6 +134,36 @@ ValueBase *ValueBase::newValue( RiceyInt key, ValueBase *vbp, ValueBase *vtc )
 }
 
 /**
+ * @brief readBao - create a KeyValue from a bao stream
+ * @return a KeyValue for the contents of bs, nullptr if there is a problem
+ */
+KeyValueBase *KeyValueBase::readBao( const BaoSerial &bs, QObject *parent )
+{ KeyValueBase *kvb = nullptr;
+  if ( bs.size() < 1 )
+    { qWarning( "KeyValueBase::readBao() no data passed" );
+      return kvb;
+    }
+  qint32 len = 0;
+  bool ok = false;
+  RiceyInt k = riceToInt( bs, &len, &ok );
+  if ( !ok )
+    { qWarning( "KeyValueBase::readBao() problem reading initial key" );
+      return kvb;
+    }
+  if ( !dict.codesContainCode( k ) )
+    { qWarning( "KeyValueBase::readBao() key %llx not found in dictionary",k );
+      return kvb;
+    }
+  if ( k & RDT_ARRAY )
+    kvb = new KeyValueArray( k, parent );
+   else
+    kvb = new KeyValuePair( k, parent );
+  kvb->setBao( bs );
+  return kvb;
+}
+
+
+/**
  * @brief KeyValueBase::setKey
  * @param key - recognized dictonary entry
  * @return number of bytes the key occupied, or -1 if unsuccessful setting key
@@ -146,7 +176,7 @@ qint32 KeyValueBase::setKey( const RiceyCode &key )
     { qWarning( "problem converting key rice code %s to int", key.toHex().data() ); return -1; }
   if ( !dict.codesContainCode( k ) )
     { qWarning( "dictionary does not contain key %llu", k ); return -1; }
-  m_key = k;
+  setVKey( k );
   return len;
 }
 
@@ -545,7 +575,7 @@ BaoSerial ValueBase::baoDefaultValue( qint8 keyType )
  */
 BaoSerial  KeyValuePair::bao() const
 { BaoSerial b = keyCode();
-  if ( !dict.codesContainCode(m_key) )
+  if ( !dict.codesContainCode(vKey()) )
     { qWarning( "unknown key 0x%s", keyHexd() );
       return BaoSerial();
     }
@@ -690,21 +720,46 @@ ValueBase *ValueBaseArray::prevChild( ValueBase *v )
 
 bool  ValueBaseArray::append( ValueBase *value )
 { if ( value == nullptr )
-    { qWarning( "BlockValueArray will not append nullptr" );
+    { qWarning( "ValueBaseArray will not append nullptr" );
       return false;
     }
   if ( value->type() != ( type() & RDT_TYPEMASK ) )
-    { qWarning( "type mismatch in BlockValueArray::append(ValueBase) %d %d",(int)value->type(),(int)type() );
+    { qWarning( "type mismatch in ValueBaseArray::append(ValueBase) %d %d",(int)value->type(),(int)type() );
       return false;
     }
   // Setting metadata for new array element
   value->vbParent = this;
-  value->m_idx    = "i"+Utf8String::number( size() );
+  value->setIdx( "i"+Utf8String::number( size() ) );
   value->setVKey( vKey() );
   // qWarning( "appending to %s to %llx", m_idx.data(), m_key );
   m_values.append( value );
   return true;
 }
+
+bool  ValueBaseArray::insertAt( ValueBase *v, qint32 i )
+{ if ( i == size() )
+    return append(v);
+  if ( v == nullptr )
+    { qWarning( "ValueBaseArray will not insert nullptr" );
+      return false;
+    }
+  if ( v->type() != ( type() & RDT_TYPEMASK ) )
+    { qWarning( "type mismatch in ValueBaseArray::insertAt() %d %d",(int)v->type(),(int)type() );
+      return false;
+    }
+  if (( i >= size() ) || ( i < 0 ))
+    { qWarning( "index out of range in ValueBaseArray::insertAt() %d %d",(int)size(),(int)i );
+      return false;
+    }
+  // Setting metadata for new array element
+  v->vbParent = this;
+  for ( qint32 j = i; j < size(); j++ ) // readjust m_idx of the later elements in the array too
+    at(j)->setIdx( "i"+Utf8String::number( j ) );
+  v->setVKey( vKey() );
+  m_values.insert(i,v);
+  return true;
+}
+
 
 /**
  * @brief KeyValueArray::append
@@ -795,11 +850,11 @@ qint32  BlockValueObject::setBao( const BaoSerial &b )
     { qWarning( "empty BaoSerial" ); return -1; }
   qint32 len = 0;
   bool ok = false;
-  qint32 obCount = riceToInt( b, &len, &ok );
+  qint64 obCount = riceToInt( b, &len, &ok );
   if ( !ok )
     { qWarning( "bad count rice code" ); return -1; }
   clear();
-  if ( obCount == 0 )
+  if ( obCount == 0 ) // TODO: check for exceeding max ob count
     return len; // empty object, we're done
   qint32 i = len;
   while ( obCount > 0 )
@@ -902,8 +957,8 @@ bool  BlockValueObject::insert( KeyValueArray *kva )
 
 void  ValueBase::setMetaData( RiceyInt k, ValueBase *vbp )
 { vbParent = vbp;
-  m_idx = "k" + intToRice( k ).toHex();
-  m_key = k;
+  setIdx( "k" + intToRice( k ).toHex() );
+  setVKey( k );
 }
 
 /**

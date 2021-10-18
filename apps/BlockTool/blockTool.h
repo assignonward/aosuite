@@ -40,10 +40,12 @@ public:
     explicit  BlockTool( QWidget *cw = nullptr );
              ~BlockTool();
         void  liveDelay( int t );
+        void  initReadFile();
   QByteArray  jsonReformat( QByteArray );
         void  updateBB( ValueBase * );
   BlockPanel *buildPanel();
   BlockPanel *makePanel();
+  BlockPanel *curNavPanel();
   BlockPanel *updateBuild();
   BlockPanel *updateMake();
   BlockPanel *updateNav();
@@ -53,6 +55,8 @@ public:
      QString  makeLabel();
 KeyValueBase *buildKvb();
 KeyValueBase *makeKvb();
+KeyValueBase *curNavKvb();
+ValueBase::Mode curNavMode();
         bool  makeClear();
         void  sortKeys();
         void  selectRoot(BlockPanel *);
@@ -71,6 +75,7 @@ signals:
 public slots:
         void  on_remove_clicked();
         void  on_insert_clicked();
+        void  on_show_clicked();
         void  on_swap_clicked();
         void  on_prev_clicked();
         void  on_next_clicked();
@@ -80,9 +85,6 @@ public slots:
         void  on_read_clicked();
         void  on_save_clicked();
         void  on_clear_clicked() { makeClear(); }
-        void  on_chain_clicked();
-        void  on_hash_clicked();
-        void  on_DAO0_clicked();
         void  on_navMake_toggled(bool);
         void  on_navBuild_toggled(bool);
         void  on_makeX_toggled(bool);

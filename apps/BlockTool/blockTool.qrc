@@ -4,5 +4,8 @@
     </qresource>
     <qresource prefix="/files">
         <file>x.dot</file>
+        <file>chain.bao</file>
+        <file>hash.bao</file>
+        <file>DⒶ0.bao</file>
     </qresource>
 </RCC>
