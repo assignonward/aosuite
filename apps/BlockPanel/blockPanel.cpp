@@ -49,6 +49,14 @@ BlockPanel::~BlockPanel()
     m_kvb->deleteLater();
 }
 
+void BlockPanel::setBlock( const BaoSerial &b, bool updateNow )
+{ if ( m_kvb )
+    m_kvb->deleteLater();
+  m_kvb = KeyValueBase::readBao( b, this );
+  if ( updateNow )
+    update();
+}
+
 void BlockPanel::setBlock( KeyValueBase *p, bool updateNow )
 { if ( m_kvb )
     m_kvb->deleteLater();

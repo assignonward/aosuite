@@ -50,6 +50,7 @@ signals:
 
 public slots:
         void  update();
+        void  setBlock( const BaoSerial &b, bool updateNow = true );
         void  setBlock( KeyValueBase *, bool updateNow = true );
         void  writeWrappedDot( QByteArray d );
         void  updateGraph();

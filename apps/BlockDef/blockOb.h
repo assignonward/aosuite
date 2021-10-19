@@ -74,6 +74,7 @@ virtual  ValueBase *prevChild( ValueBase * ) { return nullptr; }
 virtual  ValueBase *nextChild( ValueBase * ) { return nullptr; }
 virtual       bool  isContainer() const = 0;
 virtual       bool  isArray()     const { return false; }
+virtual       bool  isKeyValue()  const { return false; }
 virtual       bool  isKeyValuePair() const { return false; }
 virtual       void  clear()             = 0;
 virtual     quint8  type()        const = 0;
@@ -154,15 +155,17 @@ class KeyValueBase : public ValueBase
 {
     Q_OBJECT
 public:
-           explicit  KeyValueBase( const RiceyInt &k, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
+           explicit  KeyValueBase( const RiceyInt &k,                QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
                     ~KeyValueBase() {}
 static KeyValueBase *readBao( const BaoSerial &, QObject *parent = nullptr );
-     virtual   bool  isContainer() const { return true;  }
+     virtual   bool  isContainer() const { return true; }
      virtual   bool  isArray()     const =0;
+     virtual   bool  isKeyValue()  const { return true; }
      virtual   void  clear()        {}
      virtual quint8  type()    const { return (vKey() & RDT_OBTYPEMASK); }
              qint32  setKey( const RiceyCode &r );
                bool  setKey( const RiceyInt &k ) { return( setKey( intToRice( k ) ) > 0 ); }
+     virtual   void  set( ValueBase *vp ) = 0;
          Utf8String  keyHex()  const { return keyCode().toHex(); }
                char *keyHexd() const { return keyHex().data();   }
           RiceyCode  keyCode() const { return intToRice( vKey() ); }
@@ -188,7 +191,7 @@ virtual  ValueBase *firstChild()  const { return m_value; }
 virtual  ValueBase *nextChild( ValueBase *v ) { if ( m_value ) return m_value->nextChild(v); return nullptr; }
 virtual  ValueBase *prevChild( ValueBase *v ) { if ( m_value ) return m_value->prevChild(v); return nullptr; }
 virtual     qint32  size()    const { return 1; }
-              void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning("kvp type mismatch"); else { if ( m_value ) m_value->deleteLater(); m_value = vp; } }
+virtual       void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning("kvp type mismatch"); else { if ( m_value ) m_value->deleteLater(); m_value = vp; } }
          ValueBase *value()   const { return m_value; }
 virtual  BaoSerial  bao()     const;
 virtual JsonSerial  json()    const;
@@ -219,6 +222,7 @@ virtual       bool  isArray()     const { return true; }
 virtual       void  clear() { if ( m_val ) { m_val->clear(); m_val->deleteLater(); } m_val = nullptr; }
 virtual     qint32  size() const { if ( m_val ) return m_val->size(); return 0; }
               bool  append( ValueBase *value );
+virtual       void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning("kva type mismatch"); else { clear(); append( vp ); } }
          ValueBase *at( qint32 n ) const { if ( m_val ) return m_val->at(n); return nullptr; }
     ValueBaseArray *value()   const { return m_val; }
               bool  typeMatch( quint8 );
@@ -539,7 +543,7 @@ virtual ValueBase *prevChild( ValueBase * );
            qint32  size()        const { return m_obMap.size(); }
    QList<RiceyInt> keys()        const { return m_obMap.keys(); }
              bool  contains( RiceyInt k ) const { return m_obMap.contains( k ); }
-             bool  remove( RiceyInt k );
+        ValueBase *remove( RiceyInt k );
            qint32  insert    ( const BlockObjectMap & );
              bool  insert    ( RiceyInt, ValueBase * );
              bool  insert    ( KeyValueArray * );

@@ -964,15 +964,15 @@ void  ValueBase::setMetaData( RiceyInt k, ValueBase *vbp )
 /**
  * @brief BlockValueObject::remove
  * @param k - key of child to remove
- * @return true if successful
+ * @return removed object, nullptr if problem
  */
-bool  BlockValueObject::remove( RiceyInt k )
-{ if ( !contains(k) ) { qWarning( "BlockValueObject::remove(%llx) key not found", k ); return false; }
+ValueBase *BlockValueObject::remove( RiceyInt k )
+{ if ( !contains(k) ) { qWarning( "BlockValueObject::remove(%llx) key not found", k ); return nullptr; }
   ValueBase *vb = m_obMap[k];
   m_obMap.remove(k);
-  if ( vb == nullptr ) { qWarning( "BlockValueObject::remove(%llx) key returned nullptr", k ); return false; }
-  vb->deleteLater();
-  return true;
+  if ( vb == nullptr )
+    qWarning( "BlockValueObject::remove(%llx) key returned nullptr", k );
+  return vb;
 }
 
 /**

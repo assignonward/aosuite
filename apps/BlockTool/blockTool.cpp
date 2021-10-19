@@ -88,7 +88,7 @@ void  BlockTool::selectObjectForInsertion()
       valueEditorNoNav();
       return;
     }
-  qWarning( "selBB is an Object" );
+//  qWarning( "selBB is an Object" );
   ui->remove->setVisible( true );
   if ( ui->navBuild->isChecked() )
     { ui->index      ->setVisible( false );
@@ -203,14 +203,27 @@ void  BlockTool::on_remove_clicked()
   ValueBase *vb = selBB;
   if ( vb           == nullptr )     { qWarning( "BlockTool::on_remove_clicked() needs a valid selBB" );                              return; }
   if ( vb->vbParent == nullptr )     { qWarning( "BlockTool::on_remove_clicked() will not remove the root object, just use Clear." ); return; }
+  if ( vb->vbParent->isKeyValue()  ) { qWarning( "BlockTool::on_remove_clicked() Cannot remove from root container, use Clear." );    return; }
   if (!vb->vbParent->isContainer() ) { qWarning( "BlockTool::on_remove_clicked() Cannot remove from non-containers" );                return; }
   if ( vb->vbParent->isArray() )     { qWarning( "BlockTool::on_remove_clicked() TODO: handle removal from arrays" );                 return; }
   BlockValueObject *pbvo = (BlockValueObject *)((ValueBase *)vb->vbParent);
   RiceyInt key = vb->vKey();
   if ( !pbvo->contains( key ) ) { qWarning( "BlockTool::on_remove_clicked() key %llx not found in parent object", key ); return; }
   on_prev_clicked();
-  pbvo->remove( key );
-  updateNav();
+  vb = pbvo->remove( key );
+  if ( ui->navBuild->isChecked() )
+    { on_clear_clicked();
+      makePanel()->setBlock( intToRice( key )+vb->bao() );
+      updateBuild();
+      // vb->deleteLater();
+    }
+   else if ( ui->navMake->isChecked() )
+    { vb->deleteLater();
+      updateNav();
+    }
+   else
+    qWarning( "neither make nor build checked in nav.");
+
 }
 
 void  BlockTool::on_insert_clicked()
