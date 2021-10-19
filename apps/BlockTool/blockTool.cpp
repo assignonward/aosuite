@@ -224,9 +224,8 @@ void  BlockTool::on_insert_clicked()
         }
     }
   if ( ui->navBuild->isChecked() )
-    { // TODO: compatibility check between selBB and the current key
-      if ( makeKvb()     == nullptr    ) { qWarning( "Make is empty"    ); return; }
-      if ( selBB         == nullptr    ) { qWarning( "Nothing selected" ); return; }
+    { if ( makeKvb() == nullptr ) { qWarning( "Make is empty"    ); return; }
+      if ( selBB     == nullptr ) { qWarning( "Nothing selected" ); return; }
       RiceyInt key = makeKvb()->key();
       if ( selBB->type() == RDT_OBJECT )
         { BlockValueObject *bvo = (BlockValueObject *)((ValueBase *)selBB);
