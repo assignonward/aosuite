@@ -656,7 +656,6 @@ qint32  ValueBaseArray::setBao( const BaoSerial &b )
       len = vbo->setBao( b.mid(i) );
       if ( len < 1 )        { delete vbo; qWarning( "BlockValueArray::setBao() problem reading element in setBao %s", b.mid(i).toHex().data() ); return -1; }
       if ( !append( vbo ) ) { delete vbo; qWarning( "BlockValueArray::setBao() problem appending element during append()" ); return -1; }
-      vbo->vbParent = this;
       i += len;
       elementCount--;
     }
@@ -776,7 +775,9 @@ bool  KeyValueArray::append( ValueBase *value )
     { qWarning( "problem in typeMatch in KeyValueArray::append() %d %d",(int)value->type(),(int)type() );
       return false;
     }
-  value->setMetaData( key(), this );
+  value->vbParent = this;
+  value->setIdx( "i"+Utf8String::number( size() ) );
+  value->setVKey( vKey() );
   m_val->append( value );
   return true;
 }
