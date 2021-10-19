@@ -67,6 +67,7 @@ virtual Utf8String  idx()   const { return m_idx; }
               void  setIdx( const Utf8String &s ) { m_idx = s; }
           RiceyInt  vKey()  const { return m_key; }
               void  setVKey( RiceyInt k ) { m_key = k; }
+        Utf8String  metaText()    const;
 virtual       void  setMetaData( RiceyInt, ValueBase * );
 static  QByteArray  baoDefaultValue( qint8 );
 virtual  ValueBase *firstChild()  const      { return nullptr; }
@@ -155,7 +156,7 @@ class KeyValueBase : public ValueBase
 {
     Q_OBJECT
 public:
-           explicit  KeyValueBase( const RiceyInt &k,                QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
+           explicit  KeyValueBase( const RiceyInt &k, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
                     ~KeyValueBase() {}
 static KeyValueBase *readBao( const BaoSerial &, QObject *parent = nullptr );
      virtual   bool  isContainer() const { return true; }
@@ -213,18 +214,18 @@ class KeyValueArray : public KeyValueBase
 {
     Q_OBJECT
 public:
-          explicit  KeyValueArray( RiceyInt  k, QObject *parent = nullptr )                      : KeyValueBase(            k, parent ) { m_val = nullptr; }
-          explicit  KeyValueArray( RiceyInt  k, ValueBaseArray *bva, QObject *parent = nullptr ) : KeyValueBase(            k, parent ) { m_val = bva;     }
-                    KeyValueArray( const BaoSerial &b,               QObject *parent = nullptr ) : KeyValueBase( riceToInt(b), parent ) { setBao(b); }
+          explicit  KeyValueArray( RiceyInt  k,           QObject *p = nullptr ) : KeyValueBase(            k, p ) { m_val = nullptr; }
+          explicit  KeyValueArray( RiceyInt  k, ValueBaseArray *bva, QObject *p = nullptr ) : KeyValueBase( k, p ) { m_val = bva;     }
+                    KeyValueArray( const BaoSerial &b,    QObject *p = nullptr ) : KeyValueBase( riceToInt(b), p ) { setBao(b); }
                    ~KeyValueArray() { clear(); }
-virtual       bool  isArray()     const { return true; }
-         ValueBase *firstChild()  const { if ( m_val ) if ( m_val->size() > 0 ) return m_val->at(0); return nullptr; }
-virtual       void  clear() { if ( m_val ) { m_val->clear(); m_val->deleteLater(); } m_val = nullptr; }
-virtual     qint32  size() const { if ( m_val ) return m_val->size(); return 0; }
+virtual       bool  isArray()      const { return true; }
+         ValueBase *firstChild()   const { if ( m_val ) if ( m_val->size() > 0 ) return m_val->at(0); return nullptr; }
+virtual       void  clear()              { if ( m_val ) { m_val->clear(); m_val->deleteLater(); } m_val = nullptr; }
+virtual     qint32  size()         const { if ( m_val ) return m_val->size(); return 0; }
               bool  append( ValueBase *value );
-virtual       void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning("kva type mismatch"); else { clear(); append( vp ); } }
+virtual       void  set( ValueBase *vp ) { if ((vp->type() & RDT_TYPEMASK) != (type() & RDT_TYPEMASK)) qWarning("kva type mismatch"); else { clear(); append( vp ); } }
          ValueBase *at( qint32 n ) const { if ( m_val ) return m_val->at(n); return nullptr; }
-    ValueBaseArray *value()   const { return m_val; }
+    ValueBaseArray *value()        const { return m_val; }
               bool  typeMatch( quint8 );
 virtual  BaoSerial  bao()     const;
 virtual JsonSerial  json()    const;

@@ -40,9 +40,11 @@ BlockTool::BlockTool( QWidget *cw ) :
   panelA = new BlockPanel( "A", ValueBase::Mode::build, ui->frameA );
   panelX = new BlockPanel( "X", ValueBase::Mode::make , ui->frameX );
   panelY = new BlockPanel( "Y", ValueBase::Mode::idle , ui->frameY );
-  connect( this, SIGNAL(showA(KeyValueBase*)), panelA, SLOT(setBlock(KeyValueBase*)));
-  connect( this, SIGNAL(showX(KeyValueBase*)), panelX, SLOT(setBlock(KeyValueBase*)));
-  connect( this, SIGNAL(showY(KeyValueBase*)), panelY, SLOT(setBlock(KeyValueBase*)));
+  connect( this, SIGNAL(showA(KeyValueBase*)), panelA, SLOT(setKeyValueBlock(KeyValueBase*)));
+  connect( this, SIGNAL(showX(KeyValueBase*)), panelX, SLOT(setKeyValueBlock(KeyValueBase*)));
+  connect( this, SIGNAL(showY(KeyValueBase*)), panelY, SLOT(setKeyValueBlock(KeyValueBase*)));
+  ui->splitter->setStretchFactor( 0, 1 );
+  ui->splitter->setStretchFactor( 1, 1 );
   initReadFile();
   sortKeys();
 }
@@ -199,8 +201,7 @@ void  BlockTool::on_set_clicked()
 }
 
 void  BlockTool::on_remove_clicked()
-{ qWarning( "BlockTool::on_remove_clicked()" );
-  ValueBase *vb = selBB;
+{ ValueBase *vb = selBB;
   if ( vb           == nullptr )     { qWarning( "BlockTool::on_remove_clicked() needs a valid selBB" );                              return; }
   if ( vb->vbParent == nullptr )     { qWarning( "BlockTool::on_remove_clicked() will not remove the root object, just use Clear." ); return; }
   if ( vb->vbParent->isKeyValue()  ) { qWarning( "BlockTool::on_remove_clicked() Cannot remove from root container, use Clear." );    return; }
@@ -210,12 +211,13 @@ void  BlockTool::on_remove_clicked()
   RiceyInt key = vb->vKey();
   if ( !pbvo->contains( key ) ) { qWarning( "BlockTool::on_remove_clicked() key %llx not found in parent object", key ); return; }
   on_prev_clicked();
-  vb = pbvo->remove( key );
+  if ( vb != pbvo->remove( key ) )
+    qWarning( "odd, removed different object than selBB was pointed at..." );
   if ( ui->navBuild->isChecked() )
     { on_clear_clicked();
-      makePanel()->setBlock( intToRice( key )+vb->bao() );
+      makePanel()->setKeyValueBlock( intToRice( key )+vb->bao() );
       updateBuild();
-      // vb->deleteLater();
+      vb->deleteLater();
     }
    else if ( ui->navMake->isChecked() )
     { vb->deleteLater();
@@ -528,6 +530,8 @@ void  BlockTool::on_prev_clicked()
   if ( vb )
     { ui->navGroup->setEnabled( false );
       navPanel = curNavPanel();
+      if ( ui->showMeta->isChecked() )
+        showMeta( vb );
       updateBB( vb );
       if ( navPanel )
         { connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
@@ -573,6 +577,8 @@ void  BlockTool::on_next_clicked()
     { ui->navGroup->setEnabled( false );
       navPanel = curNavPanel();
       updateBB( vb );
+      if ( ui->showMeta->isChecked() )
+        showMeta( vb );
       if ( navPanel )
         { connect( navPanel, SIGNAL(drawingComplete()), this, SLOT(navDrawComplete()) );
           navPanel->update();
@@ -590,6 +596,14 @@ void  BlockTool::updateBB( ValueBase *vb )
     { selBB->setSel();
       updateValueEditor();
     }
+}
+
+void  BlockTool::showMeta( ValueBase *vb )
+{ if ( vb == nullptr )
+    { qWarning( "showMeta received nullptr" );
+      return;
+    }
+  ui->report->append( vb->metaText() );
 }
 
 void  BlockTool::on_now_clicked()
@@ -639,7 +653,7 @@ BlockPanel *BlockTool::updateNav()
 bool  BlockTool::setBuild( KeyValueBase *kvb )
 { BlockPanel *bp = buildPanel();
   if ( bp )
-    { bp->setBlock( kvb, false );
+    { bp->setKeyValueBlock( kvb, false );
       if ( ui->navBuild->isChecked() )
         selectRoot( bp );
       bp->update();
@@ -652,7 +666,7 @@ bool  BlockTool::setBuild( KeyValueBase *kvb )
 bool  BlockTool::setMake( KeyValueBase *kvb )
 { BlockPanel *bp = makePanel();
   if ( bp )
-    { bp->setBlock( kvb, false );
+    { bp->setKeyValueBlock( kvb, false );
       if ( ui->navMake->isChecked() )
         selectRoot( bp );
       bp->update();

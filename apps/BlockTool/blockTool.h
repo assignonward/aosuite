@@ -57,6 +57,7 @@ KeyValueBase *buildKvb();
 KeyValueBase *makeKvb();
 KeyValueBase *curNavKvb();
 ValueBase::Mode curNavMode();
+        void  showMeta( ValueBase * );
         bool  makeClear();
         void  sortKeys();
         void  selectRoot(BlockPanel *);

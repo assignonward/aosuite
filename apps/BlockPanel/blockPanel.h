@@ -50,15 +50,15 @@ signals:
 
 public slots:
         void  update();
-        void  setBlock( const BaoSerial &b, bool updateNow = true );
-        void  setBlock( KeyValueBase *, bool updateNow = true );
+        void  setKeyValueBlock( const BaoSerial &b, bool updateNow = true );
+        void  setKeyValueBlock( KeyValueBase *, bool updateNow = true );
         void  writeWrappedDot( QByteArray d );
         void  updateGraph();
         void  graphvizDone(int,QProcess::ExitStatus);
 
 public:
         ValueBase::Mode  m_mode;
-  QPointer<KeyValueBase> m_kvb;
+           KeyValueBase *m_kvb;
                 QString  m_label;
       QPointer<QProcess> pp;
                    bool  drawingInProgress;

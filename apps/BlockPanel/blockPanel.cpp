@@ -49,24 +49,28 @@ BlockPanel::~BlockPanel()
     m_kvb->deleteLater();
 }
 
-void BlockPanel::setBlock( const BaoSerial &b, bool updateNow )
-{ if ( m_kvb )
-    m_kvb->deleteLater();
-  m_kvb = KeyValueBase::readBao( b, this );
-  if ( updateNow )
-    update();
+void BlockPanel::setKeyValueBlock( const BaoSerial &b, bool updateNow )
+{ qint32 len = 0;
+  bool ok = false;
+  RiceyInt k = riceToInt(b,&len,&ok);
+  if ( !ok )
+    qWarning( "problem reading key during BlockPanel::setKeyValueBlock" );
+   else if ( !dict.codesContainCode( k ) )
+    qWarning( "key %llx not found in dictionary during BlockPanel::setKeyValueBlock", k );
+   else
+    { if ( m_kvb )
+        m_kvb->deleteLater();
+      if ( k & RDT_ARRAY )
+        m_kvb = new KeyValueArray( b, this );
+       else
+        m_kvb = new KeyValuePair ( b, this );
+      if ( updateNow )
+        update();
+    }
 }
 
-void BlockPanel::setBlock( KeyValueBase *p, bool updateNow )
-{ if ( m_kvb )
-    m_kvb->deleteLater();
-  if ( p->key() & RDT_ARRAY )
-    m_kvb = new KeyValueArray( p->bao(), this );
-   else
-    m_kvb = new KeyValuePair ( p->bao(), this );
-  if ( updateNow )
-    update();
-}
+void BlockPanel::setKeyValueBlock( KeyValueBase *p, bool updateNow )
+{ setKeyValueBlock( p->bao(), updateNow ); }
 
 void  BlockPanel::update()
 { if ( m_kvb )
