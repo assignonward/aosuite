@@ -56,8 +56,8 @@ void  BlockTool::updateValueEditor()
       qWarning( "selBB nullptr" );
       return;
     }
-    qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
-               selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->vKey(),selBB->idx().data() );
+  //  qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
+  //             selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->vKey(),selBB->idx().data() );
   if ( (!selBB->isContainer()) || selBB->isArray() )
     editSelectedElement();
    else
