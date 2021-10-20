@@ -46,7 +46,7 @@ class ValueBase : public QObject
     Q_OBJECT
 public:
               enum  Mode { make, build, idle, selected };
-          explicit  ValueBase(QObject *parent = nullptr) : QObject( parent ) { m_sel = false; m_key = RCD_null_z; }
+          explicit  ValueBase( QObject *p = nullptr ) : QObject( p ) { m_sel = false; m_key = RCD_null_z; }
 virtual            ~ValueBase() {}
 static   ValueBase *newValue( RiceyInt k, ValueBase *vbp = nullptr, ValueBase *vtc = nullptr );
 static  JsonSerial  removeQuotes( const JsonSerial &j );
@@ -182,9 +182,9 @@ class KeyValuePair : public KeyValueBase
 {
     Q_OBJECT
 public:
-          explicit  KeyValuePair( const RiceyInt  &k,                QObject *parent = nullptr ) : KeyValueBase( k,            parent ) {}
-                    KeyValuePair( const RiceyInt  &k, ValueBase *vp, QObject *parent = nullptr ) : KeyValueBase( k,            parent ) { set(vp); }
-                    KeyValuePair( const BaoSerial &b,                QObject *parent = nullptr ) : KeyValueBase( riceToInt(b), parent ) { setBao(b); }
+          explicit  KeyValuePair( const RiceyInt  &k,                QObject *p = nullptr ) : KeyValueBase( k,            p ) {}
+                    KeyValuePair( const RiceyInt  &k, ValueBase *vp, QObject *p = nullptr ) : KeyValueBase( k,            p ) { set(vp); }
+                    KeyValuePair( const BaoSerial &b,                QObject *p = nullptr ) : KeyValueBase( riceToInt(b), p ) { setBao(b); }
                    ~KeyValuePair() { if ( m_value ) m_value->deleteLater(); }
 virtual       bool  isArray()     const { return false; }
 virtual       bool  isKeyValuePair() const { return true; }
@@ -196,7 +196,7 @@ virtual       void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning(
          ValueBase *value()   const { return m_value; }
 virtual  BaoSerial  bao()     const;
 virtual JsonSerial  json()    const;
-virtual     qint32  setBao ( const  BaoSerial & );
+virtual     qint32  setBao ( const BaoSerial & );
 virtual       bool  setJson( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
 virtual  DotSerial  dot(Mode) const;
               void  setValueKey(RiceyInt k) { setVKey( k ); }

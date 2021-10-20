@@ -789,7 +789,7 @@ bool  KeyValueArray::append( ValueBase *value )
  */
 bool  KeyValueArray::typeMatch( quint8 t )
 { if ( m_val )
-    return ( m_val->type() == t );
+    return ((m_val->type() & RDT_TYPEMASK) == (t & RDT_TYPEMASK));
   switch ( t )
     { case RDT_MPZ:       m_val = new BlockValueMPZArray      ( this ); return true;
       case RDT_MPQ:       m_val = new BlockValueMPQArray      ( this ); return true;
