@@ -84,24 +84,6 @@
 #define RCD_png_c                                   1100 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_success_c                               8204 // dataGroup success code
 #define RCD_failure_c                              14348 // dataGroup failure code
-#define RCD_ProtocolDAO0_c                     195559436 // protocolIdGroup Development protocol, symbol: DⒶ0
-#define RCD_ProtocolDAO1_c                     195559468 // protocolIdGroup Development protocol, symbol: DⒶ1
-#define RCD_ProtocolDAO2_c                     195559500 // protocolIdGroup Development protocol, symbol: DⒶ2
-#define RCD_ProtocolDAO3_c                     195559532 // protocolIdGroup Development protocol, symbol: DⒶ3
-#define RCD_ProtocolDAO4_c                     195559564 // protocolIdGroup Development protocol, symbol: DⒶ4
-#define RCD_ProtocolDAO5_c                     195559596 // protocolIdGroup Development protocol, symbol: DⒶ5
-#define RCD_ProtocolDAO6_c                     195559628 // protocolIdGroup Development protocol, symbol: DⒶ6
-#define RCD_ProtocolDAO7_c                     195559660 // protocolIdGroup Development protocol, symbol: DⒶ7
-#define RCD_ProtocolDAO8_c                     195559692 // protocolIdGroup Development protocol, symbol: DⒶ8
-#define RCD_ProtocolDAO9_c                     195559724 // protocolIdGroup Development protocol, symbol: DⒶ9
-#define RCD_ProtocolDAO10_c                    195559756 // protocolIdGroup Development protocol, symbol: DⒶ10
-#define RCD_ProtocolDAO11_c                    195559788 // protocolIdGroup Development protocol, symbol: DⒶ11
-#define RCD_ProtocolDAO12_c                    195559948 // protocolIdGroup Development protocol, symbol: DⒶ12
-#define RCD_ProtocolDAO13_c                    195559980 // protocolIdGroup Development protocol, symbol: DⒶ13
-#define RCD_ProtocolTAO1_c                      82313228 // protocolIdGroup Test protocol, symbol: TⒶ2021.9.22
-#define RCD_ProtocolTAO2_c                      82313260 // protocolIdGroup Test protocol, symbol: TⒶ2021.10.13
-#define RCD_ProtocolA00_c                           4108 // protocolIdGroup Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
-#define RCD_ProtocolA01_c                           4140 // protocolIdGroup Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
 #define RCD_actorWriterClient_c                     5644 // protocolActorGroup Specifies client in the writer transaction
 #define RCD_actorWriterServer_c                     5676 // protocolActorGroup Specifies server in the writer transaction
 #define RCD_actorReaderClient_c                     5708 // protocolActorGroup Specifies client in the reader transaction
