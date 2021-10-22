@@ -164,6 +164,12 @@
         },
         {
             "group_s": "chainGroup",
+            "name_s": "hashInfo_o",
+            "text_s": "Found in hash_o, contains at least the time_i plus any other id info that will be hashed along with the hashedOb_o",
+            "type_b": "4F"
+        },
+        {
+            "group_s": "chainGroup",
             "name_s": "hash_o",
             "text_s": "Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.",
             "type_b": "6F"
@@ -188,6 +194,36 @@
         },
         {
             "group_s": "algorithmIdGroup",
+            "name_s": "SHA256_c",
+            "text_s": "algorithm ID for SHA2 256",
+            "type_b": "810C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
+            "name_s": "SHA3b512_c",
+            "text_s": "algorithm ID for SHA3 512",
+            "type_b": "816C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
+            "name_s": "Blake2s128_c",
+            "text_s": "algorithm ID for Blake2s 128",
+            "type_b": "822C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
+            "name_s": "Blake2b256_c",
+            "text_s": "algorithm ID for Blake2b 256",
+            "type_b": "826C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
+            "name_s": "Blake2b512_c",
+            "text_s": "algorithm ID for Blake2b 512",
+            "type_b": "830C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
             "name_s": "ECB256_c",
             "text_s": "algorithm ID for Elliptic Curve ECDSA curve BrainpoolP256r1",
             "type_b": "812C"
@@ -200,45 +236,15 @@
         },
         {
             "group_s": "algorithmIdGroup",
-            "name_s": "SHA256_c",
-            "text_s": "algorithm ID for Hash SHA2 256",
-            "type_b": "810C"
-        },
-        {
-            "group_s": "algorithmIdGroup",
-            "name_s": "SHA3b512_c",
-            "text_s": "algorithm ID for Hash SHA3 512",
-            "type_b": "816C"
-        },
-        {
-            "group_s": "algorithmIdGroup",
-            "name_s": "Blake2s128_c",
-            "text_s": "algorithm ID for Hash Blake2s 128",
-            "type_b": "820C"
-        },
-        {
-            "group_s": "algorithmIdGroup",
-            "name_s": "Blake2b256_c",
-            "text_s": "algorithm ID for Hash Blake2b 256",
-            "type_b": "822C"
-        },
-        {
-            "group_s": "algorithmIdGroup",
-            "name_s": "Blake2b512_c",
-            "text_s": "algorithm ID for Hash Blake2b 512",
-            "type_b": "824C"
-        },
-        {
-            "group_s": "algorithmIdGroup",
             "name_s": "jpg_c",
             "text_s": "Found in image objects, tells what format the data_b is to be interpreted as",
-            "type_b": "880C"
+            "type_b": "820C"
         },
         {
             "group_s": "algorithmIdGroup",
             "name_s": "png_c",
             "text_s": "Found in image objects, tells what format the data_b is to be interpreted as",
-            "type_b": "884C"
+            "type_b": "824C"
         },
         {
             "group_s": "dataGroup",
@@ -251,30 +257,6 @@
             "name_s": "failure_c",
             "text_s": "failure code",
             "type_b": "F00C"
-        },
-        {
-            "group_s": "protocolActorGroup",
-            "name_s": "actorWriterClient_c",
-            "text_s": "Specifies client in the writer transaction",
-            "type_b": "AC0C"
-        },
-        {
-            "group_s": "protocolActorGroup",
-            "name_s": "actorWriterServer_c",
-            "text_s": "Specifies server in the writer transaction",
-            "type_b": "AC2C"
-        },
-        {
-            "group_s": "protocolActorGroup",
-            "name_s": "actorReaderClient_c",
-            "text_s": "Specifies client in the reader transaction",
-            "type_b": "AC4C"
-        },
-        {
-            "group_s": "protocolActorGroup",
-            "name_s": "actorReaderServer_c",
-            "text_s": "Specifies server in the reader transaction",
-            "type_b": "AC6C"
         },
         {
             "group_s": "protocolDefGroup",
@@ -296,39 +278,75 @@
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "ItemDefList_O",
-            "text_s": "A list of Assign Onward Protocol Item Definitions",
-            "type_b": "A03F"
-        },
-        {
-            "group_s": "protocolDefGroup",
-            "name_s": "ItemDef_o",
+            "name_s": "ItemsDef_o",
             "text_s": "An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)",
             "type_b": "A02F"
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "actorDefList_O",
-            "text_s": "A list of Actor definitions, a valid protocol definition should contain one or more actor definitions",
-            "type_b": "AC1F"
-        },
-        {
-            "group_s": "protocolDefGroup",
-            "name_s": "actorDef_o",
+            "name_s": "ActorsDef_o",
             "text_s": "A single Actor definition",
             "type_b": "A00F"
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "OutgoingItems_C",
+            "name_s": "sendableItems_C",
             "text_s": "A list items this actor publishes",
-            "type_b": "A17C"
+            "type_b": "A15C"
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "IncomingItems_C",
+            "name_s": "receivableItems_C",
             "text_s": "A list items this actor consumes",
-            "type_b": "A15C"
+            "type_b": "A17C"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorWriterClient_o",
+            "text_s": "Actor definition: the actor who wants to create a record (in a blockchain)",
+            "type_b": "BA0F"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorWriterServer_o",
+            "text_s": "Actor definition: the actor who wants to retrieve a record (from a blockchain)",
+            "type_b": "BA2F"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorReaderClient_o",
+            "text_s": "Actor definition: the actor who handles requests to create records (in a blockchain)",
+            "type_b": "BA4F"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorReaderServer_o",
+            "text_s": "Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
+            "type_b": "BA6F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "writeRequest_o",
+            "text_s": "A request to write data to storage",
+            "type_b": "B00F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "writeResponse_o",
+            "text_s": "A response to a request to write data to storage",
+            "type_b": "B02F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "readRequest_o",
+            "text_s": "A request to read data from storage",
+            "type_b": "B04F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "readResponse_o",
+            "text_s": "A response to a request to read data from storage",
+            "type_b": "B06F"
         },
         {
             "group_s": "protocolDefGroup",
@@ -352,49 +370,49 @@
             "group_s": "protocolDefGroup",
             "name_s": "OperReqList_O",
             "text_s": "USE inside SubItemDefs_O Operational requirements / constraints on values found in Required or Optional items",
-            "type_b": "A25F"
+            "type_b": "E01F"
         },
         {
             "group_s": "protocolDefGroup",
             "name_s": "OperReq_o",
             "text_s": "USE inside SubItemDefs_O A single operational requirement / constraint on value found in an item",
-            "type_b": "A24F"
+            "type_b": "E10F"
         },
         {
             "group_s": "operationGroup",
             "name_s": "OpMemberOf_C",
             "text_s": "List of possible values for an RCODE",
-            "type_b": "A01C"
+            "type_b": "E21C"
         },
         {
             "group_s": "operationGroup",
             "name_s": "OpOneOrMoreOf_C",
             "text_s": "One or more objects of the listed types are required to appear",
-            "type_b": "A21C"
+            "type_b": "E31C"
         },
         {
             "group_s": "operationGroup",
             "name_s": "OpGreaterThan_C",
             "text_s": "Path defining a value, or array of values, to compare - the targeted value must be greater than all",
-            "type_b": "A03C"
+            "type_b": "E41C"
         },
         {
             "group_s": "operationGroup",
             "name_s": "OpLessThan_C",
             "text_s": "Path defining a value, or array of values, to compare - the targeted value must be less than all",
-            "type_b": "A05C"
+            "type_b": "E51C"
         },
         {
             "group_s": "operationGroup",
             "name_s": "OpTimeValue_c",
             "text_s": "The specified object should be assigned a time value, RCD_time_i indicates the time should be the current time - other values may be used in the future to indicate other types of time values.",
-            "type_b": "A04C"
+            "type_b": "E60C"
         },
         {
             "group_s": "operationGroup",
             "name_s": "OpHash_O",
             "text_s": "Three parameters follow, describing inputs to the hash function",
-            "type_b": "A13F"
+            "type_b": "E71F"
         },
         {
             "group_s": "structNavGroup",

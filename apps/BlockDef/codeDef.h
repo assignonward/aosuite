@@ -69,45 +69,48 @@
 #define RCD_userId_b                                  43 // dataGroup Unique user identifier, possibly the 256bit hash of a userID_o that has all kinds of stuff in it
 #define RCD_chainBlock_o                            9615 // chainGroup An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s)
 #define RCD_hashedOb_o                                47 // chainGroup An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.
+#define RCD_hashInfo_o                                79 // chainGroup Found in hash_o, contains at least the time_i plus any other id info that will be hashed along with the hashedOb_o
 #define RCD_hash_o                                   111 // chainGroup Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
 #define RCD_parentHash_O                             127 // chainGroup Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.
 #define RCD_separableItems_O                         863 // chainGroup List of items which are only indirectly included in the hash chain
 #define RCD_separableItemsHashes_O                   831 // chainGroup Hashes of separable items which do get included in the hash chain
+#define RCD_SHA256_c                                 140 // algorithmIdGroup algorithm ID for SHA2 256
+#define RCD_SHA3b512_c                               236 // algorithmIdGroup algorithm ID for SHA3 512
+#define RCD_Blake2s128_c                             300 // algorithmIdGroup algorithm ID for Blake2s 128
+#define RCD_Blake2b256_c                             364 // algorithmIdGroup algorithm ID for Blake2b 256
+#define RCD_Blake2b512_c                             396 // algorithmIdGroup algorithm ID for Blake2b 512
 #define RCD_ECB256_c                                 172 // algorithmIdGroup algorithm ID for Elliptic Curve ECDSA curve BrainpoolP256r1
 #define RCD_RSA3072_c                                204 // algorithmIdGroup algorithm ID for 3072 bit RSA - less commonly used algorithms get longer ricey codes
-#define RCD_SHA256_c                                 140 // algorithmIdGroup algorithm ID for Hash SHA2 256
-#define RCD_SHA3b512_c                               236 // algorithmIdGroup algorithm ID for Hash SHA3 512
-#define RCD_Blake2s128_c                             268 // algorithmIdGroup algorithm ID for Hash Blake2s 128
-#define RCD_Blake2b256_c                             300 // algorithmIdGroup algorithm ID for Hash Blake2b 256
-#define RCD_Blake2b512_c                             332 // algorithmIdGroup algorithm ID for Hash Blake2b 512
-#define RCD_jpg_c                                   1036 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
-#define RCD_png_c                                   1100 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
+#define RCD_jpg_c                                    268 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
+#define RCD_png_c                                    332 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_success_c                               8204 // dataGroup success code
 #define RCD_failure_c                              14348 // dataGroup failure code
-#define RCD_actorWriterClient_c                     5644 // protocolActorGroup Specifies client in the writer transaction
-#define RCD_actorWriterServer_c                     5676 // protocolActorGroup Specifies server in the writer transaction
-#define RCD_actorReaderClient_c                     5708 // protocolActorGroup Specifies client in the reader transaction
-#define RCD_actorReaderServer_c                     5740 // protocolActorGroup Specifies server in the reader transaction
 #define RCD_ProtocolList_O                          4223 // protocolDefGroup An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle
 #define RCD_ProtocolDef_o                           4207 // protocolDefGroup An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
 #define RCD_ProtocolSig_o                           4175 // protocolDefGroup A signature on an Assign Onward Protocol Definition, indicating the protocol is "approved" by the signer
-#define RCD_ItemDefList_O                           4159 // protocolDefGroup A list of Assign Onward Protocol Item Definitions
-#define RCD_ItemDef_o                               4143 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
-#define RCD_actorDefList_O                          5663 // protocolDefGroup A list of Actor definitions, a valid protocol definition should contain one or more actor definitions
-#define RCD_actorDef_o                              4111 // protocolDefGroup A single Actor definition
-#define RCD_OutgoingItems_C                         4348 // protocolDefGroup A list items this actor publishes
-#define RCD_IncomingItems_C                         4316 // protocolDefGroup A list items this actor consumes
+#define RCD_ItemsDef_o                              4143 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
+#define RCD_ActorsDef_o                             4111 // protocolDefGroup A single Actor definition
+#define RCD_sendableItems_C                         4316 // protocolDefGroup A list items this actor publishes
+#define RCD_receivableItems_C                       4348 // protocolDefGroup A list items this actor consumes
+#define RCD_actorWriterClient_o                     7439 // protocolActorGroup Actor definition: the actor who wants to create a record (in a blockchain)
+#define RCD_actorWriterServer_o                     7471 // protocolActorGroup Actor definition: the actor who wants to retrieve a record (from a blockchain)
+#define RCD_actorReaderClient_o                     7503 // protocolActorGroup Actor definition: the actor who handles requests to create records (in a blockchain)
+#define RCD_actorReaderServer_o                     7535 // protocolActorGroup Actor definition: the actor who handles requests to retrieve records (from a blockchain)
+#define RCD_writeRequest_o                          6159 // protocolDefGroup A request to write data to storage
+#define RCD_writeResponse_o                         6191 // protocolDefGroup A response to a request to write data to storage
+#define RCD_readRequest_o                           6223 // protocolDefGroup A request to read data from storage
+#define RCD_readResponse_o                          6255 // protocolDefGroup A response to a request to read data from storage
 #define RCD_SubItemDefs_O                           4191 // protocolDefGroup inside _o or _O items, SubItemDefs_O defines the requirements for sub-items which may appear
 #define RCD_DefinedSubItems_C                       4220 // protocolDefGroup DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)
 #define RCD_DefinedSubItemsDesc_S                   4213 // protocolDefGroup DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context
-#define RCD_OperReqList_O                           4447 // protocolDefGroup USE inside SubItemDefs_O Operational requirements / constraints on values found in Required or Optional items
-#define RCD_OperReq_o                               4431 // protocolDefGroup USE inside SubItemDefs_O A single operational requirement / constraint on value found in an item
-#define RCD_OpMemberOf_C                            4124 // operationGroup List of possible values for an RCODE
-#define RCD_OpOneOrMoreOf_C                         4380 // operationGroup One or more objects of the listed types are required to appear
-#define RCD_OpGreaterThan_C                         4156 // operationGroup Path defining a value, or array of values, to compare - the targeted value must be greater than all
-#define RCD_OpLessThan_C                            4188 // operationGroup Path defining a value, or array of values, to compare - the targeted value must be less than all
-#define RCD_OpTimeValue_c                           4172 // operationGroup The specified object should be assigned a time value, RCD_time_i indicates the time should be the current time - other values may be used in the future to indicate other types of time values.
-#define RCD_OpHash_O                                4287 // operationGroup Three parameters follow, describing inputs to the hash function
+#define RCD_OperReqList_O                          12319 // protocolDefGroup USE inside SubItemDefs_O Operational requirements / constraints on values found in Required or Optional items
+#define RCD_OperReq_o                              12431 // protocolDefGroup USE inside SubItemDefs_O A single operational requirement / constraint on value found in an item
+#define RCD_OpMemberOf_C                           12572 // operationGroup List of possible values for an RCODE
+#define RCD_OpOneOrMoreOf_C                        12700 // operationGroup One or more objects of the listed types are required to appear
+#define RCD_OpGreaterThan_C                        12828 // operationGroup Path defining a value, or array of values, to compare - the targeted value must be greater than all
+#define RCD_OpLessThan_C                           12956 // operationGroup Path defining a value, or array of values, to compare - the targeted value must be less than all
+#define RCD_OpTimeValue_c                          13068 // operationGroup The specified object should be assigned a time value, RCD_time_i indicates the time should be the current time - other values may be used in the future to indicate other types of time values.
+#define RCD_OpHash_O                               13215 // operationGroup Three parameters follow, describing inputs to the hash function
 #define RCD_itemRelAddr_C                        2095836 // structNavGroup Navigation from the current itemDef to an operand in an operation, sequence of item types when navigating deeper, relative step back or to root to get higher in the hiearchy
 #define RCD_navUpOne_c                           2095852 // structNavGroup Navigate 'up one' level in a nested block, used in operand relative addressing.
 #define RCD_navChainBlock_c                      2095756 // structNavGroup Navigate to the 'root' of this chain block, used in operand absolute addressing.

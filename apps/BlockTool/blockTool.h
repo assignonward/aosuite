@@ -71,6 +71,7 @@ ValueBase::Mode curNavMode();
         void  insertKeyName( Utf8String );
     RiceyInt  removeArrayElement( ValueBase * );
     RiceyInt  removeObjectElement( ValueBase * );
+     QString  buttonStyle( ValueBase::Mode m );
 
 signals:
         void  showA( KeyValueBase * );

@@ -31,6 +31,9 @@ BlockTool::BlockTool( QWidget *cw ) :
     ui(new Ui::BlockTool)
 { swapping = false;
   ui->setupUi(this);
+  ui->remove->setStyleSheet( buttonStyle( ValueBase::Mode::build ) );
+  ui->insert->setStyleSheet( buttonStyle( ValueBase::Mode::build ) );
+  ui->set   ->setStyleSheet( buttonStyle( ValueBase::Mode::build ) );
   if ( cw )
     { QVBoxLayout *vb = new QVBoxLayout( cw );
       cw->layout()->addWidget( this );
@@ -88,6 +91,7 @@ void  BlockTool::restore()
             qWarning( "bad read of panelA in restore()" );
            else
             { panelA->setKeyValueBlock( kvb, false );
+              selectRoot( panelA );
               panelA->update();
             }
         }
@@ -450,6 +454,9 @@ void  BlockTool::on_navMake_toggled( bool make )
   if ( ui->makeY->isChecked() ) { if ( !swapping ) selectRoot( panelY ); panelY->update(); }
   updateBuild();
   updateValueEditor();
+  ui->remove->setStyleSheet( buttonStyle( ValueBase::Mode::make ) );
+  ui->insert->setStyleSheet( buttonStyle( ValueBase::Mode::make ) );
+  ui->set   ->setStyleSheet( buttonStyle( ValueBase::Mode::make ) );
 }
 
 void  BlockTool::on_navBuild_toggled( bool build )
@@ -489,6 +496,9 @@ void  BlockTool::on_navBuild_toggled( bool build )
   if ( ui->buildY->isChecked() ) { if ( !swapping ) { if ( selBuild == nullptr ) selectRoot( panelY ); } panelY->update(); }
   updateMake();
   updateValueEditor();
+  ui->remove->setStyleSheet( buttonStyle( ValueBase::Mode::build ) );
+  ui->insert->setStyleSheet( buttonStyle( ValueBase::Mode::build ) );
+  ui->set   ->setStyleSheet( buttonStyle( ValueBase::Mode::build ) );
 }
 
 void  BlockTool::on_sortName_toggled(bool) { sortKeys(); }
@@ -981,4 +991,26 @@ void  BlockTool::initReadFile()
       if ( fn.endsWith( ".bao" ) )
         ui->readFile->addItem( fn.mid( 0, fn.size()-4) );
     }
+}
+
+QString BlockTool::buttonStyle( ValueBase::Mode m )
+{ QString color;
+  switch ( m )
+    { case ValueBase::Mode::make:  color = "green"; break;
+      case ValueBase::Mode::build: color = "blue";  break;
+      default:                     color = "black";
+    }
+  QString s =
+  QString( "QPushButton {\
+    padding: 2px;\
+    border: 2px solid %1;\
+    border-radius: 5px;\
+    min-width: 50px;\
+    background-color: ghostwhite;\
+  }\
+QPushButton:pressed {\
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                        stop: 0 #dadbde, stop: 1 #f6f7fa);\
+  }").arg( color );
+  return s;
 }

@@ -739,6 +739,9 @@ QGroupBox::title {
     </item>
     <item row="3" column="5">
      <widget class="QPushButton" name="insert">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="text">
        <string>Insert</string>
       </property>
