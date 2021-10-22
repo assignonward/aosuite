@@ -732,6 +732,16 @@ bool  ValueBaseArray::append( ValueBase *value )
   return true;
 }
 
+ValueBase *ValueBaseArray::removeAt( qint32 i )
+{ if (( i < 0 ) || ( i > size() ))
+    return nullptr;
+  ValueBase *v = m_values.at(i);
+  m_values.remove(i);
+  for ( qint32 j = i; j < size(); j++ ) // readjust m_idx of the later elements in the array
+    at(j)->setIdx( "i"+Utf8String::number( j ) );
+  return v;
+}
+
 bool  ValueBaseArray::insertAt( ValueBase *v, qint32 i )
 { if ( i == size() )
     return append(v);
@@ -749,10 +759,10 @@ bool  ValueBaseArray::insertAt( ValueBase *v, qint32 i )
     }
   // Setting metadata for new array element
   v->vbParent = this;
+  m_values.insert(i,v);
   for ( qint32 j = i; j < size(); j++ ) // readjust m_idx of the later elements in the array too
     at(j)->setIdx( "i"+Utf8String::number( j ) );
   v->setVKey( vKey() );
-  m_values.insert(i,v);
   return true;
 }
 

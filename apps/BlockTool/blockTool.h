@@ -65,8 +65,10 @@ ValueBase::Mode curNavMode();
         void  valueEditorNoNav();
         void  selectObjectForInsertion();
         void  editSelectedElement();
-        void  setEditorValue( ValueBase *vb );
+        void  setEditorValue( ValueBase * );
         void  insertKeyName( Utf8String );
+    RiceyInt  removeArrayElement( ValueBase * );
+    RiceyInt  removeObjectElement( ValueBase * );
 
 signals:
         void  showA( KeyValueBase * );

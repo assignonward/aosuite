@@ -142,6 +142,7 @@ virtual  ValueBase *prevChild( ValueBase * );
               bool  setJson( const JsonSerial & );
               bool  append( ValueBase * );
               bool  insertAt( ValueBase *, qint32 );
+         ValueBase *removeAt( qint32 );
          ValueBase *at( qint32 n ) const { if (( n >= 0 ) && ( n < size() )) return m_values.at(n); else return nullptr; }
               bool  operator==( const ValueBaseArray & ) const;
 

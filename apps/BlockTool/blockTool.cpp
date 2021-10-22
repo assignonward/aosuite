@@ -206,13 +206,13 @@ void  BlockTool::on_remove_clicked()
   if ( vb->vbParent == nullptr )     { qWarning( "BlockTool::on_remove_clicked() will not remove the root object, just use Clear." ); return; }
   if ( vb->vbParent->isKeyValue()  ) { qWarning( "BlockTool::on_remove_clicked() Cannot remove from root container, use Clear." );    return; }
   if (!vb->vbParent->isContainer() ) { qWarning( "BlockTool::on_remove_clicked() Cannot remove from non-containers" );                return; }
-  if ( vb->vbParent->isArray() )     { qWarning( "BlockTool::on_remove_clicked() TODO: handle removal from arrays" );                 return; }
-  BlockValueObject *pbvo = (BlockValueObject *)((ValueBase *)vb->vbParent);
-  RiceyInt key = vb->vKey();
-  if ( !pbvo->contains( key ) ) { qWarning( "BlockTool::on_remove_clicked() key %llx not found in parent object", key ); return; }
   on_prev_clicked();
-  if ( vb != pbvo->remove( key ) )
-    qWarning( "odd, removed different object than selBB was pointed at..." );
+  RiceyInt key = RCD_null_z;
+  if ( vb->vbParent->isArray() )
+    key = removeArrayElement( vb );
+   else
+    key = removeObjectElement( vb );
+  if ( key == RCD_null_z ) { qWarning( "remove returned null_z key, can't complete removal." ); return; }
   if ( ui->navBuild->isChecked() )
     { on_clear_clicked();
       makePanel()->setKeyValueBlock( intToRice( key )+vb->bao() );
@@ -225,7 +225,24 @@ void  BlockTool::on_remove_clicked()
     }
    else
     qWarning( "neither make nor build checked in nav.");
+}
 
+RiceyInt BlockTool::removeArrayElement( ValueBase *vb )
+{ if ( !vb->vbParent->isArray() ) { qWarning( "vb is not an array element, how did we get here?" ); return RCD_null_z; }
+  ValueBaseArray *vba = (ValueBaseArray *)((ValueBase *)vb->vbParent);
+  qint32 i = vb->idx().mid(1).toInt();
+  if (( i < 0 ) || ( i >= vba->size() )) { qWarning( "invalid index %d vs parent size %d", i, vba->size() ); return RCD_null_z; }
+  if ( vb != vba->removeAt(i) )            qWarning( "odd, removed different object than selBB's idx was pointed at..." );
+  return vb->vKey() & RDT_TYPEMASK;
+}
+
+RiceyInt BlockTool::removeObjectElement( ValueBase *vb )
+{ if ( vb->vbParent->isArray() ) { qWarning( "vb is an array element, how did we get here?" ); return RCD_null_z; }
+    BlockValueObject *pbvo = (BlockValueObject *)((ValueBase *)vb->vbParent);
+    RiceyInt key = vb->vKey();
+    if ( !pbvo->contains( key ) )  { qWarning( "BlockTool::removeObjectElement() key %llx not found in parent object", key ); return RCD_null_z; }
+    if ( vb != pbvo->remove( key ) ) qWarning( "odd, removed different object than selBB was pointed at..." );
+    return key;
 }
 
 void  BlockTool::on_insert_clicked()
