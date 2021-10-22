@@ -344,27 +344,39 @@
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorWriterClient_c",
-            "text_s": "Actor definition: the actor who wants to create a record (in a blockchain)",
-            "type_b": "ACC70C"
+            "name_s": "actorType_c",
+            "text_s": "Specifies client vs server and other types of actors",
+            "type_b": "ACA70C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorWriterServer_c",
-            "text_s": "Actor definition: the actor who wants to retrieve a record (from a blockchain)",
-            "type_b": "ACC72C"
+            "name_s": "actorTypeClient_c",
+            "text_s": "Specifies client",
+            "type_b": "ACA72C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorReaderClient_c",
-            "text_s": "Actor definition: the actor who handles requests to create records (in a blockchain)",
-            "type_b": "ACC74C"
+            "name_s": "actorTypeServer_c",
+            "text_s": "Specifies server",
+            "type_b": "ACA74C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorReaderServer_c",
-            "text_s": "Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
-            "type_b": "ACC76C"
+            "name_s": "actorOpType_c",
+            "text_s": "Specifies type of action being transacted: write, read, query, etc.",
+            "type_b": "ACA00C"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorOpWrite_c",
+            "text_s": "Specifies write operation",
+            "type_b": "ACA02C"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorOpRead_c",
+            "text_s": "Specifies read operation",
+            "type_b": "ACA04C"
         },
         {
             "group_s": "protocolDefGroup",

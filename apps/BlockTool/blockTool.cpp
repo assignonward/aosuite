@@ -55,7 +55,7 @@ BlockTool::~BlockTool()
 void  BlockTool::updateValueEditor()
 { if ( selBB == nullptr ) // No navigation point active
     { valueEditorNoNav();
-      qWarning( "selBB nullptr" );
+      // qWarning( "selBB nullptr" );
       return;
     }
   //  qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
@@ -71,7 +71,7 @@ void  BlockTool::updateValueEditor()
  *   for when nothing is selected by the navigator.
  */
 void  BlockTool::valueEditorNoNav()
-{ qWarning( "BlockTool::valueEditorNoNav()" );
+{ // qWarning( "BlockTool::valueEditorNoNav()" );
   ui->index      ->setVisible( false );
   ui->key        ->setVisible( true  );
   ui->key        ->setEnabled( true  );
@@ -384,10 +384,37 @@ void  BlockTool::on_navMake_toggled( bool make )
 
 void  BlockTool::on_navBuild_toggled( bool build )
 { if ( !build )
-    return;
-  if ( ui->buildA->isChecked() ) { if ( !swapping ) selectRoot( panelA ); panelA->update(); }
-  if ( ui->buildX->isChecked() ) { if ( !swapping ) selectRoot( panelX ); panelX->update(); }
-  if ( ui->buildY->isChecked() ) { if ( !swapping ) selectRoot( panelY ); panelY->update(); }
+    { selBuildId = "";
+      if ( buildPanel() )
+        if ( buildPanel()->m_kvb )
+          selBuildId = buildPanel()->m_kvb->id();
+      if ( selBuildId == "" )
+        selBuild = nullptr;
+       else
+        selBuild = selBB;
+      return;
+    }
+  if ( !swapping )
+    { if ( selBuild != nullptr )
+        { if ( selBuildId != "" )
+            { if ( buildPanel() ) // TODO: better test of "is it the same"
+                { if ( buildPanel()->m_kvb->id() == selBuildId )
+                    updateBB( selBuild );
+                   else
+                    selBuild = nullptr;
+                 }
+                else
+                 selBuild = nullptr;
+            }
+           else
+            selBuild = nullptr;
+        }
+    }
+   else
+    selBuild = nullptr;
+  if ( ui->buildA->isChecked() ) { if ( !swapping ) { if ( selBuild == nullptr ) selectRoot( panelA ); } panelA->update(); }
+  if ( ui->buildX->isChecked() ) { if ( !swapping ) { if ( selBuild == nullptr ) selectRoot( panelX ); } panelX->update(); }
+  if ( ui->buildY->isChecked() ) { if ( !swapping ) { if ( selBuild == nullptr ) selectRoot( panelY ); } panelY->update(); }
   updateMake();
   updateValueEditor();
 }

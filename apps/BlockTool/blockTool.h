@@ -107,6 +107,8 @@ public:
                QString  fileDir;
          Ui::BlockTool *ui;
     QPointer<ValueBase> selBB;
+    QPointer<ValueBase> selBuild;
+               QString  selBuildId;
      QPointer<QProcess> pp;
             BlockPanel *navPanel;
                   bool  swapping;

@@ -99,10 +99,12 @@
 #define RCD_ProtocolTAO2_c                      82313260 // protocolIdGroup Test protocol, symbol: TⒶ2021.10.13
 #define RCD_ProtocolA00_c                           4108 // protocolIdGroup Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
 #define RCD_ProtocolA01_c                           4140 // protocolIdGroup Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
-#define RCD_actorWriterClient_c                   729996 // protocolActorGroup Actor definition: the actor who wants to create a record (in a blockchain)
-#define RCD_actorWriterServer_c                   730028 // protocolActorGroup Actor definition: the actor who wants to retrieve a record (from a blockchain)
-#define RCD_actorReaderClient_c                   730060 // protocolActorGroup Actor definition: the actor who handles requests to create records (in a blockchain)
-#define RCD_actorReaderServer_c                   730092 // protocolActorGroup Actor definition: the actor who handles requests to retrieve records (from a blockchain)
+#define RCD_actorType_c                           725900 // protocolActorGroup Specifies client vs server and other types of actors
+#define RCD_actorTypeClient_c                     725932 // protocolActorGroup Specifies client
+#define RCD_actorTypeServer_c                     725964 // protocolActorGroup Specifies server
+#define RCD_actorOpType_c                         725004 // protocolActorGroup Specifies type of action being transacted: write, read, query, etc.
+#define RCD_actorOpWrite_c                        725036 // protocolActorGroup Specifies write operation
+#define RCD_actorOpRead_c                         725068 // protocolActorGroup Specifies read operation
 #define RCD_ProtocolList_O                          4223 // protocolDefGroup An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle
 #define RCD_ProtocolDef_o                           4207 // protocolDefGroup An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
 #define RCD_ProtocolSig_o                           4175 // protocolDefGroup A signature on an Assign Onward Protocol Definition, indicating the protocol is "approved" by the signer
