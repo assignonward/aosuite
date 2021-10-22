@@ -344,39 +344,27 @@
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorType_c",
-            "text_s": "Specifies client vs server and other types of actors",
-            "type_b": "ACA70C"
+            "name_s": "actorWriterClient_c",
+            "text_s": "Specifies client in the writer transaction",
+            "type_b": "AC0C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorTypeClient_c",
-            "text_s": "Specifies client",
-            "type_b": "ACA72C"
+            "name_s": "actorWriterServer_c",
+            "text_s": "Specifies server in the writer transaction",
+            "type_b": "AC2C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorTypeServer_c",
-            "text_s": "Specifies server",
-            "type_b": "ACA74C"
+            "name_s": "actorReaderClient_c",
+            "text_s": "Specifies client in the reader transaction",
+            "type_b": "AC4C"
         },
         {
             "group_s": "protocolActorGroup",
-            "name_s": "actorOpType_c",
-            "text_s": "Specifies type of action being transacted: write, read, query, etc.",
-            "type_b": "ACA00C"
-        },
-        {
-            "group_s": "protocolActorGroup",
-            "name_s": "actorOpWrite_c",
-            "text_s": "Specifies write operation",
-            "type_b": "ACA02C"
-        },
-        {
-            "group_s": "protocolActorGroup",
-            "name_s": "actorOpRead_c",
-            "text_s": "Specifies read operation",
-            "type_b": "ACA04C"
+            "name_s": "actorReaderServer_c",
+            "text_s": "Specifies server in the reader transaction",
+            "type_b": "AC6C"
         },
         {
             "group_s": "protocolDefGroup",
@@ -410,27 +398,27 @@
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "ActorDefList_O",
+            "name_s": "actorDefList_O",
             "text_s": "A list of Actor definitions, a valid protocol definition should contain one or more actor definitions",
-            "type_b": "A01F"
+            "type_b": "AC1F"
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "ActorDef_o",
+            "name_s": "actorDef_o",
             "text_s": "A single Actor definition",
             "type_b": "A00F"
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "OutgoingItemsList_O",
+            "name_s": "OutgoingItems_C",
             "text_s": "A list items this actor publishes",
-            "type_b": "A17F"
+            "type_b": "A17C"
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "IncomingItemsList_O",
+            "name_s": "IncomingItems_C",
             "text_s": "A list items this actor consumes",
-            "type_b": "A15F"
+            "type_b": "A15C"
         },
         {
             "group_s": "protocolDefGroup",

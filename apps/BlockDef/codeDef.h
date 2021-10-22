@@ -99,21 +99,19 @@
 #define RCD_ProtocolTAO2_c                      82313260 // protocolIdGroup Test protocol, symbol: TⒶ2021.10.13
 #define RCD_ProtocolA00_c                           4108 // protocolIdGroup Live protocol, symbol: Ⓐ2021.11.15 Blockchain signing only, no shares or coin
 #define RCD_ProtocolA01_c                           4140 // protocolIdGroup Live protocol, symbol: Ⓐ2021.12.15 Blockchain plus simple shares and coin, no fees
-#define RCD_actorType_c                           725900 // protocolActorGroup Specifies client vs server and other types of actors
-#define RCD_actorTypeClient_c                     725932 // protocolActorGroup Specifies client
-#define RCD_actorTypeServer_c                     725964 // protocolActorGroup Specifies server
-#define RCD_actorOpType_c                         725004 // protocolActorGroup Specifies type of action being transacted: write, read, query, etc.
-#define RCD_actorOpWrite_c                        725036 // protocolActorGroup Specifies write operation
-#define RCD_actorOpRead_c                         725068 // protocolActorGroup Specifies read operation
+#define RCD_actorWriterClient_c                     5644 // protocolActorGroup Specifies client in the writer transaction
+#define RCD_actorWriterServer_c                     5676 // protocolActorGroup Specifies server in the writer transaction
+#define RCD_actorReaderClient_c                     5708 // protocolActorGroup Specifies client in the reader transaction
+#define RCD_actorReaderServer_c                     5740 // protocolActorGroup Specifies server in the reader transaction
 #define RCD_ProtocolList_O                          4223 // protocolDefGroup An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle
 #define RCD_ProtocolDef_o                           4207 // protocolDefGroup An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
 #define RCD_ProtocolSig_o                           4175 // protocolDefGroup A signature on an Assign Onward Protocol Definition, indicating the protocol is "approved" by the signer
 #define RCD_ItemDefList_O                           4159 // protocolDefGroup A list of Assign Onward Protocol Item Definitions
 #define RCD_ItemDef_o                               4143 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
-#define RCD_ActorDefList_O                          4127 // protocolDefGroup A list of Actor definitions, a valid protocol definition should contain one or more actor definitions
-#define RCD_ActorDef_o                              4111 // protocolDefGroup A single Actor definition
-#define RCD_OutgoingItemsList_O                     4351 // protocolDefGroup A list items this actor publishes
-#define RCD_IncomingItemsList_O                     4319 // protocolDefGroup A list items this actor consumes
+#define RCD_actorDefList_O                          5663 // protocolDefGroup A list of Actor definitions, a valid protocol definition should contain one or more actor definitions
+#define RCD_actorDef_o                              4111 // protocolDefGroup A single Actor definition
+#define RCD_OutgoingItems_C                         4348 // protocolDefGroup A list items this actor publishes
+#define RCD_IncomingItems_C                         4316 // protocolDefGroup A list items this actor consumes
 #define RCD_SubItemDefs_O                           4191 // protocolDefGroup inside _o or _O items, SubItemDefs_O defines the requirements for sub-items which may appear
 #define RCD_DefinedSubItems_C                       4220 // protocolDefGroup DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)
 #define RCD_DefinedSubItemsDesc_S                   4213 // protocolDefGroup DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context
