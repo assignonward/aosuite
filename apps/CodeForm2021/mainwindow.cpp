@@ -28,7 +28,6 @@
 #include <QFile>
 #include "riceyCodes.h"
 #include "tests.h"
-#include "blockTool.h"
 #include "aboutform.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -37,15 +36,24 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     restoreConfig();
-    new AboutForm( ui->    aboutTab );
-    new BlockTool( ui->blockToolTab );
-    new Tests    ( ui->    testsTab );
+                new AboutForm( ui->    aboutTab );
+    blockTool = new BlockTool( ui->blockToolTab );
+                new Tests    ( ui->    testsTab );
     on_update_clicked();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{ if ( blockTool )
+    blockTool->closing();
+  QSettings settings;
+  settings.setValue( "geometry"   , saveGeometry()          );
+  settings.setValue( "state"      , saveState()             );
+  QMainWindow::closeEvent(event);
 }
 
 /**
@@ -69,8 +77,6 @@ void MainWindow::restoreConfig()
  */
 void MainWindow::saveConfig()
 { QSettings settings;
-  settings.setValue( "geometry"   , saveGeometry()          );
-  settings.setValue( "state"      , saveState()             );
   settings.setValue( "ricey"      , ui->ricey   ->toHtml()  );
   settings.setValue( "notes"      , ui->notes   ->toHtml()  );
   settings.setValue( "jsonPath"   , ui->jsonPath->text()    );

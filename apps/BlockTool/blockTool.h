@@ -39,6 +39,8 @@ class BlockTool : public QScrollArea
 public:
     explicit  BlockTool( QWidget *cw = nullptr );
              ~BlockTool();
+        void  closing();
+        void  restore();
         void  liveDelay( int t );
         void  initReadFile();
   QByteArray  jsonReformat( QByteArray );

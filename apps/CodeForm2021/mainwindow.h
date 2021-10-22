@@ -27,6 +27,7 @@
 #include <QJsonObject>
 #include "riceyCodes.h"
 #include "protocolDemo.h"
+#include "blockTool.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,6 +40,7 @@ class MainWindow : public QMainWindow
 public:
              MainWindow(QWidget *parent = nullptr);
             ~MainWindow();
+       void  closeEvent(QCloseEvent *);
        void  restoreConfig();
        void  saveConfig();
        void  init();
@@ -73,7 +75,7 @@ public:
  QHash<QString, QString> riceyCodes;
     QHash<qint32, QChar> notesNumChar;
      QHash<QChar, QChar> notesExtraChar;
-
+     QPointer<BlockTool> blockTool;
            ProtocolDemo  pd;
 
 private:

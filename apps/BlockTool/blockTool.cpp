@@ -47,10 +47,80 @@ BlockTool::BlockTool( QWidget *cw ) :
   ui->splitter->setStretchFactor( 1, 1 );
   initReadFile();
   sortKeys();
+  restore();
 }
 
 BlockTool::~BlockTool()
 { delete ui; }
+
+void  BlockTool::closing()
+{ QSettings settings;
+  BaoSerial s;
+  if ( panelA != nullptr )
+    if ( panelA->m_kvb != nullptr )
+      s = panelA->m_kvb->bao();
+  settings.setValue( "panelA", s );
+
+  s.clear();
+  if ( panelX != nullptr )
+    if ( panelX->m_kvb != nullptr )
+      s = panelX->m_kvb->bao();
+  settings.setValue( "panelX", s );
+
+  s.clear();
+  if ( panelY != nullptr )
+    if ( panelY->m_kvb != nullptr )
+      s = panelY->m_kvb->bao();
+  settings.setValue( "panelY", s );
+}
+
+void  BlockTool::restore()
+{ QSettings settings;
+  KeyValueBase *kvb;
+  BaoSerial s;
+  s = settings.value( "panelA" ).toByteArray();
+  if ( s.size() > 0 )
+    { if ( panelA == nullptr )
+        qWarning( "unexpected, panelA is nullptr" );
+       else
+        { kvb = KeyValueBase::readBao( s, panelA );
+          if ( kvb == nullptr )
+            qWarning( "bad read of panelA in restore()" );
+           else
+            { panelA->setKeyValueBlock( kvb, false );
+              panelA->update();
+            }
+        }
+    }
+  s = settings.value( "panelX" ).toByteArray();
+  if ( s.size() > 0 )
+    { if ( panelX == nullptr )
+        qWarning( "unexpected, panelX is nullptr" );
+       else
+        { kvb = KeyValueBase::readBao( s, panelX );
+          if ( kvb == nullptr )
+            qWarning( "bad read of panelX in restore()" );
+           else
+            { panelX->setKeyValueBlock( kvb, false );
+              panelX->update();
+            }
+        }
+    }
+  s = settings.value( "panelY" ).toByteArray();
+  if ( s.size() > 0 )
+    { if ( panelY == nullptr )
+        qWarning( "unexpected, panelY is nullptr" );
+       else
+        { kvb = KeyValueBase::readBao( s, panelY );
+          if ( kvb == nullptr )
+            qWarning( "bad read of panelY in restore()" );
+           else
+            { panelY->setKeyValueBlock( kvb, false );
+              panelY->update();
+            }
+        }
+    }
+}
 
 void  BlockTool::updateValueEditor()
 { if ( selBB == nullptr ) // No navigation point active
