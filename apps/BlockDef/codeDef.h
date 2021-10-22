@@ -73,12 +73,15 @@
 #define RCD_parentHash_O                             127 // chainGroup Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.
 #define RCD_separableItems_O                         863 // chainGroup List of items which are only indirectly included in the hash chain
 #define RCD_separableItemsHashes_O                   831 // chainGroup Hashes of separable items which do get included in the hash chain
-#define RCD_SHA256_c                                 140 // algorithmIdGroup algorithm ID for SHA2 - 256
 #define RCD_ECB256_c                                 172 // algorithmIdGroup algorithm ID for Elliptic Curve ECDSA curve BrainpoolP256r1
 #define RCD_RSA3072_c                                204 // algorithmIdGroup algorithm ID for 3072 bit RSA - less commonly used algorithms get longer ricey codes
-#define RCD_SHA3b512_c                               236 // algorithmIdGroup algorithm ID for SHA3 - 512
-#define RCD_jpg_c                                    268 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
-#define RCD_png_c                                    332 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
+#define RCD_SHA256_c                                 140 // algorithmIdGroup algorithm ID for Hash SHA2 256
+#define RCD_SHA3b512_c                               236 // algorithmIdGroup algorithm ID for Hash SHA3 512
+#define RCD_Blake2s128_c                             268 // algorithmIdGroup algorithm ID for Hash Blake2s 128
+#define RCD_Blake2b256_c                             300 // algorithmIdGroup algorithm ID for Hash Blake2b 256
+#define RCD_Blake2b512_c                             332 // algorithmIdGroup algorithm ID for Hash Blake2b 512
+#define RCD_jpg_c                                   1036 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
+#define RCD_png_c                                   1100 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_success_c                               8204 // dataGroup success code
 #define RCD_failure_c                              14348 // dataGroup failure code
 #define RCD_ProtocolDAO0_c                     195559436 // protocolIdGroup Development protocol, symbol: DⒶ0

@@ -950,7 +950,7 @@ bool  BlockValueObject::insert( RiceyInt k, ValueBase *v )
 
 bool  BlockValueObject::insert( KeyValueArray *kva )
 { if ( kva == nullptr )                       { qWarning( "will not insert nullptr kva" ); return false; }
-  if ( kva->value() == nullptr )              { qWarning( "will not insert nullptr kva->value()" ); return false; }
+  // if ( kva->value() == nullptr )              { qWarning( "will not insert nullptr kva->value()" ); return false; }
   RiceyInt k = kva->key();
   if (( k & RDT_OBTYPEMASK ) != kva->type() ) { qWarning( "will not insert mismatched type and value" ); return false; }
   if ( !dict.codesContainCode( k ) )          { qWarning( "BlockValueObject::insert(KeyValueArray) key %llu not recognized, will not insert.", kva->key() ); return false; }

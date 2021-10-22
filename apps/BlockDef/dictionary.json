@@ -188,12 +188,6 @@
         },
         {
             "group_s": "algorithmIdGroup",
-            "name_s": "SHA256_c",
-            "text_s": "algorithm ID for SHA2 - 256",
-            "type_b": "810C"
-        },
-        {
-            "group_s": "algorithmIdGroup",
             "name_s": "ECB256_c",
             "text_s": "algorithm ID for Elliptic Curve ECDSA curve BrainpoolP256r1",
             "type_b": "812C"
@@ -206,21 +200,45 @@
         },
         {
             "group_s": "algorithmIdGroup",
+            "name_s": "SHA256_c",
+            "text_s": "algorithm ID for Hash SHA2 256",
+            "type_b": "810C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
             "name_s": "SHA3b512_c",
-            "text_s": "algorithm ID for SHA3 - 512",
+            "text_s": "algorithm ID for Hash SHA3 512",
             "type_b": "816C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
+            "name_s": "Blake2s128_c",
+            "text_s": "algorithm ID for Hash Blake2s 128",
+            "type_b": "820C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
+            "name_s": "Blake2b256_c",
+            "text_s": "algorithm ID for Hash Blake2b 256",
+            "type_b": "822C"
+        },
+        {
+            "group_s": "algorithmIdGroup",
+            "name_s": "Blake2b512_c",
+            "text_s": "algorithm ID for Hash Blake2b 512",
+            "type_b": "824C"
         },
         {
             "group_s": "algorithmIdGroup",
             "name_s": "jpg_c",
             "text_s": "Found in image objects, tells what format the data_b is to be interpreted as",
-            "type_b": "820C"
+            "type_b": "880C"
         },
         {
             "group_s": "algorithmIdGroup",
             "name_s": "png_c",
             "text_s": "Found in image objects, tells what format the data_b is to be interpreted as",
-            "type_b": "824C"
+            "type_b": "884C"
         },
         {
             "group_s": "dataGroup",
