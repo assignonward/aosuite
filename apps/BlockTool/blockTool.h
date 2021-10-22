@@ -108,7 +108,7 @@ public:
          Ui::BlockTool *ui;
     QPointer<ValueBase> selBB;
     QPointer<ValueBase> selBuild;
-               QString  selBuildId;
+             BaoSerial  selBuildBao;
      QPointer<QProcess> pp;
             BlockPanel *navPanel;
                   bool  swapping;

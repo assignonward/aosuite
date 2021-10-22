@@ -384,21 +384,23 @@ void  BlockTool::on_navMake_toggled( bool make )
 
 void  BlockTool::on_navBuild_toggled( bool build )
 { if ( !build )
-    { selBuildId = "";
-      if ( buildPanel() )
-        if ( buildPanel()->m_kvb )
-          selBuildId = buildPanel()->m_kvb->id();
-      if ( selBuildId == "" )
-        selBuild = nullptr;
-       else
-        selBuild = selBB;
+    { if ( !swapping )
+        { selBuildBao.clear();
+          if ( buildPanel() )
+            if ( buildPanel()->m_kvb )
+              selBuildBao = buildPanel()->m_kvb->bao();
+          if ( selBuildBao.size() < 1 )
+            selBuild = nullptr;
+           else
+            selBuild = selBB;
+        }
       return;
     }
   if ( !swapping )
     { if ( selBuild != nullptr )
-        { if ( selBuildId != "" )
-            { if ( buildPanel() ) // TODO: better test of "is it the same"
-                { if ( buildPanel()->m_kvb->id() == selBuildId )
+        { if ( selBuildBao.size() > 0 )
+            { if ( buildPanel() ) // TODO: better test of "is it the s
+                { if ( buildPanel()->m_kvb->bao() == selBuildBao )
                     updateBB( selBuild );
                    else
                     selBuild = nullptr;
