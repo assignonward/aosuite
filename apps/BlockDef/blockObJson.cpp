@@ -242,7 +242,7 @@ JsonSerial  ValueBaseArray::json() const
  * @return json array object with the key and the whole array
  */
 JsonSerial  KeyValueArray::json() const
-{ JsonSerial j = " \"";
+{ JsonSerial j = "{ \"";
   if ( !dict.codesContainCode(key()) )
     return "{<!-- unknown key -->}";
   j.append( dict.nameFromCode(key()) );
@@ -257,7 +257,7 @@ JsonSerial  KeyValueArray::json() const
     }
   if ( wroteOne )
     j = j.mid( 0, j.size() - 3 );
-  j.append( "] \n" );
+  j.append( "] }\n" );
   return j;
 }
 
