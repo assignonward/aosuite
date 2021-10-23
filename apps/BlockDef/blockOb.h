@@ -38,6 +38,29 @@
 
 #define MAX_LENGTH 1073741824  // Nothing bigger than 1GB
 
+/***********************************************************************
+ * Philosophical thought of the day: we don't need key value pairs.    *
+ * Everything could be stored in key value arrays, and things that     *
+ * "want" to be key value pairs are simply stored in arrays of size 1. *
+ * This would still translate to-from .json cleanly.  Every structure  *
+ * element would be forced to carry an array size byte, but this is    *
+ * partly compensated by reducing the array bit out of the type code,  *
+ * thus enabling twice as many single byte codes for a given type.     *
+ * Primary downside I see at the moment is that it would feel strange  *
+ * to people "thinking in json" who would have an instinct to use key  *
+ * value pairs.  Protocol definitions might also become more clumsy    *
+ * with array index references everywhere, but an assumed default of   *
+ * index 1 might overcome that.  .dot representations might be similar *
+ * with assumed array size of 1 when not explicitly shown.  Code would *
+ * drop all the KeyValuePair vs KeyValueArray handling, and could also *
+ * have inputs for KeyValuePairs which get implemented as arrays of    *
+ * size 1.  Current code could support a trial implementation of this  *
+ * by specifying protocols which only use arrays.  If it's not too     *
+ * weird, the implementation could shift behind the scenes, though a   *
+ * dictionary change would be required to take advantage of the extra  *
+ * bit made available by the defaulting to only array types.           *
+ * *********************************************************************/
+
 /**
  * @brief The ValueBase class - base class for all value types found in block objects
  */
