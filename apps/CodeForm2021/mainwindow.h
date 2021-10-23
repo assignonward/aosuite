@@ -33,6 +33,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+class ProtocolDemo;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -76,9 +78,8 @@ public:
     QHash<qint32, QChar> notesNumChar;
      QHash<QChar, QChar> notesExtraChar;
      QPointer<BlockTool> blockTool;
-           ProtocolDemo  pd;
+           ProtocolDemo *pd;
 
-private:
-    Ui::MainWindow *ui;
+         Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

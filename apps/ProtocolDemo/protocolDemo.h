@@ -23,91 +23,87 @@
 #ifndef PROTOCOLDEMO_H
 #define PROTOCOLDEMO_H
 
-#include <QObject>
-#include "blockOb.h"
+#include <QScrollArea>
+#include "ui_protocolDemo.h"
+#include "protocolParser.h"
 
-class WriterClient : public QObject
+class WriterClient : public ProtocolActor
 {
     Q_OBJECT
 public:
-    explicit WriterClient(QObject *parent = nullptr) : QObject(parent) {}
+    explicit WriterClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterClient_o, parent ) {}
 
 signals:
     void sendRequest( QByteArray );
 
 public slots:
-    void setProtocol(  BaoSerial p ) { protocol = p; }
     void receiveResponse( QByteArray );
-
-public:
-   BaoSerial protocol;
 };
 
-class WriterServer : public QObject
+class WriterServer : public ProtocolActor
 {
     Q_OBJECT
 public:
-    explicit WriterServer(QObject *parent = nullptr) : QObject(parent) {}
+    explicit WriterServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterServer_o, parent ) {}
 
 signals:
     void sendResponse( QByteArray );
 
 public slots:
-    void setProtocol(  BaoSerial p ) { protocol = p; }
     void receiveRequest( QByteArray );
-
-public:
-   BaoSerial protocol;
 };
 
-class ReaderClient : public QObject
+class ReaderClient : public ProtocolActor
 {
     Q_OBJECT
 public:
-    explicit ReaderClient(QObject *parent = nullptr) : QObject(parent) {}
+    explicit ReaderClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderClient_o, parent ) {}
 
 signals:
     void sendRequest( QByteArray );
 
 public slots:
-    void setProtocol(  BaoSerial p ) { protocol = p; }
     void receiveResponse( QByteArray );
-
-public:
-   BaoSerial protocol;
 };
 
-class ReaderServer : public QObject
+class ReaderServer : public ProtocolActor
 {
     Q_OBJECT
 public:
-    explicit ReaderServer(QObject *parent = nullptr) : QObject(parent) {}
+    explicit ReaderServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderServer_o, parent ) {}
 
 signals:
     void sendResponse( QByteArray );
 
 public slots:
-    void setProtocol(  BaoSerial p ) { protocol = p; }
     void receiveRequest( QByteArray );
-
-public:
-   BaoSerial protocol;
 };
 
-class ProtocolDemo : public QObject
+namespace Ui {
+class ProtocolDemo;
+}
+
+class ProtocolDemo : public QScrollArea
 {
     Q_OBJECT
 public:
-    explicit ProtocolDemo(QObject *parent = nullptr);
+              ProtocolDemo( QWidget *cw = nullptr );
+             ~ProtocolDemo();
+        void  initReadFile();
 
 signals:
-    void setProtocol(  BaoSerial );
+        void  setProtocol( BaoSerial );
+
+public slots:
+        void  on_set_clicked();
 
 public:
     WriterClient  wc;
     WriterServer  ws;
     ReaderClient  rc;
     ReaderServer  rs;
+Ui::ProtocolDemo *ui;
+
 };
 
 #endif // PROTOCOLDEMO_H

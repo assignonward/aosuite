@@ -26,6 +26,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QFile>
+#include "protocolDemo.h"
 #include "riceyCodes.h"
 #include "tests.h"
 #include "aboutform.h"
@@ -36,9 +37,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     restoreConfig();
-                new AboutForm( ui->    aboutTab );
-    blockTool = new BlockTool( ui->blockToolTab );
-                new Tests    ( ui->    testsTab );
+                new AboutForm   ( ui->    aboutTab );
+    blockTool = new BlockTool   ( ui->blockToolTab );
+           pd = new ProtocolDemo( ui->     demoTab );
+                new Tests       ( ui->    testsTab );
     on_update_clicked();
 }
 
@@ -51,8 +53,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 { if ( blockTool )
     blockTool->closing();
   QSettings settings;
-  settings.setValue( "geometry"   , saveGeometry()          );
-  settings.setValue( "state"      , saveState()             );
+  settings.setValue( "geometry", saveGeometry() );
+  settings.setValue( "state"   , saveState()    );
   QMainWindow::closeEvent(event);
 }
 

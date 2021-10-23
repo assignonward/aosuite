@@ -21,3 +21,32 @@
  * SOFTWARE.
  */
 #include "protocolParser.h"
+
+/**
+ * @brief ProtocolParser::isValid
+ * @return true if the passed protocol is valid
+ */
+bool  ProtocolParser::isValid()
+{ if ( pr->key() != RCD_ProtocolDef_o )
+    return false;
+  if ( name().size() < 1 )
+    return false;
+  // TODO: more checks as needed
+  return true;
+}
+
+/**
+ * @brief ProtocolParser::name
+ * @return name of the protocol, or empty string if name is not found.
+ */
+Utf8String  ProtocolParser::name()
+{ if ( pr->key() != RCD_ProtocolDef_o )   return "";
+  BlockValueObject *bvo = (BlockValueObject *)pr->value();
+  if ( !bvo->contains( RCD_hash_o ) )     return "";
+  bvo = (BlockValueObject *)bvo->value( RCD_hash_o );
+  if ( !bvo->contains( RCD_hashInfo_o ) ) return "";
+  bvo = (BlockValueObject *)bvo->value( RCD_hashInfo_o );
+  if ( !bvo->contains( RCD_text_s ) )     return "";
+  BlockValueString *bvs = (BlockValueString *)bvo->value( RCD_text_s );
+  return bvs->value();
+}

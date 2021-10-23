@@ -42,10 +42,6 @@
 #define RDT_TYPEMASK        0x0F // * - used to get the contained value type out of an array type 
 #define RDT_OBTYPEMASK      0x1F // * - used to get the contained value type out of an object type
 
-#define RCD_riceyTypes_O                         1336223 // dictionaryGroup An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
-#define RCD_riceyCodes_O                         1336255 // dictionaryGroup An array object which contains the description, name and ricey code for each defined ricey code in the system.
-#define RCD_type_b                               1336203 // dictionaryGroup In the dictionary definition context, _y is not defined yet, use this instead of type_y
-#define RCD_group_s                              1336197 // dictionaryGroup A logical collecting of code names, can become a folder structure if necessary.
 #define RCD_null_z                                     0 // dataGroup This key indicates the value is empty, has no value - usually indicates an error
 #define RCD_mpz_n                                      1 // dataGroup Generic MPZ large integer, use depends on context.
 #define RCD_mpq_r                                      2 // dataGroup Generic MPQ large integer fraction, use depends on context.
@@ -66,12 +62,11 @@
 #define RCD_time_i                                    38 // dataGroup UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.
 #define RCD_desc_s                                    69 // dataGroup Description of the current object, specific use depends on context
 #define RCD_code_s                                   101 // dataGroup Code as a string, use depends on context, often a key type
-#define RCD_userId_b                                  43 // dataGroup Unique user identifier, possibly the 256bit hash of a userID_o that has all kinds of stuff in it
-#define RCD_chainBlock_o                            9615 // chainGroup An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s)
 #define RCD_hashedOb_o                                47 // chainGroup An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.
 #define RCD_hashInfo_o                                79 // chainGroup Found in hash_o, contains at least the time_i plus any other id info that will be hashed along with the hashedOb_o
 #define RCD_hash_o                                   111 // chainGroup Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
 #define RCD_parentHash_O                             127 // chainGroup Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.
+#define RCD_chainBlock_o                            9615 // chainGroup An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s)
 #define RCD_separableItems_O                         863 // chainGroup List of items which are only indirectly included in the hash chain
 #define RCD_separableItemsHashes_O                   831 // chainGroup Hashes of separable items which do get included in the hash chain
 #define RCD_SHA256_c                                 140 // algorithmIdGroup algorithm ID for SHA2 256
@@ -122,15 +117,15 @@
 #define RCD_recordStorageResult_o                 692879 // serviceDescriptors Object describes success or failure of a record storage attempt
 #define RCD_requestRecordRetrieval_o              693039 // serviceDescriptors Object describes the id of the requestor, id of the database to record in, and id of the record to retrieve
 #define RCD_recordRetrievalResult_o               693007 // serviceDescriptors Object describes success (with data) or failure of a record retrieval attempt
-#define RCD_RangeBounds_O                           4255 // dataGroup Boundaries for valid values
-#define RCD_min_i                                     70 // dataGroup Used in range boundaries
-#define RCD_min_n                                     65 // dataGroup Used in range boundaries
-#define RCD_min_r                                     66 // dataGroup Used in range boundaries
-#define RCD_max_i                                    102 // dataGroup Used in range boundaries
-#define RCD_max_n                                     97 // dataGroup Used in range boundaries
-#define RCD_max_r                                     98 // dataGroup Used in range boundaries
-#define RCD_enum_C                                    92 // dataGroup Used to define available choices
-#define RCD_enum_S                                    85 // dataGroup Used to define available choices
+#define RCD_RangeBounds_O                          14367 // dataGroup Boundaries for valid values
+#define RCD_min_i                                  14406 // dataGroup Used in range boundaries
+#define RCD_min_n                                  14401 // dataGroup Used in range boundaries
+#define RCD_min_r                                  14402 // dataGroup Used in range boundaries
+#define RCD_max_i                                  14438 // dataGroup Used in range boundaries
+#define RCD_max_n                                  14433 // dataGroup Used in range boundaries
+#define RCD_max_r                                  14434 // dataGroup Used in range boundaries
+#define RCD_enum_C                                 14428 // dataGroup Used to define available choices
+#define RCD_enum_S                                 14421 // dataGroup Used to define available choices
 #define RCD_GenesisBlock_o                        530447 // dataGroup An Assign Onward Genesis Block. With a signature_o which includes a timei, and other definitions for the chain.
 #define RCD_ChainDesc_o                           534159 // dataGroup Chain Description, generally only found in the Genesis Block - descriptive items like name, symbol, number of coins represented by all shares, etc.
 #define RCD_ChainFunc_o                           534415 // dataGroup Chain Functional items description, generally only found in the Genesis Block - functional items like number of shares, expiration rates, recording fees, etc.
@@ -153,6 +148,10 @@
 #define RCD_Identity_o                              8335 // contractGroup A cross chain identity, may be tied to share ownership but carries its own key pair
 #define RCD_NineCode_z                 72057594037927936 // dataGroup A test code to check a 9 byte ricey code
 #define RCD_MaxiCode_z               9223372036854775776 // dataGroup A test code to check a 9 byte ricey code
+#define RCD_riceyTypes_O                         1336223 // dictionaryGroup An array object which contains the description, name and ricey code 4 LSB for each defined ricey code type in the system.
+#define RCD_riceyCodes_O                         1336255 // dictionaryGroup An array object which contains the description, name and ricey code for each defined ricey code in the system.
+#define RCD_type_b                               1336203 // dictionaryGroup In the dictionary definition context, _y is not defined yet, use this instead of type_y
+#define RCD_group_s                              1336197 // dictionaryGroup A logical collecting of code names, can become a folder structure if necessary.
 
 
 #endif // CODEDEF_H

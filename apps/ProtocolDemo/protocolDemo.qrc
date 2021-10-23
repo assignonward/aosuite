@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/protocols">
+        <file>DⒶ0.bao</file>
+        <file>DⒶ1.bao</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>AOProtocolDemo.png</file>
+    </qresource>
+</RCC>

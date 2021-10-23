@@ -27,6 +27,7 @@ include(../AboutForm/AboutForm.pri)
 include(../BlockDef/BlockDef.pri)
 include(../BlockPanel/BlockPanel.pri)
 include(../BlockTool/BlockTool.pri)
+include(../ProtocolDemo/ProtocolDemo.pri)
 include(../ProtocolParser/ProtocolParser.pri)
 include(../Tests/Tests.pri)
 
@@ -45,13 +46,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES +=  \
     main.cpp \
-    mainwindow.cpp \
-    protocolDemo.cpp
+    mainwindow.cpp
 
 HEADERS +=   \
     appname.h \
-    mainwindow.h \
-    protocolDemo.h
+    mainwindow.h
 
 FORMS += \
     mainwindow.ui
