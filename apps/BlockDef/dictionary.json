@@ -50,43 +50,43 @@
         },
         {
             "group_s": "dataGroup",
-            "name_s": "mpzArray_N",
+            "name_s": "mpz_N",
             "text_s": "A generic array of MPZ elements",
             "type_b": "11"
         },
         {
             "group_s": "dataGroup",
-            "name_s": "mpqArray_R",
+            "name_s": "mpq_R",
             "text_s": "A generic array of MPQ elements",
             "type_b": "12"
         },
         {
             "group_s": "dataGroup",
-            "name_s": "stringArray_S",
+            "name_s": "text_S",
             "text_s": "A generic array of string elements",
             "type_b": "15"
         },
         {
             "group_s": "dataGroup",
-            "name_s": "int64Array_I",
+            "name_s": "int64_I",
             "text_s": "A generic array of int64 elements",
             "type_b": "16"
         },
         {
             "group_s": "dataGroup",
-            "name_s": "byteArrayArray_B",
+            "name_s": "data_B",
             "text_s": "A generic array of byte array element",
             "type_b": "1B"
         },
         {
             "group_s": "dataGroup",
-            "name_s": "riceyArray_C",
+            "name_s": "type_C",
             "text_s": "A generic array of Ricey elements",
             "type_b": "1C"
         },
         {
             "group_s": "dataGroup",
-            "name_s": "objectArray_O",
+            "name_s": "ob_O",
             "text_s": "A generic array of object elements",
             "type_b": "1F"
         },
@@ -110,6 +110,12 @@
         },
         {
             "group_s": "dataGroup",
+            "name_s": "time_I",
+            "text_s": "UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.",
+            "type_b": "36"
+        },
+        {
+            "group_s": "dataGroup",
             "name_s": "desc_s",
             "text_s": "Description of the current object, specific use depends on context",
             "type_b": "45"
@@ -119,6 +125,24 @@
             "name_s": "code_s",
             "text_s": "Code as a string, use depends on context, often a key type",
             "type_b": "65"
+        },
+        {
+            "group_s": "chainGroup",
+            "name_s": "hashedOb_O",
+            "text_s": "An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.",
+            "type_b": "3F"
+        },
+        {
+            "group_s": "chainGroup",
+            "name_s": "hashInfo_O",
+            "text_s": "Found in hash_o, contains at least the time_i plus any other id info that will be hashed along with the hashedOb_o",
+            "type_b": "5F"
+        },
+        {
+            "group_s": "chainGroup",
+            "name_s": "hash_O",
+            "text_s": "Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.",
+            "type_b": "857F"
         },
         {
             "group_s": "chainGroup",
@@ -143,6 +167,12 @@
             "name_s": "parentHash_O",
             "text_s": "Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.",
             "type_b": "7F"
+        },
+        {
+            "group_s": "chainGroup",
+            "name_s": "chainBlock_O",
+            "text_s": "An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s)",
+            "type_b": "CB1F"
         },
         {
             "group_s": "chainGroup",

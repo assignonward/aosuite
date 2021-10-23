@@ -153,7 +153,7 @@ DotSerial  ValueBaseArray::dot(Mode m) const
   if ( size() == 0 )
     d.append( dotEmptyNode(depth()*2+4) );
    else for ( qint32 i = 0; i < size(); i++ )
-    d.append( clusterWrap( m, at(i), "["+DotSerial::number(i)+"]" ) );
+    d.append( clusterWrap( m, at(i), (i==0) ? "" : "["+DotSerial::number(i)+"]" ) );
   return d;
 }
 

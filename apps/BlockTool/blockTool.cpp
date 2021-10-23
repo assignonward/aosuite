@@ -382,7 +382,7 @@ void  BlockTool::insertKeyName( Utf8String nKey )
           case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit->text().toUtf8(), this ); break;
           case RDT_BYTEARRAY: vbp = new BlockValueByteArray( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ), this ); break;
           case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit   ->text().toUtf8(), this ); break;
-          case RDT_OBJECT_ARRAY   : vbp = new BlockValueObjectArray   ( this ); break;
+          case RDT_OBJECT_ARRAY   : vbp = new BlockValueObjectArray   ( this ); ((BlockValueObjectArray *)vbp)->append(new BlockValueObject(vbp)); break;
           case RDT_INT64_ARRAY    : vbp = new BlockValueInt64Array    ( this ); break;
           case RDT_RCODE_ARRAY    : vbp = new BlockValueRiceyCodeArray( this ); break;
           case RDT_MPZ_ARRAY      : vbp = new BlockValueMPZArray      ( this ); break;

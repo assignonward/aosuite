@@ -50,22 +50,27 @@
 #define RCD_data_b                                    11 // dataGroup Generic data block, use determined by the object which contains it.
 #define RCD_type_c                                    12 // dataGroup Identifies an algorithm type for hash or crypto key, or other types depending on context
 #define RCD_ob_o                                      15 // dataGroup Generic object, use depends on context
-#define RCD_mpzArray_N                                17 // dataGroup A generic array of MPZ elements
-#define RCD_mpqArray_R                                18 // dataGroup A generic array of MPQ elements
-#define RCD_stringArray_S                             21 // dataGroup A generic array of string elements
-#define RCD_int64Array_I                              22 // dataGroup A generic array of int64 elements
-#define RCD_byteArrayArray_B                          27 // dataGroup A generic array of byte array element
-#define RCD_riceyArray_C                              28 // dataGroup A generic array of Ricey elements
-#define RCD_objectArray_O                             31 // dataGroup A generic array of object elements
+#define RCD_mpz_N                                     17 // dataGroup A generic array of MPZ elements
+#define RCD_mpq_R                                     18 // dataGroup A generic array of MPQ elements
+#define RCD_text_S                                    21 // dataGroup A generic array of string elements
+#define RCD_int64_I                                   22 // dataGroup A generic array of int64 elements
+#define RCD_data_B                                    27 // dataGroup A generic array of byte array element
+#define RCD_type_C                                    28 // dataGroup A generic array of Ricey elements
+#define RCD_ob_O                                      31 // dataGroup A generic array of object elements
 #define RCD_AOShares_n                                33 // dataGroup A quantity of shares - meaning depends on context
 #define RCD_name_s                                    37 // dataGroup Name as a string, use depends on context, often a key name
 #define RCD_time_i                                    38 // dataGroup UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.
+#define RCD_time_I                                    54 // dataGroup UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.
 #define RCD_desc_s                                    69 // dataGroup Description of the current object, specific use depends on context
 #define RCD_code_s                                   101 // dataGroup Code as a string, use depends on context, often a key type
+#define RCD_hashedOb_O                                63 // chainGroup An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.
+#define RCD_hashInfo_O                                95 // chainGroup Found in hash_o, contains at least the time_i plus any other id info that will be hashed along with the hashedOb_o
+#define RCD_hash_O                                   767 // chainGroup Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
 #define RCD_hashedOb_o                                47 // chainGroup An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.
 #define RCD_hashInfo_o                                79 // chainGroup Found in hash_o, contains at least the time_i plus any other id info that will be hashed along with the hashedOb_o
 #define RCD_hash_o                                   111 // chainGroup Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.
 #define RCD_parentHash_O                             127 // chainGroup Contains copies of the hash_o of one or more (more in the case of merging forked chains) parent blocks.
+#define RCD_chainBlock_O                            9631 // chainGroup An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s)
 #define RCD_chainBlock_o                            9615 // chainGroup An Assign Onward Chain Block. With a hash_o which includes a timei, and a hashedOb_o which includes exact copied of the hash_o(s) of the parent(s)
 #define RCD_separableItems_O                         863 // chainGroup List of items which are only indirectly included in the hash chain
 #define RCD_separableItemsHashes_O                   831 // chainGroup Hashes of separable items which do get included in the hash chain

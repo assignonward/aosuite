@@ -1284,13 +1284,13 @@ bool  Tests::testObject( QString &msg, qint32 &tc )
   tvo = tv;
   tv.insert( RCD_hashedOb_o  , new BlockValueObject( tvo, this ) );      pass &= testObject( v, tv, tc, msg );
   QList<qint64> ta64 = { 0,1,-1,70000,-70000,-5123456789, 5123456789 };
-  tv.insert( RCD_int64Array_I, new BlockValueInt64Array( ta64, this ) ); pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_int64_I     , new BlockValueInt64Array( ta64, this ) ); pass &= testObject( v, tv, tc, msg );
   // emit newDot( v.dot() );
-  QList<RiceyInt> tari = { RCD_mpz_n, RCD_riceyArray_C, RCD_data_b, RCD_MaxiCode_z, RCD_RangeBounds_O };
-  tv.insert( RCD_riceyArray_C, new BlockValueRiceyCodeArray( tari, this ) );     pass &= testObject( v, tv, tc, msg );
+  QList<RiceyInt> tari = { RCD_mpz_n, RCD_type_C, RCD_data_b, RCD_MaxiCode_z, RCD_RangeBounds_O };
+  tv.insert( RCD_type_C      , new BlockValueRiceyCodeArray( tari, this ) );     pass &= testObject( v, tv, tc, msg );
   QList<Utf8String> tau8 = { "A", "1", "Stringy" };
-  tv.insert( RCD_stringArray_S, new BlockValueStringArray( tau8, this ) );       pass &= testObject( v, tv, tc, msg );
-  tv.insert( RCD_byteArrayArray_B, new BlockValueByteArrayArray( tau8, this ) ); pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_text_S      , new BlockValueStringArray( tau8, this ) );       pass &= testObject( v, tv, tc, msg );
+  tv.insert( RCD_data_B      , new BlockValueByteArrayArray( tau8, this ) ); pass &= testObject( v, tv, tc, msg );
 
   mpz_clear( &v1 );
   mpz_clear( &v2 );
