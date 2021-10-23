@@ -376,19 +376,19 @@ void  BlockTool::insertKeyName( Utf8String nKey )
    else
     { switch ( tp )
         { case RDT_OBJECT   : vbp = new BlockValueObject   ( this ); break;
-          case RDT_INT64    : vbp = new BlockValueInt64    ( ui->intEdit  ->text().toLongLong(), this ); break;
+          case RDT_INT64    : vbp = new BlockValueInt64    ( ui->intEdit->text().toLongLong(), this ); break;
           case RDT_RCODE    : vbp = new BlockValueRiceyCode( dict.codeFromCodeName( ui->rcodeEdit->currentText().toUtf8() ), this ); break;
           case RDT_MPZ      : vbp = new BlockValueMPZ      ( ui->mpzEdit->text().toUtf8(), this ); break;
           case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit->text().toUtf8(), this ); break;
           case RDT_BYTEARRAY: vbp = new BlockValueByteArray( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ), this ); break;
-          case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit   ->text().toUtf8(), this ); break;
-          case RDT_OBJECT_ARRAY   : vbp = new BlockValueObjectArray   ( this ); ((BlockValueObjectArray *)vbp)->append(new BlockValueObject(vbp)); break;
-          case RDT_INT64_ARRAY    : vbp = new BlockValueInt64Array    ( this ); break;
-          case RDT_RCODE_ARRAY    : vbp = new BlockValueRiceyCodeArray( this ); break;
-          case RDT_MPZ_ARRAY      : vbp = new BlockValueMPZArray      ( this ); break;
-          case RDT_MPQ_ARRAY      : vbp = new BlockValueMPQArray      ( this ); break;
-          case RDT_BYTEARRAY_ARRAY: vbp = new BlockValueByteArrayArray( this ); break;
-          case RDT_STRING_ARRAY   : vbp = new BlockValueStringArray   ( this ); break;
+          case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit->text().toUtf8(), this ); break;
+          case RDT_OBJECT_ARRAY   : vbp = new BlockValueObjectArray   ( this ); ((BlockValueObjectArray *   )vbp)->append(new BlockValueObject   (vbp)); break;
+          case RDT_INT64_ARRAY    : vbp = new BlockValueInt64Array    ( this ); ((BlockValueInt64Array *    )vbp)->append(new BlockValueInt64    (ui->intEdit->text().toLongLong(), vbp)); break;
+          case RDT_RCODE_ARRAY    : vbp = new BlockValueRiceyCodeArray( this ); ((BlockValueRiceyCodeArray *)vbp)->append(new BlockValueRiceyCode(dict.codeFromCodeName(ui->rcodeEdit->currentText().toUtf8() ), vbp)); break;
+          case RDT_MPZ_ARRAY      : vbp = new BlockValueMPZArray      ( this ); ((BlockValueMPZArray *      )vbp)->append(new BlockValueMPZ      (ui->mpzEdit->text().toUtf8(), vbp)); break;
+          case RDT_MPQ_ARRAY      : vbp = new BlockValueMPQArray      ( this ); ((BlockValueMPQArray *      )vbp)->append(new BlockValueMPQ      (ui->mpqEdit->text().toUtf8(), vbp)); break;
+          case RDT_BYTEARRAY_ARRAY: vbp = new BlockValueByteArrayArray( this ); ((BlockValueByteArrayArray *)vbp)->append(new BlockValueByteArray(QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ), vbp)); break;
+          case RDT_STRING_ARRAY   : vbp = new BlockValueStringArray   ( this ); ((BlockValueStringArray *   )vbp)->append(new BlockValueString   (ui->stringEdit->text().toUtf8(), vbp)); break;
         }
     }
   if ( vbp == nullptr )
