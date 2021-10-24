@@ -314,7 +314,8 @@ class BlockValueInt64Array : public ValueBaseArray
 class BlockValueRiceyInt : public ValueBase
 { public:
       explicit  BlockValueRiceyInt( QObject *parent = nullptr ) : ValueBase( parent ) { set( 0 ); }
-                BlockValueRiceyInt( const RiceyInt &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
+                BlockValueRiceyInt( const RiceyInt  &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
+                BlockValueRiceyInt( const RiceyCode &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
                ~BlockValueRiceyInt() {}
 virtual   bool  isContainer() const { return false; }
 virtual   bool  isArray()     const { return false; }
@@ -326,8 +327,9 @@ virtual qint32  size()        const { return 1; }
         qint32  setBao ( const  BaoSerial &b );
           bool  setJson( const JsonSerial &j );
       RiceyInt  value()       const { return m_value; }
-     RiceyCode  valueInt()    const { return intToRice( m_value ); }
+     RiceyCode  valueCode()   const { return intToRice( m_value ); }
           void  set       ( const RiceyInt &v )                  { m_value = v; }
+          void  set       ( const RiceyCode &v )                 { set( riceToInt( v ) ); }
           bool  operator==( const RiceyInt &v )            const { return v         == value(); }
           bool  operator==( const BlockValueRiceyInt &v  ) const { return v.value() == value(); }
 
