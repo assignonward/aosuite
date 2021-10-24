@@ -44,6 +44,13 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
      <widget class="QLabel" name="label_6">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Writer</string>
       </property>
@@ -51,6 +58,13 @@
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_5">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>C
 l
@@ -67,6 +81,15 @@ s</string>
     </item>
     <item row="1" column="1">
      <widget class="QScrollArea" name="DAO0_CS">
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>3</number>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -75,41 +98,60 @@ s</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>567</width>
-         <height>383</height>
+         <width>565</width>
+         <height>380</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_10">
-        <item row="1" column="1" colspan="2">
-         <widget class="QLineEdit" name="wcId">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        <item row="4" column="0" colspan="4">
+         <widget class="QGroupBox" name="wcLogGroup">
+          <property name="title">
+           <string>Transaction Log</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QTextEdit" name="wcLog"/>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="2" column="0" colspan="3">
-         <widget class="QTextEdit" name="wcLog"/>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="wcProtocol">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        <item row="1" column="0" rowspan="2" colspan="4">
+         <widget class="QGroupBox" name="wcDataGroup">
+          <property name="title">
+           <string>Data to Write</string>
           </property>
-          <property name="text">
-           <string>Protocol</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QTextEdit" name="wcData"/>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="3" column="3" alignment="Qt::AlignRight">
          <widget class="QPushButton" name="wcSend">
           <property name="maximumSize">
            <size>
@@ -122,8 +164,79 @@ s</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QTextEdit" name="wcData"/>
+        <item row="0" column="3">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Protocol</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="wcProtocol">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Protocol</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="3">
+         <widget class="QGroupBox" name="wcIdGroup">
+          <property name="title">
+           <string>Writer Identity</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="wcId">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -131,6 +244,15 @@ s</string>
     </item>
     <item row="1" column="2">
      <widget class="QScrollArea" name="DAO0_CR">
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>3</number>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -139,39 +261,153 @@ s</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>567</width>
-         <height>383</height>
+         <width>564</width>
+         <height>380</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_8">
-        <item row="0" column="2">
-         <widget class="QLabel" name="rcProtocol">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>Reader Identity</string>
           </property>
-          <property name="text">
-           <string>Protocol</string>
-          </property>
+          <layout class="QGridLayout" name="gridLayout_13">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="rcId"/>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLineEdit" name="rcId"/>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="title">
+           <string>Data Handle</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_14">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="rcDataHandle"/>
+           </item>
+          </layout>
+         </widget>
         </item>
-        <item row="2" column="0" colspan="3">
-         <widget class="QTextEdit" name="rcLog"/>
+        <item row="3" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="title">
+           <string>Transaction Log</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_15">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QTextEdit" name="rcLog"/>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Protocol</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_12">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="rcProtocol">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Protocol</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1">
          <widget class="QPushButton" name="rcRequest">
           <property name="text">
            <string>Request</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QTextEdit" name="rcData"/>
+        <item row="2" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Data Read</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QTextEdit" name="rcData"/>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -179,6 +415,13 @@ s</string>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_8">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>S
 e
@@ -195,6 +438,15 @@ s</string>
     </item>
     <item row="2" column="1">
      <widget class="QScrollArea" name="DAO0_SS">
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>3</number>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -203,29 +455,101 @@ s</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>567</width>
-         <height>210</height>
+         <width>565</width>
+         <height>209</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_9">
-        <item row="0" column="1">
-         <widget class="QLabel" name="wsProtocol">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        <item row="1" column="0" colspan="2">
+         <widget class="QGroupBox" name="wsLogGroup">
+          <property name="title">
+           <string>Transaction Log</string>
           </property>
-          <property name="text">
-           <string>Protocol</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QTextEdit" name="wsLog"/>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QTextEdit" name="wsLog"/>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_8">
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Protocol</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_17">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="wsProtocol">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Protocol</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="wsIdGroup">
+          <property name="title">
+           <string>Write Server Identity</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_19">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="wsId"/>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -233,6 +557,15 @@ s</string>
     </item>
     <item row="2" column="2">
      <widget class="QScrollArea" name="DAO0_SR">
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>3</number>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -241,29 +574,101 @@ s</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>567</width>
-         <height>210</height>
+         <width>564</width>
+         <height>209</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_11">
         <item row="0" column="1">
-         <widget class="QLabel" name="rsProtocol">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QGroupBox" name="groupBox_9">
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>16777215</height>
+           </size>
           </property>
-          <property name="text">
+          <property name="title">
            <string>Protocol</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
+          <layout class="QGridLayout" name="gridLayout_18">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="rsProtocol">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Protocol</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="1" column="0" colspan="2">
-         <widget class="QTextEdit" name="rsLog"/>
+         <widget class="QGroupBox" name="groupBox_7">
+          <property name="title">
+           <string>Transaction Log</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_16">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QTextEdit" name="rsLog"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="rsIdGroup">
+          <property name="title">
+           <string>Read Server Identity</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_20">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="rsId"/>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -273,6 +678,13 @@ s</string>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="label_7">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
         <property name="text">
          <string>Reader</string>
         </property>
