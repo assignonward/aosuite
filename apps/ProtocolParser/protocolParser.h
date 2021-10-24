@@ -47,21 +47,13 @@ class ProtocolUser : public QObject
     Q_OBJECT
 public:
     explicit ProtocolUser(QObject *parent = nullptr) : QObject(parent) {}
+virtual void protocolSet() = 0;
 
 signals:
-    void protocolSet();
     void newName( QString );
 
 public slots:
-    void setProtocol( BaoSerial p )
-      { if ( pp )
-          pp->deleteLater();
-        pp = new ProtocolParser( p );
-        if ( pp->isValid() )
-          { emit protocolSet();
-            emit( newName( QString::fromUtf8( pp->name() ) ) );
-          }
-      }
+    void setProtocol( BaoSerial p );
 
 public:
    QPointer<ProtocolParser> pp;
@@ -71,15 +63,15 @@ class ProtocolActor : public ProtocolUser
 {
     Q_OBJECT
 public:
-              ProtocolActor( RiceyInt at, QObject *parent = nullptr ) : ProtocolUser(parent) { setActorType(at); }
+              ProtocolActor( RiceyInt at, QObject *parent = nullptr ) : ProtocolUser(parent) { sendableItems = nullptr; receivableItems = nullptr; setActorType(at); }
         void  setActorType( RiceyInt at ) { actTyp = at; }
     RiceyInt  actType() { return actTyp; }
-
-public slots:
-        void  protocolSet() {}
+virtual void  protocolSet();
 
 public:
-   RiceyInt actTyp;
+   ValueBase *sendableItems;
+   ValueBase *receivableItems;
+    RiceyInt  actTyp;
 };
 
 #endif // PROTOCOLPARSER_H
