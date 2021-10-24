@@ -49,6 +49,7 @@ public:
     explicit ProtocolUser(QObject *parent = nullptr) : QObject(parent) {}
 
 signals:
+    void protocolSet();
     void newName( QString );
 
 public slots:
@@ -57,7 +58,9 @@ public slots:
           pp->deleteLater();
         pp = new ProtocolParser( p );
         if ( pp->isValid() )
-          emit( newName( QString::fromUtf8( pp->name() ) ) );
+          { emit protocolSet();
+            emit( newName( QString::fromUtf8( pp->name() ) ) );
+          }
       }
 
 public:
@@ -71,6 +74,9 @@ public:
               ProtocolActor( RiceyInt at, QObject *parent = nullptr ) : ProtocolUser(parent) { setActorType(at); }
         void  setActorType( RiceyInt at ) { actTyp = at; }
     RiceyInt  actType() { return actTyp; }
+
+public slots:
+        void  protocolSet() {}
 
 public:
    RiceyInt actTyp;

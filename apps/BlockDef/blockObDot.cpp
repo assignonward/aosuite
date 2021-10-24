@@ -63,7 +63,7 @@ DotSerial ValueBase::dotName( RiceyInt k )
 }
 
 DotSerial ValueBase::dotArrayName( RiceyInt k, qint32 sz )
-{ return dotName(k) + "["+DotSerial::number( sz )+"]"; }
+{ return dotName(k) + ( (sz==1) ? "" : "["+DotSerial::number( sz )+"]" ); }
 
 DotSerial ValueBase::clusterWrap( Mode m, ValueBase *vb, const DotSerial &kn )
 { DotSerial dot;

@@ -699,7 +699,8 @@ qint32  KeyValueArray::setBao( const BaoSerial &b )
   if ( !ok )                         { qWarning( "bad ricey code element count" ); return -1; }
   i += len;
   clear();
-  setKey( k ); // Now we also know our data type
+  if ( !setKey( k ) ) // Now we also know our data type
+    qWarning( "problem setting key in KeyValueArray::setBao()" );
   RiceyInt t = k & RDT_TYPEMASK;
   while ( elementCount > 0 )
     { if ( b.size() <= i )  { qWarning( "value data missing" ); return -1; }
@@ -709,6 +710,7 @@ qint32  KeyValueArray::setBao( const BaoSerial &b )
       if ( len < 1 )        { delete vbo; qWarning( "problem reading element" ); return -1; }
       if ( !append( vbo ) ) { delete vbo; qWarning( "problem appending element" ); return -1; }
       vbo->vbParent = this;
+      vbo->setVKey( t );
       i += len;
       elementCount--;
     }
@@ -745,7 +747,7 @@ bool  ValueBaseArray::append( ValueBase *value )
   // Setting metadata for new array element
   value->vbParent = this;
   value->setIdx( "i"+Utf8String::number( size() ) );
-  value->setVKey( vKey() );
+  value->setVKey( vKey() & RDT_TYPEMASK );
   // qWarning( "appending to %s to %llx", m_idx.data(), m_key );
   m_values.append( value );
   return true;
