@@ -50,15 +50,16 @@
 //   2) MPQ, arbitrary precision ratio of two integers stored as two MPZ: numerator / denominator
 //   5) String, any valid UTF-8 string stored as a rice code length followed by the characters - not including null terminator
 //   6) int64, 8 byte signed integers stored LSB first
+//   9) RiceyInt, 63 bit unsigned integers stored MSB first in a "Ricey chain" one to 9 bytes long
 //   11) Data, any octet stream stored as a rice code length followed by the data
 //   12) RCODE, when used as a key - a rice code value which appears in the protocol dictionary
-//      note that the following data types use rice code numbers (positive integers from 0 to 2^63) to specify lengths in bao code
+//      note that the following data types use rice code numbers (aka RiceyInts: positive integers from 0 to 2^63-1) to specify lengths in bao code
 //   15) Objects, contain 0 or more key-value pairs
-//   16-31) arrays of the above, stored as a rice code specifying 0 or more elements, followed by that number of elements stored as above
+//   16-31) arrays of the above, stored as a key plus length specifying 0 or more elements, followed by that number of elements stored as above
 //
 // State of the code:
 //
-// In progress...
+// Functional, evolving to support functions as needed.
 
 size_t strnlength (const char* s, size_t n)
 { const char *found = (char *)memchr(s, '\0', n);
@@ -121,6 +122,7 @@ ValueBase *ValueBase::newValue( RiceyInt key, ValueBase *vbp, ValueBase *vtc )
   ValueBase *vbo = nullptr;
   if ( t == RDT_OBJECT          ) vbo = new BlockValueObject( vbp );
   if ( t == RDT_INT64           ) vbo = new BlockValueInt64( vbp );
+  if ( t == RDT_RICEYINT        ) vbo = new BlockValueRiceyInt( vbp );
   if ( t == RDT_MPZ             ) vbo = new BlockValueMPZ( vbp );
   if ( t == RDT_MPQ             ) vbo = new BlockValueMPQ( vbp );
   if ( t == RDT_RCODE           ) vbo = new BlockValueRiceyCode( vbp );
@@ -128,6 +130,7 @@ ValueBase *ValueBase::newValue( RiceyInt key, ValueBase *vbp, ValueBase *vtc )
   if ( t == RDT_BYTEARRAY       ) vbo = new BlockValueByteArray( vbp );
   if ( t == RDT_OBJECT_ARRAY    ) vbo = new BlockValueObjectArray( vbp );
   if ( t == RDT_INT64_ARRAY     ) vbo = new BlockValueInt64Array( vbp );
+  if ( t == RDT_RICEYINT_ARRAY  ) vbo = new BlockValueRiceyIntArray( vbp );
   if ( t == RDT_MPZ_ARRAY       ) vbo = new BlockValueMPZArray( vbp );
   if ( t == RDT_MPQ_ARRAY       ) vbo = new BlockValueMPQArray( vbp );
   if ( t == RDT_RCODE_ARRAY     ) vbo = new BlockValueRiceyCodeArray( vbp );
@@ -583,6 +586,7 @@ BaoSerial ValueBase::baoDefaultValue( qint8 keyType )
   switch ( keyType )
     { case RDT_OBJECT:    s << intToRice( 0 );               break;
       case RDT_INT64:     s << (qint64)0;                    break;
+      case RDT_RICEYINT:  s << (RiceyInt)0;                  break;
       case RDT_MPZ:       s << (quint8)0x0E;                 break;
       case RDT_MPQ:       s << (quint8)0x0E << (quint8)0x1E; break;
       case RDT_RCODE:     s << intToRice( RCD_null_z );      break;
@@ -820,6 +824,7 @@ bool  KeyValueArray::typeMatch( quint8 t )
       case RDT_MPQ:       m_val = new BlockValueMPQArray      ( this ); return true;
       case RDT_STRING:    m_val = new BlockValueStringArray   ( this ); return true;
       case RDT_INT64:     m_val = new BlockValueInt64Array    ( this ); return true;
+      case RDT_RICEYINT:  m_val = new BlockValueRiceyIntArray ( this ); return true;
       case RDT_BYTEARRAY: m_val = new BlockValueByteArrayArray( this ); return true;
       case RDT_RCODE:     m_val = new BlockValueRiceyCodeArray( this ); return true;
       case RDT_OBJECT:    m_val = new BlockValueObjectArray   ( this ); return true;
@@ -1055,6 +1060,7 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
       switch ( k & RDT_OBTYPEMASK )
         { case RDT_OBJECT:    if ( !(*((BlockValueObject    *)vt)          == *((BlockValueObject    *)vv)          ) ) return false; break;
           case RDT_INT64:     if (  ( ((BlockValueInt64     *)vt)->value() !=  ((BlockValueInt64     *)vv)->value() ) ) return false; break;
+          case RDT_RICEYINT:  if (  ( ((BlockValueRiceyInt  *)vt)->value() !=  ((BlockValueRiceyInt  *)vv)->value() ) ) return false; break;
           case RDT_MPZ:       if ( !(*((BlockValueMPZ       *)vt)          ==  ((BlockValueMPZ       *)vv)->value() ) ) return false; break;
           case RDT_MPQ:       if ( !(*((BlockValueMPQ       *)vt)          ==  ((BlockValueMPQ       *)vv)->value() ) ) return false; break;
           case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
@@ -1062,6 +1068,7 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;
           case RDT_OBJECT_ARRAY:
           case RDT_INT64_ARRAY:
+          case RDT_RICEYINT_ARRAY:
           case RDT_MPZ_ARRAY:
           case RDT_MPQ_ARRAY:
           case RDT_RCODE_ARRAY:

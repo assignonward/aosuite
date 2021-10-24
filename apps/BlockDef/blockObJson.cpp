@@ -41,10 +41,9 @@
 //
 // Although the Qt Json library functions are convenient for parsing of structures
 //   like arrays, they are struggling with accuracy of larger int64 numbers due to
-//   internal representation of such numbers as double floats.  I am beginning to
-//   question the utility of including the int32 data type, and also the value of
-//   representing qint64 as naked integers in json rather than ASCII decimal strings
-//   which would not suffer the precision problems of the bare integers.
+//   internal representation of such numbers as double floats.  Accordingly, integer
+//   values are stored as strings, with quotes, to use the QString .toLongLong
+//   conversions which do not lose precision.
 //
 
 /**
@@ -330,7 +329,8 @@ bool  ValueBaseArray::setJson( const JsonSerial &j )
                  else
                   qWarning( "dictionary does not contain %s", vt.data() );
                 break;
-              case RDT_INT64_ARRAY:     vbo = new BlockValueInt64( (qint64)v.toString().toLongLong(), this ); break;
+              case RDT_INT64_ARRAY:     vbo = new BlockValueInt64   ( (qint64)v.toString().toLongLong(), this ); break;
+              case RDT_RICEYINT_ARRAY:  vbo = new BlockValueRiceyInt( (qint64)v.toString().toLongLong(), this ); break;
               case RDT_STRING_ARRAY:    vbo = new BlockValueString( v.toString().toUtf8(), this ); break; // TODO: encode using the same escapes as in the BlockString.json() function
               case RDT_BYTEARRAY_ARRAY: vbo = new BlockValueByteArray( QByteArray::fromHex( v.toString().toUtf8() ), this ); break;
               case RDT_MPZ_ARRAY:       vbo = new BlockValueMPZ( v.toString().toUtf8(), this );    break;
@@ -462,6 +462,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, ValueBas
   switch ( typ )
     { case RDT_OBJECT:    typeMatch = jv.isObject(); jdt = JDT_OBJECT; break;
       case RDT_INT64:
+      case RDT_RICEYINT:
       case RDT_MPZ:
       case RDT_MPQ:
       case RDT_RCODE:
@@ -469,6 +470,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, ValueBas
       case RDT_BYTEARRAY: typeMatch = jv.isString(); jdt = JDT_STRING; break;
       case RDT_OBJECT_ARRAY:
       case RDT_INT64_ARRAY:
+      case RDT_RICEYINT_ARRAY:
       case RDT_MPZ_ARRAY:
       case RDT_MPQ_ARRAY:
       case RDT_RCODE_ARRAY:
@@ -493,7 +495,7 @@ ValueBase *ValueBase::jsonValueByKey( RiceyInt k, const QJsonValue &jv, ValueBas
 
       case JDT_STRING:
         vbo = newValue( k, vbp );
-        if (( typ == RDT_STRING ) || ( typ == RDT_MPZ ) || ( typ == RDT_MPQ ) || ( typ == RDT_INT64 ))
+        if (( typ == RDT_STRING ) || ( typ == RDT_MPZ ) || ( typ == RDT_MPQ ) || ( typ == RDT_INT64 ) || ( typ == RDT_RICEYINT ))
           vbo->setJson( "\""+jv.toString().toUtf8()+"\"" );
          else
           vbo->setJson(      jv.toString().toUtf8()      );

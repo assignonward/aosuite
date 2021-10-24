@@ -48,6 +48,8 @@ public:
        bool  testMPQ( BlockValueMPQ &, const MP_RAT &, qint32 &, QString & );
        bool  testRicey( QString &, qint32 & );
        bool  testRicey( BlockValueRiceyCode &, RiceyInt, qint32 &, QString & );
+       bool  testRiceyInt( QString &, qint32 & );
+       bool  testRiceyInt( BlockValueRiceyInt &, RiceyInt, qint32 &, QString & );
        bool  testString( QString &, qint32 & );
        bool  testString( BlockValueString &, const Utf8String &, qint32 &, QString & );
        bool  testByteArray( QString &, qint32 & );
@@ -60,6 +62,8 @@ public:
        bool  testMPZA( BlockValueMPZArray &, const QList<MP_INT> &, qint32 &, QString & );
        bool  testMPQA( QString &, qint32 & );
        bool  testMPQA( BlockValueMPQArray &, const QList<MP_RAT> &, qint32 &, QString & );
+       bool  testRiceyIntA( QString &, qint32 & );
+       bool  testRiceyIntA( BlockValueRiceyIntArray &, const QList<RiceyInt>  &, qint32 &, QString & );
        bool  testRiceyA( QString &, qint32 & );
        bool  testRiceyA( BlockValueRiceyCodeArray &, const QList<RiceyCode> &, qint32 &, QString & );
        bool  testRiceyA( BlockValueRiceyCodeArray &, const QList<RiceyInt>  &, qint32 &, QString & );

@@ -61,6 +61,7 @@ void  Tests::on_start_clicked()
   pass &= testGmp        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testDict       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testInt64      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+  pass &= testRiceyInt   ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testRicey      ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPZ        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPQ        ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
@@ -70,6 +71,7 @@ void  Tests::on_start_clicked()
   pass &= testInt64A     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPZA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testMPQA       ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
+  pass &= testRiceyIntA  ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testRiceyA     ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testStringA    ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
   pass &= testByteArrayA ( msg, tc ); ui->report->append( msg ); count += tc; tc = 0; liveDelay(4);
@@ -443,6 +445,66 @@ bool Tests::testRicey( BlockValueRiceyCode &v, RiceyInt tv, qint32 &tc, QString 
   v.set( tv + 1 );
   bool ok = v.setJson( j );
   if ( ok && ( v.valueInt() == tv )) tc++; else
+    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv).arg(ok).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+
+  return pass;
+}
+
+bool Tests::testRiceyInt( QString &msg, qint32 &tc )
+{ bool pass = true;
+  msg = "riceyInt Test: ";
+  BlockValueRiceyInt v(this);
+  if ( v.type() == RDT_RICEYINT ) tc++; else
+    { msg.append( "FAIL type() test.\n" ); pass = false; }
+
+  RiceyInt tv;
+  tv = 0                ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 1                ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 2                ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 126              ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 127              ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 128              ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 129              ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 65535            ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 65536            ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 549755813887LL   ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = 549755813888LL   ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = RCD_NineCode_z   ; pass &= testRiceyInt( v, tv, tc, msg );
+  tv = RCD_MaxiCode_z   ; pass &= testRiceyInt( v, tv, tc, msg );
+
+  if ( pass )
+    msg.append( QString("Pass %1 tests.").arg(tc) );
+
+  return pass;
+}
+
+bool Tests::testRiceyInt( BlockValueRiceyInt &v, RiceyInt tv, qint32 &tc, QString &msg )
+{ bool pass = true;
+  v.set( tv );
+  if ( v.value() == tv ) tc++; else
+    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv) ); pass = false; }
+
+  v.set( tv + 1 );
+  if  ( v.value() != tv ) tc++; else
+    { msg.append( QString( "FAIL inequality test %1 %2\n" ).arg(tv).arg( v.value() ) ); pass = false; }
+  v.set( intToRice( tv ) );
+  if ( v.value() == tv ) tc++; else
+    { msg.append( QString( "FAIL code set test %1\n" ).arg(tv) ); pass = false; }
+
+  BaoSerial b = v.bao();
+  v.set( tv + 1 );
+  v.setBao( b );
+  if ( v.value() == tv ) tc++; else
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()),
+                  QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
+
+  JsonSerial j = v.json();
+  v.set( tv + 1 );
+  bool ok = v.setJson( j );
+  if ( ok && ( v.value() == tv )) tc++; else
     { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv).arg(ok).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
 
   return pass;
@@ -1107,6 +1169,73 @@ bool Tests::testRiceyA( BlockValueRiceyCodeArray &v, const QList<RiceyCode> &tv,
 
   JsonSerial j = v.json();
   v.clear();
+  if ( v.append( (RiceyInt)321 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
+  bool ok = v.setJson( j );
+  if ( ok && ( v == tv )) tc++; else
+    { msg.append( QString( "FAIL json encode/decode test %1 %2 %3\n" ).arg(tv.size()).arg(ok).arg( QString::fromUtf8(j) ) ); pass = false; }
+  return pass;
+}
+
+bool Tests::testRiceyIntA( QString &msg, qint32 &tc )
+{ bool pass = true;
+  msg = "riceyInt array Test: ";
+  BlockValueRiceyIntArray v(this);
+  if ( v.type() == RDT_RICEYINT_ARRAY ) tc++; else
+    { msg.append( "FAIL type() test.\n" ); pass = false; }
+
+  QList<RiceyInt> tv;
+                                  pass &= testRiceyIntA( v, tv, tc, msg ); // Empty Array test
+  tv.append( 0                 ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 1                 ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 2                 ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 126               ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 127               ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 128               ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 129               ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 1048575           ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 1048576           ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 34359738367LL     ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( 34359738368LL     ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( RCD_NineCode_z    ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.append( RCD_MaxiCode_z    ); pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.clear();
+  for ( qint32 i = 1; i < 1100; i++ )
+    tv.append(RCD_ob_o);
+                                   pass &= testRiceyIntA( v, tv, tc, msg );
+  tv.clear();
+  for ( qint32 i = 1; i < 1101; i++ )
+    tv.append(RCD_MaxiCode_z);
+                                   pass &= testRiceyIntA( v, tv, tc, msg );
+
+  if ( pass )
+    msg.append( QString("Pass %1 tests.").arg(tc) );
+
+  return pass;
+}
+
+bool Tests::testRiceyIntA( BlockValueRiceyIntArray &v, const QList<RiceyInt> &tv, qint32 &tc, QString &msg )
+{ bool pass = true;
+  v.set( tv );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL value set/get test %1\n" ).arg(tv.size()) ); pass = false; }
+
+   BaoSerial b = v.bao();
+  if ( v.append( (RiceyInt)123 ) ) tc++; else
+    { pass = false; msg.append( "FAIL during append()\n" ); }
+  if  ( !( v.value() == tv ) ) tc++; else
+    { msg.append( QString( "FAIL inequality test\n" ) ); pass = false; }
+  v.setBao( b );
+  if ( v == tv ) tc++; else
+    { msg.append( QString( "FAIL bao encode/decode test %1 %2\n" ).arg(tv.size()).arg( QString::fromUtf8(b.toHex()) ) ); pass = false; }
+  if ( b == v.bao() ) tc++; else
+    { msg.append( QString( "FAIL bao repeat test %1 %2\n" )
+            .arg( QString::fromUtf8(b.toHex()) )
+            .arg( QString::fromUtf8(v.bao().toHex()) ) ); pass = false; }
+
+  JsonSerial j = v.json();
   if ( v.append( (RiceyInt)321 ) ) tc++; else
     { pass = false; msg.append( "FAIL during append()\n" ); }
   if  ( !( v.value() == tv ) ) tc++; else

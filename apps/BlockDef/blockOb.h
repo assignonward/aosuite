@@ -322,7 +322,7 @@ virtual   bool  isArray()     const { return false; }
           void  clear()             { m_value = 0; }
         quint8  type()        const { return RDT_RICEYINT; }
 virtual qint32  size()        const { return 1; }
-     BaoSerial  bao()         const {  BaoSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
+     BaoSerial  bao()         const { return intToRice( m_value ); }
     JsonSerial  json()        const { return ensureQuotes( QByteArray::number( m_value ) ); }
         qint32  setBao ( const  BaoSerial &b );
           bool  setJson( const JsonSerial &j );
