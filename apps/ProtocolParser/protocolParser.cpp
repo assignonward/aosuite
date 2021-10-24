@@ -27,7 +27,8 @@
  * @return true if the passed protocol is valid
  */
 bool  ProtocolParser::isValid()
-{ if ( pr->key() != RCD_ProtocolDef_o )
+{ if (( pr->key() != RCD_ProtocolDef_o ) &&
+      ( pr->key() != RCD_ProtocolDef_O ))
     return false;
   if ( name().size() < 1 )
     return false;
@@ -40,13 +41,29 @@ bool  ProtocolParser::isValid()
  * @return name of the protocol, or empty string if name is not found.
  */
 Utf8String  ProtocolParser::name()
-{ if ( pr->key() != RCD_ProtocolDef_o )   return "";
-  BlockValueObject *bvo = (BlockValueObject *)pr->value();
-  if ( !bvo->contains( RCD_hash_o ) )     return "";
-  bvo = (BlockValueObject *)bvo->value( RCD_hash_o );
-  if ( !bvo->contains( RCD_hashInfo_o ) ) return "";
-  bvo = (BlockValueObject *)bvo->value( RCD_hashInfo_o );
-  if ( !bvo->contains( RCD_text_s ) )     return "";
-  BlockValueString *bvs = (BlockValueString *)bvo->value( RCD_text_s );
-  return bvs->value();
+{ if ( pr->key() == RCD_ProtocolDef_o )
+    { BlockValueObject *bvo = (BlockValueObject *)pr->value();
+      if ( !bvo->contains( RCD_hash_o ) )     return "1";
+      bvo = (BlockValueObject *)bvo->value( RCD_hash_o );
+      if ( !bvo->contains( RCD_hashInfo_o ) ) return "2";
+      bvo = (BlockValueObject *)bvo->value( RCD_hashInfo_o );
+      if ( !bvo->contains( RCD_text_s ) )     return "3";
+      BlockValueString *bvs = (BlockValueString *)bvo->value( RCD_text_s );
+      return bvs->value();
+    }
+  if ( pr->key() == RCD_ProtocolDef_O )
+    { BlockValueObjectArray *bvo = (BlockValueObjectArray *)pr->value();
+      if ( bvo->size() < 1 )                        return "A1";
+      if ( !bvo->at(0).contains( RCD_hash_O ) )     return "A2";
+      bvo = (BlockValueObjectArray *)bvo->at(0).value( RCD_hash_O );
+      if ( bvo->size() != 1 )                       return "A3";
+      if ( !bvo->at(0).contains( RCD_hashInfo_O ) ) return "A4";
+      bvo = (BlockValueObjectArray *)bvo->at(0).value( RCD_hashInfo_O );
+      if ( bvo->size() != 1 )                       return "A5";
+      if ( !bvo->at(0).contains( RCD_text_S ) )     return "A6";
+      BlockValueStringArray *bvs = (BlockValueStringArray *)bvo->at(0).value( RCD_text_S );
+      if ( bvs->size() != 1 )                       return "A7";
+      return bvs->at(0);
+    }
+  return "0";
 }

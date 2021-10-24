@@ -51,6 +51,7 @@ BlockTool::BlockTool( QWidget *cw ) :
   initReadFile();
   sortKeys();
   restore();
+  ui->sortDict->setChecked( true );
 }
 
 BlockTool::~BlockTool()

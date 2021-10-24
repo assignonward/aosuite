@@ -260,7 +260,7 @@
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "ProtocolList_O",
+            "name_s": "ProtocolDef_O",
             "text_s": "An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle",
             "type_b": "A07F"
         },
@@ -278,14 +278,26 @@
         },
         {
             "group_s": "protocolDefGroup",
+            "name_s": "ItemsDef_O",
+            "text_s": "An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)",
+            "type_b": "A03F"
+        },
+        {
+            "group_s": "protocolDefGroup",
             "name_s": "ItemsDef_o",
             "text_s": "An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)",
             "type_b": "A02F"
         },
         {
             "group_s": "protocolDefGroup",
+            "name_s": "ActorsDef_O",
+            "text_s": "A Actor definitions",
+            "type_b": "A01F"
+        },
+        {
+            "group_s": "protocolDefGroup",
             "name_s": "ActorsDef_o",
-            "text_s": "A single Actor definition",
+            "text_s": "A Actor definitions",
             "type_b": "A00F"
         },
         {
@@ -299,6 +311,30 @@
             "name_s": "receivableItems_C",
             "text_s": "A list items this actor consumes",
             "type_b": "A17C"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorWriterClient_O",
+            "text_s": "Actor definition: the actor who wants to create a record (in a blockchain)",
+            "type_b": "BA1F"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorWriterServer_O",
+            "text_s": "Actor definition: the actor who wants to retrieve a record (from a blockchain)",
+            "type_b": "BA3F"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorReaderClient_O",
+            "text_s": "Actor definition: the actor who handles requests to create records (in a blockchain)",
+            "type_b": "BA5F"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorReaderServer_O",
+            "text_s": "Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
+            "type_b": "BA7F"
         },
         {
             "group_s": "protocolActorGroup",
@@ -323,6 +359,30 @@
             "name_s": "actorReaderServer_o",
             "text_s": "Actor definition: the actor who handles requests to retrieve records (from a blockchain)",
             "type_b": "BA6F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "writeRequest_O",
+            "text_s": "A request to write data to storage",
+            "type_b": "B01F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "writeResponse_O",
+            "text_s": "A response to a request to write data to storage",
+            "type_b": "B03F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "readRequest_O",
+            "text_s": "A request to read data from storage",
+            "type_b": "B05F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "readResponse_O",
+            "text_s": "A response to a request to read data from storage",
+            "type_b": "B07F"
         },
         {
             "group_s": "protocolDefGroup",

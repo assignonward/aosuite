@@ -2,6 +2,8 @@
     <qresource prefix="/protocols">
         <file>DⒶ0.bao</file>
         <file>DⒶ1.bao</file>
+        <file>DⒶ0A.bao</file>
+        <file>DⒶ1A.bao</file>
     </qresource>
     <qresource prefix="/icons">
         <file>AOProtocolDemo.png</file>

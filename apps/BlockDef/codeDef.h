@@ -85,17 +85,27 @@
 #define RCD_png_c                                    332 // algorithmIdGroup Found in image objects, tells what format the data_b is to be interpreted as
 #define RCD_success_c                               8204 // dataGroup success code
 #define RCD_failure_c                              14348 // dataGroup failure code
-#define RCD_ProtocolList_O                          4223 // protocolDefGroup An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle
+#define RCD_ProtocolDef_O                           4223 // protocolDefGroup An Assign Onward Protocol List - should contain one or more ProtocolDef_o describing the protocols an actor is equipped to handle
 #define RCD_ProtocolDef_o                           4207 // protocolDefGroup An Assign Onward Protocol Definition - defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
 #define RCD_ProtocolSig_o                           4175 // protocolDefGroup A signature on an Assign Onward Protocol Definition, indicating the protocol is "approved" by the signer
+#define RCD_ItemsDef_O                              4159 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
 #define RCD_ItemsDef_o                              4143 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
-#define RCD_ActorsDef_o                             4111 // protocolDefGroup A single Actor definition
+#define RCD_ActorsDef_O                             4127 // protocolDefGroup A Actor definitions
+#define RCD_ActorsDef_o                             4111 // protocolDefGroup A Actor definitions
 #define RCD_sendableItems_C                         4316 // protocolDefGroup A list items this actor publishes
 #define RCD_receivableItems_C                       4348 // protocolDefGroup A list items this actor consumes
+#define RCD_actorWriterClient_O                     7455 // protocolActorGroup Actor definition: the actor who wants to create a record (in a blockchain)
+#define RCD_actorWriterServer_O                     7487 // protocolActorGroup Actor definition: the actor who wants to retrieve a record (from a blockchain)
+#define RCD_actorReaderClient_O                     7519 // protocolActorGroup Actor definition: the actor who handles requests to create records (in a blockchain)
+#define RCD_actorReaderServer_O                     7551 // protocolActorGroup Actor definition: the actor who handles requests to retrieve records (from a blockchain)
 #define RCD_actorWriterClient_o                     7439 // protocolActorGroup Actor definition: the actor who wants to create a record (in a blockchain)
 #define RCD_actorWriterServer_o                     7471 // protocolActorGroup Actor definition: the actor who wants to retrieve a record (from a blockchain)
 #define RCD_actorReaderClient_o                     7503 // protocolActorGroup Actor definition: the actor who handles requests to create records (in a blockchain)
 #define RCD_actorReaderServer_o                     7535 // protocolActorGroup Actor definition: the actor who handles requests to retrieve records (from a blockchain)
+#define RCD_writeRequest_O                          6175 // protocolDefGroup A request to write data to storage
+#define RCD_writeResponse_O                         6207 // protocolDefGroup A response to a request to write data to storage
+#define RCD_readRequest_O                           6239 // protocolDefGroup A request to read data from storage
+#define RCD_readResponse_O                          6271 // protocolDefGroup A response to a request to read data from storage
 #define RCD_writeRequest_o                          6159 // protocolDefGroup A request to write data to storage
 #define RCD_writeResponse_o                         6191 // protocolDefGroup A response to a request to write data to storage
 #define RCD_readRequest_o                           6223 // protocolDefGroup A request to read data from storage
