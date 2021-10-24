@@ -192,9 +192,10 @@ void  BlockTool::editSelectedElement()
   RiceyInt k = vb->vKey();
   if (( k == RCD_null_z ) || ( !dict.codesContainCode( k ) ))
     { if ( k == RCD_null_z )
-        qWarning( "null key" );
+        { // qWarning( "BlockTool::editSelectedElement() null key" );
+        }
        else
-        qWarning( "unknown key %llu", k );
+        qWarning( "BlockTool::editSelectedElement() unknown key %llu", k );
       valueEditorNoNav();
       return;
     }
@@ -232,10 +233,11 @@ void  BlockTool::editSelectedElement()
 void  BlockTool::setEditorValue( ValueBase *vb )
 { qint32 i;
   switch ( vb->type() & RDT_TYPEMASK )
-   { case RDT_INT64: ui->intEdit->setText( Utf8String::number(((BlockValueInt64 *)vb)->value())   ); break;
-     case RDT_MPZ:   ui->mpzEdit->setText( ValueBase::removeQuotes(((BlockValueMPZ *)vb)->json()) ); break;
-     case RDT_MPQ:   ui->mpqEdit->setText( ValueBase::removeQuotes(((BlockValueMPQ *)vb)->json()) ); break;
-     case RDT_STRING:    ui->stringEdit->   setText( ((BlockValueString    *)vb)->value()         ); break;
+   { case RDT_INT64:     ui->      intEdit->setText( Utf8String::number(((BlockValueInt64    *)vb)->value())); break;
+     case RDT_RICEYINT:  ui-> riceyIntEdit->setText( Utf8String::number(((BlockValueRiceyInt *)vb)->value())); break;
+     case RDT_MPZ:       ui->      mpzEdit->setText( ValueBase::removeQuotes(((BlockValueMPZ *)vb)->json()) ); break;
+     case RDT_MPQ:       ui->      mpqEdit->setText( ValueBase::removeQuotes(((BlockValueMPQ *)vb)->json()) ); break;
+     case RDT_STRING:    ui->   stringEdit->setText( ((BlockValueString    *)vb)->value()         ); break;
      case RDT_BYTEARRAY: ui->byteArrayEdit->setText( ((BlockValueByteArray *)vb)->value().toHex() ); break;
      case RDT_RCODE:
        i = ui->rcodeEdit->findText( dict.nameFromCode( ((BlockValueRiceyCode *)vb)->value()) );
@@ -256,10 +258,11 @@ void  BlockTool::on_set_clicked()
   if ( vb->isArray() ) { qWarning( "shouldn't be able to set in an array element (only insert)" ); return; }
   Utf8String codeName;
   switch ( vb->type() & RDT_TYPEMASK )
-    { case RDT_MPZ:       ((BlockValueMPZ       *)vb)->set( ui->mpzEdit->text().toUtf8() );     updateNav(); break;
-      case RDT_MPQ:       ((BlockValueMPQ       *)vb)->set( ui->mpqEdit->text().toUtf8() );     updateNav(); break;
-      case RDT_INT64:     ((BlockValueInt64     *)vb)->set( ui->intEdit->text().toLongLong() ); updateNav(); break;
-      case RDT_STRING:    ((BlockValueString    *)vb)->set( ui->stringEdit->text().toUtf8()  ); updateNav(); break;
+    { case RDT_MPZ:       ((BlockValueMPZ       *)vb)->set( ui->     mpzEdit->text().toUtf8()     ); updateNav(); break;
+      case RDT_MPQ:       ((BlockValueMPQ       *)vb)->set( ui->     mpqEdit->text().toUtf8()     ); updateNav(); break;
+      case RDT_INT64:     ((BlockValueInt64     *)vb)->set( ui->     intEdit->text().toLongLong() ); updateNav(); break;
+      case RDT_RICEYINT:  ((BlockValueRiceyInt  *)vb)->set( ui->riceyIntEdit->text().toLongLong() ); updateNav(); break;
+      case RDT_STRING:    ((BlockValueString    *)vb)->set( ui->  stringEdit->text().toUtf8()     ); updateNav(); break;
       case RDT_BYTEARRAY: ((BlockValueByteArray *)vb)->set( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ) ); updateNav(); break;
       case RDT_RCODE:
         codeName = ui->rcodeEdit->currentText().toUtf8();
@@ -377,14 +380,16 @@ void  BlockTool::insertKeyName( Utf8String nKey )
    else
     { switch ( tp )
         { case RDT_OBJECT   : vbp = new BlockValueObject   ( this ); break;
-          case RDT_INT64    : vbp = new BlockValueInt64    ( ui->intEdit->text().toLongLong(), this ); break;
+          case RDT_INT64    : vbp = new BlockValueInt64    ( ui->     intEdit->text().toLongLong(), this ); break;
+          case RDT_RICEYINT : vbp = new BlockValueRiceyInt ( ui->riceyIntEdit->text().toLongLong(), this ); break;
           case RDT_RCODE    : vbp = new BlockValueRiceyCode( dict.codeFromCodeName( ui->rcodeEdit->currentText().toUtf8() ), this ); break;
           case RDT_MPZ      : vbp = new BlockValueMPZ      ( ui->mpzEdit->text().toUtf8(), this ); break;
           case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit->text().toUtf8(), this ); break;
           case RDT_BYTEARRAY: vbp = new BlockValueByteArray( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ), this ); break;
           case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit->text().toUtf8(), this ); break;
           case RDT_OBJECT_ARRAY   : vbp = new BlockValueObjectArray   ( this ); ((BlockValueObjectArray *   )vbp)->append(new BlockValueObject   (vbp)); break;
-          case RDT_INT64_ARRAY    : vbp = new BlockValueInt64Array    ( this ); ((BlockValueInt64Array *    )vbp)->append(new BlockValueInt64    (ui->intEdit->text().toLongLong(), vbp)); break;
+          case RDT_INT64_ARRAY    : vbp = new BlockValueInt64Array    ( this ); ((BlockValueInt64Array *    )vbp)->append(new BlockValueInt64    (ui->     intEdit->text().toLongLong(), vbp)); break;
+          case RDT_RICEYINT_ARRAY : vbp = new BlockValueRiceyIntArray ( this ); ((BlockValueRiceyIntArray * )vbp)->append(new BlockValueRiceyInt (ui->riceyIntEdit->text().toLongLong(), vbp)); break;
           case RDT_RCODE_ARRAY    : vbp = new BlockValueRiceyCodeArray( this ); ((BlockValueRiceyCodeArray *)vbp)->append(new BlockValueRiceyCode(dict.codeFromCodeName(ui->rcodeEdit->currentText().toUtf8() ), vbp)); break;
           case RDT_MPZ_ARRAY      : vbp = new BlockValueMPZArray      ( this ); ((BlockValueMPZArray *      )vbp)->append(new BlockValueMPZ      (ui->mpzEdit->text().toUtf8(), vbp)); break;
           case RDT_MPQ_ARRAY      : vbp = new BlockValueMPQArray      ( this ); ((BlockValueMPQArray *      )vbp)->append(new BlockValueMPQ      (ui->mpqEdit->text().toUtf8(), vbp)); break;
@@ -432,6 +437,8 @@ void  BlockTool::on_key_currentTextChanged( const QString &nuKey )
       case RDT_OBJECT         : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_object    )); break;
       case RDT_INT64_ARRAY    :
       case RDT_INT64          : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_int       )); break;
+      case RDT_RICEYINT_ARRAY :
+      case RDT_RICEYINT       : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_riceyInt  )); break;
       case RDT_RCODE_ARRAY    :
       case RDT_RCODE          : ui->valueWidget->setCurrentIndex( ui->valueWidget->indexOf(ui->page_rcode     )); break;
       case RDT_MPZ_ARRAY      :
@@ -772,7 +779,7 @@ BlockPanel *BlockTool::updateBuild()
 BlockPanel *BlockTool::updateNav()
 { if ( ui->navBuild->isChecked() ) return updateBuild();
   if ( ui->navMake ->isChecked() ) return updateMake();
-  qWarning( "BlockTool::updateBuild() no nav choice checked" );
+  qWarning( "BlockTool::updateNav() no nav choice checked" );
   return nullptr;
 }
 
@@ -994,6 +1001,11 @@ void  BlockTool::initReadFile()
     }
 }
 
+/**
+ * @brief BlockTool::buttonStyle - stylesheet for buttons that change with mode
+ * @param m - controls the button outline color
+ * @return style sheet for the color outline buttons, color chosen by mode
+ */
 QString BlockTool::buttonStyle( ValueBase::Mode m )
 { QString color;
   switch ( m )

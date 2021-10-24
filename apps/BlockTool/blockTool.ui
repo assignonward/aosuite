@@ -78,7 +78,7 @@
     <item row="3" column="3">
      <widget class="QStackedWidget" name="valueWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page_object">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -154,6 +154,25 @@
         </property>
         <item row="0" column="0">
          <widget class="QComboBox" name="rcodeEdit"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_riceyInt">
+       <layout class="QGridLayout" name="gridLayout_14">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLineEdit" name="riceyIntEdit"/>
         </item>
        </layout>
       </widget>
