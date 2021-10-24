@@ -28,7 +28,7 @@
 #define RDT_MPQ             0x02 // r - libGMP rational fraction - json as a quoted ASCII decimal string/ASCII decimal string, bson as an object carrying the native GMP
 #define RDT_STRING          0x05 // s - UTF8 encoded string - json as UTF8 string, bson as int32_t length (includes terminator) followed by UTF8 string plus null terminator
 #define RDT_INT64           0x06 // i - 64 bit signed integer - json in an unquoted ASCII decimal string, bao as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)
-#define RDT_RICEYINT        0x09 // v - RiceyInt 63 bit unsigned integer - stored as a variable (1 to 9 byte) length code in bao, as a decimal string of the value in json
+#define RDT_RICEYINT        0x09 // v - 63 bit unsigned integer - json in an unquoted ASCII decimal string, bao as ricey code
 #define RDT_BYTEARRAY       0x0B // b - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
 #define RDT_RCODE           0x0C // c - Ricey code - json as the table defined name, bson as a list of bytes: last byte has 0 in most significant bit.
 #define RDT_OBJECT          0x0F // o - in json: a comma separated list of zero or more key-value pairs json encases each pair in {}, all keys unique within the object, in bson there are no separators, a key of Obterm ends the current object
@@ -36,7 +36,7 @@
 #define RDT_MPQ_ARRAY       0x12 // R - array of zero or more libGMP rational fractions stored as described above
 #define RDT_STRING_ARRAY    0x15 // S - array of zero or more UTF-8 encoded strings - json as quoted, escaped UTF-8 string, bson as int32_t length followed by UTF-8 string, no null terminator
 #define RDT_INT64_ARRAY     0x16 // I - array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson
-#define RDT_RICEYINT_ARRAY  0x19 // V - array of zero or more RiceyInt 63 bit unsigned integers - stored as a variable (1 to 9 byte) length code in bao, as a decimal string of the value in json
+#define RDT_RICEYINT_ARRAY  0x19 // V - array of zero or more 63 bit unsigned integers stored as above, comma separated in json, rice code size followed by the array in bson
 #define RDT_BYTEARRAY_ARRAY 0x1B // B - ByteArray (aka octet stream) - json as hex string, bson as int32_t length followed by length octets
 #define RDT_RCODE_ARRAY     0x1C // C - array of zero or more Ricey codes, quoted hexadecimal and comma separated in json, starts with a rice code size followed by the array in bson
 #define RDT_OBJECT_ARRAY    0x1F // O - array of zero or more objects encased in []
@@ -49,7 +49,7 @@
 #define RCD_mpq_r                                      2 // dataGroup Generic MPQ large integer fraction, use depends on context.
 #define RCD_text_s                                     5 // dataGroup Generic string, use depends on context, for instance in an image object this would be the alt text
 #define RCD_int64_i                                    6 // dataGroup Generic signed int64, use depends on context.
-#define RCD_ricey_v                                    9 // dataGroup Generic unsigned 63 bit int, use depends on context.
+#define RCD_riceyInt_v                                 9 // dataGroup Generic unsigned 63 bit int, use depends on context.
 #define RCD_data_b                                    11 // dataGroup Generic data block, use determined by the object which contains it.
 #define RCD_type_c                                    12 // dataGroup Identifies an algorithm type for hash or crypto key, or other types depending on context
 #define RCD_ob_o                                      15 // dataGroup Generic object, use depends on context
@@ -57,7 +57,7 @@
 #define RCD_mpq_R                                     18 // dataGroup A generic array of MPQ elements
 #define RCD_text_S                                    21 // dataGroup A generic array of string elements
 #define RCD_int64_I                                   22 // dataGroup A generic array of int64 elements
-#define RCD_ricey_V                                   25 // dataGroup A generic array of RiceyInt elements
+#define RCD_riceyInt_V                                25 // dataGroup A generic array of riceyInt elements
 #define RCD_data_B                                    27 // dataGroup A generic array of byte array element
 #define RCD_type_C                                    28 // dataGroup A generic array of Ricey elements
 #define RCD_ob_O                                      31 // dataGroup A generic array of object elements
@@ -102,6 +102,11 @@
 #define RCD_actorWriterServer_O                     7487 // protocolActorGroup Actor definition: the actor who wants to retrieve a record (from a blockchain)
 #define RCD_actorReaderClient_O                     7519 // protocolActorGroup Actor definition: the actor who handles requests to create records (in a blockchain)
 #define RCD_actorReaderServer_O                     7551 // protocolActorGroup Actor definition: the actor who handles requests to retrieve records (from a blockchain)
+#define RCD_actorWriterClientId_B                   7451 // protocolActorGroup Actor id: unique id of the actor who wants to create a record (in a blockchain)
+#define RCD_actorWriterServerId_B                   7483 // protocolActorGroup Actor id: unique id of the actor who handles requests to create records (in a blockchain)
+#define RCD_actorReaderClientId_B                   7515 // protocolActorGroup Actor id: unique id of the actor who wants to retrieve a record (from a blockchain)
+#define RCD_actorReaderServerId_B                   7547 // protocolActorGroup Actor id: unique id of the actor who handles requests to retrieve records (from a blockchain)
+#define RCD_blockchainId_B                          7707 // protocolActorGroup Unique id of a blockchain, often the bao of its hash_o
 #define RCD_actorWriterClient_o                     7439 // protocolActorGroup Actor definition: the actor who wants to create a record (in a blockchain)
 #define RCD_actorWriterServer_o                     7471 // protocolActorGroup Actor definition: the actor who wants to retrieve a record (from a blockchain)
 #define RCD_actorReaderClient_o                     7503 // protocolActorGroup Actor definition: the actor who handles requests to create records (in a blockchain)
@@ -136,7 +141,6 @@
 #define RCD_recordStorageResult_o                 692879 // serviceDescriptors Object describes success or failure of a record storage attempt
 #define RCD_requestRecordRetrieval_o              693039 // serviceDescriptors Object describes the id of the requestor, id of the database to record in, and id of the record to retrieve
 #define RCD_recordRetrievalResult_o               693007 // serviceDescriptors Object describes success (with data) or failure of a record retrieval attempt
-#define RCD_minMaxSize_V                           14361 // dataGroup Describing an array in a protocol, element 0 tells the minimum legal size of an array in a protocol, element 1 tells the maximum legal size - when this is absent, both are assumed to be 1 (key value pair)
 #define RCD_RangeBounds_O                          14367 // dataGroup Boundaries for valid values
 #define RCD_min_i                                  14406 // dataGroup Used in range boundaries
 #define RCD_min_n                                  14401 // dataGroup Used in range boundaries

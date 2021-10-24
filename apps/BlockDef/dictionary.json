@@ -32,7 +32,7 @@
         },
         {
             "group_s": "dataGroup",
-            "name_s": "ricey_v",
+            "name_s": "riceyInt_v",
             "text_s": "Generic unsigned 63 bit int, use depends on context.",
             "type_b": "09"
         },
@@ -80,8 +80,8 @@
         },
         {
             "group_s": "dataGroup",
-            "name_s": "ricey_V",
-            "text_s": "A generic array of RiceyInt elements",
+            "name_s": "riceyInt_V",
+            "text_s": "A generic array of riceyInt elements",
             "type_b": "19"
         },
         {
@@ -350,6 +350,36 @@
         },
         {
             "group_s": "protocolActorGroup",
+            "name_s": "actorWriterClientId_B",
+            "text_s": "Actor id: unique id of the actor who wants to create a record (in a blockchain)",
+            "type_b": "BA1B"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorWriterServerId_B",
+            "text_s": "Actor id: unique id of the actor who handles requests to create records (in a blockchain)",
+            "type_b": "BA3B"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorReaderClientId_B",
+            "text_s": "Actor id: unique id of the actor who wants to retrieve a record (from a blockchain)",
+            "type_b": "BA5B"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "actorReaderServerId_B",
+            "text_s": "Actor id: unique id of the actor who handles requests to retrieve records (from a blockchain)",
+            "type_b": "BA7B"
+        },
+        {
+            "group_s": "protocolActorGroup",
+            "name_s": "blockchainId_B",
+            "text_s": "Unique id of a blockchain, often the bao of its hash_o",
+            "type_b": "BC1B"
+        },
+        {
+            "group_s": "protocolActorGroup",
             "name_s": "actorWriterClient_o",
             "text_s": "Actor definition: the actor who wants to create a record (in a blockchain)",
             "type_b": "BA0F"
@@ -551,12 +581,6 @@
             "name_s": "recordRetrievalResult_o",
             "text_s": "Object describes success (with data) or failure of a record retrieval attempt",
             "type_b": "AAA60F"
-        },
-        {
-            "group_s": "dataGroup",
-            "name_s": "minMaxSize_V",
-            "text_s": "Describing an array in a protocol, element 0 tells the minimum legal size of an array in a protocol, element 1 tells the maximum legal size - when this is absent, both are assumed to be 1 (key value pair)",
-            "type_b": "F019"
         },
         {
             "group_s": "dataGroup",
@@ -803,7 +827,7 @@
         {
             "code_s": "v",
             "name_s": "RICEYINT",
-            "text_s": "RiceyInt 63 bit unsigned integer - stored as a variable (1 to 9 byte) length code in bao, as a decimal string of the value in json",
+            "text_s": "63 bit unsigned integer - json in an unquoted ASCII decimal string, bao as ricey code",
             "type_b": "09"
         },
         {
@@ -851,7 +875,7 @@
         {
             "code_s": "V",
             "name_s": "RICEYINT_ARRAY",
-            "text_s": "array of zero or more RiceyInt 63 bit unsigned integers - stored as a variable (1 to 9 byte) length code in bao, as a decimal string of the value in json",
+            "text_s": "array of zero or more 63 bit unsigned integers stored as above, comma separated in json, rice code size followed by the array in bson",
             "type_b": "19"
         },
         {

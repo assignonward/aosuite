@@ -98,12 +98,12 @@ s</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>565</width>
-         <height>380</height>
+         <width>551</width>
+         <height>361</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_10">
-        <item row="4" column="0" colspan="4">
+        <item row="5" column="0" colspan="4">
          <widget class="QGroupBox" name="wcLogGroup">
           <property name="title">
            <string>Transaction Log</string>
@@ -127,7 +127,7 @@ s</string>
           </layout>
          </widget>
         </item>
-        <item row="1" column="0" rowspan="2" colspan="4">
+        <item row="2" column="0" rowspan="2" colspan="4">
          <widget class="QGroupBox" name="wcDataGroup">
           <property name="title">
            <string>Data to Write</string>
@@ -151,7 +151,38 @@ s</string>
           </layout>
          </widget>
         </item>
-        <item row="3" column="3" alignment="Qt::AlignRight">
+        <item row="0" column="0" colspan="3">
+         <widget class="QGroupBox" name="wcIdGroup">
+          <property name="title">
+           <string>Writer Identity</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="wcId">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="3" alignment="Qt::AlignRight">
          <widget class="QPushButton" name="wcSend">
           <property name="maximumSize">
            <size>
@@ -207,12 +238,12 @@ s</string>
           </layout>
          </widget>
         </item>
-        <item row="0" column="0" colspan="3">
-         <widget class="QGroupBox" name="wcIdGroup">
+        <item row="1" column="0" colspan="3">
+         <widget class="QGroupBox" name="wcBlockchainIdGroup">
           <property name="title">
-           <string>Writer Identity</string>
+           <string>Blockchain Id</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_5">
+          <layout class="QGridLayout" name="gridLayout_21">
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -226,14 +257,7 @@ s</string>
             <number>0</number>
            </property>
            <item row="0" column="0">
-            <widget class="QLineEdit" name="wcId">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
+            <widget class="QLineEdit" name="wcBlockchainId"/>
            </item>
           </layout>
          </widget>
@@ -261,8 +285,8 @@ s</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>564</width>
-         <height>380</height>
+         <width>550</width>
+         <height>387</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_8">
@@ -290,31 +314,7 @@ s</string>
           </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_5">
-          <property name="title">
-           <string>Data Handle</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_14">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLineEdit" name="rcDataHandle"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="2">
+        <item row="4" column="0" colspan="2">
          <widget class="QGroupBox" name="groupBox_6">
           <property name="title">
            <string>Transaction Log</string>
@@ -334,6 +334,61 @@ s</string>
            </property>
            <item row="0" column="0">
             <widget class="QTextEdit" name="rcLog"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="1" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+         <widget class="QPushButton" name="rcRequest">
+          <property name="text">
+           <string>Request</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Data Read</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QTextEdit" name="rcData"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="title">
+           <string>Data Handle</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_14">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="rcDataHandle"/>
            </item>
           </layout>
          </widget>
@@ -378,19 +433,12 @@ s</string>
           </layout>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QPushButton" name="rcRequest">
-          <property name="text">
-           <string>Request</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="QGroupBox" name="groupBox">
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="rcBlockchainIdGroup">
           <property name="title">
-           <string>Data Read</string>
+           <string>Blockchain Id</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_6">
+          <layout class="QGridLayout" name="gridLayout_22">
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -404,7 +452,7 @@ s</string>
             <number>0</number>
            </property>
            <item row="0" column="0">
-            <widget class="QTextEdit" name="rcData"/>
+            <widget class="QLineEdit" name="rcBlockchainId"/>
            </item>
           </layout>
          </widget>
@@ -456,7 +504,7 @@ s</string>
          <x>0</x>
          <y>0</y>
          <width>565</width>
-         <height>209</height>
+         <height>239</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_9">
@@ -575,7 +623,7 @@ s</string>
          <x>0</x>
          <y>0</y>
          <width>564</width>
-         <height>209</height>
+         <height>239</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_11">
