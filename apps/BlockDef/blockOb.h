@@ -307,9 +307,51 @@ class BlockValueInt64Array : public ValueBaseArray
 };
 
 /**
- * @brief The BlockValueRiceyCode class - a single Ricey Code, 1 to 7 octets in length
+ * @brief The BlockValueRiceyInt class - single unsigned 63 bit integer
  *
- * Container's Keys are type y/Y
+ * Container's Keys are type v/V - codes are not required to appear in the dictionary
+ */
+class BlockValueRiceyInt : public ValueBase
+{ public:
+      explicit  BlockValueRiceyInt( QObject *parent = nullptr ) : ValueBase( parent ) { set( 0 ); }
+                BlockValueRiceyInt( const RiceyInt &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
+               ~BlockValueRiceyInt() {}
+virtual   bool  isContainer() const { return false; }
+virtual   bool  isArray()     const { return false; }
+          void  clear()             { m_value = 0; }
+        quint8  type()        const { return RDT_RICEYINT; }
+virtual qint32  size()        const { return 1; }
+     BaoSerial  bao()         const {  BaoSerial b; QDataStream s(&b,QIODevice::WriteOnly); s.setByteOrder(QDataStream::LittleEndian); s << m_value; return b; }
+    JsonSerial  json()        const { return ensureQuotes( QByteArray::number( m_value ) ); }
+        qint32  setBao ( const  BaoSerial &b );
+          bool  setJson( const JsonSerial &j );
+      RiceyInt  value()       const { return m_value; }
+     RiceyCode  valueInt()    const { return intToRice( m_value ); }
+          void  set       ( const RiceyInt &v )                  { m_value = v; }
+          bool  operator==( const RiceyInt &v )            const { return v         == value(); }
+          bool  operator==( const BlockValueRiceyInt &v  ) const { return v.value() == value(); }
+
+        qint64  m_value;
+};
+
+class BlockValueRiceyIntArray : public ValueBaseArray
+{ public:
+      explicit  BlockValueRiceyIntArray( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
+                BlockValueRiceyIntArray( const QList<RiceyInt> &v, QObject *parent = nullptr ) : ValueBaseArray( parent ) { set(v); }
+               ~BlockValueRiceyIntArray() {}
+        quint8  type()           const { return RDT_RICEYINT_ARRAY; }
+          bool  append(  RiceyInt  v ) { return append( new BlockValueRiceyInt(v, this) ); }
+          bool  append( ValueBase *v ) { return ValueBaseArray::append( v ); }
+      RiceyInt  at( qint32 n )   const { if (( n >= 0 ) && ( n < size() )) return ((BlockValueRiceyInt *)m_values[n])->value(); qWarning( "array index %d out of bounds %d",n,size() ); return 0; }
+QList<RiceyInt> value()          const { QList<RiceyInt> vl; qint32 n = 0; while ( n < size() ) vl.append(at(n++)); return vl; }
+          void  set( const QList<RiceyInt> &vl ) { clear(); foreach( RiceyInt v, vl ) { if ( !append( v ) ) qWarning( "append Failed" ); } }
+          bool  operator==(const QList<RiceyInt>& l) const { if (l.size() != size()) return false; for (qint32 i=0;i<size();i++) if (l.at(i)!=at(i)) return false; return true; }
+};
+
+/**
+ * @brief The BlockValueRiceyCode class - a single Ricey Code, 1 to 9 octets in length
+ *
+ * Container's Keys are type c/C - codes are required to appear in the dictionary
  */
 class BlockValueRiceyCode : public ValueBase
 { public:

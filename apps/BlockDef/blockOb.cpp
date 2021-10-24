@@ -421,6 +421,21 @@ qint32  BlockValueMPQ::setBao( const BaoSerial &b )
 }
 
 /**
+ * @brief BlockValueRiceyInt::setBao
+ * @param b - ricey code in octets
+ * @return number of bytes converted from the BaoSerial stream, -1 if there was a problem
+ */
+qint32  BlockValueRiceyInt::setBao( const BaoSerial &b )
+{ qint32 len = 0;
+  bool ok = false;
+  qint64 v = riceToInt( b, &len, &ok );
+  if ( !ok )
+    { qWarning( "riceToInt conversion problem." ); return -1; }
+  set( v );
+  return len;
+}
+
+/**
  * @brief BlockValueRiceyCode::setBao
  * @param b - ricey code in octets
  * @return number of bytes converted from the BaoSerial stream, -1 if there was a problem

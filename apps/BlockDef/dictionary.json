@@ -32,6 +32,12 @@
         },
         {
             "group_s": "dataGroup",
+            "name_s": "ricey_v",
+            "text_s": "Generic unsigned 63 bit int, use depends on context.",
+            "type_b": "09"
+        },
+        {
+            "group_s": "dataGroup",
             "name_s": "data_b",
             "text_s": "Generic data block, use determined by the object which contains it.",
             "type_b": "0B"
@@ -71,6 +77,12 @@
             "name_s": "int64_I",
             "text_s": "A generic array of int64 elements",
             "type_b": "16"
+        },
+        {
+            "group_s": "dataGroup",
+            "name_s": "ricey_V",
+            "text_s": "A generic array of RiceyInt elements",
+            "type_b": "19"
         },
         {
             "group_s": "dataGroup",
@@ -542,6 +554,12 @@
         },
         {
             "group_s": "dataGroup",
+            "name_s": "minMaxSize_V",
+            "text_s": "Describing an array in a protocol, element 0 tells the minimum legal size of an array in a protocol, element 1 tells the maximum legal size - when this is absent, both are assumed to be 1 (key value pair)",
+            "type_b": "F019"
+        },
+        {
+            "group_s": "dataGroup",
             "name_s": "RangeBounds_O",
             "text_s": "Boundaries for valid values",
             "type_b": "F01F"
@@ -779,8 +797,14 @@
         {
             "code_s": "i",
             "name_s": "INT64",
-            "text_s": "64 bit signed integer - json in an unquoted ASCII decimal string, bson as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)",
+            "text_s": "64 bit signed integer - json in an unquoted ASCII decimal string, bao as 8 bytes using void qToLittleEndian(qint64 src, uchar *dest)",
             "type_b": "06"
+        },
+        {
+            "code_s": "v",
+            "name_s": "RICEYINT",
+            "text_s": "RiceyInt 63 bit unsigned integer - stored as a variable (1 to 9 byte) length code in bao, as a decimal string of the value in json",
+            "type_b": "09"
         },
         {
             "code_s": "b",
@@ -823,6 +847,12 @@
             "name_s": "INT64_ARRAY",
             "text_s": "array of zero or more 64 bit signed integers stored as above, comma separated in json, rice code size followed by the array in bson",
             "type_b": "16"
+        },
+        {
+            "code_s": "V",
+            "name_s": "RICEYINT_ARRAY",
+            "text_s": "array of zero or more RiceyInt 63 bit unsigned integers - stored as a variable (1 to 9 byte) length code in bao, as a decimal string of the value in json",
+            "type_b": "19"
         },
         {
             "code_s": "B",

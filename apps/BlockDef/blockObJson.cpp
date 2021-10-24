@@ -49,7 +49,7 @@
 
 /**
  * @brief BlockValueInt64::setJson
- * @param j - byte array which should contain a UTF8 encoded integer
+ * @param j - byte array which should contain a UTF8 encoded base 10 integer
  * @return true if conversion was successful
  */
 bool BlockValueInt64::setJson( const JsonSerial &j )
@@ -61,6 +61,29 @@ bool BlockValueInt64::setJson( const JsonSerial &j )
     m_value = v;
    else
     qWarning( "problem converting '%s' to int64", j.data() );
+  return ok;
+}
+
+/**
+ * @brief BlockValueRiceyInt::setJson
+ * @param j - byte array which should contain a UTF8 encoded base 10 unsigned integer
+ * @return true if conversion was successful
+ */
+bool BlockValueRiceyInt::setJson( const JsonSerial &j )
+{ if ( j.size() < 1 )
+    { qWarning( "empty json" ); return false; }
+  bool ok;
+  qint64 v = removeQuotes(j).toLongLong(&ok);
+  if ( ok )
+    { if ( v >= 0 )
+        m_value = v;
+       else
+        { ok = false;
+          qWarning( "RiceyInt cannot be negative" );
+        }
+    }
+   else
+    qWarning( "problem converting '%s' to RiceyInt", j.data() );
   return ok;
 }
 
