@@ -59,6 +59,25 @@
  * weird, the implementation could shift behind the scenes, though a   *
  * dictionary change would be required to take advantage of the extra  *
  * bit made available by the defaulting to only array types.           *
+ *                                                                     *
+ * Conclusion after experiment:                                        *
+ * While it would be nice to get rid of the KeyValuePair vs            *
+ * KeyValueArray code bifurcations, it's not a good tradeoff for the   *
+ * assurance provided by KeyValuePair that there will be a singular    *
+ * value present just by the fact that the key refers to a pair        *
+ * instead of an array.  Also, the "work of values" would be preserved *
+ * in a KeyValueArray only implementation even though the values would *
+ * not be handled directly from a key, they are still handled as       *
+ * members of the arrays and most of the required value functions      *
+ * remain necessary in a KeyValueArray only implementation.  Finally,  *
+ * in addition to being cumbersome to always check array sizes before  *
+ * accessing the array, it is highly likely that some size checks      *
+ * would be skipped in actual practice, leading to potential crashes   *
+ * and exploit vulnerabilities.                                        *
+ *                                                                     *
+ * Bottom Line:                                                        *
+ * KeyValuePairs are staying in the code, and the protocol definition  *
+ * format will be using them.                                          *
  * *********************************************************************/
 
 /**
