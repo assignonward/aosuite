@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
            pd = new ProtocolDemo( ui->     demoTab );
                 new Tests       ( ui->    testsTab );
     on_update_clicked();
+    on_readJson_clicked();
+    on_reformat_clicked();
 }
 
 MainWindow::~MainWindow()
