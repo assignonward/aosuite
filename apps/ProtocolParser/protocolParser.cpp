@@ -116,8 +116,12 @@ void  ProtocolActor::protocolSet()
        else
         { items = bvc->value();
           foreach( RiceyCode item, items )
-            { qWarning( "%s sendable item %s", dict.nameFromCode( actTyp ).data(), dict.nameFromCode( item ).data() );
-
+            { if ( !bvi->at(0).contains( riceToInt( item ) ) )
+                { Utf8String actor = dict.nameFromCode( actTyp );
+                  Utf8String itNam = dict.nameFromCode( item );
+                  qWarning( "%s sendable item %s not found", actor.data(), itNam.data() );
+                }
+              // TODO: grab it for use...
             }
         }
       if ( !bvo->at(0).contains( RCD_receivableItems_C ) ) { qWarning( "ProtocolActor::protocolSet() Error 15" ); return; }
@@ -126,8 +130,12 @@ void  ProtocolActor::protocolSet()
        else
         { items = bvc->value();
           foreach( RiceyCode item, items )
-            { qWarning( "%s receivable item %s", dict.nameFromCode( actTyp ).data(), dict.nameFromCode( item ).data() );
-
+            { if ( !bvi->at(0).contains( riceToInt( item ) ) )
+                { Utf8String actor = dict.nameFromCode( actTyp );
+                  Utf8String itNam = dict.nameFromCode( item );
+                  qWarning( "%s receivable item %s not found", actor.data(), itNam.data() );
+                }
+              // TODO: grab it for use...
             }
         }
     }
