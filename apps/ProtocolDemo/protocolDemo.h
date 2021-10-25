@@ -31,7 +31,7 @@ class WriterClient : public ProtocolActor
 {
     Q_OBJECT
 public:
-    explicit WriterClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterClient_O, parent ) {}
+    explicit WriterClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterClient_o, parent ) {}
 
 signals:
     void sendRequest( QByteArray );
@@ -44,7 +44,7 @@ class WriterServer : public ProtocolActor
 {
     Q_OBJECT
 public:
-    explicit WriterServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterServer_O, parent ) {}
+    explicit WriterServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterServer_o, parent ) {}
 
 signals:
     void sendResponse( QByteArray );
@@ -57,7 +57,7 @@ class ReaderClient : public ProtocolActor
 {
     Q_OBJECT
 public:
-    explicit ReaderClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderClient_O, parent ) {}
+    explicit ReaderClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderClient_o, parent ) {}
 
 signals:
     void sendRequest( QByteArray );
@@ -70,7 +70,7 @@ class ReaderServer : public ProtocolActor
 {
     Q_OBJECT
 public:
-    explicit ReaderServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderServer_O, parent ) {}
+    explicit ReaderServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderServer_o, parent ) {}
 
 signals:
     void sendResponse( QByteArray );

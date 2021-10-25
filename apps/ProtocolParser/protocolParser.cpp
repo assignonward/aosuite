@@ -27,11 +27,14 @@
  * @return true if the passed protocol is valid
  */
 bool  ProtocolParser::isValid()
-{ if (( pr->key() != RCD_ProtocolDef_o ) &&
-      ( pr->key() != RCD_ProtocolDef_O ))
-    return false;
+{ if ( pr->key() != RCD_ProtocolDef_o )
+    { qWarning( "protocol invalid" );
+      return false;
+    }
   if ( name().size() < 1 )
-    return false;
+    { qWarning( "protocol name not found" );
+      return false;
+    }
   // TODO: more checks as needed
   return true;
 }
@@ -50,20 +53,6 @@ Utf8String  ProtocolParser::name()
       if ( !bvo->contains( RCD_text_s ) )     return "3";
       BlockValueString *bvs = (BlockValueString *)bvo->value( RCD_text_s );
       return bvs->value();
-    }
-  if ( pr->key() == RCD_ProtocolDef_O )
-    { BlockValueObjectArray *bvo = (BlockValueObjectArray *)pr->value();
-      if ( bvo->size() < 1 )                        return "A1";
-      if ( !bvo->at(0).contains( RCD_hash_O ) )     return "A2";
-      bvo = (BlockValueObjectArray *)bvo->at(0).value( RCD_hash_O );
-      if ( bvo->size() != 1 )                       return "A3";
-      if ( !bvo->at(0).contains( RCD_hashInfo_O ) ) return "A4";
-      bvo = (BlockValueObjectArray *)bvo->at(0).value( RCD_hashInfo_O );
-      if ( bvo->size() != 1 )                       return "A5";
-      if ( !bvo->at(0).contains( RCD_text_S ) )     return "A6";
-      BlockValueStringArray *bvs = (BlockValueStringArray *)bvo->at(0).value( RCD_text_S );
-      if ( bvs->size() != 1 )                       return "A7";
-        return bvs->at(0);
     }
   return "0";
 }
@@ -93,49 +82,55 @@ void  ProtocolActor::protocolSet()
         return;
       }
   QList<RiceyCode> items;
-  if ( pp->pr->key() == RCD_ProtocolDef_O )
-    { BlockValueObjectArray *bvi = nullptr;
-      BlockValueObjectArray *bvo = (BlockValueObjectArray *)pp->pr->value();
-      if ( bvo == nullptr )                                { qWarning( "ProtocolActor::protocolSet() Error 3"  ); return; }
-      if ( bvo->size() < 1 )                               { qWarning( "ProtocolActor::protocolSet() Error 4"  ); return; }
-      if ( !bvo->at(0).contains( RCD_hashedOb_O ) )        { qWarning( "ProtocolActor::protocolSet() Error 5"  ); return; }
-      bvo = (BlockValueObjectArray *)bvo->at(0).value( RCD_hashedOb_O );
-      if ( bvo->size() != 1 )                              { qWarning( "ProtocolActor::protocolSet() Error 6"  ); return; }
-      if ( !bvo->at(0).contains( RCD_ItemsDef_O ) )        { qWarning( "ProtocolActor::protocolSet() Error 7"  ); return; }
-      bvi = (BlockValueObjectArray *)bvo->at(0).value( RCD_ItemsDef_O );
-      if ( bvi->size() != 1 )                              { qWarning( "ProtocolActor::protocolSet() Error 8"  ); return; }
-      if ( !bvo->at(0).contains( RCD_ActorsDef_O ) )       { qWarning( "ProtocolActor::protocolSet() Error 9"  ); return; }
-      bvo = (BlockValueObjectArray *)bvo->at(0).value( RCD_ActorsDef_O );
-      if ( bvo->size() != 1 )                              { qWarning( "ProtocolActor::protocolSet() Error 10" ); return; }
-      if ( !bvo->at(0).contains( actTyp ) )                { qWarning( "ProtocolActor::protocolSet() Error 11" ); return; }
-      bvo = (BlockValueObjectArray *)bvo->at(0).value( actTyp );
-      if ( bvo->size() < 1 )                               { qWarning( "ProtocolActor::protocolSet() Error 12" ); return; }
-      if ( !bvo->at(0).contains( RCD_sendableItems_C ) )   { qWarning( "ProtocolActor::protocolSet() Error 13" ); return; }
-      BlockValueRiceyCodeArray *bvc = (BlockValueRiceyCodeArray *)bvo->at(0).value( RCD_sendableItems_C );
+  if ( pp->pr->key() == RCD_ProtocolDef_o )
+    { BlockValueObject *bvi = nullptr;
+      BlockValueObject *bvo = (BlockValueObject *)pp->pr->value();
+      if ( bvo == nullptr )                          { qWarning( "ProtocolActor::protocolSet() Error 3"  ); return; }
+      if ( !bvo->contains( RCD_hashedOb_o ) )        { qWarning( "ProtocolActor::protocolSet() Error 5"  ); return; }
+      bvo = (BlockValueObject *)bvo->value( RCD_hashedOb_o );
+      if ( !bvo->contains( RCD_ItemsDef_o ) )        { qWarning( "ProtocolActor::protocolSet() Error 7"  ); return; }
+      bvi = (BlockValueObject *)bvo->value( RCD_ItemsDef_o );
+      if ( !bvo->contains( RCD_ActorsDef_o ) )       { qWarning( "ProtocolActor::protocolSet() Error 9"  ); return; }
+      bvo = (BlockValueObject *)bvo->value( RCD_ActorsDef_o );
+      if ( !bvo->contains( actTyp ) )                { qWarning( "ProtocolActor::protocolSet() Error 11" ); return; }
+      bvo = (BlockValueObject *)bvo->value( actTyp );
+      if ( !bvo->contains( RCD_sendableItems_C ) )   { qWarning( "ProtocolActor::protocolSet() Error 13" ); return; }
+      BlockValueRiceyCodeArray *bvc = (BlockValueRiceyCodeArray *)bvo->value().value( RCD_sendableItems_C );
       if ( bvc->size() < 1 )                               { qWarning( "ProtocolActor::protocolSet() Error 14 - no sendable items" ); }
        else
-        { items = bvc->value();
+        { qWarning( "ProtocolActor::protocolSet() size %d", bvc->size() );
+          items = bvc->value();
           foreach( RiceyCode item, items )
-            { if ( !bvi->at(0).contains( riceToInt( item ) ) )
+            { if ( !bvi->contains( riceToInt( item ) ) )
                 { Utf8String actor = dict.nameFromCode( actTyp );
                   Utf8String itNam = dict.nameFromCode( item );
                   qWarning( "%s sendable item %s not found", actor.data(), itNam.data() );
                 }
-              // TODO: grab it for use...
+               else
+                { Utf8String actor = dict.nameFromCode( actTyp );
+                  Utf8String itNam = dict.nameFromCode( item );
+                  qWarning( "%s sendable item %s found", actor.data(), itNam.data() );
+                  // TODO: grab it for use...
+                }
             }
         }
-      if ( !bvo->at(0).contains( RCD_receivableItems_C ) ) { qWarning( "ProtocolActor::protocolSet() Error 15" ); return; }
-      bvc = (BlockValueRiceyCodeArray *)bvo->at(0).value( RCD_receivableItems_C );
-      if ( bvc->size() < 1 )                               { qWarning( "ProtocolActor::protocolSet() Error 16 - no receivable items" ); }
+      if ( !bvo->contains( RCD_receivableItems_C ) ) { qWarning( "ProtocolActor::protocolSet() Error 15" ); return; }
+      bvc = (BlockValueRiceyCodeArray *)bvo->value( RCD_receivableItems_C );
+      if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Error 16 - no receivable items" ); }
        else
         { items = bvc->value();
           foreach( RiceyCode item, items )
-            { if ( !bvi->at(0).contains( riceToInt( item ) ) )
+            { if ( !bvi->contains( riceToInt( item ) ) )
                 { Utf8String actor = dict.nameFromCode( actTyp );
                   Utf8String itNam = dict.nameFromCode( item );
                   qWarning( "%s receivable item %s not found", actor.data(), itNam.data() );
                 }
-              // TODO: grab it for use...
+               else
+                { Utf8String actor = dict.nameFromCode( actTyp );
+                  Utf8String itNam = dict.nameFromCode( item );
+                  qWarning( "%s receivable item %s found", actor.data(), itNam.data() );
+                  // TODO: grab it for use...
+                }
             }
         }
     }
