@@ -91,11 +91,13 @@
 #define RCD_ProtocolSig_o                           4175 // protocolDefGroup A signature on an Assign Onward Protocol Definition, indicating the protocol is "approved" by the signer
 #define RCD_ItemsDef_O                              4159 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
 #define RCD_ItemsDef_o                              4143 // protocolDefGroup An Assign Onward Protocol Item Definition - overall, defines containers and their contents including operation requirements (hashes, signatures, order of timestamps, etc.)
+#define RCD_ItemStructure_o                         4239 // protocolDefGroup Defines an item structure, but not contents
+#define RCD_ItemContents_O                          4255 // protocolDefGroup Defines contents of an item structure, may point to other item structures for containers.
 #define RCD_ActorsDef_o                             4111 // protocolDefGroup A Actor definitions
 #define RCD_sendableItems_C                         4316 // protocolDefGroup A list items this actor publishes
 #define RCD_receivableItems_C                       4348 // protocolDefGroup A list items this actor consumes
 #define RCD_actorWriterClientId_b                   7435 // protocolActorGroup Actor id: unique id of the actor who wants to create a record (in a blockchain)
-#define RCD_actorWriterServerId_b                   7467 // protocolActorGroup Actor id: unique id of the actor who handles requests to create records (in a blockchain)_b      0xBA4B // protocolActorGroup Actor id: unique id of the actor who wants to retrieve a record (from a blockchain)
+#define RCD_actorWriterServerId_b                   7467 // protocolActorGroup Actor id: unique id of the actor who handles requests to create records (in a blockchain)_b 0xBA4B // protocolActorGroup Actor id: unique id of the actor who wants to retrieve a record (from a blockchain)
 #define RCD_actorReaderServerId_b                   7531 // protocolActorGroup Actor id: unique id of the actor who handles requests to retrieve records (from a blockchain)
 #define RCD_blockchainId_b                          7691 // protocolActorGroup Unique id of a blockchain, often the bao of its hash_o
 #define RCD_actorWriterClient_o                     7439 // protocolActorGroup Actor definition: the actor who wants to create a record (in a blockchain)
@@ -107,8 +109,12 @@
 #define RCD_readRequest_o                           6223 // protocolDefGroup A request to read data from storage
 #define RCD_readResponse_o                          6255 // protocolDefGroup A response to a request to read data from storage
 #define RCD_SubItemDefs_O                           4191 // protocolDefGroup inside _o or _O items, SubItemDefs_O defines the requirements for sub-items which may appear
+#define RCD_recordText_s                           10245 // protocolDefGroup DⒶ0 and later: text that goes in a write request, or comes from a read request
+#define RCD_recordId_i                             10246 // protocolDefGroup DⒶ0 and later: timestamp of a record when written, or used to request reading by timestamp
+#define RCD_userId_b                               10379 // protocolDefGroup DⒶ1 and later: user identity - hopefully unique
 #define RCD_DefinedSubItems_C                       4220 // protocolDefGroup DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)
 #define RCD_DefinedSubItemsDesc_S                   4213 // protocolDefGroup DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context
+#define RCD_OpDataLink_C                           12316 // operationGroup Links ItemContents to more uniquely defined data types used to interface with applications
 #define RCD_OperReqList_O                          12319 // protocolDefGroup USE inside SubItemDefs_O Operational requirements / constraints on values found in Required or Optional items
 #define RCD_OperReq_o                              12431 // protocolDefGroup USE inside SubItemDefs_O A single operational requirement / constraint on value found in an item
 #define RCD_OpMemberOf_C                           12572 // operationGroup List of possible values for an RCODE

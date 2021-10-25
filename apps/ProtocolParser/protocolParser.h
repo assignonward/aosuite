@@ -51,6 +51,7 @@ virtual void protocolSet() = 0;
 
 signals:
     void newName( QString );
+    void transactionRecord( QString );
 
 public slots:
     void setProtocol( BaoSerial p );

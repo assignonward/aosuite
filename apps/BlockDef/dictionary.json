@@ -284,6 +284,18 @@
         },
         {
             "group_s": "protocolDefGroup",
+            "name_s": "ItemStructure_o",
+            "text_s": "Defines an item structure, but not contents",
+            "type_b": "A10F"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "ItemContents_O",
+            "text_s": "Defines contents of an item structure, may point to other item structures for containers.",
+            "type_b": "A11F"
+        },
+        {
+            "group_s": "protocolDefGroup",
             "name_s": "ActorsDef_o",
             "text_s": "A Actor definitions",
             "type_b": "A00F"
@@ -309,7 +321,7 @@
         {
             "group_s": "protocolActorGroup",
             "name_s": "actorWriterServerId_b",
-            "text_s": "Actor id: unique id of the actor who handles requests to create records (in a blockchain)_b      0xBA4B // protocolActorGroup Actor id: unique id of the actor who wants to retrieve a record (from a blockchain)",
+            "text_s": "Actor id: unique id of the actor who handles requests to create records (in a blockchain)_b 0xBA4B // protocolActorGroup Actor id: unique id of the actor who wants to retrieve a record (from a blockchain)",
             "type_b": "BA2B"
         },
         {
@@ -380,6 +392,24 @@
         },
         {
             "group_s": "protocolDefGroup",
+            "name_s": "recordText_s",
+            "text_s": "DⒶ0 and later: text that goes in a write request, or comes from a read request",
+            "type_b": "D005"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "recordId_i",
+            "text_s": "DⒶ0 and later: timestamp of a record when written, or used to request reading by timestamp",
+            "type_b": "D006"
+        },
+        {
+            "group_s": "protocolDefGroup",
+            "name_s": "userId_b",
+            "text_s": "DⒶ1 and later: user identity - hopefully unique",
+            "type_b": "D10B"
+        },
+        {
+            "group_s": "protocolDefGroup",
             "name_s": "DefinedSubItems_C",
             "text_s": "DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)",
             "type_b": "A07C"
@@ -389,6 +419,12 @@
             "name_s": "DefinedSubItemsDesc_S",
             "text_s": "DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context",
             "type_b": "A075"
+        },
+        {
+            "group_s": "operationGroup",
+            "name_s": "OpDataLink_C",
+            "text_s": "Links ItemContents to more uniquely defined data types used to interface with applications",
+            "type_b": "E01C"
         },
         {
             "group_s": "protocolDefGroup",

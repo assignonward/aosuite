@@ -81,46 +81,52 @@ void  ProtocolActor::protocolSet()
       { qWarning( "ProtocolActor::protocolSet() error 2" );
         return;
       }
+  Utf8String actor = dict.nameFromCode( actTyp );
   QList<RiceyCode> items;
   if ( pp->pr->key() == RCD_ProtocolDef_o )
-    { BlockValueObject *bvi = nullptr;
+    { BlockValueObjectArray *bvi = nullptr;
       BlockValueObject *bvo = (BlockValueObject *)pp->pr->value();
       if ( bvo == nullptr )                          { qWarning( "ProtocolActor::protocolSet() Error 3"  ); return; }
-      if ( !bvo->contains( RCD_hashedOb_o ) )        { qWarning( "ProtocolActor::protocolSet() Error 5"  ); return; }
+      if ( !bvo->contains( RCD_hashedOb_o ) )        { qWarning( "ProtocolActor::protocolSet() Error 4"  ); return; }
       bvo = (BlockValueObject *)bvo->value( RCD_hashedOb_o );
-      if ( !bvo->contains( RCD_ItemsDef_o ) )        { qWarning( "ProtocolActor::protocolSet() Error 7"  ); return; }
-      bvi = (BlockValueObject *)bvo->value( RCD_ItemsDef_o );
-      if ( !bvo->contains( RCD_ActorsDef_o ) )       { qWarning( "ProtocolActor::protocolSet() Error 9"  ); return; }
+      if ( !bvo->contains( RCD_ItemsDef_O ) )        { qWarning( "ProtocolActor::protocolSet() Error 5"  ); return; }
+      bvi = (BlockValueObjectArray *)bvo->value( RCD_ItemsDef_O );
+      if ( !bvo->contains( RCD_ActorsDef_o ) )       { qWarning( "ProtocolActor::protocolSet() Error 6"  ); return; }
+
+      // TODO: read the item definitions into a more convenient structure
+
+
+      // Populate the actor definition with its sendable and receivable item structure definitions
       bvo = (BlockValueObject *)bvo->value( RCD_ActorsDef_o );
-      if ( !bvo->contains( actTyp ) )                { qWarning( "ProtocolActor::protocolSet() Error 11" ); return; }
+      if ( !bvo->contains( actTyp ) )                { qWarning( "ProtocolActor::protocolSet() actor %s not defined in protocol", actor.data() ); return; }
       bvo = (BlockValueObject *)bvo->value( actTyp );
-      if ( !bvo->contains( RCD_sendableItems_C ) )   { qWarning( "ProtocolActor::protocolSet() Error 13" ); return; }
+
+      if ( !bvo->contains( RCD_sendableItems_C ) )   { qWarning( "ProtocolActor::protocolSet() Error 8" ); return; }
       BlockValueRiceyCodeArray *bvc = (BlockValueRiceyCodeArray *)bvo->value().value( RCD_sendableItems_C );
-      if ( bvc->size() < 1 )                               { qWarning( "ProtocolActor::protocolSet() Error 14 - no sendable items" ); }
+      if ( bvc->size() < 1 )                               { qWarning( "ProtocolActor::protocolSet() Error 9 - no sendable items" ); }
        else
         { qWarning( "ProtocolActor::protocolSet() size %d", bvc->size() );
           items = bvc->value();
           foreach( RiceyCode item, items )
-            { if ( !bvi->contains( riceToInt( item ) ) )
-                { Utf8String actor = dict.nameFromCode( actTyp );
-                  Utf8String itNam = dict.nameFromCode( item );
+            { if ( !bvi->at(0).contains( riceToInt( item ) ) )
+                { Utf8String itNam = dict.nameFromCode( item );
                   qWarning( "%s sendable item %s not found", actor.data(), itNam.data() );
                 }
                else
-                { Utf8String actor = dict.nameFromCode( actTyp );
-                  Utf8String itNam = dict.nameFromCode( item );
+                { Utf8String itNam = dict.nameFromCode( item );
                   qWarning( "%s sendable item %s found", actor.data(), itNam.data() );
                   // TODO: grab it for use...
                 }
             }
         }
-      if ( !bvo->contains( RCD_receivableItems_C ) ) { qWarning( "ProtocolActor::protocolSet() Error 15" ); return; }
+
+      if ( !bvo->contains( RCD_receivableItems_C ) ) { qWarning( "ProtocolActor::protocolSet() Error 10" ); return; }
       bvc = (BlockValueRiceyCodeArray *)bvo->value( RCD_receivableItems_C );
-      if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Error 16 - no receivable items" ); }
+      if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Error 11 - no receivable items" ); }
        else
         { items = bvc->value();
           foreach( RiceyCode item, items )
-            { if ( !bvi->contains( riceToInt( item ) ) )
+            { if ( !bvi->at(0).contains( riceToInt( item ) ) )
                 { Utf8String actor = dict.nameFromCode( actTyp );
                   Utf8String itNam = dict.nameFromCode( item );
                   qWarning( "%s receivable item %s not found", actor.data(), itNam.data() );
@@ -134,4 +140,6 @@ void  ProtocolActor::protocolSet()
             }
         }
     }
+
+  emit transactionRecord( QString( "Protocol set: %1" ).arg( QString::fromUtf8( pp->name() ) ) ); // TODO: maybe add a few descriptives...
 }

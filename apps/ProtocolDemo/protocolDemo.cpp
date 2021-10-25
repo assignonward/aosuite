@@ -33,14 +33,24 @@ ProtocolDemo::ProtocolDemo( QWidget *cw ) :
       cw->layout()->addWidget( this );
       vb->setContentsMargins( 0,0,0,0 );
     }
-  connect( this, SIGNAL( setProtocol(BaoSerial) ), &wc, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ), &rc, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ), &ws, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ), &rs, SLOT( setProtocol(BaoSerial) ) );
-  connect( &wc , SIGNAL( newName(QString) ), ui->wcProtocol, SLOT( setText(QString)  ) );
-  connect( &rc , SIGNAL( newName(QString) ), ui->rcProtocol, SLOT( setText(QString)  ) );
-  connect( &ws , SIGNAL( newName(QString) ), ui->wsProtocol, SLOT( setText(QString)  ) );
-  connect( &rs , SIGNAL( newName(QString) ), ui->rsProtocol, SLOT( setText(QString)  ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ),           &wc, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ),           &rc, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ),           &ws, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ),           &rs, SLOT( setProtocol(BaoSerial) ) );
+  connect( &wc , SIGNAL( newName(QString) ),      ui->wcProtocol, SLOT( setText(QString)       ) );
+  connect( &rc , SIGNAL( newName(QString) ),      ui->rcProtocol, SLOT( setText(QString)       ) );
+  connect( &ws , SIGNAL( newName(QString) ),      ui->wsProtocol, SLOT( setText(QString)       ) );
+  connect( &rs , SIGNAL( newName(QString) ),      ui->rsProtocol, SLOT( setText(QString)       ) );
+  connect( &wc , SIGNAL( transactionRecord(QString) ), ui->wcLog, SLOT( append(QString)        ) );
+  connect( &rc , SIGNAL( transactionRecord(QString) ), ui->rcLog, SLOT( append(QString)        ) );
+  connect( &ws , SIGNAL( transactionRecord(QString) ), ui->wsLog, SLOT( append(QString)        ) );
+  connect( &rs , SIGNAL( transactionRecord(QString) ), ui->rsLog, SLOT( append(QString)        ) );
+  connect( &wc , SIGNAL( sendRequest (BaoSerial) ), &ws, SLOT( receiveRequest (BaoSerial) ) );
+  connect( &rc , SIGNAL( sendRequest (BaoSerial) ), &rs, SLOT( receiveRequest (BaoSerial) ) );
+  connect( &ws , SIGNAL( sendResponse(BaoSerial) ), &wc, SLOT( receiveResponse(BaoSerial) ) );
+  connect( &rs , SIGNAL( sendResponse(BaoSerial) ), &rc, SLOT( receiveResponse(BaoSerial) ) );
+  connect( ui->wcSend   , SIGNAL( clicked() ), &wc, SLOT( sendWriteRequest() ) );
+  connect( ui->rcRequest, SIGNAL( clicked() ), &rc, SLOT( sendReadRequest()  ) );
 }
 
 ProtocolDemo::~ProtocolDemo()
@@ -61,6 +71,9 @@ void  ProtocolDemo::initReadFile()
     }
 }
 
+/**
+ * @brief ProtocolDemo::on_set_clicked - protocol set has clicked by user
+ */
 void  ProtocolDemo::on_set_clicked()
 { QString readFile;
   readFile = ":/files/"+ui->readFile->currentText()+".bao";
@@ -80,19 +93,74 @@ void  ProtocolDemo::on_set_clicked()
     qWarning( "read no data from %s", fn.data() );
 }
 
+/**
+ * @brief WriterClient::sendWriteRequest - catches signal from the ui button
+ */
+void WriterClient::sendWriteRequest()
+{ emit transactionRecord("sendWriteRequest()");
+  if ( pp == nullptr )
+    { emit transactionRecord("protocol not defined.");
+      return;
+    }
+  BaoSerial bs;
+  // TODO: prepare bao based on protocol definition and ui contents
+  emit sendRequest( bs );
+}
+
+/**
+ * @brief WriterClient::receiveResponse
+ * @param resp - from server
+ */
 void WriterClient::receiveResponse( QByteArray resp )
-{ (void)resp;
+{ emit transactionRecord("receiveResponse()");
+  (void)resp;
+  // TODO: show response/results on ui
 }
 
+/**
+ * @brief ReaderClient::sendReadRequest - catches signal from the ui button
+ */
+void ReaderClient::sendReadRequest()
+{ emit transactionRecord("sendReadRequest()");
+  if ( pp == nullptr )
+    { emit transactionRecord("protocol not defined.");
+      return;
+    }
+  BaoSerial bs;
+  // TODO: prepare bao based on protocol definition and ui contents
+  emit sendRequest( bs );
+}
+
+/**
+ * @brief ReaderClient::receiveResponse
+ * @param resp - from server
+ */
 void ReaderClient::receiveResponse( QByteArray resp )
-{ (void)resp;
+{ emit transactionRecord("receiveResponse()");
+  (void)resp;
+  // TODO: show response/results on ui
 }
 
+/**
+ * @brief WriterServer::receiveRequest
+ * @param req - request from writer client
+ */
 void WriterServer::receiveRequest( QByteArray req )
-{ (void)req;
+{ emit transactionRecord("receiveRequest()");
+  (void)req;
+  BaoSerial resp;
+  // TODO: act on request and generate a response
+  emit sendResponse( resp );
 }
 
+/**
+ * @brief ReaderServer::receiveRequest
+ * @param req - request from reader client
+ */
 void ReaderServer::receiveRequest( QByteArray req )
-{ (void)req;
+{ emit transactionRecord("receiveRequest()");
+  (void)req;
+  BaoSerial resp;
+  // TODO: act on request and generate a response
+  emit sendResponse( resp );
 }
-
