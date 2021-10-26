@@ -93,9 +93,6 @@ void  ProtocolActor::protocolSet()
       bvi = (BlockValueObject *)bvo->value( RCD_ItemsDef_o );
       if ( !bvo->contains( RCD_ActorsDef_o ) )       { qWarning( "ProtocolActor::protocolSet() Error 6"  ); return; }
 
-      // TODO: read the item definitions into a more convenient structure
-
-
       // Populate the actor definition with its sendable and receivable item structure definitions
       bvo = (BlockValueObject *)bvo->value( RCD_ActorsDef_o );
       if ( !bvo->contains( actTyp ) )                { qWarning( "ProtocolActor::protocolSet() actor %s not defined in protocol", actor.data() ); return; }
