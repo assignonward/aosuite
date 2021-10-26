@@ -34,11 +34,11 @@ public:
     explicit WriterClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterClient_o, parent ) {}
 
 signals:
-    void sendRequest( BaoSerial ); // sends request to the server
+        void sendRequest( BaoSerial ); // sends request to the server
 
 public slots:
-    void sendWriteRequest();       // catches signal from the ui button
-    void receiveResponse( BaoSerial );
+        void sendWriteRequest();       // catches signal from the ui button
+        void receiveResponse( BaoSerial );
 };
 
 class WriterServer : public ProtocolActor
@@ -48,10 +48,10 @@ public:
     explicit WriterServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterServer_o, parent ) {}
 
 signals:
-    void sendResponse( BaoSerial );
+        void sendResponse( BaoSerial );
 
 public slots:
-    void receiveRequest( BaoSerial );
+        void receiveRequest( BaoSerial );
 };
 
 class ReaderClient : public ProtocolActor
@@ -61,11 +61,11 @@ public:
     explicit ReaderClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderClient_o, parent ) {}
 
 signals:
-    void sendRequest( BaoSerial ); // sends request to the server
+        void sendRequest( BaoSerial ); // sends request to the server
 
 public slots:
-    void sendReadRequest();        // catches signal from the ui button
-    void receiveResponse( BaoSerial );
+        void sendReadRequest();        // catches signal from the ui button
+        void receiveResponse( BaoSerial );
 };
 
 class ReaderServer : public ProtocolActor
@@ -75,10 +75,10 @@ public:
     explicit ReaderServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderServer_o, parent ) {}
 
 signals:
-    void sendResponse( BaoSerial );
+        void sendResponse( BaoSerial );
 
 public slots:
-    void receiveRequest( BaoSerial );
+        void receiveRequest( BaoSerial );
 };
 
 namespace Ui {

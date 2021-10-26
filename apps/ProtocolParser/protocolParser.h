@@ -64,15 +64,16 @@ class ProtocolActor : public ProtocolUser
 {
     Q_OBJECT
 public:
-              ProtocolActor( RiceyInt at, QObject *parent = nullptr ) : ProtocolUser(parent) { sendableItems = nullptr; receivableItems = nullptr; setActorType(at); }
+              ProtocolActor( RiceyInt at, QObject *parent = nullptr ) : ProtocolUser(parent) { setActorType(at); }
         void  setActorType( RiceyInt at ) { actTyp = at; }
     RiceyInt  actType() { return actTyp; }
 virtual void  protocolSet();
 
 public:
-   ValueBase *sendableItems;
-   ValueBase *receivableItems;
-    RiceyInt  actTyp;
+    QPointer<BlockValueObject>   sendableItemDefs;
+    QPointer<BlockValueObject> receivableItemDefs;
+                     RiceyInt  actTyp;
+
 };
 
 #endif // PROTOCOLPARSER_H

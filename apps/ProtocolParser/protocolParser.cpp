@@ -84,13 +84,13 @@ void  ProtocolActor::protocolSet()
   Utf8String actor = dict.nameFromCode( actTyp );
   QList<RiceyCode> items;
   if ( pp->pr->key() == RCD_ProtocolDef_o )
-    { BlockValueObjectArray *bvi = nullptr;
+    { BlockValueObject *bvi = nullptr;
       BlockValueObject *bvo = (BlockValueObject *)pp->pr->value();
       if ( bvo == nullptr )                          { qWarning( "ProtocolActor::protocolSet() Error 3"  ); return; }
       if ( !bvo->contains( RCD_hashedOb_o ) )        { qWarning( "ProtocolActor::protocolSet() Error 4"  ); return; }
       bvo = (BlockValueObject *)bvo->value( RCD_hashedOb_o );
-      if ( !bvo->contains( RCD_ItemsDef_O ) )        { qWarning( "ProtocolActor::protocolSet() Error 5"  ); return; }
-      bvi = (BlockValueObjectArray *)bvo->value( RCD_ItemsDef_O );
+      if ( !bvo->contains( RCD_ItemsDef_o ) )        { qWarning( "ProtocolActor::protocolSet() Error 5"  ); return; }
+      bvi = (BlockValueObject *)bvo->value( RCD_ItemsDef_o );
       if ( !bvo->contains( RCD_ActorsDef_o ) )       { qWarning( "ProtocolActor::protocolSet() Error 6"  ); return; }
 
       // TODO: read the item definitions into a more convenient structure
@@ -103,19 +103,23 @@ void  ProtocolActor::protocolSet()
 
       if ( !bvo->contains( RCD_sendableItems_C ) )   { qWarning( "ProtocolActor::protocolSet() Error 8" ); return; }
       BlockValueRiceyCodeArray *bvc = (BlockValueRiceyCodeArray *)bvo->value().value( RCD_sendableItems_C );
-      if ( bvc->size() < 1 )                               { qWarning( "ProtocolActor::protocolSet() Error 9 - no sendable items" ); }
+      if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Error 9 - no sendable items" ); }
        else
-        { qWarning( "ProtocolActor::protocolSet() size %d", bvc->size() );
+        { // qWarning( "ProtocolActor::protocolSet() %s %d sendable items", actor.data(), bvc->size() );
+          if ( sendableItemDefs )
+            sendableItemDefs->deleteLater();
+          sendableItemDefs = new BlockValueObject( this );
           items = bvc->value();
           foreach( RiceyCode item, items )
-            { if ( !bvi->at(0).contains( riceToInt( item ) ) )
-                { Utf8String itNam = dict.nameFromCode( item );
-                  qWarning( "%s sendable item %s not found", actor.data(), itNam.data() );
+            { Utf8String itNam = dict.nameFromCode( item );
+              if ( !bvi->contains( item ) )
+                { qWarning( "%s sendable item %s not found", actor.data(), itNam.data() );
                 }
                else
-                { Utf8String itNam = dict.nameFromCode( item );
-                  qWarning( "%s sendable item %s found", actor.data(), itNam.data() );
-                  // TODO: grab it for use...
+                { if ( sendableItemDefs->insert( riceToInt(item), ((BlockValueObject *)(bvi->value( item )))->value() ) )
+                    qWarning( "%s sendable item %s successfully inserted", actor.data(), itNam.data() );
+                   else
+                    qWarning( "%s sendable item %s failed to insert", actor.data(), itNam.data() );
                 }
             }
         }
@@ -124,18 +128,20 @@ void  ProtocolActor::protocolSet()
       bvc = (BlockValueRiceyCodeArray *)bvo->value( RCD_receivableItems_C );
       if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Error 11 - no receivable items" ); }
        else
-        { items = bvc->value();
+        { // qWarning( "ProtocolActor::protocolSet() %s %d receivable items", actor.data(), bvc->size() );
+          if ( receivableItemDefs )
+            receivableItemDefs->deleteLater();
+          receivableItemDefs = new BlockValueObject( this );
+          items = bvc->value();
           foreach( RiceyCode item, items )
-            { if ( !bvi->at(0).contains( riceToInt( item ) ) )
-                { Utf8String actor = dict.nameFromCode( actTyp );
-                  Utf8String itNam = dict.nameFromCode( item );
-                  qWarning( "%s receivable item %s not found", actor.data(), itNam.data() );
-                }
+            { Utf8String itNam = dict.nameFromCode( item );
+              if ( !bvi->contains( item ) )
+                { qWarning( "%s receivable item %s not found", actor.data(), itNam.data() ); }
                else
-                { Utf8String actor = dict.nameFromCode( actTyp );
-                  Utf8String itNam = dict.nameFromCode( item );
-                  qWarning( "%s receivable item %s found", actor.data(), itNam.data() );
-                  // TODO: grab it for use...
+                { if ( receivableItemDefs->insert( riceToInt(item), ((BlockValueObject *)(bvi->value( item )))->value() ) )
+                    qWarning( "%s receivable item %s successfully inserted", actor.data(), itNam.data() );
+                   else
+                    qWarning( "%s receivable item %s failed to insert", actor.data(), itNam.data() );
                 }
             }
         }

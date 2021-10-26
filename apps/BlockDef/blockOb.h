@@ -630,7 +630,8 @@ virtual ValueBase *prevChild( ValueBase * );
              void  clear()             { QList<RiceyInt> keys = m_obMap.keys(); foreach( RiceyInt k, keys ) { if ( m_obMap[k] != nullptr ) m_obMap[k]->deleteLater(); m_obMap.remove(k); } }
            qint32  size()        const { return m_obMap.size(); }
    QList<RiceyInt> keys()        const { return m_obMap.keys(); }
-             bool  contains( RiceyInt k ) const { return m_obMap.contains( k ); }
+             bool  contains( RiceyInt  k ) const { return m_obMap.contains( k ); }
+             bool  contains( RiceyCode c ) const { return contains( riceToInt( c ) ); }
         ValueBase *remove( RiceyInt k );
            qint32  insert    ( const BlockObjectMap & );
              bool  insert    ( RiceyInt, ValueBase * );
