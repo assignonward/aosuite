@@ -19,45 +19,49 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
-#ifndef PROTOCOLDEMO_H
-#define PROTOCOLDEMO_H
+ */#ifndef WRITERSERVER_H
+#define WRITERSERVER_H
 
-#include <QScrollArea>
-#include "ui_protocolDemo.h"
+#include <QGroupBox>
+#include "ui_writerServer.h"
 #include "protocolParser.h"
-#include "writerClient.h"
-#include "writerServer.h"
-#include "readerClient.h"
-#include "readerServer.h"
-
 
 namespace Ui {
-class ProtocolDemo;
+class WriterServer;
 }
 
-class ProtocolDemo : public QScrollArea
+/*
+class WriterServer : public ProtocolActor
 {
     Q_OBJECT
 public:
-              ProtocolDemo( QWidget *cw = nullptr );
-             ~ProtocolDemo();
-        void  initReadFile();
+    explicit WriterServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterServer_o, parent ) {}
 
 signals:
-        void  setProtocol( BaoSerial );
+        void sendResponse( BaoSerial );
 
 public slots:
-        void  on_set_clicked();
-        void  updateUi( ProtocolActor * ) {} // based on the collection of sendable/receivable items, make corresponding ui elements visible / invisible
+        void receiveRequest( BaoSerial );
+};
+*/
+
+class WriterServer : public QGroupBox
+{
+    Q_OBJECT
 
 public:
-  QPointer<WriterClient> wc;
-  QPointer<WriterServer> ws;
-  QPointer<ReaderClient> rc;
-  QPointer<ReaderServer> rs;
-       Ui::ProtocolDemo *ui;
+    explicit WriterServer(QWidget *parent = nullptr);
+    ~WriterServer();
 
+signals:
+        void sendResponse( BaoSerial );
+
+public slots:
+        void receiveRequest( BaoSerial );
+
+private:
+  QPointer<ProtocolActor> pa;
+        Ui::WriterServer *ui;
 };
 
-#endif // PROTOCOLDEMO_H
+#endif // WRITERSERVER_H

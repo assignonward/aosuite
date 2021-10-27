@@ -33,10 +33,16 @@ ProtocolDemo::ProtocolDemo( QWidget *cw ) :
       cw->layout()->addWidget( this );
       vb->setContentsMargins( 0,0,0,0 );
     }
-  connect( this, SIGNAL( setProtocol(BaoSerial) ),           &wc, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ),           &rc, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ),           &ws, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ),           &rs, SLOT( setProtocol(BaoSerial) ) );
+  rc = new ReaderClient( ui->crsa );
+  rs = new ReaderServer( ui->srsa );
+  wc = new WriterClient( ui->cwsa );
+  ws = new WriterServer( ui->swsa );
+
+  connect( this, SIGNAL( setProtocol(BaoSerial) ), wc, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ), rc, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ), ws, SLOT( setProtocol(BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol(BaoSerial) ), rs, SLOT( setProtocol(BaoSerial) ) );
+  /*
   connect( &wc , SIGNAL( newName(QString) ),      ui->wcProtocol, SLOT( setText(QString)       ) );
   connect( &rc , SIGNAL( newName(QString) ),      ui->rcProtocol, SLOT( setText(QString)       ) );
   connect( &ws , SIGNAL( newName(QString) ),      ui->wsProtocol, SLOT( setText(QString)       ) );
@@ -51,6 +57,7 @@ ProtocolDemo::ProtocolDemo( QWidget *cw ) :
   connect( &rs , SIGNAL( sendResponse(BaoSerial) ), &rc, SLOT( receiveResponse(BaoSerial) ) );
   connect( ui->wcSend   , SIGNAL( clicked() ), &wc, SLOT( sendWriteRequest() ) );
   connect( ui->rcRequest, SIGNAL( clicked() ), &rc, SLOT( sendReadRequest()  ) );
+  */
 }
 
 ProtocolDemo::~ProtocolDemo()
@@ -97,9 +104,9 @@ void  ProtocolDemo::on_set_clicked()
  * @brief WriterClient::sendWriteRequest - catches signal from the ui button
  */
 void WriterClient::sendWriteRequest()
-{ emit transactionRecord("sendWriteRequest()");
-  if ( pp == nullptr )
-    { emit transactionRecord("protocol not defined.");
+{ pa->emit transactionRecord("sendWriteRequest()");
+  if ( pa->pp == nullptr )
+    { pa->emit transactionRecord("protocol not defined.");
       return;
     }
   BaoSerial bs;
@@ -112,7 +119,7 @@ void WriterClient::sendWriteRequest()
  * @param resp - from server
  */
 void WriterClient::receiveResponse( QByteArray resp )
-{ emit transactionRecord("receiveResponse()");
+{ pa->emit transactionRecord("receiveResponse()");
   (void)resp;
   // TODO: show response/results on ui
 }
@@ -121,9 +128,9 @@ void WriterClient::receiveResponse( QByteArray resp )
  * @brief ReaderClient::sendReadRequest - catches signal from the ui button
  */
 void ReaderClient::sendReadRequest()
-{ emit transactionRecord("sendReadRequest()");
-  if ( pp == nullptr )
-    { emit transactionRecord("protocol not defined.");
+{ pa->emit transactionRecord("sendReadRequest()");
+  if ( pa->pp == nullptr )
+    { pa->emit transactionRecord("protocol not defined.");
       return;
     }
   BaoSerial bs;
@@ -136,7 +143,7 @@ void ReaderClient::sendReadRequest()
  * @param resp - from server
  */
 void ReaderClient::receiveResponse( QByteArray resp )
-{ emit transactionRecord("receiveResponse()");
+{ pa->emit transactionRecord("receiveResponse()");
   (void)resp;
   // TODO: show response/results on ui
 }
@@ -146,7 +153,7 @@ void ReaderClient::receiveResponse( QByteArray resp )
  * @param req - request from writer client
  */
 void WriterServer::receiveRequest( QByteArray req )
-{ emit transactionRecord("receiveRequest()");
+{ pa->emit transactionRecord("receiveRequest()");
   (void)req;
   BaoSerial resp;
   // TODO: act on request and generate a response
@@ -158,7 +165,7 @@ void WriterServer::receiveRequest( QByteArray req )
  * @param req - request from reader client
  */
 void ReaderServer::receiveRequest( QByteArray req )
-{ emit transactionRecord("receiveRequest()");
+{ pa->emit transactionRecord("receiveRequest()");
   (void)req;
   BaoSerial resp;
   // TODO: act on request and generate a response

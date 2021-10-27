@@ -143,6 +143,6 @@ void  ProtocolActor::protocolSet()
             }
         }
     }
-
+  emit newProtocolSet( this ); // Enables a central ui to react to the new protocol items, lack of items.  Prefer a non-central ui implementation.
   emit transactionRecord( QString( "Protocol set: %1" ).arg( QString::fromUtf8( pp->name() ) ) ); // TODO: maybe add a few descriptives...
 }

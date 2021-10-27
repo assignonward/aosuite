@@ -20,44 +20,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PROTOCOLDEMO_H
-#define PROTOCOLDEMO_H
+#ifndef READERCLIENT_H
+#define READERCLIENT_H
 
-#include <QScrollArea>
-#include "ui_protocolDemo.h"
+#include <QGroupBox>
+#include "ui_readerClient.h"
 #include "protocolParser.h"
-#include "writerClient.h"
-#include "writerServer.h"
-#include "readerClient.h"
-#include "readerServer.h"
-
 
 namespace Ui {
-class ProtocolDemo;
+class ReaderClient;
 }
 
-class ProtocolDemo : public QScrollArea
+/*
+class ReaderClient : public ProtocolActor
 {
     Q_OBJECT
 public:
-              ProtocolDemo( QWidget *cw = nullptr );
-             ~ProtocolDemo();
-        void  initReadFile();
+    explicit ReaderClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderClient_o, parent ) {}
 
 signals:
-        void  setProtocol( BaoSerial );
+        void sendRequest( BaoSerial ); // sends request to the server
 
 public slots:
-        void  on_set_clicked();
-        void  updateUi( ProtocolActor * ) {} // based on the collection of sendable/receivable items, make corresponding ui elements visible / invisible
+        void sendReadRequest();        // catches signal from the ui button
+        void receiveResponse( BaoSerial );
+};
+*/
+
+class ReaderClient : public QGroupBox
+{
+    Q_OBJECT
 
 public:
-  QPointer<WriterClient> wc;
-  QPointer<WriterServer> ws;
-  QPointer<ReaderClient> rc;
-  QPointer<ReaderServer> rs;
-       Ui::ProtocolDemo *ui;
+    explicit ReaderClient(QWidget *parent = nullptr);
+    ~ReaderClient();
 
+signals:
+        void sendRequest( BaoSerial ); // sends request to the server
+
+public slots:
+        void sendReadRequest();        // catches signal from the ui button
+        void receiveResponse( BaoSerial );
+
+private:
+  QPointer<ProtocolActor> pa;
+        Ui::ReaderClient *ui;
 };
 
-#endif // PROTOCOLDEMO_H
+#endif // READERCLIENT_H

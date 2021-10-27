@@ -20,44 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PROTOCOLDEMO_H
-#define PROTOCOLDEMO_H
-
-#include <QScrollArea>
-#include "ui_protocolDemo.h"
-#include "protocolParser.h"
-#include "writerClient.h"
-#include "writerServer.h"
-#include "readerClient.h"
 #include "readerServer.h"
 
+ReaderServer::ReaderServer(QWidget *cw) :
+    QGroupBox(cw),
+    ui(new Ui::ReaderServer)
+{
+    ui->setupUi(this);
+    if ( cw )
+      { new QVBoxLayout( cw );
+        cw->layout()->addWidget( this );
+        cw->layout()->setContentsMargins( 0,0,0,0 );
+      }
 
-namespace Ui {
-class ProtocolDemo;
 }
 
-class ProtocolDemo : public QScrollArea
+ReaderServer::~ReaderServer()
 {
-    Q_OBJECT
-public:
-              ProtocolDemo( QWidget *cw = nullptr );
-             ~ProtocolDemo();
-        void  initReadFile();
-
-signals:
-        void  setProtocol( BaoSerial );
-
-public slots:
-        void  on_set_clicked();
-        void  updateUi( ProtocolActor * ) {} // based on the collection of sendable/receivable items, make corresponding ui elements visible / invisible
-
-public:
-  QPointer<WriterClient> wc;
-  QPointer<WriterServer> ws;
-  QPointer<ReaderClient> rc;
-  QPointer<ReaderServer> rs;
-       Ui::ProtocolDemo *ui;
-
-};
-
-#endif // PROTOCOLDEMO_H
+    delete ui;
+}

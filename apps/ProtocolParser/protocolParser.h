@@ -69,6 +69,9 @@ public:
     RiceyInt  actType() { return actTyp; }
 virtual void  protocolSet();
 
+signals:
+        void  newProtocolSet( ProtocolActor * );
+
 public:
     QPointer<BlockValueObject>   sendableItemDefs;
     QPointer<BlockValueObject> receivableItemDefs;

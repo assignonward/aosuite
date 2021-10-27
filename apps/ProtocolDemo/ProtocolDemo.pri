@@ -23,11 +23,23 @@
 
 INCLUDEPATH += $${PWD}
 
-HEADERS     += $$PWD/protocolDemo.h
+HEADERS     += $$PWD/protocolDemo.h \
+    $$PWD/readerClient.h \
+    $$PWD/readerServer.h \
+    $$PWD/writerClient.h \
+    $$PWD/writerServer.h
 
-SOURCES     += $$PWD/protocolDemo.cpp
+SOURCES     += $$PWD/protocolDemo.cpp \
+    $$PWD/readerClient.cpp \
+    $$PWD/readerServer.cpp \
+    $$PWD/writerClient.cpp \
+    $$PWD/writerServer.cpp
 
-FORMS       += $$PWD/protocolDemo.ui
+FORMS       += $$PWD/protocolDemo.ui \
+    $$PWD/readerClient.ui \
+    $$PWD/readerServer.ui \
+    $$PWD/writerClient.ui \
+    $$PWD/writerServer.ui
 
 RESOURCES   += $$PWD/protocolDemo.qrc
 
