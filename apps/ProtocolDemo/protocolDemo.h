@@ -37,8 +37,7 @@ class ProtocolDemo;
 }
 
 class ProtocolDemo : public QScrollArea
-{
-    Q_OBJECT
+{ Q_OBJECT
 public:
               ProtocolDemo( QWidget *cw = nullptr );
              ~ProtocolDemo();
@@ -57,7 +56,6 @@ public:
   QPointer<ReaderClient> rc;
   QPointer<ReaderServer> rs;
        Ui::ProtocolDemo *ui;
-
 };
 
 #endif // PROTOCOLDEMO_H

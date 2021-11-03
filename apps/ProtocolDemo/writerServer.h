@@ -19,7 +19,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */#ifndef WRITERSERVER_H
+ */
+#ifndef WRITERSERVER_H
 #define WRITERSERVER_H
 
 #include <QGroupBox>
@@ -30,28 +31,11 @@ namespace Ui {
 class WriterServer;
 }
 
-/*
-class WriterServer : public ProtocolActor
-{
-    Q_OBJECT
-public:
-    explicit WriterServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterServer_o, parent ) {}
-
-signals:
-        void sendResponse( BaoSerial );
-
-public slots:
-        void receiveRequest( BaoSerial );
-};
-*/
-
 class WriterServer : public QGroupBox
-{
-    Q_OBJECT
-
+{ Q_OBJECT
 public:
     explicit WriterServer(QWidget *parent = nullptr);
-    ~WriterServer();
+            ~WriterServer();
 
 signals:
         void sendResponse( BaoSerial );
@@ -59,7 +43,7 @@ signals:
 public slots:
         void receiveRequest( BaoSerial );
 
-private:
+public:
   QPointer<ProtocolActor> pa;
         Ui::WriterServer *ui;
 };

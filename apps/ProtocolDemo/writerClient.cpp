@@ -25,17 +25,15 @@
 WriterClient::WriterClient(QWidget *cw) :
     QGroupBox(cw),
     ui(new Ui::WriterClient)
-{
-    ui->setupUi(this);
-    if ( cw )
-      { new QVBoxLayout( cw );
-        cw->layout()->addWidget( this );
-        cw->layout()->setContentsMargins( 0,0,0,0 );
-      }
-
+{ ui->setupUi(this);
+  if ( cw )
+    { new QVBoxLayout( cw );
+      cw->layout()->addWidget( this );
+      cw->layout()->setContentsMargins( 0,0,0,0 );
+    }
+  pa = new ProtocolActor( RCD_actorWriterClient_o, this );
+  connect( pa, SIGNAL(newName(QString)), ui->wcProtocol, SLOT(setText(QString)) );
 }
 
 WriterClient::~WriterClient()
-{
-    delete ui;
-}
+{ delete ui; }

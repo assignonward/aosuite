@@ -31,28 +31,11 @@ namespace Ui {
 class ReaderServer;
 }
 
-/*
-class ReaderServer : public ProtocolActor
-{
-    Q_OBJECT
-public:
-    explicit ReaderServer(QObject *parent = nullptr) : ProtocolActor( RCD_actorReaderServer_o, parent ) {}
-
-signals:
-        void sendResponse( BaoSerial );
-
-public slots:
-        void receiveRequest( BaoSerial );
-};
-*/
-
 class ReaderServer : public QGroupBox
-{
-    Q_OBJECT
-
+{ Q_OBJECT
 public:
     explicit ReaderServer(QWidget *parent = nullptr);
-    ~ReaderServer();
+            ~ReaderServer();
 
 signals:
         void sendResponse( BaoSerial );
@@ -60,7 +43,7 @@ signals:
 public slots:
         void receiveRequest( BaoSerial );
 
-private:
+public:
   QPointer<ProtocolActor> pa;
         Ui::ReaderServer *ui;
 };

@@ -25,17 +25,15 @@
 ReaderClient::ReaderClient(QWidget *cw) :
     QGroupBox(cw),
     ui(new Ui::ReaderClient)
-{
-    ui->setupUi(this);
-    if ( cw )
-      { new QVBoxLayout( cw );
-        cw->layout()->addWidget( this );
-        cw->layout()->setContentsMargins( 0,0,0,0 );
-      }
-
+{ ui->setupUi(this);
+  if ( cw )
+    { new QVBoxLayout( cw );
+      cw->layout()->addWidget( this );
+      cw->layout()->setContentsMargins( 0,0,0,0 );
+    }
+  pa = new ProtocolActor( RCD_actorReaderClient_o, this );
+  connect( pa, SIGNAL(newName(QString)), ui->rcProtocol, SLOT(setText(QString)) );
 }
 
 ReaderClient::~ReaderClient()
-{
-    delete ui;
-}
+{ delete ui; }

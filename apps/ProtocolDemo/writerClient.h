@@ -30,29 +30,12 @@
 namespace Ui {
 class WriterClient;
 }
-/*
-class WriterClient : public ProtocolActor
-{
-    Q_OBJECT
-public:
-    explicit WriterClient(QObject *parent = nullptr) : ProtocolActor( RCD_actorWriterClient_o, parent ) {}
-
-signals:
-        void sendRequest( BaoSerial ); // sends request to the server
-
-public slots:
-        void sendWriteRequest();       // catches signal from the ui button
-        void receiveResponse( BaoSerial );
-};
-*/
 
 class WriterClient : public QGroupBox
-{
-    Q_OBJECT
-
+{ Q_OBJECT
 public:
     explicit WriterClient(QWidget *parent = nullptr);
-    ~WriterClient();
+            ~WriterClient();
 
 signals:
         void sendRequest( BaoSerial ); // sends request to the server
