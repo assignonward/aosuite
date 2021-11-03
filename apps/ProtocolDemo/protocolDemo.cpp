@@ -38,26 +38,14 @@ ProtocolDemo::ProtocolDemo( QWidget *cw ) :
   wc = new WriterClient( ui->cwsa );
   ws = new WriterServer( ui->swsa );
 
-  connect( this, SIGNAL( setProtocol(BaoSerial) ), wc->pa, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ), rc->pa, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ), ws->pa, SLOT( setProtocol(BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol(BaoSerial) ), rs->pa, SLOT( setProtocol(BaoSerial) ) );
-  /*
-  connect( &wc->pa, SIGNAL( newName(QString) ),      ui->wcProtocol, SLOT( setText(QString)  ) );
-  connect( &rc->pa, SIGNAL( newName(QString) ),      ui->rcProtocol, SLOT( setText(QString)  ) );
-  connect( &ws->pa, SIGNAL( newName(QString) ),      ui->wsProtocol, SLOT( setText(QString)  ) );
-  connect( &rs->pa, SIGNAL( newName(QString) ),      ui->rsProtocol, SLOT( setText(QString)  ) );
-  connect( &wc->pa, SIGNAL( transactionRecord(QString) ), ui->wcLog, SLOT( append(QString)   ) );
-  connect( &rc->pa, SIGNAL( transactionRecord(QString) ), ui->rcLog, SLOT( append(QString)   ) );
-  connect( &ws->pa, SIGNAL( transactionRecord(QString) ), ui->wsLog, SLOT( append(QString)   ) );
-  connect( &rs->pa, SIGNAL( transactionRecord(QString) ), ui->rsLog, SLOT( append(QString)   ) );
-  connect( &wc    , SIGNAL( sendRequest (BaoSerial) ), &ws, SLOT( receiveRequest (BaoSerial) ) );
-  connect( &rc    , SIGNAL( sendRequest (BaoSerial) ), &rs, SLOT( receiveRequest (BaoSerial) ) );
-  connect( &ws    , SIGNAL( sendResponse(BaoSerial) ), &wc, SLOT( receiveResponse(BaoSerial) ) );
-  connect( &rs    , SIGNAL( sendResponse(BaoSerial) ), &rc, SLOT( receiveResponse(BaoSerial) ) );
-  connect( ui->wcSend   , SIGNAL( clicked() ), &wc->pa, SLOT( sendWriteRequest() ) );
-  connect( ui->rcRequest, SIGNAL( clicked() ), &rc->pa, SLOT( sendReadRequest()  ) );
-  */
+  connect( this, SIGNAL( setProtocol (BaoSerial) ), wc->pa, SLOT( setProtocol    (BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol (BaoSerial) ), rc->pa, SLOT( setProtocol    (BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol (BaoSerial) ), ws->pa, SLOT( setProtocol    (BaoSerial) ) );
+  connect( this, SIGNAL( setProtocol (BaoSerial) ), rs->pa, SLOT( setProtocol    (BaoSerial) ) );
+  connect( wc  , SIGNAL( sendRequest (BaoSerial) ), ws    , SLOT( receiveRequest (BaoSerial) ) );
+  connect( rc  , SIGNAL( sendRequest (BaoSerial) ), rs    , SLOT( receiveRequest (BaoSerial) ) );
+  connect( ws  , SIGNAL( sendResponse(BaoSerial) ), wc    , SLOT( receiveResponse(BaoSerial) ) );
+  connect( rs  , SIGNAL( sendResponse(BaoSerial) ), rc    , SLOT( receiveResponse(BaoSerial) ) );
 }
 
 ProtocolDemo::~ProtocolDemo()

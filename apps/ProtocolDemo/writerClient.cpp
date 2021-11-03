@@ -32,7 +32,9 @@ WriterClient::WriterClient(QWidget *cw) :
       cw->layout()->setContentsMargins( 0,0,0,0 );
     }
   pa = new ProtocolActor( RCD_actorWriterClient_o, this );
-  connect( pa, SIGNAL(newName(QString)), ui->wcProtocol, SLOT(setText(QString)) );
+  connect( pa        , SIGNAL( newName(QString)           ), ui->wcProtocol, SLOT( setText(QString)   ) );
+  connect( pa        , SIGNAL( transactionRecord(QString) ), ui->wcLog     , SLOT( append(QString)    ) );
+  connect( ui->wcSend, SIGNAL( clicked()                  )                , SLOT( sendWriteRequest() ) );
 }
 
 WriterClient::~WriterClient()

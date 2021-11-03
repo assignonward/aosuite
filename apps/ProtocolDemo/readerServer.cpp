@@ -32,7 +32,8 @@ ReaderServer::ReaderServer(QWidget *cw) :
       cw->layout()->setContentsMargins( 0,0,0,0 );
     }
   pa = new ProtocolActor( RCD_actorReaderServer_o, this );
-  connect( pa, SIGNAL(newName(QString)), ui->rsProtocol, SLOT(setText(QString)) );
+  connect( pa, SIGNAL( newName(QString)           ), ui->rsProtocol, SLOT( setText(QString) ) );
+  connect( pa, SIGNAL( transactionRecord(QString) ), ui->rsLog     , SLOT( append(QString)  ) );
 }
 
 ReaderServer::~ReaderServer()

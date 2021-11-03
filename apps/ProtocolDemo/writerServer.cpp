@@ -32,7 +32,8 @@ WriterServer::WriterServer(QWidget *cw) :
       cw->layout()->setContentsMargins( 0,0,0,0 );
     }
   pa = new ProtocolActor( RCD_actorWriterServer_o, this );
-  connect( pa, SIGNAL(newName(QString)), ui->wsProtocol, SLOT(setText(QString)) );
+  connect( pa, SIGNAL( newName(QString)           ), ui->wsProtocol, SLOT( setText(QString) ) );
+  connect( pa, SIGNAL( transactionRecord(QString) ), ui->wsLog     , SLOT( append(QString)  ) );
 }
 
 WriterServer::~WriterServer()
