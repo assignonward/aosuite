@@ -38,3 +38,15 @@ ReaderServer::ReaderServer(QWidget *cw) :
 
 ReaderServer::~ReaderServer()
 { delete ui; }
+
+/**
+ * @brief ReaderServer::receiveRequest
+ * @param req - request from reader client
+ */
+void ReaderServer::receiveRequest( QByteArray req )
+{ pa->emit transactionRecord("receiveRequest()");
+  (void)req;
+  BaoSerial resp;
+  // TODO: act on request and generate a response
+  emit sendResponse( resp );
+}

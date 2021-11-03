@@ -39,3 +39,28 @@ WriterClient::WriterClient(QWidget *cw) :
 
 WriterClient::~WriterClient()
 { delete ui; }
+
+/**
+ * @brief WriterClient::sendWriteRequest - catches signal from the ui button
+ */
+void WriterClient::sendWriteRequest()
+{ pa->emit transactionRecord("sendWriteRequest()");
+  if ( pa->pp == nullptr )
+    { pa->emit transactionRecord("protocol not defined.");
+      return;
+    }
+  BaoSerial bs;
+  // TODO: prepare bao based on protocol definition and ui contents
+  emit sendRequest( bs );
+}
+
+/**
+ * @brief WriterClient::receiveResponse
+ * @param resp - from server
+ */
+void WriterClient::receiveResponse( QByteArray resp )
+{ pa->emit transactionRecord("receiveResponse()");
+  (void)resp;
+  // TODO: show response/results on ui
+}
+

@@ -39,3 +39,27 @@ ReaderClient::ReaderClient(QWidget *cw) :
 
 ReaderClient::~ReaderClient()
 { delete ui; }
+
+/**
+ * @brief ReaderClient::sendReadRequest - catches signal from the ui button
+ */
+void ReaderClient::sendReadRequest()
+{ pa->emit transactionRecord("sendReadRequest()");
+  if ( pa->pp == nullptr )
+    { pa->emit transactionRecord("protocol not defined.");
+      return;
+    }
+  BaoSerial bs;
+  // TODO: prepare bao based on protocol definition and ui contents
+  emit sendRequest( bs );
+}
+
+/**
+ * @brief ReaderClient::receiveResponse
+ * @param resp - from server
+ */
+void ReaderClient::receiveResponse( QByteArray resp )
+{ pa->emit transactionRecord("receiveResponse()");
+  (void)resp;
+  // TODO: show response/results on ui
+}

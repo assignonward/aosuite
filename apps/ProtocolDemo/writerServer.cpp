@@ -38,3 +38,16 @@ WriterServer::WriterServer(QWidget *cw) :
 
 WriterServer::~WriterServer()
 { delete ui; }
+
+/**
+ * @brief WriterServer::receiveRequest
+ * @param req - request from writer client
+ */
+void WriterServer::receiveRequest( QByteArray req )
+{ pa->emit transactionRecord("receiveRequest()");
+  (void)req;
+  BaoSerial resp;
+  // TODO: act on request and generate a response
+  emit sendResponse( resp );
+}
+
