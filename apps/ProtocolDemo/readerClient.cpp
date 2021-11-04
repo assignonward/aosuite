@@ -34,11 +34,23 @@ ReaderClient::ReaderClient(QWidget *cw) :
   pa = new ProtocolActor( RCD_actorReaderClient_o, this );
   connect( pa           , SIGNAL( newName(QString)           ), ui->rcProtocol, SLOT( setText(QString)  ) );
   connect( pa           , SIGNAL( transactionRecord(QString) ), ui->rcLog     , SLOT( append(QString)   ) );
+  connect( pa           , SIGNAL( newProtocolSet()           )                , SLOT( newProtocolSet()  ) );
   connect( ui->rcRequest, SIGNAL( clicked()                  )                , SLOT( sendReadRequest() ) );
 }
 
 ReaderClient::~ReaderClient()
 { delete ui; }
+
+/**
+ * @brief ReaderClient::newProtocolSet
+ */
+void ReaderClient::newProtocolSet()
+{ ui->rcRequest          ->setVisible( pa->   sendableObTypes.contains( (RiceyInt)RCD_readRequest_o ) );
+  ui->rcDataGroup        ->setVisible( pa->receivableContents.contains( (RiceyInt)RCD_recordText_s  ) );
+  ui->rcBlockchainIdGroup->setVisible( false ); // TODO: define a protocol that includes blockchain id
+  ui->rcIdGroup          ->setVisible( false ); // TODO: define a protocol that includes reader id
+  // qWarning( "ReaderClient::newProtocolSet()" );
+}
 
 /**
  * @brief ReaderClient::sendReadRequest - catches signal from the ui button

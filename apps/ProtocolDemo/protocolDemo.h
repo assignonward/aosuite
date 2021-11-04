@@ -31,7 +31,6 @@
 #include "readerClient.h"
 #include "readerServer.h"
 
-
 namespace Ui {
 class ProtocolDemo;
 }

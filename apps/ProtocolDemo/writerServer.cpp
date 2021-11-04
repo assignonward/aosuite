@@ -34,10 +34,19 @@ WriterServer::WriterServer(QWidget *cw) :
   pa = new ProtocolActor( RCD_actorWriterServer_o, this );
   connect( pa, SIGNAL( newName(QString)           ), ui->wsProtocol, SLOT( setText(QString) ) );
   connect( pa, SIGNAL( transactionRecord(QString) ), ui->wsLog     , SLOT( append(QString)  ) );
+  connect( pa, SIGNAL( newProtocolSet()           )                , SLOT( newProtocolSet() ) );
 }
 
 WriterServer::~WriterServer()
 { delete ui; }
+
+/**
+ * @brief WriterServer::newProtocolSet
+ */
+void WriterServer::newProtocolSet()
+{
+
+}
 
 /**
  * @brief WriterServer::receiveRequest

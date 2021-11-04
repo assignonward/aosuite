@@ -34,11 +34,23 @@ WriterClient::WriterClient(QWidget *cw) :
   pa = new ProtocolActor( RCD_actorWriterClient_o, this );
   connect( pa        , SIGNAL( newName(QString)           ), ui->wcProtocol, SLOT( setText(QString)   ) );
   connect( pa        , SIGNAL( transactionRecord(QString) ), ui->wcLog     , SLOT( append(QString)    ) );
+  connect( pa        , SIGNAL( newProtocolSet()           )                , SLOT( newProtocolSet()   ) );
   connect( ui->wcSend, SIGNAL( clicked()                  )                , SLOT( sendWriteRequest() ) );
 }
 
 WriterClient::~WriterClient()
 { delete ui; }
+
+/**
+ * @brief WriterClient::newProtocolSet
+ */
+void WriterClient::newProtocolSet()
+{ ui->wcSend             ->setVisible( pa->sendableObTypes .contains( (RiceyInt)RCD_writeRequest_o ) );
+  ui->wcDataGroup        ->setVisible( pa->sendableContents.contains( (RiceyInt)RCD_recordText_s   ) );
+  ui->wcBlockchainIdGroup->setVisible( false ); // TODO: define a protocol that includes blockchain id
+  ui->wcIdGroup          ->setVisible( false ); // TODO: define a protocol that includes writer id
+  // qWarning( "WriterClient::newProtocolSet()" );
+}
 
 /**
  * @brief WriterClient::sendWriteRequest - catches signal from the ui button

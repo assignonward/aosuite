@@ -43,6 +43,7 @@ signals:
 public slots:
         void sendWriteRequest();       // catches signal from the ui button
         void receiveResponse( BaoSerial );
+        void newProtocolSet();
 
 public:
   QPointer<ProtocolActor> pa;

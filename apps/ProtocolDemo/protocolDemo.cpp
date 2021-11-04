@@ -42,6 +42,8 @@ ProtocolDemo::ProtocolDemo( QWidget *cw ) :
   connect( this, SIGNAL( setProtocol (BaoSerial) ), rc->pa, SLOT( setProtocol    (BaoSerial) ) );
   connect( this, SIGNAL( setProtocol (BaoSerial) ), ws->pa, SLOT( setProtocol    (BaoSerial) ) );
   connect( this, SIGNAL( setProtocol (BaoSerial) ), rs->pa, SLOT( setProtocol    (BaoSerial) ) );
+
+  // Communication links between the modules
   connect( wc  , SIGNAL( sendRequest (BaoSerial) ), ws    , SLOT( receiveRequest (BaoSerial) ) );
   connect( rc  , SIGNAL( sendRequest (BaoSerial) ), rs    , SLOT( receiveRequest (BaoSerial) ) );
   connect( ws  , SIGNAL( sendResponse(BaoSerial) ), wc    , SLOT( receiveResponse(BaoSerial) ) );

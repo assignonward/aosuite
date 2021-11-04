@@ -42,6 +42,7 @@ signals:
 
 public slots:
         void receiveRequest( BaoSerial );
+        void newProtocolSet();
 
 public:
   QPointer<ProtocolActor> pa;

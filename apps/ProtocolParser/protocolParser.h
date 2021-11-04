@@ -68,15 +68,20 @@ public:
         void  setActorType( RiceyInt at ) { actTyp = at; }
     RiceyInt  actType() { return actTyp; }
 virtual void  protocolSet();
+        void  connectSendableItems();
+        void  connectReceivableItems();
 
 signals:
-        void  newProtocolSet( ProtocolActor * );
+        void  newProtocolSet();
 
 public:
     QPointer<BlockValueObject>   sendableItemDefs;
+               QList<RiceyInt>   sendableObTypes;
+               QList<RiceyInt>   sendableContents;
     QPointer<BlockValueObject> receivableItemDefs;
+               QList<RiceyInt> receivableObTypes;
+               QList<RiceyInt> receivableContents;
                      RiceyInt  actTyp;
-
 };
 
 #endif // PROTOCOLPARSER_H
