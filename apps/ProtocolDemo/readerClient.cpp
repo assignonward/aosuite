@@ -46,6 +46,7 @@ ReaderClient::~ReaderClient()
  */
 void ReaderClient::newProtocolSet()
 { ui->rcRequest          ->setVisible( pa->   sendableObTypes.contains( (RiceyInt)RCD_readRequest_o ) );
+  ui->rcDataHandleGroup  ->setVisible( pa->  sendableContents.contains( (RiceyInt)RCD_recordId_i    ) );
   ui->rcDataGroup        ->setVisible( pa->receivableContents.contains( (RiceyInt)RCD_recordText_s  ) );
   ui->rcBlockchainIdGroup->setVisible( false ); // TODO: define a protocol that includes blockchain id
   ui->rcIdGroup          ->setVisible( false ); // TODO: define a protocol that includes reader id

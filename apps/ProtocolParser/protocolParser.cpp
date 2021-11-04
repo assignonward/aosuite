@@ -184,16 +184,16 @@ void  ProtocolActor::connectSendableItems()
                 { QList<BlockObjectMap> icObs = icA->value();
                   foreach ( BlockObjectMap icOm, icObs )
                     { if ( icOm.contains( RCD_OpDataLink_C ) )
-                        { BlockValueRiceyIntArray *opDataLink = (BlockValueRiceyIntArray *)icOm[RCD_OpDataLink_C];
+                        { BlockValueRiceyCodeArray *opDataLink = (BlockValueRiceyCodeArray *)icOm[RCD_OpDataLink_C];
                           if ( opDataLink->size() < 2 )
                             qWarning( "%s sendable ItemContents %s not enough items %d", actor.data(), siName.data(), opDataLink->size() );
                            else
-                            sendableContents.append( opDataLink->at(0) );
+                            sendableContents.append( riceToInt( opDataLink->at(0) ) );
                         }
                     }
                 }
             } // si contains ItemContents_O
-          qWarning( "%s sendable %s checked.", actor.data(), siName.data() );
+          // qWarning( "%s sendable %s checked.", actor.data(), siName.data() );
         } // si not nullptr
     } // foreach key in keys
 }
@@ -202,16 +202,51 @@ void  ProtocolActor::connectReceivableItems()
 { Utf8String actor = dict.nameFromCode( actTyp );
   QList<RiceyInt> keys = receivableItemDefs->keys();
   foreach ( RiceyInt key, keys )
-    { BlockValueObject *si = (BlockValueObject *)receivableItemDefs->value( key );
-      if ( si == nullptr )
+    { BlockValueObject *ri = (BlockValueObject *)receivableItemDefs->value( key );
+      if ( ri == nullptr )
         qWarning( "%s receivable item nullptr", actor.data() );
        else
-        { Utf8String siName = dict.nameFromCode( si->vKey() );
-          if ( !si->contains( RCD_ItemStructure_o ) )
+        { Utf8String siName = dict.nameFromCode( ri->vKey() );
+          if ( !ri->contains( RCD_ItemStructure_o ) )
             qWarning( "%s receivable %s lacks structure", actor.data(), siName.data() );
-          if ( !si->contains( RCD_ItemContents_O ) )
+          else
+           { BlockValueObject *itSt = (BlockValueObject *)ri->value( RCD_ItemStructure_o );
+             if ( itSt == nullptr )
+               qWarning( "%s receivable ItemStructure %s nullptr", actor.data(), siName.data() );
+              else
+               { QList<RiceyInt> itStKeys = itSt->keys();
+                 if ( itStKeys.size() != 1 )
+                   qWarning( "%s receivable ItemStructure %s %lld keys, should be 1", actor.data(), siName.data(), itStKeys.size() );
+                  else
+                   { if ( key != itStKeys.at(0) )
+                       qWarning( "%s receivable ItemStructure %s key mismatch %llx vs %llx", actor.data(), siName.data(), key, itStKeys.at(0) );
+                      else
+                       receivableObTypes.append( key );
+                   }
+               }
+           } // ri contains ItemStructure_o
+          if ( !ri->contains( RCD_ItemContents_O ) )
             qWarning( "%s receivable %s lacks contents", actor.data(), siName.data() );
-          qWarning( "%s receivable %s checked.", actor.data(), siName.data() );
+           else
+            { BlockValueObjectArray *icA = (BlockValueObjectArray *)ri->value( RCD_ItemContents_O );
+              if ( icA == nullptr )
+                qWarning( "%s receivable ItemContents %s nullptr", actor.data(), siName.data() );
+               else
+                { QList<BlockObjectMap> icObs = icA->value();
+                  foreach ( BlockObjectMap icOm, icObs )
+                    { if ( icOm.contains( RCD_OpDataLink_C ) )
+                        { BlockValueRiceyCodeArray *opDataLink = (BlockValueRiceyCodeArray *)icOm[RCD_OpDataLink_C];
+                          if ( opDataLink->size() < 2 )
+                            qWarning( "%s receivable ItemContents %s not enough items %d", actor.data(), siName.data(), opDataLink->size() );
+                           else
+                            { receivableContents.append( riceToInt( opDataLink->at(0) ) );
+                              // qWarning( "%s receivable ItemContents %s added %llx", actor.data(), siName.data(), riceToInt( opDataLink->at(0) ) );
+                            }
+                        }
+                    }
+                }
+            } // ri contains ItemContents_O
+          // qWarning( "%s receivable %s checked.", actor.data(), siName.data() );
         }
     }
 }

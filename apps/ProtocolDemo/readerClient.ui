@@ -151,7 +151,7 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="2">
-    <widget class="QGroupBox" name="groupBox_5">
+    <widget class="QGroupBox" name="rcDataHandleGroup">
      <property name="title">
       <string>Data Handle</string>
      </property>
