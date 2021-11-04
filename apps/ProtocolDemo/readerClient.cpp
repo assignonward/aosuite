@@ -47,9 +47,9 @@ ReaderClient::~ReaderClient()
 void ReaderClient::newProtocolSet()
 { ui->rcRequest          ->setVisible( pa->   sendableObTypes.contains( (RiceyInt)RCD_readRequest_o ) );
   ui->rcDataHandleGroup  ->setVisible( pa->  sendableContents.contains( (RiceyInt)RCD_recordId_i    ) );
+  ui->rcIdGroup          ->setVisible( pa->  sendableContents.contains( (RiceyInt)RCD_userId_b      ) );
   ui->rcDataGroup        ->setVisible( pa->receivableContents.contains( (RiceyInt)RCD_recordText_s  ) );
   ui->rcBlockchainIdGroup->setVisible( false ); // TODO: define a protocol that includes blockchain id
-  ui->rcIdGroup          ->setVisible( false ); // TODO: define a protocol that includes reader id
   // qWarning( "ReaderClient::newProtocolSet()" );
 }
 
@@ -62,9 +62,17 @@ void ReaderClient::sendReadRequest()
     { pa->emit transactionRecord("protocol not defined.");
       return;
     }
-  BaoSerial bs;
-  // TODO: prepare bao based on protocol definition and ui contents
-  emit sendRequest( bs );
+  // Compose bao based on protocol definition and ui contents and send it.
+  // Unneeded components will be ignored by pa->compose
+  BlockObjectMap inputs;
+  BlockValueByteArray userId( ui->rcId->text().toUtf8() );             inputs.insert( RCD_userId_b  , &userId   );
+  BlockValueInt64   recordId( ui->rcDataHandle->text().toLongLong() ); inputs.insert( RCD_recordId_i, &recordId );
+  // more to come
+  BaoSerial bao = pa->compose( RCD_readRequest_o, inputs );
+  if ( bao.size() > 0 )
+    emit sendRequest( bao );
+   else
+    qWarning( "problem when composing readRequest" );
 }
 
 /**

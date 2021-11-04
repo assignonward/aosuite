@@ -129,6 +129,8 @@ void  ProtocolActor::protocolSet()
         { // qWarning( "ProtocolActor::protocolSet() %s %d receivable items", actor.data(), bvc->size() );
           if ( receivableItemDefs )
             receivableItemDefs->deleteLater();
+          receivableObTypes.clear();
+          receivableContents.clear();
           receivableItemDefs = new BlockValueObject( this );
           items = bvc->value();
           foreach( RiceyCode item, items )
@@ -249,4 +251,36 @@ void  ProtocolActor::connectReceivableItems()
           // qWarning( "%s receivable %s checked.", actor.data(), siName.data() );
         }
     }
+}
+
+/**
+ * @brief ProtocolActor::compose - organize inputs into an obType packet according to the currently set protocol.
+ *   Composed items are for sending, so they only consider sendable items.
+ *   TODO: a logical nesting structure that works with the inputs map
+ * @param obType - type of packet to make
+ * @param inputs - data to fill the packet with
+ * @return serialized packet - or empty array if there was a problem.
+ */
+BaoSerial  ProtocolActor::compose( RiceyInt obType, const BlockObjectMap &inputs )
+{ BaoSerial bao;
+  if ( !sendableItemDefs->contains( obType ) )
+    { qWarning( "ProtocolActor::compose( %llx ) not found in sendableIdemDefs.", obType );
+      return bao;
+    }
+  BlockValueObject    itemDef( sendableItemDefs->value( obType )             ->bao() );
+  BlockValueObject itemStruct( itemDef          .value( RCD_ItemStructure_o )->bao() );
+  BlockValueObject         ob( itemStruct       .value( obType )             ->bao() );
+  BlockValueObjectArray itemContents; itemContents.setBao( itemDef.value( RCD_ItemContents_O )->bao() );
+  for ( qint32 i = 0; i < itemContents.size(); i++ )
+    { BlockObjectMap contents = itemContents.at(i);
+      if ( !contents.contains( RCD_OpDataLink_C ) )
+        { qWarning( "unexpected: contents[%d] doesn't have an OpDataLink_C", i );
+        }
+       else
+        { BlockValueRiceyCodeArray dataLink; dataLink.setBao( contents[RCD_OpDataLink_C]->bao() );
+          qWarning( "%s", dataLink.json().data() );
+        }
+    }
+  KeyValuePair kvp( obType, &ob );
+  return kvp.bao();
 }

@@ -70,6 +70,7 @@ public:
 virtual void  protocolSet();
         void  connectSendableItems();
         void  connectReceivableItems();
+   BaoSerial  compose( RiceyInt, const BlockObjectMap & );
 
 signals:
         void  newProtocolSet();

@@ -46,9 +46,9 @@ WriterClient::~WriterClient()
  */
 void WriterClient::newProtocolSet()
 { ui->wcSend             ->setVisible( pa->sendableObTypes .contains( (RiceyInt)RCD_writeRequest_o ) );
+  ui->wcIdGroup          ->setVisible( pa->sendableContents.contains( (RiceyInt)RCD_userId_b       ) );
   ui->wcDataGroup        ->setVisible( pa->sendableContents.contains( (RiceyInt)RCD_recordText_s   ) );
   ui->wcBlockchainIdGroup->setVisible( false ); // TODO: define a protocol that includes blockchain id
-  ui->wcIdGroup          ->setVisible( false ); // TODO: define a protocol that includes writer id
   // qWarning( "WriterClient::newProtocolSet()" );
 }
 
@@ -61,9 +61,17 @@ void WriterClient::sendWriteRequest()
     { pa->emit transactionRecord("protocol not defined.");
       return;
     }
-  BaoSerial bs;
-  // TODO: prepare bao based on protocol definition and ui contents
-  emit sendRequest( bs );
+  // Compose bao based on protocol definition and ui contents and send it.
+  // Unneeded components will be ignored by pa->compose
+  BlockObjectMap inputs;
+  BlockValueByteArray  userId( ui->wcId->text().toUtf8() ); inputs.insert( RCD_userId_b    , &userId     );
+  BlockValueString recordText( ui->wcId->text().toUtf8() ); inputs.insert( RCD_recordText_s, &recordText );
+  // more to come
+  BaoSerial bao = pa->compose( RCD_writeRequest_o, inputs );
+  if ( bao.size() > 0 )
+    emit sendRequest( bao );
+   else
+    qWarning( "problem when composing writeRequest" );
 }
 
 /**
