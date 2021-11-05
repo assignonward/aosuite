@@ -64,8 +64,8 @@ void WriterClient::sendWriteRequest()
   // Compose bao based on protocol definition and ui contents and send it.
   // Unneeded components will be ignored by pa->compose
   BlockObjectMap inputs;
-  BlockValueByteArray  userId( ui->wcId->text().toUtf8() ); inputs.insert( RCD_userId_b    , &userId     );
-  BlockValueString recordText( ui->wcId->text().toUtf8() ); inputs.insert( RCD_recordText_s, &recordText );
+  BlockValueByteArray  userId( ui->wcId  ->text()       .toUtf8() ); inputs.insert( RCD_userId_b    , &userId     );
+  BlockValueString recordText( ui->wcData->toPlainText().toUtf8() ); inputs.insert( RCD_recordText_s, &recordText );
   // more to come
   BaoSerial bao = pa->compose( RCD_writeRequest_o, inputs );
   if ( bao.size() > 0 )

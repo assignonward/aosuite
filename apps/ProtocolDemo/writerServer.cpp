@@ -53,7 +53,7 @@ void WriterServer::newProtocolSet()
  * @param req - request from writer client
  */
 void WriterServer::receiveRequest( QByteArray req )
-{ pa->emit transactionRecord("receiveRequest()");
+{ pa->emit transactionRecord( QString("receiveRequest(%1)").arg( QString::fromUtf8( req.toHex() ) ) );
   (void)req;
   BaoSerial resp;
   // TODO: act on request and generate a response

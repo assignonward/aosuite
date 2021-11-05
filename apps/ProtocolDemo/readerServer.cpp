@@ -54,7 +54,7 @@ void ReaderServer::newProtocolSet()
  * @param req - request from reader client
  */
 void ReaderServer::receiveRequest( QByteArray req )
-{ pa->emit transactionRecord("receiveRequest()");
+{ pa->emit transactionRecord( QString("receiveRequest(%1)").arg( QString::fromUtf8( req.toHex() ) ) );
   (void)req;
   BaoSerial resp;
   // TODO: act on request and generate a response

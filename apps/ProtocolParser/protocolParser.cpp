@@ -262,10 +262,11 @@ void  ProtocolActor::connectReceivableItems()
  * @return serialized packet - or empty array if there was a problem.
  */
 BaoSerial  ProtocolActor::compose( RiceyInt obType, const BlockObjectMap &inputs )
-{ BaoSerial bao;
+{ Utf8String obName = dict.nameFromCode( obType );
+  BaoSerial err; // empty bao indicates error
   if ( !sendableItemDefs->contains( obType ) )
     { qWarning( "ProtocolActor::compose( %llx ) not found in sendableIdemDefs.", obType );
-      return bao;
+      return err;
     }
   BlockValueObject    itemDef( sendableItemDefs->value( obType )             ->bao() );
   BlockValueObject itemStruct( itemDef          .value( RCD_ItemStructure_o )->bao() );
@@ -274,13 +275,61 @@ BaoSerial  ProtocolActor::compose( RiceyInt obType, const BlockObjectMap &inputs
   for ( qint32 i = 0; i < itemContents.size(); i++ )
     { BlockObjectMap contents = itemContents.at(i);
       if ( !contents.contains( RCD_OpDataLink_C ) )
-        { qWarning( "unexpected: contents[%d] doesn't have an OpDataLink_C", i );
+        { qWarning( "unexpected: %s contents[%d] doesn't have an OpDataLink_C", obName.data(), i );
         }
        else
         { BlockValueRiceyCodeArray dataLink; dataLink.setBao( contents[RCD_OpDataLink_C]->bao() );
-          qWarning( "%s", dataLink.json().data() );
-        }
-    }
+          if ( dataLink.size() < 2 )
+            qWarning( "%s dataLink[%d] size %d", obName.data(), i, dataLink.size() );
+           else
+            { if ( !inputs.contains( riceToInt( dataLink.at(0) ) ) )
+                qWarning( "%s dataLink[%d] defined item %llx not found in inputs", obName.data(), i, riceToInt( dataLink.at(0) ) );
+               else
+                { if ( !populate( ob, dataLink, inputs[riceToInt(dataLink.at(0))] ) )
+                    { qWarning( "problem during populate" );
+                      return err;
+                    }
+                }
+            } // dataLink size 2 or higher
+        } // contents contains OpDataLink
+    } // for i = 0 to itemContents.size()-1
   KeyValuePair kvp( obType, &ob );
   return kvp.bao();
+}
+
+/**
+ * @brief ProtocolActor::populate
+ * @param ob       - object to populate value in
+ * @param dataLink - description of where to put the value
+ * @param v        - value to be populated
+ * @return true if successful
+ */
+bool  ProtocolActor::populate( BlockValueObject &ob, const BlockValueRiceyCodeArray &dataLink, ValueBase *v )
+{ if ( dataLink.size() < 2 )
+    { qWarning( "dataLink undersized %d", dataLink.size() );
+      return false;
+    }
+  qint32 i = 1;
+  ValueBase *ptr = &ob;
+  while ( i < dataLink.size() )
+    { // TODO: enable navigation to parents as well as children
+      // TODO2: navigation into array elements
+      if ( ptr != nullptr )
+        { if ( !((BlockValueObject *)ptr)->contains( dataLink.at(i) ) )
+           qWarning( "navigation could not find item %d %llx", i, riceToInt( dataLink.at(i) ) );
+          else
+           ptr = ((BlockValueObject *)ptr)->value( dataLink.at(i) );
+        }
+      i++;
+    }
+  if ( ptr == nullptr )
+    { qWarning( "populate ptr is nullptr" );
+      return false;
+    }
+  if ( ptr->type() != v->type() )
+    { qWarning( "mismatch ptr type %d v type %d", ptr->type(), v->type() );
+      return false;
+    }
+  ptr->setBao( v->bao() );
+  return true;
 }

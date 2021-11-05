@@ -71,6 +71,7 @@ virtual void  protocolSet();
         void  connectSendableItems();
         void  connectReceivableItems();
    BaoSerial  compose( RiceyInt, const BlockObjectMap & );
+        bool  populate( BlockValueObject &, const BlockValueRiceyCodeArray &, ValueBase *v );
 
 signals:
         void  newProtocolSet();
