@@ -44,19 +44,26 @@ WriterServer::~WriterServer()
  * @brief WriterServer::newProtocolSet
  */
 void WriterServer::newProtocolSet()
-{
-
+{ ui->wsIdGroup->setVisible( pa->sendableContents.contains( (RiceyInt)RCD_serverId_b ) );
 }
 
 /**
- * @brief WriterServer::receiveRequest
+ * @brief WriterServer::receiveRequest - process it and generate a response
  * @param req - request from writer client
  */
 void WriterServer::receiveRequest( QByteArray req )
 { pa->emit transactionRecord( QString("receiveRequest(%1)").arg( QString::fromUtf8( req.toHex() ) ) );
-  (void)req;
+  RiceyInt reqTyp = riceToInt( req );
+  BlockObjectMap bom = pa->extract( req );
   BaoSerial resp;
-  // TODO: act on request and generate a response
+  switch ( reqTyp )
+    { case RCD_writeRequest_o:
+        // TODO: process bom, compose resp
+        break;
+
+      default:
+        qWarning( "unrecognized request type %llx", reqTyp );
+    }
   emit sendResponse( resp );
 }
 

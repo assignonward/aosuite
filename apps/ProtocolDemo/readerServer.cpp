@@ -45,8 +45,7 @@ ReaderServer::~ReaderServer()
  * @brief ReaderServer::newProtocolSet
  */
 void ReaderServer::newProtocolSet()
-{
-
+{ ui->rsIdGroup->setVisible( pa->sendableContents.contains( (RiceyInt)RCD_serverId_b ) );
 }
 
 /**

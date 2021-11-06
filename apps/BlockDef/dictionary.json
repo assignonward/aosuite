@@ -410,15 +410,9 @@
         },
         {
             "group_s": "protocolDefGroup",
-            "name_s": "DefinedSubItems_C",
-            "text_s": "DEPRECATED USE SubItemDefs_O Items that may appear in a container (to fulfill the protocol requirements)",
-            "type_b": "A07C"
-        },
-        {
-            "group_s": "protocolDefGroup",
-            "name_s": "DefinedSubItemsDesc_S",
-            "text_s": "DEPRECATED USE SubItemDefs_O Optional, description of what the items represent in this context",
-            "type_b": "A075"
+            "name_s": "serverId_b",
+            "text_s": "DⒶ3 and later: server identity - hopefully unique",
+            "type_b": "D30B"
         },
         {
             "group_s": "operationGroup",

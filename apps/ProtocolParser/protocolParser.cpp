@@ -27,11 +27,7 @@
  * @return true if the passed protocol is valid
  */
 bool  ProtocolParser::isValid()
-{ if ( pr->key() != RCD_ProtocolDef_o )
-    { qWarning( "protocol invalid" );
-      return false;
-    }
-  if ( name().size() < 1 )
+{ if ( name().size() < 1 )
     { qWarning( "protocol name not found" );
       return false;
     }
@@ -46,22 +42,28 @@ bool  ProtocolParser::isValid()
 Utf8String  ProtocolParser::name()
 { if ( pr->key() == RCD_ProtocolDef_o )
     { BlockValueObject *bvo = (BlockValueObject *)pr->value();
-      if ( !bvo->contains( RCD_hash_o ) )     return "1";
+      if ( !bvo->contains( RCD_hash_o ) )     { qWarning(     "hash_o not found" ); return ""; }
       bvo = (BlockValueObject *)bvo->value( RCD_hash_o );
-      if ( !bvo->contains( RCD_hashInfo_o ) ) return "2";
+      if ( !bvo->contains( RCD_hashInfo_o ) ) { qWarning( "hashInfo_o not found" ); return ""; }
       bvo = (BlockValueObject *)bvo->value( RCD_hashInfo_o );
-      if ( !bvo->contains( RCD_text_s ) )     return "3";
+      if ( !bvo->contains( RCD_text_s ) )     { qWarning(     "text_s not found" ); return ""; }
       BlockValueString *bvs = (BlockValueString *)bvo->value( RCD_text_s );
       return bvs->value();
     }
-  return "0";
+  qWarning( "Expected ProtocolDef_o as the protocol key" );
+  return "";
 }
 
+/**
+ * @brief ProtocolUser::setProtocol - in the single protocol ecosystem model, the incoming
+ *   protocol is the only one that the ProtocolUser will be working with.
+ * @param p - protocol to set
+ */
 void ProtocolUser::setProtocol( BaoSerial p )
 { if ( pp )
     pp->deleteLater();
   pp = new ProtocolParser( p );
-  if ( pp->isValid() )
+  if ( !pp->isValid() ) qWarning( "protocol not valid, not set." ); else
     { protocolSet();
       emit newName( QString::fromUtf8( pp->name() ) );
     }
@@ -73,14 +75,8 @@ void ProtocolUser::setProtocol( BaoSerial p )
  *   get ths actor's sendable and receivable items.
  */
 void  ProtocolActor::protocolSet()
-{ if ( pp == nullptr )
-    { qWarning( "ProtocolActor::protocolSet() error 1" );
-      return;
-    }
-  if ( pp->pr == nullptr )
-      { qWarning( "ProtocolActor::protocolSet() error 2" );
-        return;
-      }
+{ if ( pp     == nullptr ) { qWarning( "ProtocolActor::protocolSet() error 1" ); return; }
+  if ( pp->pr == nullptr ) { qWarning( "ProtocolActor::protocolSet() error 2" ); return; }
   Utf8String actor = dict.nameFromCode( actTyp );
   QList<RiceyCode> items;
   if ( pp->pr->key() == RCD_ProtocolDef_o )
@@ -100,15 +96,14 @@ void  ProtocolActor::protocolSet()
 
       if ( !bvo->contains( RCD_sendableItems_C ) )   { qWarning( "ProtocolActor::protocolSet() Error 8" ); return; }
       BlockValueRiceyCodeArray *bvc = (BlockValueRiceyCodeArray *)bvo->value().value( RCD_sendableItems_C );
-      if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Error 9 - no sendable items" ); }
+      if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Warning 9 - no sendable items" ); }
        else
-        { // qWarning( "ProtocolActor::protocolSet() %s %d sendable items", actor.data(), bvc->size() );
-          if ( sendableItemDefs )
+        { if ( sendableItemDefs )
             sendableItemDefs->deleteLater();
           sendableObTypes.clear();
           sendableContents.clear();
           sendableItemDefs = new BlockValueObject( this );
-          items = bvc->value();
+          items = bvc->value(); // populate sendableItemDefs for actTyp
           foreach( RiceyCode item, items )
             { Utf8String itNam = dict.nameFromCode( item );
               if ( !bvi->contains( item ) )
@@ -124,10 +119,9 @@ void  ProtocolActor::protocolSet()
 
       if ( !bvo->contains( RCD_receivableItems_C ) ) { qWarning( "ProtocolActor::protocolSet() Error 10" ); return; }
       bvc = (BlockValueRiceyCodeArray *)bvo->value( RCD_receivableItems_C );
-      if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Error 11 - no receivable items" ); }
+      if ( bvc->size() < 1 )                         { qWarning( "ProtocolActor::protocolSet() Warning 11 - no receivable items" ); }
        else
-        { // qWarning( "ProtocolActor::protocolSet() %s %d receivable items", actor.data(), bvc->size() );
-          if ( receivableItemDefs )
+        { if ( receivableItemDefs )
             receivableItemDefs->deleteLater();
           receivableObTypes.clear();
           receivableContents.clear();
@@ -149,98 +143,74 @@ void  ProtocolActor::protocolSet()
   emit transactionRecord( QString( "Protocol set: %1" ).arg( QString::fromUtf8( pp->name() ) ) ); // TODO: maybe add a few descriptives...
 }
 
+/**
+ * @brief ProtocolActor::connectSendableItems - navigate through each of the sendableItemDefs
+ *   populate the lists of ObTypes and Contents
+ *
+ */
 void  ProtocolActor::connectSendableItems()
 { Utf8String actor = dict.nameFromCode( actTyp );
   QList<RiceyInt> keys = sendableItemDefs->keys();
   foreach ( RiceyInt key, keys )
     { BlockValueObject *si = (BlockValueObject *)sendableItemDefs->value( key );
-      if ( si == nullptr )
-        qWarning( "%s sendable item nullptr", actor.data() );
-       else
+      if ( si == nullptr )                              qWarning( "%s sendable item nullptr", actor.data() ); else
         { Utf8String siName = dict.nameFromCode( si->vKey() );
-          if ( !si->contains( RCD_ItemStructure_o ) )
-            qWarning( "%s sendable %s lacks structure", actor.data(), siName.data() );
-           else
+          if ( !si->contains( RCD_ItemStructure_o ) )   qWarning( "%s sendable %s lacks structure", actor.data(), siName.data() ); else
             { BlockValueObject *itSt = (BlockValueObject *)si->value( RCD_ItemStructure_o );
-              if ( itSt == nullptr )
-                qWarning( "%s sendable ItemStructure %s nullptr", actor.data(), siName.data() );
-               else
+              if ( itSt == nullptr )                    qWarning( "%s sendable ItemStructure %s nullptr", actor.data(), siName.data() ); else
                 { QList<RiceyInt> itStKeys = itSt->keys();
-                  if ( itStKeys.size() != 1 )
-                    qWarning( "%s sendable ItemStructure %s %lld keys, should be 1", actor.data(), siName.data(), itStKeys.size() );
-                   else
-                    { if ( key != itStKeys.at(0) )
-                        qWarning( "%s sendable ItemStructure %s key mismatch %llx vs %llx", actor.data(), siName.data(), key, itStKeys.at(0) );
-                       else
+                  if ( itStKeys.size() != 1 )           qWarning( "%s sendable ItemStructure %s %lld keys, should be 1"   , actor.data(), siName.data(), itStKeys.size() ); else
+                    { if ( key != itStKeys.at(0) )      qWarning( "%s sendable ItemStructure %s key mismatch %llx vs %llx", actor.data(), siName.data(), key, itStKeys.at(0) ); else
                         sendableObTypes.append( key );
                     }
                 }
             } // si contains ItemStructure_o
-          if ( !si->contains( RCD_ItemContents_O ) )
-            qWarning( "%s sendable ItemContents %s lacks contents", actor.data(), siName.data() );
-           else
+          if ( !si->contains( RCD_ItemContents_O ) )    qWarning( "%s sendable ItemContents %s lacks contents", actor.data(), siName.data() ); else
             { BlockValueObjectArray *icA = (BlockValueObjectArray *)si->value( RCD_ItemContents_O );
-              if ( icA == nullptr )
-                qWarning( "%s sendable ItemContents %s nullptr", actor.data(), siName.data() );
-               else
+              if ( icA == nullptr )                     qWarning( "%s sendable ItemContents %s nullptr", actor.data(), siName.data() ); else
                 { QList<BlockObjectMap> icObs = icA->value();
                   foreach ( BlockObjectMap icOm, icObs )
                     { if ( icOm.contains( RCD_OpDataLink_C ) )
                         { BlockValueRiceyCodeArray *opDataLink = (BlockValueRiceyCodeArray *)icOm[RCD_OpDataLink_C];
-                          if ( opDataLink->size() < 2 )
-                            qWarning( "%s sendable ItemContents %s not enough items %d", actor.data(), siName.data(), opDataLink->size() );
-                           else
+                          if ( opDataLink->size() < 2 ) qWarning( "%s sendable ItemContents %s not enough items %d", actor.data(), siName.data(), opDataLink->size() ); else
                             sendableContents.append( riceToInt( opDataLink->at(0) ) );
                         }
                     }
                 }
             } // si contains ItemContents_O
-          // qWarning( "%s sendable %s checked.", actor.data(), siName.data() );
-        } // si not nullptr
-    } // foreach key in keys
+        }    // si not nullptr
+    }       // foreach key in keys
 }
 
+/**
+ * @brief ProtocolActor::connectReceivableItems - navigate through each of the receivableItemDefs
+ *   populate the lists of ObTypes and Contents
+ */
 void  ProtocolActor::connectReceivableItems()
 { Utf8String actor = dict.nameFromCode( actTyp );
   QList<RiceyInt> keys = receivableItemDefs->keys();
   foreach ( RiceyInt key, keys )
     { BlockValueObject *ri = (BlockValueObject *)receivableItemDefs->value( key );
-      if ( ri == nullptr )
-        qWarning( "%s receivable item nullptr", actor.data() );
-       else
+      if ( ri == nullptr )                              qWarning( "%s receivable item nullptr", actor.data() ); else
         { Utf8String siName = dict.nameFromCode( ri->vKey() );
-          if ( !ri->contains( RCD_ItemStructure_o ) )
-            qWarning( "%s receivable %s lacks structure", actor.data(), siName.data() );
-          else
+          if ( !ri->contains( RCD_ItemStructure_o ) )   qWarning( "%s receivable %s lacks structure", actor.data(), siName.data() ); else
            { BlockValueObject *itSt = (BlockValueObject *)ri->value( RCD_ItemStructure_o );
-             if ( itSt == nullptr )
-               qWarning( "%s receivable ItemStructure %s nullptr", actor.data(), siName.data() );
-              else
+             if ( itSt == nullptr )                     qWarning( "%s receivable ItemStructure %s nullptr", actor.data(), siName.data() ); else
                { QList<RiceyInt> itStKeys = itSt->keys();
-                 if ( itStKeys.size() != 1 )
-                   qWarning( "%s receivable ItemStructure %s %lld keys, should be 1", actor.data(), siName.data(), itStKeys.size() );
-                  else
-                   { if ( key != itStKeys.at(0) )
-                       qWarning( "%s receivable ItemStructure %s key mismatch %llx vs %llx", actor.data(), siName.data(), key, itStKeys.at(0) );
-                      else
+                 if ( itStKeys.size() != 1 )            qWarning( "%s receivable ItemStructure %s %lld keys, should be 1", actor.data(), siName.data(), itStKeys.size() ); else
+                   { if ( key != itStKeys.at(0) )       qWarning( "%s receivable ItemStructure %s key mismatch %llx vs %llx", actor.data(), siName.data(), key, itStKeys.at(0) ); else
                        receivableObTypes.append( key );
                    }
                }
            } // ri contains ItemStructure_o
-          if ( !ri->contains( RCD_ItemContents_O ) )
-            qWarning( "%s receivable %s lacks contents", actor.data(), siName.data() );
-           else
+          if ( !ri->contains( RCD_ItemContents_O ) )    qWarning( "%s receivable %s lacks contents", actor.data(), siName.data() ); else
             { BlockValueObjectArray *icA = (BlockValueObjectArray *)ri->value( RCD_ItemContents_O );
-              if ( icA == nullptr )
-                qWarning( "%s receivable ItemContents %s nullptr", actor.data(), siName.data() );
-               else
+              if ( icA == nullptr )                     qWarning( "%s receivable ItemContents %s nullptr", actor.data(), siName.data() ); else
                 { QList<BlockObjectMap> icObs = icA->value();
                   foreach ( BlockObjectMap icOm, icObs )
                     { if ( icOm.contains( RCD_OpDataLink_C ) )
                         { BlockValueRiceyCodeArray *opDataLink = (BlockValueRiceyCodeArray *)icOm[RCD_OpDataLink_C];
-                          if ( opDataLink->size() < 2 )
-                            qWarning( "%s receivable ItemContents %s not enough items %d", actor.data(), siName.data(), opDataLink->size() );
-                           else
+                          if ( opDataLink->size() < 2 ) qWarning( "%s receivable ItemContents %s not enough items %d", actor.data(), siName.data(), opDataLink->size() ); else
                             { receivableContents.append( riceToInt( opDataLink->at(0) ) );
                               // qWarning( "%s receivable ItemContents %s added %llx", actor.data(), siName.data(), riceToInt( opDataLink->at(0) ) );
                             }
@@ -248,9 +218,8 @@ void  ProtocolActor::connectReceivableItems()
                     }
                 }
             } // ri contains ItemContents_O
-          // qWarning( "%s receivable %s checked.", actor.data(), siName.data() );
-        }
-    }
+        }    // ri not nullptr
+    }       // foreach key in keys
 }
 
 /**
@@ -274,25 +243,18 @@ BaoSerial  ProtocolActor::compose( RiceyInt obType, const BlockObjectMap &inputs
   BlockValueObjectArray itemContents; itemContents.setBao( itemDef.value( RCD_ItemContents_O )->bao() );
   for ( qint32 i = 0; i < itemContents.size(); i++ )
     { BlockObjectMap contents = itemContents.at(i);
-      if ( !contents.contains( RCD_OpDataLink_C ) )
-        { qWarning( "unexpected: %s contents[%d] doesn't have an OpDataLink_C", obName.data(), i );
-        }
-       else
+      if ( !contents.contains( RCD_OpDataLink_C ) )                  qWarning( "unexpected: %s contents[%d] doesn't have an OpDataLink_C", obName.data(), i ); else
         { BlockValueRiceyCodeArray dataLink; dataLink.setBao( contents[RCD_OpDataLink_C]->bao() );
-          if ( dataLink.size() < 2 )
-            qWarning( "%s dataLink[%d] size %d", obName.data(), i, dataLink.size() );
-           else
-            { if ( !inputs.contains( riceToInt( dataLink.at(0) ) ) )
-                qWarning( "%s dataLink[%d] defined item %llx not found in inputs", obName.data(), i, riceToInt( dataLink.at(0) ) );
-               else
+          if ( dataLink.size() < 2 )                                 qWarning( "%s dataLink[%d] size %d", obName.data(), i, dataLink.size() ); else
+            { if ( !inputs.contains( riceToInt( dataLink.at(0) ) ) ) qWarning( "%s dataLink[%d] defined item %llx not found in inputs", obName.data(), i, riceToInt( dataLink.at(0) ) ); else
                 { if ( !populate( ob, dataLink, inputs[riceToInt(dataLink.at(0))] ) )
                     { qWarning( "problem during populate" );
                       return err;
                     }
                 }
             } // dataLink size 2 or higher
-        } // contents contains OpDataLink
-    } // for i = 0 to itemContents.size()-1
+        }    // contents contains OpDataLink
+    }       // for i = 0 to itemContents.size()-1
   KeyValuePair kvp( obType, &ob );
   return kvp.bao();
 }
@@ -332,4 +294,21 @@ bool  ProtocolActor::populate( BlockValueObject &ob, const BlockValueRiceyCodeAr
     }
   ptr->setBao( v->bao() );
   return true;
+}
+
+
+/**
+ * @brief ProtocolActor::extract
+ * @param bao - packet to extract receivable values from
+ * @return map of receivable values, empty if there is a problem
+ */
+BlockObjectMap ProtocolActor::extract( BaoSerial bao )
+{ KeyValuePair kvp( bao );
+  RiceyInt obk = kvp.key();
+  BlockObjectMap bom;
+  if ( receivableItemDefs == nullptr )    { qWarning( "receivableItemDefs nullptr" );                   return bom; }
+  if ( !receivableObTypes.contains(obk) ) { qWarning( "key %llx not found in receivableObTypes", obk ); return bom; }
+
+  qWarning( "working %s rid %s", dict.nameFromCode( obk ).data(),receivableItemDefs->json().data() );
+  return bom;
 }

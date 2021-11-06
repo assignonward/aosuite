@@ -64,14 +64,15 @@ class ProtocolActor : public ProtocolUser
 {
     Q_OBJECT
 public:
-              ProtocolActor( RiceyInt at, QObject *parent = nullptr ) : ProtocolUser(parent) { setActorType(at); }
-        void  setActorType( RiceyInt at ) { actTyp = at; }
-    RiceyInt  actType() { return actTyp; }
-virtual void  protocolSet();
-        void  connectSendableItems();
-        void  connectReceivableItems();
-   BaoSerial  compose( RiceyInt, const BlockObjectMap & );
-        bool  populate( BlockValueObject &, const BlockValueRiceyCodeArray &, ValueBase *v );
+                ProtocolActor( RiceyInt at, QObject *parent = nullptr ) : ProtocolUser(parent) { setActorType(at); }
+          void  setActorType( RiceyInt at ) { actTyp = at; }
+      RiceyInt  actType() { return actTyp; }
+  virtual void  protocolSet();
+          void  connectSendableItems();
+          void  connectReceivableItems();
+     BaoSerial  compose( RiceyInt, const BlockObjectMap & );
+          bool  populate( BlockValueObject &, const BlockValueRiceyCodeArray &, ValueBase *v );
+BlockObjectMap  extract( BaoSerial );
 
 signals:
         void  newProtocolSet();
