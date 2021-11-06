@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Assign Onward Code Form 2021</string>
+   <string>Protocol Development Tool</string>
   </property>
   <property name="windowIcon">
    <iconset resource="CodeForm.qrc">
-    <normaloff>:/icons/AOCode.png</normaloff>:/icons/AOCode.png</iconset>
+    <normaloff>:/icons/ProtoDev.png</normaloff>:/icons/ProtoDev.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -279,7 +279,7 @@ p, li { white-space: pre-wrap; }
   </widget>
  </widget>
  <resources>
-  <include location="CodeForm.qrc"/>
+  <include location="ProtoDev.qrc"/>
  </resources>
  <connections/>
 </ui>

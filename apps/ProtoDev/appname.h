@@ -23,8 +23,8 @@
 #ifndef APPNAME_H
 #define APPNAME_H
 // Ⓐ
-#define APPNAME_SHORT "AOPT"
-#define APPNAME    "Assign Onward Protocol Tool"
+#define APPNAME_SHORT "AOPD"
+#define APPNAME    "Assign Onward Protocol Development Tool"
 #define APPDESC    "Used to develop and test communication and storage protocols."
 #define APPVERSION "0.1"
 #define APPSTATUS  "Pre alpha, design development mule."
