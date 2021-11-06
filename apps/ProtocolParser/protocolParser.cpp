@@ -305,10 +305,54 @@ bool  ProtocolActor::populate( BlockValueObject &ob, const BlockValueRiceyCodeAr
 BlockObjectMap ProtocolActor::extract( BaoSerial bao )
 { KeyValuePair kvp( bao );
   RiceyInt obk = kvp.key();
+  BlockValueObject *bob = (BlockValueObject *)kvp.value();
   BlockObjectMap bom;
-  if ( receivableItemDefs == nullptr )    { qWarning( "receivableItemDefs nullptr" );                   return bom; }
-  if ( !receivableObTypes.contains(obk) ) { qWarning( "key %llx not found in receivableObTypes", obk ); return bom; }
-
-  qWarning( "working %s rid %s", dict.nameFromCode( obk ).data(),receivableItemDefs->json().data() );
+  if ( bob == nullptr )                      { qWarning( "bob nullptr" );                                  return bom; }
+  if ( receivableItemDefs == nullptr )       { qWarning( "receivableItemDefs nullptr" );                   return bom; }
+  if ( !receivableObTypes.contains(obk) )    { qWarning( "key %llx not found in receivableObTypes", obk ); return bom; }
+  if ( !receivableItemDefs->contains(obk) )  { qWarning( "rid does not contain %llx", obk );               return bom; }
+  BlockValueObject *ob = (BlockValueObject *)receivableItemDefs->value(obk);
+  if ( ob == nullptr )                       { qWarning( "%llx ob nullptr", obk );                         return bom; }
+  if ( !ob->contains( RCD_ItemContents_O ) ) { qWarning( "ob does not contain ItemContents" );             return bom; }
+  BlockValueObjectArray *ic = (BlockValueObjectArray *)ob->value( RCD_ItemContents_O );
+  if ( ic == nullptr )                       { qWarning( "%llx ic nullptr", obk );                         return bom; }
+  if ( ic->size() < 1 )                        qWarning( "ic is empty?" );
+  QList<BlockObjectMap> icm = ic->value();  // Work through ItemContents_O
+  foreach( BlockObjectMap ici, icm )
+    if ( ici.contains( RCD_OpDataLink_C ) ) // one of the OpDataLink_Cs in ItemContents_O
+      { BlockValueRiceyCodeArray *odl = (BlockValueRiceyCodeArray *)ici.value( RCD_OpDataLink_C );
+        if ( odl == nullptr )                  qWarning( "odl nullptr" ); else
+          { if ( odl->size() < 2 )             qWarning( "odl size %d?", odl->size() ); else
+              { RiceyInt it = riceToInt( odl->at(0) ); // id of the value being extracted
+                ValueBase *vb = extractOne( bob, odl );
+                if ( vb == nullptr )           qWarning( "extractOne failed on %llx", it ); else
+                  bom.insert( it, vb );
+              }
+          }
+      }
   return bom;
+}
+
+/**
+ * @brief ProtocolActor::extractOne - pull one specified value out of the object
+ * @param bob - object to read into
+ * @param odl - describes a route to the value
+ * @return value from bob at the end of the route odl, nullptr if there is a problem
+ */
+ValueBase *ProtocolActor::extractOne( BlockValueObject *bob, BlockValueRiceyCodeArray *odl )
+{ if ( bob == nullptr )  { qWarning( "bob nullptr?!?" ); return nullptr; }
+  if ( odl == nullptr )  { qWarning( "odl nullptr?!?" ); return nullptr; }
+  if ( odl->size() < 2 ) { qWarning( "odl size %d, no path", odl->size() ); return nullptr; }
+  qint32 i = 1; // index working down the route
+  while ( i < odl->size() )
+    { RiceyInt cid = riceToInt( odl->at(i) );
+      // TODO: enable navigation to parents as well as children
+      // TODO2: navigation into array elements
+      if ( !bob->contains( cid ) ) { qWarning( "bob doesn't contain %llx", cid ); return nullptr; }
+      if ( i == ( odl->size() - 1 ) )
+        return bob->value( cid );
+      if ( bob->value( cid )->type() != RDT_OBJECT ) { qWarning( "extractOne only navigates into object trees" ); return nullptr; }
+      i++;
+    }
+  return nullptr;
 }

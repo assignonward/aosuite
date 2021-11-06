@@ -54,8 +54,16 @@ void ReaderServer::newProtocolSet()
  */
 void ReaderServer::receiveRequest( QByteArray req )
 { pa->emit transactionRecord( QString("receiveRequest(%1)").arg( QString::fromUtf8( req.toHex() ) ) );
-  (void)req;
-  BaoSerial resp;
-  // TODO: act on request and generate a response
+    RiceyInt reqTyp = riceToInt( req );
+    BlockObjectMap bom = pa->extract( req );
+    BaoSerial resp;
+    switch ( reqTyp )
+      { case RCD_readRequest_o:
+          qWarning( "bom size %lld", bom.size() );
+          break;
+
+        default:
+          qWarning( "unrecognized request type %llx", reqTyp );
+      }
   emit sendResponse( resp );
 }

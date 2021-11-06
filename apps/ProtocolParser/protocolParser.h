@@ -73,6 +73,7 @@ public:
      BaoSerial  compose( RiceyInt, const BlockObjectMap & );
           bool  populate( BlockValueObject &, const BlockValueRiceyCodeArray &, ValueBase *v );
 BlockObjectMap  extract( BaoSerial );
+     ValueBase *extractOne( BlockValueObject *, BlockValueRiceyCodeArray * );
 
 signals:
         void  newProtocolSet();

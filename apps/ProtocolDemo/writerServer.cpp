@@ -58,7 +58,7 @@ void WriterServer::receiveRequest( QByteArray req )
   BaoSerial resp;
   switch ( reqTyp )
     { case RCD_writeRequest_o:
-        // TODO: process bom, compose resp
+        qWarning( "bom size %lld", bom.size() );
         break;
 
       default:

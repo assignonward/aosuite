@@ -11,10 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Protocol Development Tool</string>
+   <string>Ⓐ Protocol Development Tool</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="CodeForm.qrc">
+   <iconset resource="ProtoDev.qrc">
     <normaloff>:/icons/ProtoDev.png</normaloff>:/icons/ProtoDev.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
