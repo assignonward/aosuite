@@ -66,9 +66,9 @@ void WriterServer::receiveRequest( QByteArray req )
           { if ( bom.value(RCD_recordText_s) == nullptr )
               qWarning( "bom recordText nullptr" );
              else
-              { Utf8String rt = ((BlockValueString *)bom.value(RCD_recordText_s))->value();
+              { QByteArray rt = ((BlockValueString *)bom.value(RCD_recordText_s))->value();
                 rt.detach();
-                Utf8String cid = "0";
+                QByteArray cid = "0";
                 if ( bom.contains( RCD_blockchainId_b ) )
                   { if ( bom.value(RCD_blockchainId_b) == nullptr )
                       qWarning( "bom blockchainId nullptr" );
@@ -77,7 +77,7 @@ void WriterServer::receiveRequest( QByteArray req )
                         cid.detach();
                       }
                   }
-                Utf8String uid = "";
+                QByteArray uid = "";
                 if ( bom.contains( RCD_userId_b ) )
                   { if ( bom.value(RCD_userId_b) == nullptr )
                       qWarning( "bom userId nullptr" );
