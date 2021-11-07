@@ -56,9 +56,9 @@ void WriterClient::newProtocolSet()
  * @brief WriterClient::sendWriteRequest - catches signal from the ui button
  */
 void WriterClient::sendWriteRequest()
-{ pa->emit transactionRecord("sendWriteRequest()");
+{ emit pa->transactionRecord("sendWriteRequest()");
   if ( pa->pp == nullptr )
-    { pa->emit transactionRecord("protocol not defined.");
+    { emit pa->transactionRecord("protocol not defined.");
       return;
     }
   // Compose bao based on protocol definition and ui contents and send it.
@@ -79,8 +79,28 @@ void WriterClient::sendWriteRequest()
  * @param resp - from server
  */
 void WriterClient::receiveResponse( QByteArray resp )
-{ pa->emit transactionRecord("receiveResponse()");
-  (void)resp;
-  // TODO: show response/results on ui
+{ RiceyInt reqTyp = riceToInt( resp );
+  BlockObjectMap bom = pa->extract( resp );
+  qint64 recordHandle = -1;
+  switch ( reqTyp )
+    { case RCD_writeResponse_o:
+        if ( !bom.contains( RCD_recordId_i ) )
+          qWarning( "response did not contain a recordId" );
+         else
+          { if ( bom.value(RCD_recordId_i) == nullptr )
+              qWarning( "bom recordId nullptr" );
+             else
+              { recordHandle = ((BlockValueInt64 *)bom.value(RCD_recordId_i))->value();
+              } // recordHandle not null
+          }    // recordHandle present
+        break;
+
+      default:
+        qWarning( "unrecognized response type %llx", reqTyp );
+    }
+  QString msg = QString("receiveResponse(%1) %2 %3")
+          .arg( QString::fromUtf8(resp.toHex()) ).arg( recordHandle )
+          .arg( QDateTime::fromMSecsSinceEpoch(recordHandle/1000).toString() );
+  emit pa->transactionRecord( msg );
 }
 

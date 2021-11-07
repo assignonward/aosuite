@@ -34,17 +34,20 @@ class WriterServer;
 class WriterServer : public QGroupBox
 { Q_OBJECT
 public:
-    explicit WriterServer(QWidget *parent = nullptr);
-            ~WriterServer();
+    explicit  WriterServer(QWidget *parent = nullptr);
+             ~WriterServer();
+      qint64  writeRecord( const Utf8String &, const Utf8String & );
+   BaoSerial  buildResponse( qint64 );
 
 signals:
-        void sendResponse( BaoSerial );
+        void  sendResponse( BaoSerial );
 
 public slots:
-        void receiveRequest( BaoSerial );
-        void newProtocolSet();
+        void  receiveRequest( BaoSerial );
+        void  newProtocolSet();
 
 public:
+                  qint64  index;
   QPointer<ProtocolActor> pa;
         Ui::WriterServer *ui;
 };

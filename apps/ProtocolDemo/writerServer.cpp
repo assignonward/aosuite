@@ -31,6 +31,7 @@ WriterServer::WriterServer(QWidget *cw) :
       cw->layout()->addWidget( this );
       cw->layout()->setContentsMargins( 0,0,0,0 );
     }
+  index = 0;
   pa = new ProtocolActor( RCD_actorWriterServer_o, this );
   connect( pa, SIGNAL( newName(QString)           ), ui->wsProtocol, SLOT( setText(QString) ) );
   connect( pa, SIGNAL( transactionRecord(QString) ), ui->wsLog     , SLOT( append(QString)  ) );
@@ -52,13 +53,47 @@ void WriterServer::newProtocolSet()
  * @param req - request from writer client
  */
 void WriterServer::receiveRequest( QByteArray req )
-{ pa->emit transactionRecord( QString("receiveRequest(%1)").arg( QString::fromUtf8( req.toHex() ) ) );
+{ emit pa->transactionRecord( QString("receiveRequest(%1)").arg( QString::fromUtf8( req.toHex() ) ) );
   RiceyInt reqTyp = riceToInt( req );
   BlockObjectMap bom = pa->extract( req );
   BaoSerial resp;
+  qint64 recordHandle = -1;
   switch ( reqTyp )
     { case RCD_writeRequest_o:
-        qWarning( "bom size %lld", bom.size() );
+        if ( !bom.contains( RCD_recordText_s ) )
+          qWarning( "will not write without recordText" );
+         else
+          { if ( bom.value(RCD_recordText_s) == nullptr )
+              qWarning( "bom recordText nullptr" );
+             else
+              { Utf8String rt = ((BlockValueString *)bom.value(RCD_recordText_s))->value();
+                rt.detach();
+                Utf8String cid = "0";
+                if ( bom.contains( RCD_blockchainId_b ) )
+                  { if ( bom.value(RCD_blockchainId_b) == nullptr )
+                      qWarning( "bom blockchainId nullptr" );
+                     else
+                      { cid = ((BlockValueByteArray *)bom.value(RCD_blockchainId_b))->value();
+                        cid.detach();
+                      }
+                  }
+                Utf8String uid = "";
+                if ( bom.contains( RCD_userId_b ) )
+                  { if ( bom.value(RCD_userId_b) == nullptr )
+                      qWarning( "bom userId nullptr" );
+                     else
+                      { uid = ((BlockValueByteArray *)bom.value(RCD_userId_b))->value();
+                        uid.detach();
+                      }
+                  }
+                recordHandle = writeRecord( rt, cid );
+                if ( recordHandle > 0 )
+                  resp = buildResponse( recordHandle );
+                 else
+                  qWarning( "writeRecord had a problem." );
+                  // empty resp for the error state
+              } // recordText not null
+          }    // recordText present
         break;
 
       default:
@@ -67,3 +102,36 @@ void WriterServer::receiveRequest( QByteArray req )
   emit sendResponse( resp );
 }
 
+#include <QFile>
+/**
+ * @brief WriterServer::writeRecord
+ * @param rt - record text, to write
+ * @param cid - chainId, to write text in
+ * @return handle (time) of the record written, or -1 if there was a problem
+ */
+qint64  WriterServer::writeRecord( const Utf8String &rt, const Utf8String &cid )
+{ qint64 tm = QDateTime::currentMSecsSinceEpoch() * 1000 + index;
+  if ( ++index >= 1000 )
+    index = 0;
+  // TODO: fill the huge security hole (file access) before using this exposed to the wild
+  QString fn = QString( "/var/aos/%1/%2" ).arg( cid ).arg( tm );
+  QFile file(fn);
+  if ( !file.open( QIODevice::WriteOnly ) )
+    { qWarning( "could not open file %s", fn.toUtf8().data() );
+      return -1;
+    }
+  file.write( rt );
+  return tm;
+}
+
+/**
+ * @brief WriterServer::buildResponse
+ * @param recordHandle - time record was written
+ * @return response packet
+ */
+BaoSerial  WriterServer::buildResponse( qint64 recordHandle )
+{ BlockObjectMap inputs;
+  BlockValueInt64 *rh = new BlockValueInt64( recordHandle, this );
+  inputs.insert( RCD_recordId_i, rh );
+  return pa->compose( RCD_writeResponse_o, inputs );
+}
