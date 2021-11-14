@@ -81,7 +81,9 @@
     margin-right: 140px;
     margin-left: 160px;
 }
-</style>DⒶ Protocols</title>
+</style>
+<meta charset="UTF-8"/>
+<title>DⒶ Protocols</title>
   <link REL="SHORTCUT ICON" HREF="favicon.ico" type="image/x-icon" >
 </head>
 
@@ -94,19 +96,19 @@
 
 <h2>The Development Protocol Series</h2>
 
-The DⒶ protocols are the first, and simplest, protocols made to demonstrate the Ⓐ protocol language and routines that implment it for applications and test suites.  They are NOT meant for live use on the open internet.  Especially at the simpler levels they lack robust precautions against attackers.  Before a protocol is released as an Ⓐ "live" protocol, it should undergo documented testing as a TⒶ protocol<div class="tooltip"><sup>*</sup><span class="tooltiptext">the point of documenting testing is to provide a baseline for future testers to expand on.  The testing documentation should be linked as a parent block for the protocol definition.</span></div>.<br/><br/>
+The DⒶ protocols are the first, and simplest, <a href="Protocols.html">protocols</a> made to demonstrate the Ⓐ protocol language and routines that implment it for applications and test suites.  They are NOT meant for live use on the open internet.  Especially at the simpler levels they lack robust precautions against attackers.  Before a protocol is released as an Ⓐ "live" protocol, it should undergo documented testing as a TⒶ protocol<div class="tooltip"><sup>*</sup><span class="tooltiptext">the point of documenting testing is to provide a baseline for future testers to expand on.  The testing documentation should be linked as a parent block for the protocol definition.  DⒶ might be linked as parent to a TⒶ protocol, but more often the parent of the TⒶ protocol would be another, somewhat less developed protocol that the TⒶ protocol was developed from.</span></div>.<br/><br/>
 
 <img src="Dhow0.jpg" alt="Simplest Dhow" width="25%" style="float:left">
 DⒶ0 defines four roles: writer client, writer server, reader server and reader client.  There are four message types that can be exchanged: write request, write response, read request and read response.  The write request merely contains data to be written.  The write response tells the time at which the data was written, which becomes a unique key with which to retrieve the record.  The read request sends a unique key, and the read response sends back the data associated with that key, or no data if there was any kind of problem.  There is no defined error reporting.  Any application which intends to interpret and implement generalized Ⓐ protocols can start out by trying out DⒶ0.<br/><br/>
 
 DⒶ1 adds identification of the clients.  This enables implementation on message passing exchanges like AMQP and MQTT as implemented by RabbitMQ and similar exchanges.  Servers listen to all messages on an exchange, and clients can subscribe to a topic that matches their I.D. so they only receive messages of interest to themselves.<br/><br/>
 
-DⒶ2 adds identification of a database<div class="tooltip"><sup>*</sup><span class="tooltiptext">Many Ⓐ servers will handle transactions for multiple blockchains.</span></div> to write the record into / read it from, segregating records by database id and laying some groundwork for selective service of chosen databases.<br/><br/>
+DⒶ2 adds identification of a database<div class="tooltip"><sup>*</sup><span class="tooltiptext">Many Ⓐ servers will handle transactions for multiple blockchains.</span></div> to write the record into / read it from, segregating records by database id and laying some groundwork for selective service of chosen databases.  DⒶ2 also starts adding error and error type reporting.<br/><br/>
 
 <img src="Dhow3.jpg" alt="Simple Dhow" width="25%" style="float:right">
 DⒶ3 adds identification of the protocol in use within each message.  While a short name would be sufficient in a "friendly" environment, DⒶ3 adds a hash of the entire protocol definition to prevent confusion in the case of short name collisions between diverse protocol developers.<br/><br/>
  
-DⒶ4 adds a query/response for protocols supported by servers.  Rather than define optional elements of a given protocol, it is preferred to fully implement a given protocol and define a new protocol lacking any optional element not supported.  This way, full protocol definitions can be independently tested / approved and if there are serious problems identified with any protocol, it can be deactivated without complications.<br/><br/>
+DⒶ4 adds a query/response for protocols supported by servers.  Rather than define optional elements of a given protocol, it is preferred to fully implement a given protocol and define a new protocol lacking any optional element not supported.  This way, full protocol definitions can be independently tested / approved and if there are serious problems identified with any protocol, it can be deactivated without complications.  Clients wanting to implement a "lite" version of a protocol can define that lite version, and hope they find servers willing to speak that protocol with them<div class="tooltip"><sup>*</sup><span class="tooltiptext">Removing some elements from a protocol can make it less secure, or outright incompatible with blockchain records that require more information.  For the most part, the blockchain will define which protocols are acceptable for transactions on that chain.</span></div>.<br/><br/>
 
 DⒶ5 adds a requirement for read response payload contents to be timestamped and hashed.<br/><br/>
 
