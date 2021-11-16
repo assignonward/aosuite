@@ -233,14 +233,14 @@ void  BlockTool::editSelectedElement()
 void  BlockTool::setEditorValue( ValueBase *vb )
 { qint32 i;
   switch ( vb->type() & RDT_TYPEMASK )
-   { case RDT_INT64:     ui->      intEdit->setText( Utf8String::number(((BlockValueInt64    *)vb)->value())); break;
-     case RDT_RICEYINT:  ui-> riceyIntEdit->setText( Utf8String::number(((BlockValueRiceyInt *)vb)->value())); break;
-     case RDT_MPZ:       ui->      mpzEdit->setText( ValueBase::removeQuotes(((BlockValueMPZ *)vb)->json()) ); break;
-     case RDT_MPQ:       ui->      mpqEdit->setText( ValueBase::removeQuotes(((BlockValueMPQ *)vb)->json()) ); break;
-     case RDT_STRING:    ui->   stringEdit->setText( ((BlockValueString    *)vb)->value()         ); break;
-     case RDT_BYTEARRAY: ui->byteArrayEdit->setText( ((BlockValueByteArray *)vb)->value().toHex() ); break;
+   { case RDT_INT64:     ui->      intEdit->setText( Utf8String::number((qobject_cast<BlockValueInt64    *>(vb))->value())); break;
+     case RDT_RICEYINT:  ui-> riceyIntEdit->setText( Utf8String::number((qobject_cast<BlockValueRiceyInt *>(vb))->value())); break;
+     case RDT_MPZ:       ui->      mpzEdit->setText( ValueBase::removeQuotes((qobject_cast<BlockValueMPZ *>(vb))->json()) ); break;
+     case RDT_MPQ:       ui->      mpqEdit->setText( ValueBase::removeQuotes((qobject_cast<BlockValueMPQ *>(vb))->json()) ); break;
+     case RDT_STRING:    ui->   stringEdit->setText( (qobject_cast<BlockValueString    *>(vb))->value()         ); break;
+     case RDT_BYTEARRAY: ui->byteArrayEdit->setText( (qobject_cast<BlockValueByteArray *>(vb))->value().toHex() ); break;
      case RDT_RCODE:
-       i = ui->rcodeEdit->findText( dict.nameFromCode( ((BlockValueRiceyCode *)vb)->value()) );
+       i = ui->rcodeEdit->findText( dict.nameFromCode( (qobject_cast<BlockValueRiceyCode *>(vb))->value()) );
        if ( i > 0 )
          ui->rcodeEdit->setCurrentIndex( i );
        break;
@@ -258,16 +258,16 @@ void  BlockTool::on_set_clicked()
   if ( vb->isArray() ) { qWarning( "shouldn't be able to set in an array element (only insert)" ); return; }
   Utf8String codeName;
   switch ( vb->type() & RDT_TYPEMASK )
-    { case RDT_MPZ:       ((BlockValueMPZ       *)vb)->set( ui->     mpzEdit->text().toUtf8()     ); updateNav(); break;
-      case RDT_MPQ:       ((BlockValueMPQ       *)vb)->set( ui->     mpqEdit->text().toUtf8()     ); updateNav(); break;
-      case RDT_INT64:     ((BlockValueInt64     *)vb)->set( ui->     intEdit->text().toLongLong() ); updateNav(); break;
-      case RDT_RICEYINT:  ((BlockValueRiceyInt  *)vb)->set( ui->riceyIntEdit->text().toLongLong() ); updateNav(); break;
-      case RDT_STRING:    ((BlockValueString    *)vb)->set( ui->  stringEdit->text().toUtf8()     ); updateNav(); break;
-      case RDT_BYTEARRAY: ((BlockValueByteArray *)vb)->set( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ) ); updateNav(); break;
+    { case RDT_MPZ:       (qobject_cast<BlockValueMPZ       *>(vb))->set( ui->     mpzEdit->text().toUtf8()     ); updateNav(); break;
+      case RDT_MPQ:       (qobject_cast<BlockValueMPQ       *>(vb))->set( ui->     mpqEdit->text().toUtf8()     ); updateNav(); break;
+      case RDT_INT64:     (qobject_cast<BlockValueInt64     *>(vb))->set( ui->     intEdit->text().toLongLong() ); updateNav(); break;
+      case RDT_RICEYINT:  (qobject_cast<BlockValueRiceyInt  *>(vb))->set( ui->riceyIntEdit->text().toLongLong() ); updateNav(); break;
+      case RDT_STRING:    (qobject_cast<BlockValueString    *>(vb))->set( ui->  stringEdit->text().toUtf8()     ); updateNav(); break;
+      case RDT_BYTEARRAY: (qobject_cast<BlockValueByteArray *>(vb))->set( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ) ); updateNav(); break;
       case RDT_RCODE:
         codeName = ui->rcodeEdit->currentText().toUtf8();
         if ( dict.codesContainName( codeName ) )
-          { ((BlockValueRiceyCode *)vb)->set( dict.codeFromCodeName( codeName ) );
+          { (qobject_cast<BlockValueRiceyCode *>(vb))->set( dict.codeFromCodeName( codeName ) );
             updateNav();
           }
          else
@@ -307,7 +307,7 @@ void  BlockTool::on_remove_clicked()
 
 RiceyInt BlockTool::removeArrayElement( ValueBase *vb )
 { if ( !vb->vbParent->isArray() ) { qWarning( "vb is not an array element, how did we get here?" ); return RCD_null_z; }
-  ValueBaseArray *vba = (ValueBaseArray *)((ValueBase *)vb->vbParent);
+  ValueBaseArray *vba = qobject_cast<ValueBaseArray *>(vb->vbParent);
   qint32 i = vb->idx().mid(1).toInt();
   if (( i < 0 ) || ( i >= vba->size() )) { qWarning( "invalid index %d vs parent size %d", i, vba->size() ); return RCD_null_z; }
   if ( vb != vba->removeAt(i) )            qWarning( "odd, removed different object than selBB's idx was pointed at..." );
@@ -316,7 +316,7 @@ RiceyInt BlockTool::removeArrayElement( ValueBase *vb )
 
 RiceyInt BlockTool::removeObjectElement( ValueBase *vb )
 { if ( vb->vbParent->isArray() ) { qWarning( "vb is an array element, how did we get here?" ); return RCD_null_z; }
-    BlockValueObject *pbvo = (BlockValueObject *)((ValueBase *)vb->vbParent);
+    BlockValueObject *pbvo = qobject_cast<BlockValueObject *>(vb->vbParent);
     RiceyInt key = vb->vKey();
     if ( !pbvo->contains( key ) )  { qWarning( "BlockTool::removeObjectElement() key %llx not found in parent object", key ); return RCD_null_z; }
     if ( vb != pbvo->remove( key ) ) qWarning( "odd, removed different object than selBB was pointed at..." );
@@ -338,23 +338,23 @@ void  BlockTool::on_insert_clicked()
       if ( selBB     == nullptr ) { qWarning( "Nothing selected" ); return; }
       RiceyInt key = makeKvb()->key();
       if ( selBB->type() == RDT_OBJECT )
-        { BlockValueObject *bvo = (BlockValueObject *)((ValueBase *)selBB);
+        { BlockValueObject *bvo = qobject_cast<BlockValueObject *>(selBB);
           if ( bvo->contains(key) )
             { qWarning( "selected object already contains a member with type %llx", key );
               return;
             }
           if ( makeKvb()->isKeyValuePair() )
-            { KeyValuePair *kvp = (KeyValuePair *)makeKvb();
+            { KeyValuePair *kvp = qobject_cast<KeyValuePair *>(makeKvb());
               bvo->insert( kvp->key(), kvp->value() );
             }
            else
-            { bvo->insert( (KeyValueArray *)makeKvb() );
+            { bvo->insert( qobject_cast<KeyValueArray *>(makeKvb()) );
             }
           on_clear_clicked();
           updateBuild();
         }
        else if ( selBB->isArray() )
-        { ValueBaseArray *vba = (ValueBaseArray *)((ValueBase *)selBB);
+        { ValueBaseArray *vba = qobject_cast<ValueBaseArray *>(selBB);
           if ( (vba->vKey() & RDT_TYPEMASK) != (key & RDT_TYPEMASK) ) { qWarning( "Make item key %llx incompatible with array key %llx", key, vba->vKey() ); return; }
           if ( !makeKvb()->isKeyValuePair() ) { qWarning( "Cannot insert an array directly into another array" ); return; }
           qint32 i = ui->index->value();
@@ -387,14 +387,14 @@ void  BlockTool::insertKeyName( Utf8String nKey )
           case RDT_MPQ      : vbp = new BlockValueMPQ      ( ui->mpqEdit->text().toUtf8(), this ); break;
           case RDT_BYTEARRAY: vbp = new BlockValueByteArray( QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ), this ); break;
           case RDT_STRING   : vbp = new BlockValueString   ( ui->stringEdit->text().toUtf8(), this ); break;
-          case RDT_OBJECT_ARRAY   : vbp = new BlockValueObjectArray   ( this ); ((BlockValueObjectArray *   )vbp)->append(new BlockValueObject   (vbp)); break;
-          case RDT_INT64_ARRAY    : vbp = new BlockValueInt64Array    ( this ); ((BlockValueInt64Array *    )vbp)->append(new BlockValueInt64    (ui->     intEdit->text().toLongLong(), vbp)); break;
-          case RDT_RICEYINT_ARRAY : vbp = new BlockValueRiceyIntArray ( this ); ((BlockValueRiceyIntArray * )vbp)->append(new BlockValueRiceyInt (ui->riceyIntEdit->text().toLongLong(), vbp)); break;
-          case RDT_RCODE_ARRAY    : vbp = new BlockValueRiceyCodeArray( this ); ((BlockValueRiceyCodeArray *)vbp)->append(new BlockValueRiceyCode(dict.codeFromCodeName(ui->rcodeEdit->currentText().toUtf8() ), vbp)); break;
-          case RDT_MPZ_ARRAY      : vbp = new BlockValueMPZArray      ( this ); ((BlockValueMPZArray *      )vbp)->append(new BlockValueMPZ      (ui->mpzEdit->text().toUtf8(), vbp)); break;
-          case RDT_MPQ_ARRAY      : vbp = new BlockValueMPQArray      ( this ); ((BlockValueMPQArray *      )vbp)->append(new BlockValueMPQ      (ui->mpqEdit->text().toUtf8(), vbp)); break;
-          case RDT_BYTEARRAY_ARRAY: vbp = new BlockValueByteArrayArray( this ); ((BlockValueByteArrayArray *)vbp)->append(new BlockValueByteArray(QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ), vbp)); break;
-          case RDT_STRING_ARRAY   : vbp = new BlockValueStringArray   ( this ); ((BlockValueStringArray *   )vbp)->append(new BlockValueString   (ui->stringEdit->text().toUtf8(), vbp)); break;
+          case RDT_OBJECT_ARRAY   : vbp = new BlockValueObjectArray   ( this ); (qobject_cast<BlockValueObjectArray *   >(vbp))->append(new BlockValueObject   (vbp)); break;
+          case RDT_INT64_ARRAY    : vbp = new BlockValueInt64Array    ( this ); (qobject_cast<BlockValueInt64Array *    >(vbp))->append(new BlockValueInt64    (ui->     intEdit->text().toLongLong(), vbp)); break;
+          case RDT_RICEYINT_ARRAY : vbp = new BlockValueRiceyIntArray ( this ); (qobject_cast<BlockValueRiceyIntArray * >(vbp))->append(new BlockValueRiceyInt (ui->riceyIntEdit->text().toLongLong(), vbp)); break;
+          case RDT_RCODE_ARRAY    : vbp = new BlockValueRiceyCodeArray( this ); (qobject_cast<BlockValueRiceyCodeArray *>(vbp))->append(new BlockValueRiceyCode(dict.codeFromCodeName(ui->rcodeEdit->currentText().toUtf8() ), vbp)); break;
+          case RDT_MPZ_ARRAY      : vbp = new BlockValueMPZArray      ( this ); (qobject_cast<BlockValueMPZArray *      >(vbp))->append(new BlockValueMPZ      (ui->mpzEdit->text().toUtf8(), vbp)); break;
+          case RDT_MPQ_ARRAY      : vbp = new BlockValueMPQArray      ( this ); (qobject_cast<BlockValueMPQArray *      >(vbp))->append(new BlockValueMPQ      (ui->mpqEdit->text().toUtf8(), vbp)); break;
+          case RDT_BYTEARRAY_ARRAY: vbp = new BlockValueByteArrayArray( this ); (qobject_cast<BlockValueByteArrayArray *>(vbp))->append(new BlockValueByteArray(QByteArray::fromHex( ui->byteArrayEdit->text().toUtf8() ), vbp)); break;
+          case RDT_STRING_ARRAY   : vbp = new BlockValueStringArray   ( this ); (qobject_cast<BlockValueStringArray *   >(vbp))->append(new BlockValueString   (ui->stringEdit->text().toUtf8(), vbp)); break;
         }
     }
   if ( vbp == nullptr )

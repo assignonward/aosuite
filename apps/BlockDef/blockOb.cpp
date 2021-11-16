@@ -1060,14 +1060,14 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
       if ( vv->type() != vt->type() )
         { qWarning( "BlockValueObject::operator== type mismatch %d %d",vv->type(),vt->type() ); return false; }
       switch ( k & RDT_OBTYPEMASK )
-        { case RDT_OBJECT:    if ( !(*((BlockValueObject    *)vt)          == *((BlockValueObject    *)vv)          ) ) return false; break;
-          case RDT_INT64:     if (  ( ((BlockValueInt64     *)vt)->value() !=  ((BlockValueInt64     *)vv)->value() ) ) return false; break;
-          case RDT_RICEYINT:  if (  ( ((BlockValueRiceyInt  *)vt)->value() !=  ((BlockValueRiceyInt  *)vv)->value() ) ) return false; break;
-          case RDT_MPZ:       if ( !(*((BlockValueMPZ       *)vt)          ==  ((BlockValueMPZ       *)vv)->value() ) ) return false; break;
-          case RDT_MPQ:       if ( !(*((BlockValueMPQ       *)vt)          ==  ((BlockValueMPQ       *)vv)->value() ) ) return false; break;
-          case RDT_RCODE:     if (  ( ((BlockValueRiceyCode *)vt)->value() !=  ((BlockValueRiceyCode *)vv)->value() ) ) return false; break;
-          case RDT_STRING:    if (  ( ((BlockValueString    *)vt)->value() !=  ((BlockValueString    *)vv)->value() ) ) return false; break;
-          case RDT_BYTEARRAY: if (  ( ((BlockValueByteArray *)vt)->value() !=  ((BlockValueByteArray *)vv)->value() ) ) return false; break;
+        { case RDT_OBJECT:    if ( !(*(qobject_cast<BlockValueObject    *>(vt))          == *(qobject_cast<BlockValueObject    *>(vv))          ) ) return false; break;
+          case RDT_INT64:     if (  ( (qobject_cast<BlockValueInt64     *>(vt))->value() !=  (qobject_cast<BlockValueInt64     *>(vv))->value() ) ) return false; break;
+          case RDT_RICEYINT:  if (  ( (qobject_cast<BlockValueRiceyInt  *>(vt))->value() !=  (qobject_cast<BlockValueRiceyInt  *>(vv))->value() ) ) return false; break;
+          case RDT_MPZ:       if ( !(*(qobject_cast<BlockValueMPZ       *>(vt))          ==  (qobject_cast<BlockValueMPZ       *>(vv))->value() ) ) return false; break;
+          case RDT_MPQ:       if ( !(*(qobject_cast<BlockValueMPQ       *>(vt))          ==  (qobject_cast<BlockValueMPQ       *>(vv))->value() ) ) return false; break;
+          case RDT_RCODE:     if (  ( (qobject_cast<BlockValueRiceyCode *>(vt))->value() !=  (qobject_cast<BlockValueRiceyCode *>(vv))->value() ) ) return false; break;
+          case RDT_STRING:    if (  ( (qobject_cast<BlockValueString    *>(vt))->value() !=  (qobject_cast<BlockValueString    *>(vv))->value() ) ) return false; break;
+          case RDT_BYTEARRAY: if (  ( (qobject_cast<BlockValueByteArray *>(vt))->value() !=  (qobject_cast<BlockValueByteArray *>(vv))->value() ) ) return false; break;
           case RDT_OBJECT_ARRAY:
           case RDT_INT64_ARRAY:
           case RDT_RICEYINT_ARRAY:
@@ -1075,35 +1075,10 @@ bool BlockValueObject::operator==( const BlockObjectMap &v ) const
           case RDT_MPQ_ARRAY:
           case RDT_RCODE_ARRAY:
           case RDT_STRING_ARRAY:
-          case RDT_BYTEARRAY_ARRAY: if ( !(*((ValueBaseArray *)vt) == *((ValueBaseArray *)vv) ) ) return false; break;
+          case RDT_BYTEARRAY_ARRAY: if ( !(*(qobject_cast<ValueBaseArray *>(vt)) == *(qobject_cast<ValueBaseArray *>(vv)) ) ) return false; break;
           default: Utf8String n = dict.nameFromCode( k ); qWarning( "unhandled type %s", n.data() ); return false;
         }
     }
   return true;
 }
-
-/**
- * @brief BlockArrayObject::operator ==
- * @param l - list of object values
- * @return true if this list of object values is the same as l's
-bool  BlockArrayObject::operator==(const QList<BlockObjectMap>& l) const
-{ if (l.size() != size())
-    return false;
-  for ( qint32 i=0; i<size(); i++ )
-    { BlockObjectMap om = l.at(i);
-      BlockObjectMap tm = at(i);
-      if ( om.size() != tm.size() )
-        return false;
-      QList<RiceyInt> keys = om.keys();
-      foreach ( RiceyInt k, keys )
-        { if ( !tm.contains(k) )
-            return false;
-          if ( !( *om[k] == *(tm[k]) ) )
-          // if ( !om[k]->valueEqual( *(tm[k]) ) )
-            return false;
-        }
-    }
-  return true;
-}
-*/
 
