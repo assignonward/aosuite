@@ -889,7 +889,9 @@ void  BlockTool::on_read_clicked()
     { JsonSerial js = file.readAll();
       if ( js.size() > 4 )
         { KeyValueBase *kvb = makeKvb();
-          kvb->setJson( js );
+          if ( kvb )
+            on_clear_clicked();
+          kvb = KeyValueBase::readJson( js, this );
           setMake( kvb );
         }
        else

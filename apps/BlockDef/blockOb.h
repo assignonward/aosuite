@@ -201,7 +201,8 @@ class KeyValueBase : public ValueBase
 public:
            explicit  KeyValueBase( const RiceyInt &k, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
                     ~KeyValueBase() {}
-static KeyValueBase *readBao( const BaoSerial &, QObject *parent = nullptr );
+static KeyValueBase *readBao(  const  BaoSerial &, QObject *parent = nullptr );
+static KeyValueBase *readJson( const JsonSerial &, QObject *parent = nullptr );
      virtual   bool  isContainer() const { return true; }
      virtual   bool  isArray()     const =0;
      virtual   bool  isKeyValue()  const { return true; }
@@ -239,7 +240,7 @@ virtual       void  set( ValueBase *vp ) { if ( vp->type() != type() ) qWarning(
 virtual  BaoSerial  bao()     const;
 virtual JsonSerial  json()    const;
 virtual     qint32  setBao ( const BaoSerial & );
-virtual       bool  setJson( const JsonSerial &j ) { (void)j; return true; } // TODO: fixme
+virtual       bool  setJson( const JsonSerial &j );
 virtual  DotSerial  dot(Mode) const;
               void  setValueKey(RiceyInt k) { setVKey( k ); }
 

@@ -46,6 +46,64 @@
 //   conversions which do not lose precision.
 //
 
+
+/**
+ * @brief readJson - create a KeyValue from a json document - this function mostly decides
+ *   if the document is a key value pair or key value array then passes the parse work to
+ *   the newly created object.
+ * @return a KeyValue for the contents of js, nullptr if there is a problem
+ */
+KeyValueBase *KeyValueBase::readJson( const JsonSerial &js, QObject *parent )
+{ KeyValueBase *kvb = nullptr;
+  if ( js.size() < 5 )         { qWarning( "KeyValueBase::readJson() no doc passed" ); return kvb; }
+  QJsonDocument jd = QJsonDocument::fromJson( js );
+  if ( !jd.isObject() )        { qWarning( "KeyValueBase::readJson() doc is not a json object" ); return kvb; }
+  JsonSerial jt = js.trimmed();
+  if ( !jt.startsWith( '{' ) ) { qWarning( "KeyValueBase::readJson() expected json stream to start with {, it didn't" ); return kvb; }
+  if ( !jt.endsWith  ( '}' ) ) { qWarning( "KeyValueBase::readJson() expected json stream to end with }, it didn't" ); return kvb; }
+  jt.chop( 1 );
+  jt = jt.mid(1);
+  QJsonObject jo = jd.object();
+  QStringList keys = jo.keys();
+  if ( keys.size() != 1 )      { qWarning( "KeyValueBase::readJson() expected 1 key, not %lld", keys.size() ); return kvb; }
+  Utf8String key = keys.at(0).toUtf8();
+  if ( !dict.codesContainName( key ) ) { qWarning( "KeyValueBase::readJson() unknown key %s", key.data() ); return kvb; }
+  RiceyInt k = dict.codeFromCodeName( key );
+  if ( k & RDT_ARRAY )
+    kvb = new KeyValueArray( k, parent );
+   else
+    kvb = new KeyValuePair( k, parent );
+  kvb->setJson( jt );
+  return kvb;
+}
+
+bool  KeyValuePair::setJson( const JsonSerial &j )
+{ QJsonDocument jd = QJsonDocument::fromJson( "{"+j+"}" );
+  if ( !jd.isObject() )
+    { qWarning( "KeyValueArray::document is not a JsonObject '%s'",j.data() ); return false; }
+  QJsonObject jo = jd.object();
+  if ( jo.keys().size() != 1 )
+    { qWarning( "object has %lld keys (should be 1)", jo.keys().size() ); return false; }
+
+  QVector<QString> keys = jo.keys();
+  Utf8String obKey = keys.at(0).toUtf8();
+  if ( !dict.codesContainName( obKey ) )
+    { qWarning( "dictionary does not contain a %s element", obKey.data() ); return false; }
+  setKey( dict.codeFromCodeName( obKey ) );
+  QJsonValue jv = jo.value( obKey );
+
+  if ( !jv.isObject() )
+    { qWarning( "value is not an object" ); return false; }
+  clear();
+  set( newValue( key(), this ) );
+  if ( m_value == nullptr )
+    { qWarning( "unexpected problem allocating BlockValue" );
+      return false;
+    }
+  QJsonDocument jda = QJsonDocument( jv.toObject() );
+  return m_value->setJson( jda.toJson() );
+}
+
 /**
  * @brief BlockValueInt64::setJson
  * @param j - byte array which should contain a UTF8 encoded base 10 integer
