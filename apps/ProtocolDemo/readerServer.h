@@ -34,15 +34,16 @@ class ReaderServer;
 class ReaderServer : public QGroupBox
 { Q_OBJECT
 public:
-    explicit ReaderServer(QWidget *parent = nullptr);
-            ~ReaderServer();
-
+    explicit  ReaderServer(QWidget *parent = nullptr);
+             ~ReaderServer();
+  Utf8String  readRecord( qint64, const Utf8String & );
+   BaoSerial  buildResponse( const Utf8String &dataRecord );
 signals:
-        void sendResponse( BaoSerial );
+        void  sendResponse( BaoSerial );
 
 public slots:
-        void receiveRequest( BaoSerial );
-        void newProtocolSet();
+        void  receiveRequest( BaoSerial );
+        void  newProtocolSet();
 
 public:
   QPointer<ProtocolActor> pa;

@@ -84,8 +84,7 @@
  * @brief The ValueBase class - base class for all value types found in block objects
  */
 class ValueBase : public QObject
-{
-    Q_OBJECT
+{ Q_OBJECT
 public:
               enum  Mode { make, build, idle, selected };
           explicit  ValueBase( QObject *p = nullptr ) : QObject( p ) { m_sel = false; m_key = RCD_null_z; }
@@ -143,7 +142,8 @@ QPointer<ValueBase> vbParent;
  * Container's Keys are type z
  */
 class BlockValueNull : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
      explicit  BlockValueNull( QObject *parent = nullptr ) : ValueBase( parent ) {}
               ~BlockValueNull() {}
  virtual bool  isContainer() const { return false; }
@@ -165,7 +165,8 @@ typedef QVarLengthArray<ValueBase *> ValueArray;
  * @brief The ValueBaseArray class - a one dimensional array of zero or more ValueBase objects
  */
 class ValueBaseArray : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
           explicit  ValueBaseArray( QObject *parent = nullptr ) : ValueBase( parent ) {}
                     ValueBaseArray( const ValueBaseArray &v, QObject *parent = nullptr ) : ValueBase( parent ) { m_values = v.m_values; }
                    ~ValueBaseArray() {}
@@ -196,8 +197,7 @@ public:
  * @brief The KeyValueBase class - common base for objects that contain a key and zero or more values
  */
 class KeyValueBase : public ValueBase
-{
-    Q_OBJECT
+{ Q_OBJECT
 public:
            explicit  KeyValueBase( const RiceyInt &k, QObject *parent = nullptr ) : ValueBase( parent )  { setKey( k ); }
                     ~KeyValueBase() {}
@@ -222,8 +222,7 @@ static KeyValueBase *readBao( const BaoSerial &, QObject *parent = nullptr );
  * @brief The KeyValuePair class - a single key and a single value (of any type)
  */
 class KeyValuePair : public KeyValueBase
-{
-    Q_OBJECT
+{ Q_OBJECT
 public:
           explicit  KeyValuePair( const RiceyInt  &k,                QObject *p = nullptr ) : KeyValueBase( k,            p ) {}
                     KeyValuePair( const RiceyInt  &k, ValueBase *vp, QObject *p = nullptr ) : KeyValueBase( k,            p ) { set(vp); }
@@ -254,8 +253,7 @@ public:
  *   Equivalent to a JsonObject with a single key: array value inside.
  */
 class KeyValueArray : public KeyValueBase
-{
-    Q_OBJECT
+{ Q_OBJECT
 public:
           explicit  KeyValueArray( RiceyInt  k,           QObject *p = nullptr ) : KeyValueBase(            k, p ) { m_val = nullptr; }
           explicit  KeyValueArray( RiceyInt  k, ValueBaseArray *bva, QObject *p = nullptr ) : KeyValueBase( k, p ) { m_val = bva;     }
@@ -290,7 +288,8 @@ public:
  * Container's Keys are type i/I
  */
 class BlockValueInt64 : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueInt64( QObject *parent = nullptr ) : ValueBase( parent ) { set( 0 ); }
                 BlockValueInt64( const qint64 &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
                ~BlockValueInt64() {}
@@ -312,7 +311,8 @@ virtual qint32  size()        const { return 1; }
 };
 
 class BlockValueInt64Array : public ValueBaseArray
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueInt64Array( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
                 BlockValueInt64Array( const QList<qint64> &v, QObject *parent = nullptr ) : ValueBaseArray( parent ) { set(v); }
                ~BlockValueInt64Array() {}
@@ -331,7 +331,8 @@ class BlockValueInt64Array : public ValueBaseArray
  * Container's Keys are type v/V - codes are not required to appear in the dictionary
  */
 class BlockValueRiceyInt : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueRiceyInt( QObject *parent = nullptr ) : ValueBase( parent ) { set( 0 ); }
                 BlockValueRiceyInt( const RiceyInt  &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
                 BlockValueRiceyInt( const RiceyCode &v, QObject *parent = nullptr ) : ValueBase( parent ) { set( v ); }
@@ -356,7 +357,8 @@ virtual qint32  size()        const { return 1; }
 };
 
 class BlockValueRiceyIntArray : public ValueBaseArray
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueRiceyIntArray( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
                 BlockValueRiceyIntArray( const QList<RiceyInt> &v, QObject *parent = nullptr ) : ValueBaseArray( parent ) { set(v); }
                ~BlockValueRiceyIntArray() {}
@@ -375,7 +377,8 @@ QList<RiceyInt> value()          const { QList<RiceyInt> vl; qint32 n = 0; while
  * Container's Keys are type c/C - codes are required to appear in the dictionary
  */
 class BlockValueRiceyCode : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueRiceyCode( QObject *parent = nullptr ) : ValueBase( parent ) {}
                 BlockValueRiceyCode( const RiceyCode &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
                 BlockValueRiceyCode( const RiceyInt &r , QObject *parent = nullptr ) : ValueBase( parent ) { set(r); }
@@ -401,7 +404,8 @@ virtual qint32  size()        const { return 1; }
 };
 
 class BlockValueRiceyCodeArray : public ValueBaseArray
-{ public:
+{ Q_OBJECT
+public:
          explicit  BlockValueRiceyCodeArray( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
                    BlockValueRiceyCodeArray( QList<RiceyInt>  v, QObject *parent = nullptr ) : ValueBaseArray( parent ) { set(v); }
                    BlockValueRiceyCodeArray( QList<RiceyCode> v, QObject *parent = nullptr ) : ValueBaseArray( parent ) { set(v); }
@@ -426,7 +430,8 @@ class BlockValueRiceyCodeArray : public ValueBaseArray
  * Container's Keys are type s/S
  */
 class BlockValueString : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueString( QObject *parent = nullptr ) : ValueBase( parent ) {}
                 BlockValueString( const Utf8String &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
                ~BlockValueString() {}
@@ -450,7 +455,8 @@ virtual qint32  size()        const { return 1; }
 };
 
 class BlockValueStringArray : public ValueBaseArray
-{ public:
+{ Q_OBJECT
+public:
           explicit  BlockValueStringArray( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
                     BlockValueStringArray( const QList<Utf8String> &v, QObject *parent = nullptr ) : ValueBaseArray( parent ) { set(v); }
                    ~BlockValueStringArray() {}
@@ -469,7 +475,8 @@ class BlockValueStringArray : public ValueBaseArray
  * Container's Keys are type b/B
  */
 class BlockValueByteArray : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
           explicit  BlockValueByteArray( QObject *parent = nullptr ) : ValueBase( parent ) {}
                     BlockValueByteArray( const QByteArray &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v); }
                    ~BlockValueByteArray() {}
@@ -492,7 +499,8 @@ virtual  DotSerial  dot(Mode m)   const;
 };
 
 class BlockValueByteArrayArray : public ValueBaseArray
-{ public:
+{ Q_OBJECT
+public:
           explicit  BlockValueByteArrayArray( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
                     BlockValueByteArrayArray( const QList<QByteArray> &v, QObject *parent = nullptr ) : ValueBaseArray( parent ) { set(v); }
                    ~BlockValueByteArrayArray() {}
@@ -511,7 +519,8 @@ class BlockValueByteArrayArray : public ValueBaseArray
  * Container's Keys are type n/N
  */
 class BlockValueMPZ : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
           explicit  BlockValueMPZ( QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); }
                     BlockValueMPZ( const     MP_INT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); set(v); }
                     BlockValueMPZ( const Utf8String &s, QObject *parent = nullptr ) : ValueBase( parent ) { mpz_init( &m_value ); set(s); }
@@ -538,7 +547,8 @@ virtual       bool  isArray()     const { return false; }
 };
 
 class BlockValueMPZArray : public ValueBaseArray
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueMPZArray( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
                ~BlockValueMPZArray() {}
         quint8  type() const { return RDT_MPZ_ARRAY; }
@@ -557,7 +567,8 @@ class BlockValueMPZArray : public ValueBaseArray
  * Container's Keys are type r/R
  */
 class BlockValueMPQ : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueMPQ( QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); }
                 BlockValueMPQ( const     MP_RAT &v, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); set(v); }
                 BlockValueMPQ( const Utf8String &s, QObject *parent = nullptr ) : ValueBase( parent ) { mpq_init( &m_value ); set(s); }
@@ -582,7 +593,8 @@ static Utf8String  toStr( const MP_RAT & );
 };
 
 class BlockValueMPQArray : public ValueBaseArray
-{ public:
+{ Q_OBJECT
+public:
       explicit  BlockValueMPQArray( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
                ~BlockValueMPQArray() {}
         quint8  type() const { return RDT_MPQ_ARRAY; }
@@ -610,7 +622,8 @@ class BlockValueMPQArray : public ValueBaseArray
  * Container's Keys are type o/O
  */
 class BlockValueObject : public ValueBase
-{ public:
+{ Q_OBJECT
+public:
          explicit  BlockValueObject( QObject *parent = nullptr )                          : ValueBase( parent ) {}
                    BlockValueObject( const BlockObjectMap &v, QObject *parent = nullptr ) : ValueBase( parent ) { set(v);     }
                    BlockValueObject( const      BaoSerial &b, QObject *parent = nullptr ) : ValueBase( parent ) { setBao(b);  }
@@ -661,7 +674,8 @@ virtual ValueBase *prevChild( ValueBase * );
 };
 
 class BlockValueObjectArray : public ValueBaseArray
-{ public:
+{ Q_OBJECT
+public:
              explicit  BlockValueObjectArray( QObject *parent = nullptr ) : ValueBaseArray( parent ) {}
                       ~BlockValueObjectArray() {}
 //BlockValueObjectArray &operator= ( const QList<BlockObjectMap> &v ) { set(v); return *this; }

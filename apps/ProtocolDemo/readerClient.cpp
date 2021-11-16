@@ -45,11 +45,11 @@ ReaderClient::~ReaderClient()
  * @brief ReaderClient::newProtocolSet
  */
 void ReaderClient::newProtocolSet()
-{ ui->rcRequest          ->setVisible( pa->   sendableObTypes.contains( (RiceyInt)RCD_readRequest_o ) );
-  ui->rcDataHandleGroup  ->setVisible( pa->  sendableContents.contains( (RiceyInt)RCD_recordId_i    ) );
-  ui->rcIdGroup          ->setVisible( pa->  sendableContents.contains( (RiceyInt)RCD_userId_b      ) );
-  ui->rcDataGroup        ->setVisible( pa->receivableContents.contains( (RiceyInt)RCD_recordText_s  ) );
-  ui->rcBlockchainIdGroup->setVisible( false ); // TODO: define a protocol that includes blockchain id
+{ ui->rcRequest          ->setVisible( pa->   sendableObTypes.contains( (RiceyInt)RCD_readRequest_o  ) );
+  ui->rcDataHandleGroup  ->setVisible( pa->  sendableContents.contains( (RiceyInt)RCD_recordId_i     ) );
+  ui->rcIdGroup          ->setVisible( pa->  sendableContents.contains( (RiceyInt)RCD_userId_b       ) );
+  ui->rcBlockchainIdGroup->setVisible( pa->  sendableContents.contains( (RiceyInt)RCD_blockchainId_b ) );
+  ui->rcDataGroup        ->setVisible( pa->receivableContents.contains( (RiceyInt)RCD_recordText_s   ) );
   // qWarning( "ReaderClient::newProtocolSet()" );
 }
 
@@ -57,16 +57,17 @@ void ReaderClient::newProtocolSet()
  * @brief ReaderClient::sendReadRequest - catches signal from the ui button
  */
 void ReaderClient::sendReadRequest()
-{ pa->emit transactionRecord("sendReadRequest()");
+{ emit pa->transactionRecord("sendReadRequest()");
   if ( pa->pp == nullptr )
-    { pa->emit transactionRecord("protocol not defined.");
+    { emit pa->transactionRecord("protocol not defined.");
       return;
     }
   // Compose bao based on protocol definition and ui contents and send it.
   // Unneeded components will be ignored by pa->compose
   BlockObjectMap inputs;
-  BlockValueByteArray userId( ui->rcId->text().toUtf8() );             inputs.insert( RCD_userId_b  , &userId   );
-  BlockValueInt64   recordId( ui->rcDataHandle->text().toLongLong() ); inputs.insert( RCD_recordId_i, &recordId );
+  BlockValueByteArray  userId( ui->rcId          ->text().toUtf8()     ); inputs.insert( RCD_userId_b      , &userId   );
+  BlockValueInt64    recordId( ui->rcDataHandle  ->text().toLongLong() ); inputs.insert( RCD_recordId_i    , &recordId );
+  BlockValueByteArray chainId( ui->rcBlockchainId->text().toUtf8()     ); inputs.insert( RCD_blockchainId_b, &chainId  );
   // more to come
   BaoSerial bao = pa->compose( RCD_readRequest_o, inputs );
   if ( bao.size() > 0 )
@@ -80,7 +81,30 @@ void ReaderClient::sendReadRequest()
  * @param resp - from server
  */
 void ReaderClient::receiveResponse( QByteArray resp )
-{ pa->emit transactionRecord("receiveResponse()");
-  (void)resp;
-  // TODO: show response/results on ui
+{ RiceyInt respTyp = riceToInt( resp );
+  BlockObjectMap bom = pa->extract( resp );
+  Utf8String recordText;
+  switch ( respTyp )
+    { case RCD_readResponse_o:
+        if ( !bom.contains( RCD_recordText_s ) )
+          qWarning( "response did not contain a recordText" );
+         else
+          { if ( bom.value(RCD_recordText_s) == nullptr )
+              qWarning( "bom recordText nullptr" );
+             else
+              { BlockValueString *bvs = qobject_cast<BlockValueString *>(bom.value(RCD_recordText_s));
+                if ( bvs != nullptr )
+                  recordText = bvs->value();
+              } // recordText not null
+          }    // recordText present
+        break;
+
+      default:
+        qWarning( "unrecognized response type %llx", respTyp );
+    }
+  QString msg = QString("receiveResponse(%1)" )
+          .arg( QString::fromUtf8(resp.toHex()) );
+  emit pa->transactionRecord( msg );
+  if ( resp.size() > 0 )
+    ui->rcData->append( recordText );
 }

@@ -161,7 +161,7 @@ void MainWindow::on_readJson_clicked()
         qWarning( "code %d is not an object", i );
        else
         { QJsonObject cao = jv.toObject();
-          QString name,typ,group,desc;
+          QString name,typ,group,desc; desc.reserve( 64 );
           if ( cao.contains( "name_s" ) )
             name =       cao["name_s"].toString();
           if ( cao.contains( "group_s" ) )
@@ -365,7 +365,8 @@ void MainWindow::translateRicey()
                   QString name = lList.at(0);
                   while ( name.size() < maxNameLength )
                     name.append( QChar(' ') );
-                  QString num = QString::number( riceToInt( QByteArray::fromHex( lList.at(1).mid(2).toUtf8() ) ) );
+                  QString num; num.reserve( maxNumLength + 1 );
+                  num = QString::number( riceToInt( QByteArray::fromHex( lList.at(1).mid(2).toUtf8() ) ) );
                   while ( num.size() < maxNumLength )
                     num.prepend( QChar(' ') );
                   t.append( QString( "#define %4%1 %2 %3\n" ).arg( name, num, line.mid(ics), rPre ) );

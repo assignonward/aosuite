@@ -181,6 +181,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>wcId</tabstop>
+  <tabstop>wcBlockchainId</tabstop>
+  <tabstop>wcData</tabstop>
+  <tabstop>wcSend</tabstop>
+  <tabstop>wcLog</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

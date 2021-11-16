@@ -317,7 +317,7 @@ qint32 BlockValueMPZ::fromBCD( const  BaoSerial &bcd, mpz_t in )
     { qWarning( "fromBCD was passed a non-bcd first nybble %x", firstNybble );
       return 0;
     }
-  Utf8String iStr;
+  Utf8String iStr; iStr.reserve( 32 );
   qint32 i = 0;
   while ( i < MAX_MPINT_LEN )
     {  firstNybble = (bcd.at(i) & 0xF0) >> 4;

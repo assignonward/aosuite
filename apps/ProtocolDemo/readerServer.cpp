@@ -53,17 +53,84 @@ void ReaderServer::newProtocolSet()
  * @param req - request from reader client
  */
 void ReaderServer::receiveRequest( QByteArray req )
-{ pa->emit transactionRecord( QString("receiveRequest(%1)").arg( QString::fromUtf8( req.toHex() ) ) );
-    RiceyInt reqTyp = riceToInt( req );
-    BlockObjectMap bom = pa->extract( req );
-    BaoSerial resp;
-    switch ( reqTyp )
-      { case RCD_readRequest_o:
-          qWarning( "bom size %lld", bom.size() );
-          break;
+{ emit pa->transactionRecord( QString("receiveRequest(%1)").arg( QString::fromUtf8( req.toHex() ) ) );
+  RiceyInt reqTyp = riceToInt( req );
+  BlockObjectMap bom = pa->extract( req );
+  BaoSerial resp;
+  switch ( reqTyp )
+    { case RCD_readRequest_o:
+        if ( !bom.contains( RCD_recordId_i ) )
+          qWarning( "can not read without recordId" );
+         else
+          { if ( bom.value(RCD_recordId_i) == nullptr )
+              qWarning( "bom recordId nullptr" );
+             else
+              { qint64 tm = -1;
+                BlockValueInt64 *bvip = qobject_cast<BlockValueInt64 *>(bom.value(RCD_recordId_i));
+                if ( bvip == nullptr ) qWarning( "ReaderServer::receiveRequest() bvip nullptr" ); else
+                  tm = bvip->value();
+                QByteArray cid = "0";
+                if ( bom.contains( RCD_blockchainId_b ) )
+                  { if ( bom.value(RCD_blockchainId_b) == nullptr )
+                      qWarning( "bom blockchainId nullptr" );
+                     else
+                      { BlockValueByteArray *bvbap = qobject_cast<BlockValueByteArray *>(bom.value(RCD_blockchainId_b));
+                        if ( bvbap == nullptr ) qWarning( "ReaderServer::receiveRequest() bvbap nullptr" ); else
+                          cid = bvbap->value();
+                      }
+                  }
+                QByteArray uid = "";
+                if ( bom.contains( RCD_userId_b ) )
+                  { if ( bom.value(RCD_userId_b) == nullptr )
+                      qWarning( "bom userId nullptr" );
+                     else
+                      { BlockValueByteArray *bvbap2 = qobject_cast<BlockValueByteArray *>(bom.value(RCD_userId_b));
+                        if ( bvbap2 == nullptr ) qWarning( "ReaderServer::receiveRequest() bvbap2 nullptr" ); else
+                          uid = bvbap2->value();
+                      }
+                  }
+                Utf8String recordText = readRecord( tm, cid );
+                if ( recordText.size() > 0 )
+                  resp = buildResponse( recordText );
+                 else
+                  qWarning( "readRecord had a problem." );
+                  // empty resp for the error state
+              } // recordId not null
+          }    // recordId present
+        break;
 
-        default:
-          qWarning( "unrecognized request type %llx", reqTyp );
-      }
+      default:
+        qWarning( "unrecognized request type %llx", reqTyp );
+    }
   emit sendResponse( resp );
+}
+
+#include <QFile>
+/**
+ * @brief ReaderServer::readRecord
+ * @param tm - time of record to read
+ * @param cid = chain id of record to read
+ * @return data read from record, or empty if there was a problem
+ */
+Utf8String  ReaderServer::readRecord( qint64 tm, const Utf8String &cid )
+{ QString fn = QString( "/var/aos/%1/%2" ).arg( QString::fromUtf8( cid ) ).arg( tm );
+  QFile file(fn);
+    if ( !file.open( QIODevice::ReadOnly ) )
+      { qWarning( "could not open file %s", fn.toUtf8().data() );
+        return Utf8String();
+      }
+  QByteArray ba = file.readAll();
+  return ba;
+}
+
+/**
+ * @brief ReaderServer::buildResponse
+ * @param dataRecord - data that was read from the file
+ * @return response packet
+ */
+BaoSerial  ReaderServer::buildResponse( const Utf8String &dataRecord )
+{ BlockObjectMap inputs;
+  BlockValueString *dr = new BlockValueString( dataRecord, this );
+  inputs.insert( RCD_recordText_s, dr );
+  return pa->compose( RCD_readResponse_o, inputs );
 }

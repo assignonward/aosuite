@@ -48,7 +48,7 @@ void WriterClient::newProtocolSet()
 { ui->wcSend             ->setVisible( pa->sendableObTypes .contains( (RiceyInt)RCD_writeRequest_o ) );
   ui->wcIdGroup          ->setVisible( pa->sendableContents.contains( (RiceyInt)RCD_userId_b       ) );
   ui->wcDataGroup        ->setVisible( pa->sendableContents.contains( (RiceyInt)RCD_recordText_s   ) );
-  ui->wcBlockchainIdGroup->setVisible( false ); // TODO: define a protocol that includes blockchain id
+  ui->wcBlockchainIdGroup->setVisible( pa->sendableContents.contains( (RiceyInt)RCD_blockchainId_b ) );
   // qWarning( "WriterClient::newProtocolSet()" );
 }
 
@@ -64,14 +64,21 @@ void WriterClient::sendWriteRequest()
   // Compose bao based on protocol definition and ui contents and send it.
   // Unneeded components will be ignored by pa->compose
   BlockObjectMap inputs;
-  BlockValueByteArray  userId( ui->wcId  ->text()       .toUtf8() ); inputs.insert( RCD_userId_b    , &userId     );
-  BlockValueString recordText( ui->wcData->toPlainText().toUtf8() ); inputs.insert( RCD_recordText_s, &recordText );
+  BlockValueByteArray  *userId = new BlockValueByteArray( ui->wcId          ->text().toUtf8(), this );
+  BlockValueString *recordText = new BlockValueString   ( ui->wcData ->toPlainText().toUtf8(), this );
+  BlockValueByteArray *chainId = new BlockValueByteArray( ui->wcBlockchainId->text().toUtf8(), this );
+  inputs.insert( RCD_userId_b      , userId     );
+  inputs.insert( RCD_recordText_s  , recordText );
+  inputs.insert( RCD_blockchainId_b, chainId    );
   // more to come
-  BaoSerial bao = pa->compose( RCD_writeRequest_o, inputs );
+  BaoSerial bao = pa->compose( RCD_writeRequest_o, inputs ); bao.detach();
   if ( bao.size() > 0 )
     emit sendRequest( bao );
    else
     qWarning( "problem when composing writeRequest" );
+  userId    ->deleteLater();
+  recordText->deleteLater();
+  chainId   ->deleteLater();
 }
 
 /**
@@ -79,10 +86,10 @@ void WriterClient::sendWriteRequest()
  * @param resp - from server
  */
 void WriterClient::receiveResponse( QByteArray resp )
-{ RiceyInt reqTyp = riceToInt( resp );
+{ RiceyInt respTyp = riceToInt( resp );
   BlockObjectMap bom = pa->extract( resp );
   qint64 recordHandle = -1;
-  switch ( reqTyp )
+  switch ( respTyp )
     { case RCD_writeResponse_o:
         if ( !bom.contains( RCD_recordId_i ) )
           qWarning( "response did not contain a recordId" );
@@ -96,7 +103,7 @@ void WriterClient::receiveResponse( QByteArray resp )
         break;
 
       default:
-        qWarning( "unrecognized response type %llx", reqTyp );
+        qWarning( "unrecognized response type %llx", respTyp );
     }
   QString msg = QString("receiveResponse(%1) %2 %3")
           .arg( QString::fromUtf8(resp.toHex()) ).arg( recordHandle )

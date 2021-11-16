@@ -36,7 +36,7 @@ class WriterServer : public QGroupBox
 public:
     explicit  WriterServer(QWidget *parent = nullptr);
              ~WriterServer();
-      qint64  writeRecord( const Utf8String &, const Utf8String & );
+      qint64  writeRecord( const QByteArray &, const QByteArray & );
    BaoSerial  buildResponse( qint64 );
 
 signals:

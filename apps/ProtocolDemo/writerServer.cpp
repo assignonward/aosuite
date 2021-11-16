@@ -66,15 +66,22 @@ void WriterServer::receiveRequest( QByteArray req )
           { if ( bom.value(RCD_recordText_s) == nullptr )
               qWarning( "bom recordText nullptr" );
              else
-              { QByteArray rt = ((BlockValueString *)bom.value(RCD_recordText_s))->value();
-                rt.detach();
+              { QByteArray rt;
+                BlockValueString *rtp = qobject_cast<BlockValueString *>(bom.value(RCD_recordText_s));
+                if ( rtp == nullptr ) qWarning( "rtp is nullptr" ); else
+                  {  rt = rtp->value();
+                    rt.detach();
+                  }
                 QByteArray cid = "0";
                 if ( bom.contains( RCD_blockchainId_b ) )
                   { if ( bom.value(RCD_blockchainId_b) == nullptr )
                       qWarning( "bom blockchainId nullptr" );
                      else
-                      { cid = ((BlockValueByteArray *)bom.value(RCD_blockchainId_b))->value();
-                        cid.detach();
+                      { BlockValueByteArray *cip = qobject_cast<BlockValueByteArray *>(bom.value(RCD_blockchainId_b));
+                        if ( cip == nullptr ) qWarning( "cip is nullptr" ); else
+                          { cid = cip->value();
+                            cid.detach();
+                          }
                       }
                   }
                 QByteArray uid = "";
@@ -82,8 +89,11 @@ void WriterServer::receiveRequest( QByteArray req )
                   { if ( bom.value(RCD_userId_b) == nullptr )
                       qWarning( "bom userId nullptr" );
                      else
-                      { uid = ((BlockValueByteArray *)bom.value(RCD_userId_b))->value();
-                        uid.detach();
+                      { BlockValueByteArray *uip = qobject_cast<BlockValueByteArray *>(bom.value(RCD_userId_b));
+                        if ( uip == nullptr ) qWarning( "uip is nullptr" ); else
+                          { uid = uip->value();
+                            uid.detach();
+                          }
                       }
                   }
                 recordHandle = writeRecord( rt, cid );
@@ -109,12 +119,12 @@ void WriterServer::receiveRequest( QByteArray req )
  * @param cid - chainId, to write text in
  * @return handle (time) of the record written, or -1 if there was a problem
  */
-qint64  WriterServer::writeRecord( const Utf8String &rt, const Utf8String &cid )
+qint64  WriterServer::writeRecord( const QByteArray &rt, const QByteArray &cid )
 { qint64 tm = QDateTime::currentMSecsSinceEpoch() * 1000 + index;
   if ( ++index >= 1000 )
     index = 0;
   // TODO: fill the huge security hole (file access) before using this exposed to the wild
-  QString fn = QString( "/var/aos/%1/%2" ).arg( cid ).arg( tm );
+  QString fn = QString( "/var/aos/%1/%2" ).arg( QString::fromUtf8( cid ) ).arg( tm );
   QFile file(fn);
   if ( !file.open( QIODevice::WriteOnly ) )
     { qWarning( "could not open file %s", fn.toUtf8().data() );

@@ -67,6 +67,9 @@
 #define RCD_time_I                                    54 // dataGroup UTC time of block creation (microseconds since epoch x 189). May never be less than or equal to the timei of any parent block. Serves as a unique id for AOBO blocks.
 #define RCD_desc_s                                    69 // dataGroup Description of the current object, specific use depends on context
 #define RCD_code_s                                   101 // dataGroup Code as a string, use depends on context, often a key type
+#define RCD_data2_b                                   43 // dataGroup Additional generic data block, use determined by the object which contains it.
+#define RCD_data3_b                                  107 // dataGroup Additional generic data block, use determined by the object which contains it.
+#define RCD_data4_b                                   75 // dataGroup Additional generic data block, use determined by the object which contains it.
 #define RCD_hashedOb_o                                47 // chainGroup An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.
 #define RCD_hashInfo_o                                79 // chainGroup Found in hash_o, contains at least the time_i plus any other id info that will be hashed along with the hashedOb_o
 #define RCD_hash_o                                   111 // chainGroup Found in chainBlock_O and similar objects which contain a signedBlock_O, contains an algorithm id (type_y) and the hash by that algorithm of the binary representation of the objects in the signedBlock_O (data_b) and a timestamp (time_i) matching the time_i in the signedBlock_O and which must not be as old or older than any parent timestamp and also should not be in the future, these time_i are unique identifiers for chainBlock_O objects.

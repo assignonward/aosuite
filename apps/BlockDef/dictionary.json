@@ -139,6 +139,24 @@
             "type_b": "65"
         },
         {
+            "group_s": "dataGroup",
+            "name_s": "data2_b",
+            "text_s": "Additional generic data block, use determined by the object which contains it.",
+            "type_b": "2B"
+        },
+        {
+            "group_s": "dataGroup",
+            "name_s": "data3_b",
+            "text_s": "Additional generic data block, use determined by the object which contains it.",
+            "type_b": "6B"
+        },
+        {
+            "group_s": "dataGroup",
+            "name_s": "data4_b",
+            "text_s": "Additional generic data block, use determined by the object which contains it.",
+            "type_b": "4B"
+        },
+        {
             "group_s": "chainGroup",
             "name_s": "hashedOb_o",
             "text_s": "An object which has its hash computed. When found in a chainBlock_o always contains a parentHash_O a time_i of when the block was signed, the hash_o is found in the object which contains the hashedOb_o.",
