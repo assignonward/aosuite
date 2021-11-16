@@ -97,7 +97,9 @@ void WriterClient::receiveResponse( QByteArray resp )
           { if ( bom.value(RCD_recordId_i) == nullptr )
               qWarning( "bom recordId nullptr" );
              else
-              { recordHandle = ((BlockValueInt64 *)bom.value(RCD_recordId_i))->value();
+              { BlockValueInt64 *bvi = qobject_cast<BlockValueInt64 *>(bom.value(RCD_recordId_i));
+                if ( bvi == nullptr ) qWarning( "void WriterClient::receiveResponse() bvi nullptr" ); else
+                  recordHandle = bvi->value();
               } // recordHandle not null
           }    // recordHandle present
         break;
