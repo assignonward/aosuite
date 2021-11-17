@@ -20,8 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-TEMPLATE = subdirs
-SUBDIRS +=   \
-    ProtoDev  \
-    DemoServer \
-    DemoClients
+
+DEPTH = ../..
+include($${DEPTH}/qamqp.pri)
+INCLUDEPATH += $${QAMQP_INCLUDEPATH}
+LIBS        += -L$${DEPTH}/src $${QAMQP_LIBS}
+
+INCLUDEPATH += $${PWD}
+
+HEADERS     += $$PWD/amqpInterface.h
+
+SOURCES     += $$PWD/amqpInterface.cpp
+

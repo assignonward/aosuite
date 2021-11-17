@@ -20,8 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-TEMPLATE = subdirs
-SUBDIRS +=   \
-    ProtoDev  \
-    DemoServer \
-    DemoClients
+
+INCLUDEPATH += $${PWD}
+
+HEADERS     += $$PWD/readerServer.h
+
+SOURCES     += $$PWD/readerServer.cpp
+
+FORMS       += $$PWD/readerServer.ui

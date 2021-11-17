@@ -20,8 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-TEMPLATE = subdirs
-SUBDIRS +=   \
-    ProtoDev  \
-    DemoServer \
-    DemoClients
+
+INCLUDEPATH += $${PWD}
+
+HEADERS     += $$PWD/writerServer.h
+
+SOURCES     += $$PWD/writerServer.cpp
+
+FORMS       += $$PWD/writerServer.ui
+

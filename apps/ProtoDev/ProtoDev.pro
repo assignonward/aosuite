@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-QT     += core gui
+QT     += core gui widgets
 CONFIG += c++11
 
 include(../AboutForm/AboutForm.pri)
@@ -28,10 +28,7 @@ include(../BlockDef/BlockDef.pri)
 include(../BlockPanel/BlockPanel.pri)
 include(../BlockTool/BlockTool.pri)
 include(../ProtocolDemo/ProtocolDemo.pri)
-include(../ProtocolParser/ProtocolParser.pri)
 include(../Tests/Tests.pri)
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -66,8 +63,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     ProtoDev.qrc
 
-LIBS           += -lgpgme -lgcrypt -ldl -lgpg-error
-LIBS           += -L/usr/local/lib/ -lgmp
-INCLUDEPATH    += /usr/local/include
-DEPENDPATH     += /usr/local/include
-PRE_TARGETDEPS += /usr/local/lib/libgmp.a

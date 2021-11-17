@@ -20,8 +20,34 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-TEMPLATE = subdirs
-SUBDIRS +=   \
-    ProtoDev  \
-    DemoServer \
-    DemoClients
+QT     += core gui widgets
+CONFIG += c++11
+
+include(../AmqpInterface/AmqpInterface.pri)
+include(../BlockDef/BlockDef.pri)
+include(../ReaderClient/ReaderClient.pri)
+include(../WriterClient/WriterClient.pri)
+include(../ProtocolParser/ProtocolParser.pri)
+
+# You can make your code fail to compile if it uses deprecated APIs.
+# In order to do so, uncomment the following line.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+SOURCES  += \
+    main.cpp \
+    mainwindow.cpp
+
+HEADERS      += mainwindow.h
+
+FORMS        += mainwindow.ui
+
+RESOURCES    += demoClients.qrc
+
+TRANSLATIONS += DemoClients_en_US.ts
+CONFIG       += lrelease
+CONFIG       += embed_translations
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target

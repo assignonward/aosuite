@@ -20,39 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PROTOCOLDEMO_H
-#define PROTOCOLDEMO_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include <QScrollArea>
-#include "ui_protocolDemo.h"
+#include <QMainWindow>
 #include "writerClient.h"
-#include "writerServer.h"
 #include "readerClient.h"
-#include "readerServer.h"
 
-namespace Ui {
-class ProtocolDemo;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
-class ProtocolDemo : public QScrollArea
-{ Q_OBJECT
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
 public:
-              ProtocolDemo( QWidget *cw = nullptr );
-             ~ProtocolDemo();
-        void  initReadFile();
+          MainWindow(QWidget *parent = nullptr);
+         ~MainWindow();
+    void  initReadFile();
 
 signals:
-        void  setProtocol( BaoSerial );
+    void  setProtocol( BaoSerial );
 
 public slots:
-        void  on_set_clicked();
+    void  on_set_clicked();
 
 public:
   QPointer<WriterClient> wc;
-  QPointer<WriterServer> ws;
   QPointer<ReaderClient> rc;
-  QPointer<ReaderServer> rs;
-       Ui::ProtocolDemo *ui;
+         Ui::MainWindow *ui;
 };
-
-#endif // PROTOCOLDEMO_H
+#endif // MAINWINDOW_H

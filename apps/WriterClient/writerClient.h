@@ -20,39 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef PROTOCOLDEMO_H
-#define PROTOCOLDEMO_H
+#ifndef WRITERCLIENT_H
+#define WRITERCLIENT_H
 
-#include <QScrollArea>
-#include "ui_protocolDemo.h"
-#include "writerClient.h"
-#include "writerServer.h"
-#include "readerClient.h"
-#include "readerServer.h"
+#include <QGroupBox>
+#include "ui_writerClient.h"
+#include "protocolParser.h"
 
 namespace Ui {
-class ProtocolDemo;
+class WriterClient;
 }
 
-class ProtocolDemo : public QScrollArea
+class WriterClient : public QGroupBox
 { Q_OBJECT
 public:
-              ProtocolDemo( QWidget *cw = nullptr );
-             ~ProtocolDemo();
-        void  initReadFile();
+    explicit WriterClient(QWidget *parent = nullptr);
+            ~WriterClient();
 
 signals:
-        void  setProtocol( BaoSerial );
+        void sendRequest( BaoSerial ); // sends request to the server
 
 public slots:
-        void  on_set_clicked();
+        void sendWriteRequest();       // catches signal from the ui button
+        void receiveResponse( BaoSerial );
+        void newProtocolSet();
 
 public:
-  QPointer<WriterClient> wc;
-  QPointer<WriterServer> ws;
-  QPointer<ReaderClient> rc;
-  QPointer<ReaderServer> rs;
-       Ui::ProtocolDemo *ui;
+  QPointer<ProtocolActor> pa;
+        Ui::WriterClient *ui;
 };
 
-#endif // PROTOCOLDEMO_H
+#endif // WRITERCLIENT_H

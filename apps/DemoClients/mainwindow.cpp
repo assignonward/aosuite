@@ -20,44 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "protocolDemo.h"
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "amqpInterface.h"
 #include <QDir>
 
-ProtocolDemo::ProtocolDemo( QWidget *cw ) :
-    QScrollArea(cw),
-    ui(new Ui::ProtocolDemo)
-{ ui->setupUi(this);
-  initReadFile();
-  if ( cw )
-    { QVBoxLayout *vb = new QVBoxLayout( cw );
-      cw->layout()->addWidget( this );
-      vb->setContentsMargins( 0,0,0,0 );
-    }
-  rc = new ReaderClient( ui->crsa );
-  rs = new ReaderServer( ui->srsa );
-  wc = new WriterClient( ui->cwsa );
-  ws = new WriterServer( ui->swsa );
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+    initReadFile();
 
-  connect( this, SIGNAL( setProtocol (BaoSerial) ), wc->pa, SLOT( setProtocol    (BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol (BaoSerial) ), rc->pa, SLOT( setProtocol    (BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol (BaoSerial) ), ws->pa, SLOT( setProtocol    (BaoSerial) ) );
-  connect( this, SIGNAL( setProtocol (BaoSerial) ), rs->pa, SLOT( setProtocol    (BaoSerial) ) );
+    rc = new ReaderClient( ui->readerFrame );
+    wc = new WriterClient( ui->writerFrame );
 
-  // Communication links between the modules
-  connect( wc  , SIGNAL( sendRequest (BaoSerial) ), ws    , SLOT( receiveRequest (BaoSerial) ) );
-  connect( rc  , SIGNAL( sendRequest (BaoSerial) ), rs    , SLOT( receiveRequest (BaoSerial) ) );
-  connect( ws  , SIGNAL( sendResponse(BaoSerial) ), wc    , SLOT( receiveResponse(BaoSerial) ) );
-  connect( rs  , SIGNAL( sendResponse(BaoSerial) ), rc    , SLOT( receiveResponse(BaoSerial) ) );
+    AmqpInterface *ai = amqpQuickStart( this );
+
+    connect( this, SIGNAL( setProtocol(BaoSerial) ), wc->pa, SLOT( setProtocol(BaoSerial) ) );
+    connect( this, SIGNAL( setProtocol(BaoSerial) ), rc->pa, SLOT( setProtocol(BaoSerial) ) );
 }
 
-ProtocolDemo::~ProtocolDemo()
-{ delete ui; }
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
 
 /**
  * @brief ProtocolDemo::initReadFile - readFile is a comboBox which specifies
  *   a resource file to select a protocol from when Set is clicked.
  */
-void  ProtocolDemo::initReadFile()
+void  MainWindow::initReadFile()
 { ui->readFile->clear();
   QDir d(":/protocols");
   QFileInfoList fil = d.entryInfoList();
@@ -71,7 +65,7 @@ void  ProtocolDemo::initReadFile()
 /**
  * @brief ProtocolDemo::on_set_clicked - protocol set has clicked by user
  */
-void  ProtocolDemo::on_set_clicked()
+void  MainWindow::on_set_clicked()
 { QString readFile;
   readFile = ":/protocols/"+ui->readFile->currentText()+".bao";
   if ( readFile.size() < 1 )
