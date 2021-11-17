@@ -47,6 +47,51 @@ AmqpInterface::AmqpInterface( QObject *p ) : QObject( p )
   objectConnections    = false;
   startPending         = false;
   connectButtonPressed = false;
+  setToDefaultValues();
+  writeSettings();
+}
+
+void AmqpInterface::setToDefaultValues()
+{  reqConnectionState      = RI_NOT_STARTED;
+  respConnectionState      = RI_NOT_STARTED;
+   reqReady                = 0;
+  respReady                = 0;
+   reqExchangeName         = "Requests";
+  respExchangeName         = "Responses";
+   reqQueueName            = "requests";
+  respQueueName            = "responses";
+   reqQueueName_set        = false;
+  respQueueName_set        = false;
+   reqConsumerTag          = "reqConsumerTag";
+  respConsumerTag          = "respConsumerTag";
+   reqConsumerTag_set      = false;
+  respConsumerTag_set      = false;
+   reqBindingKey           = "#";
+  respBindingKey           = "#";
+   reqStats_packetCount    = 0;
+  respStats_packetCount    = 0;
+   reqStats_byteCount      = 0;
+  respStats_byteCount      = 0;
+   reqStats_lastPacketSize = 0;
+  respStats_lastPacketSize = 0;
+  startDelay               = 1000;  // milliseconds
+  shuttingDown             = false;
+  shutdownComplete         = false;
+  restartOnDisconnect      = true;
+  restartOnDisconnect_time = 5000;
+  heartbeatDelay           = 10000;
+  username                 = "guest";
+  password                 = "guest";
+  vhost                    = "/";
+  address                  = "localhost";
+  port                     = 5672;
+  echo                     = false;
+  echoHex                  = false;
+  appId                    = "me";
+}
+
+void AmqpInterface::readSettings()
+{ QSettings settings;
 
    reqConnectionState      = RI_NOT_STARTED;
   respConnectionState      = RI_NOT_STARTED;
@@ -84,6 +129,47 @@ AmqpInterface::AmqpInterface( QObject *p ) : QObject( p )
   echo                     = false;
   echoHex                  = false;
   appId                    = "me";
+}
+
+void AmqpInterface::writeSettings()
+{ QSettings settings;
+
+  settings.setValue(  "reqConnectionState",       reqConnectionState      );
+  settings.setValue( "respConnectionState",      respConnectionState      );
+  settings.setValue(  "reqReady",                 reqReady                );
+  settings.setValue( "respReady",                respReady                );
+  settings.setValue(  "reqExchangeName",          reqExchangeName         );
+  settings.setValue( "respExchangeName",         respExchangeName         );
+  settings.setValue(  "reqQueueName",             reqQueueName            );
+  settings.setValue( "respQueueName",            respQueueName            );
+  settings.setValue(  "reqQueueName_set",         reqQueueName_set        );
+  settings.setValue( "respQueueName_set",        respQueueName_set        );
+  settings.setValue(  "reqConsumerTag",           reqConsumerTag          );
+  settings.setValue( "respConsumerTag",          respConsumerTag          );
+  settings.setValue(  "reqConsumerTag_set",       reqConsumerTag_set      );
+  settings.setValue( "respConsumerTag_set",      respConsumerTag_set      );
+  settings.setValue(  "reqBindingKey",            reqBindingKey           );
+  settings.setValue( "respBindingKey",           respBindingKey           );
+  settings.setValue(  "reqStats_packetCount",     reqStats_packetCount    );
+  settings.setValue( "respStats_packetCount",    respStats_packetCount    );
+  settings.setValue(  "reqStats_byteCount",       reqStats_byteCount      );
+  settings.setValue( "respStats_byteCount",      respStats_byteCount      );
+  settings.setValue(  "reqStats_lastPacketSize",  reqStats_lastPacketSize );
+  settings.setValue( "respStats_lastPacketSize", respStats_lastPacketSize );
+  settings.setValue( "startDelay",               startDelay               );
+  settings.setValue( "shuttingDown",             shuttingDown             );
+  settings.setValue( "shutdownComplete",         shutdownComplete         );
+  settings.setValue( "restartOnDisconnect",      restartOnDisconnect      );
+  settings.setValue( "restartOnDisconnect_time", restartOnDisconnect_time );
+  settings.setValue( "heartbeatDelay",           heartbeatDelay           );
+  settings.setValue( "username",                 username                 );
+  settings.setValue( "password",                 password                 );
+  settings.setValue( "vhost",                    vhost                    );
+  settings.setValue( "address",                  address                  );
+  settings.setValue( "port",                     port                     );
+  settings.setValue( "echo",                     echo                     );
+  settings.setValue( "echoHex",                  echoHex                  );
+  settings.setValue( "appId",                    appId                    );
 }
 
 void AmqpInterface::retry()

@@ -36,14 +36,19 @@ MainWindow::MainWindow(QWidget *parent)
     ws = new WriterServer( ui->writerFrame );
 
     AmqpInterface *ai = amqpQuickStart( this );
-
-    connect( this, SIGNAL( setProtocol(BaoSerial) ), ws->pa, SLOT( setProtocol(BaoSerial) ) );
-    connect( this, SIGNAL( setProtocol(BaoSerial) ), rs->pa, SLOT( setProtocol(BaoSerial) ) );
+    connect( ai  , SIGNAL(logMessage(QString))   , ws->ui->wsLog, SLOT(insertPlainText(QString)) );
+    connect( this, SIGNAL(setProtocol(BaoSerial)), ws->pa       , SLOT(setProtocol(BaoSerial))   );
+    connect( this, SIGNAL(setProtocol(BaoSerial)), rs->pa       , SLOT(setProtocol(BaoSerial))   );
 }
 
 MainWindow::~MainWindow()
-{
-    delete ui;
+{ delete ui; }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{ QSettings settings;
+  settings.setValue( "geometry", saveGeometry() );
+  settings.setValue( "state"   , saveState()    );
+  QMainWindow::closeEvent(event);
 }
 
 /**

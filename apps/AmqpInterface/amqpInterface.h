@@ -53,6 +53,9 @@ public:
 public:
     AmqpInterface( QObject *parent = nullptr );
     void prep();
+    void setToDefaultValues();
+    void readSettings();
+    void writeSettings();
     void disconnect();
     void shutDown();
 

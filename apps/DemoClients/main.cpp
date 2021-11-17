@@ -3,9 +3,20 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <QSettings>
+
+/**
+ * @brief setAppNames - set names for QSettings use
+ */
+void setAppNames()
+{ QCoreApplication::setOrganizationName( "AssignOnward" );
+  QCoreApplication::setOrganizationDomain( "assignonward.com" );
+  QCoreApplication::setApplicationName( "DemoClients" );
+  QSettings::setDefaultFormat( QSettings::IniFormat );
+}
 
 int main(int argc, char *argv[])
-{
+{   setAppNames();
     QApplication a(argc, argv);
 
     QTranslator translator;

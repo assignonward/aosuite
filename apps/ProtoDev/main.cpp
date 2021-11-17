@@ -31,7 +31,7 @@
 void setAppNames()
 { QCoreApplication::setOrganizationName( "AssignOnward" );
   QCoreApplication::setOrganizationDomain( "assignonward.com" );
-  QCoreApplication::setApplicationName( "CodeForm2021" );
+  QCoreApplication::setApplicationName( "ProtoDev" );
   QSettings::setDefaultFormat( QSettings::IniFormat );
 }
 
