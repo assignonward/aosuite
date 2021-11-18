@@ -82,8 +82,8 @@ public slots:
     void respQueueDeclared();
     void  reqQueueBound();
     void respQueueBound();
-    void  reqSendMessage( QByteArray message, QString route );
-    void respSendMessage( QByteArray message, QString route );
+    void  reqSendMessage( QByteArray message, QString route = "" );
+    void respSendMessage( QByteArray message, QString route = "" );
     void  reqMessageReceived();
     void respMessageReceived();
     void disconnectAndRestart();

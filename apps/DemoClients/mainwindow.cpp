@@ -22,23 +22,40 @@
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "amqpInterface.h"
 #include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    initReadFile();
+{ ui->setupUi(this);
+  initReadFile();
+  rc = new ReaderClient( ui->readerFrame );
+  wc = new WriterClient( ui->writerFrame );
+  ai = amqpQuickStart( this );
+  connect( ai  , SIGNAL(logMessage(QString)), wc->ui->wcLog, SLOT(insertPlainText(QString))        );
+  connect( this, SIGNAL(setProtocol(BaoSerial)), wc->pa    , SLOT(setProtocol(BaoSerial))          );
+  connect( this, SIGNAL(setProtocol(BaoSerial)), rc->pa    , SLOT(setProtocol(BaoSerial))          );
+  connect( rc  , SIGNAL(sendRequest(BaoSerial))            , SLOT(sendRequest(BaoSerial))          );
+  connect( wc  , SIGNAL(sendRequest(BaoSerial))            , SLOT(sendRequest(BaoSerial))          );
+  connect( ai  , SIGNAL(respReceivedMessage(QByteArray))   , SLOT(respReceivedMessage(QByteArray)) );
+}
 
-    rc = new ReaderClient( ui->readerFrame );
-    wc = new WriterClient( ui->writerFrame );
+/**
+ * @brief MainWindow::sendRequest
+ * @param b - request to send
+ * TODO: interpret the topic / server address from the packet
+ */
+void MainWindow::sendRequest(BaoSerial b)
+{ ai->reqSendMessage( b, "" ); }
 
-    AmqpInterface *ai = amqpQuickStart( this );
-    connect( ai  , SIGNAL(logMessage(QString))   , wc->ui->wcLog, SLOT(insertPlainText(QString)) );
-    connect( this, SIGNAL(setProtocol(BaoSerial)), wc->pa       , SLOT(setProtocol(BaoSerial))   );
-    connect( this, SIGNAL(setProtocol(BaoSerial)), rc->pa       , SLOT(setProtocol(BaoSerial))   );
+/**
+ * @brief MainWindow::respReceivedMessage
+ * @param ba - message received from the interface
+ * // TODO: maybe a little better destination routing?
+ */
+void MainWindow::respReceivedMessage(QByteArray ba)
+{ wc->receiveResponse(ba);
+  rc->receiveResponse(ba);
 }
 
 MainWindow::~MainWindow()

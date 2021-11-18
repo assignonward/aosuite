@@ -28,21 +28,40 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    initReadFile();
-
-    rs = new ReaderServer( ui->readerFrame );
-    ws = new WriterServer( ui->writerFrame );
-
-    AmqpInterface *ai = amqpQuickStart( this );
-    connect( ai  , SIGNAL(logMessage(QString))   , ws->ui->wsLog, SLOT(insertPlainText(QString)) );
-    connect( this, SIGNAL(setProtocol(BaoSerial)), ws->pa       , SLOT(setProtocol(BaoSerial))   );
-    connect( this, SIGNAL(setProtocol(BaoSerial)), rs->pa       , SLOT(setProtocol(BaoSerial))   );
+{ ui->setupUi(this);
+  initReadFile();
+  rs = new ReaderServer( ui->readerFrame );
+  ws = new WriterServer( ui->writerFrame );
+  ai = amqpQuickStart( this );
+  AmqpInterface *ai = amqpQuickStart( this );
+  connect( ai  , SIGNAL(logMessage(QString)), ws->ui->wsLog, SLOT(insertPlainText(QString))       );
+  connect( this, SIGNAL(setProtocol(BaoSerial)), ws->pa    , SLOT(setProtocol(BaoSerial))         );
+  connect( this, SIGNAL(setProtocol(BaoSerial)), rs->pa    , SLOT(setProtocol(BaoSerial))         );
+  connect( rs  , SIGNAL(sendResponse(BaoSerial))           , SLOT(sendResponse(BaoSerial))        );
+  connect( ws  , SIGNAL(sendResponse(BaoSerial))           , SLOT(sendResponse(BaoSerial))        );
+  connect( ai  , SIGNAL(reqReceivedMessage(QByteArray))    , SLOT(reqReceivedMessage(QByteArray)) );
 }
 
 MainWindow::~MainWindow()
 { delete ui; }
+
+/**
+ * @brief MainWindow::sendResponse
+ * @param b - response to send
+ * // TODO: interpret the topic out of the packet
+ */
+void MainWindow::sendResponse(BaoSerial b)
+{ ai->respSendMessage( b, "" ); }
+
+/**
+ * @brief MainWindow::reqReceivedMessage
+ * @param ba - message received from the interface
+ * // TODO: maybe a little better destination routing?
+ */
+void MainWindow::reqReceivedMessage(QByteArray ba)
+{ rs->receiveRequest(ba);
+  ws->receiveRequest(ba);
+}
 
 void MainWindow::closeEvent(QCloseEvent *event)
 { QSettings settings;

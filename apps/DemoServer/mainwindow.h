@@ -26,6 +26,7 @@
 #include <QMainWindow>
 #include "writerServer.h"
 #include "readerServer.h"
+#include "amqpInterface.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -45,11 +46,14 @@ signals:
     void  setProtocol( BaoSerial );
 
 public slots:
+    void  sendResponse(BaoSerial);
+    void  reqReceivedMessage(QByteArray);
     void  on_set_clicked();
 
 public:
   QPointer<WriterServer> ws;
   QPointer<ReaderServer> rs;
+ QPointer<AmqpInterface> ai;
          Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H
