@@ -40,6 +40,8 @@ public:
                      bool  codesContainCode( RiceyInt c )   { return ciByNum  .contains(c); }
                Utf8String  nameFromCode( RiceyCode );
                Utf8String  nameFromCode( RiceyInt );
+               Utf8String  nameOrHexFromCode( RiceyCode );
+               Utf8String  nameOrHexFromCode( RiceyInt );
                 RiceyCode  riceyFromCodeName( Utf8String );
                  RiceyInt  codeFromCodeName( Utf8String );
          QList<Utf8String> names() { return ciByName.keys(); }

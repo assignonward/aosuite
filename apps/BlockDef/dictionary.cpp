@@ -115,6 +115,21 @@ void  Dictionary::interpret( const JsonSerial &js )
 }
 
 /**
+ * @brief Dictionary::nameOrHexFromCode
+ * @param i - RiceyInt to convert
+ * @return name, or ricey hex if not in dict
+ */
+Utf8String  Dictionary::nameOrHexFromCode( RiceyInt i )
+{ return nameOrHexFromCode( intToRice( i ) ); }
+
+Utf8String  Dictionary::nameOrHexFromCode( RiceyCode c )
+{ Utf8String n = nameFromCode( c );
+  if ( n.size() > 0 )
+    return n;
+  return c.toHex();
+}
+
+/**
  * @brief Dictionary::nameFromCode
  * @param c - ricey code to look up
  * @return corresponding name, or empty string if not found
@@ -136,10 +151,10 @@ Utf8String  Dictionary::nameFromCode( RiceyCode c )
  * @param c - ricey code interpreted to an integer
  * @return corresponding name, or empty string if not found
  */
-Utf8String  Dictionary::nameFromCode( quint64 c )
-{ if ( !codesContainCode( c ) )
+Utf8String  Dictionary::nameFromCode( RiceyInt i )
+{ if ( !codesContainCode( i ) )
     return Utf8String();
-  QJsonValue jv = codes.at(ciByNum[c]);
+  QJsonValue jv = codes.at(ciByNum[i]);
   if ( !jv.isObject() )
     return Utf8String();
   QJsonObject jo = jv.toObject();

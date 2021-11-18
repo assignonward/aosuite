@@ -100,11 +100,8 @@ void ReaderServer::receiveRequest( QByteArray req )
         break;
 
       default:
-        Utf8String ks = intToRice( reqTyp ).toHex();
-        if ( dict.codesContainCode( reqTyp ) )
-          qWarning( "unrecognized request type %s %s", ks.data(), dict.nameFromCode( reqTyp ).data() );
-         else
-          qWarning( "unrecognized request type %s", ks.data() );
+        Utf8String ns = dict.nameOrHexFromCode( reqTyp );
+        qWarning( "ReaderServer::receiveRequest() unrecognized type %s", ns.data() );
     }
   emit sendResponse( resp );
 }

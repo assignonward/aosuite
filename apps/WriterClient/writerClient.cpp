@@ -115,11 +115,8 @@ void WriterClient::receiveResponse( QByteArray resp )
         break;
 
       default:
-        Utf8String ks = intToRice( respTyp ).toHex();
-        if ( dict.codesContainCode( respTyp ) )
-          qWarning( "unrecognized response type %s %s", ks.data(), dict.nameFromCode( respTyp ).data() );
-         else
-          qWarning( "unrecognized response type %s", ks.data() );
+        Utf8String ns = dict.nameOrHexFromCode( respTyp );
+        qWarning( "WriterClient::receiveResponse() unrecognized type %s", ns.data() );
     }
   QString msg = QString("receiveResponse(%1)").arg( QString::fromUtf8(resp.toHex()) );
   if ( recordHandle > 0 ) // TODO: a more generalized validity check
