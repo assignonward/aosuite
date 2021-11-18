@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect( rc  , SIGNAL(sendRequest(BaoSerial))            , SLOT(sendRequest(BaoSerial))          );
   connect( wc  , SIGNAL(sendRequest(BaoSerial))            , SLOT(sendRequest(BaoSerial))          );
   connect( ai  , SIGNAL(respReceivedMessage(QByteArray))   , SLOT(respReceivedMessage(QByteArray)) );
+  connect( wc  , SIGNAL(handleReceived(qint64)), rc        , SLOT(handleReceived(qint64))          );
 }
 
 /**
@@ -54,7 +55,11 @@ void MainWindow::sendRequest(BaoSerial b)
  * // TODO: maybe a little better destination routing?
  */
 void MainWindow::respReceivedMessage(QByteArray ba)
-{ wc->receiveResponse(ba);
+{ if ( ba.size() < 1 )
+    { qWarning( "MainWindow::respReceivedMessage() received empty message" );
+      return;
+    }
+  wc->receiveResponse(ba);
   rc->receiveResponse(ba);
 }
 

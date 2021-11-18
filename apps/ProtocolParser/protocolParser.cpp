@@ -170,8 +170,8 @@ void  ProtocolActor::connectSendableItems()
             { BlockValueObject *itSt = qobject_cast<BlockValueObject *>(si->value( RCD_ItemStructure_o ));
               if ( itSt == nullptr )                    qWarning( "%s sendable ItemStructure %s nullptr", actor.data(), siName.data() ); else
                 { QList<RiceyInt> itStKeys = itSt->keys();
-                  if ( itStKeys.size() != 1 )           qWarning( "%s sendable ItemStructure %s %lld keys, should be 1"   , actor.data(), siName.data(), itStKeys.size() ); else
-                    { if ( key != itStKeys.at(0) )      qWarning( "%s sendable ItemStructure %s key mismatch %llx vs %llx", actor.data(), siName.data(), key, itStKeys.at(0) ); else
+                  if ( itStKeys.size() != 1 )           qWarning( "%s sendable ItemStructure %s %lld keys, should be 1"       , actor.data(), siName.data(), itStKeys.size() ); else
+                    { if ( key != itStKeys.at(0) )      qWarning( "%s sendable ItemStructure %s key mismatch 0x%llx vs 0x%llx", actor.data(), siName.data(), key, itStKeys.at(0) ); else
                         sendableObTypes.append( key );
                     }
                 }
@@ -208,8 +208,8 @@ void  ProtocolActor::connectReceivableItems()
            { BlockValueObject *itSt = qobject_cast<BlockValueObject *>(ri->value( RCD_ItemStructure_o ));
              if ( itSt == nullptr )                     qWarning( "%s receivable ItemStructure %s nullptr", actor.data(), siName.data() ); else
                { QList<RiceyInt> itStKeys = itSt->keys();
-                 if ( itStKeys.size() != 1 )            qWarning( "%s receivable ItemStructure %s %lld keys, should be 1", actor.data(), siName.data(), itStKeys.size() ); else
-                   { if ( key != itStKeys.at(0) )       qWarning( "%s receivable ItemStructure %s key mismatch %llx vs %llx", actor.data(), siName.data(), key, itStKeys.at(0) ); else
+                 if ( itStKeys.size() != 1 )            qWarning( "%s receivable ItemStructure %s %lld keys, should be 1",        actor.data(), siName.data(), itStKeys.size() ); else
+                   { if ( key != itStKeys.at(0) )       qWarning( "%s receivable ItemStructure %s key mismatch 0x%llx vs 0x%llx", actor.data(), siName.data(), key, itStKeys.at(0) ); else
                        receivableObTypes.append( key );
                    }
                }
@@ -223,7 +223,7 @@ void  ProtocolActor::connectReceivableItems()
                         { BlockValueRiceyCodeArray *opDataLink = qobject_cast<BlockValueRiceyCodeArray *>(icOm[RCD_OpDataLink_C]);
                           if ( opDataLink->size() < 2 ) qWarning( "%s receivable ItemContents %s not enough items %d", actor.data(), siName.data(), opDataLink->size() ); else
                             { receivableContents.append( riceToInt( opDataLink->at(0) ) );
-                              // qWarning( "%s receivable ItemContents %s added %llx", actor.data(), siName.data(), riceToInt( opDataLink->at(0) ) );
+                              // qWarning( "%s receivable ItemContents %s added 0x%llx", actor.data(), siName.data(), riceToInt( opDataLink->at(0) ) );
                             }
                         }
                     }
@@ -245,7 +245,7 @@ BaoSerial  ProtocolActor::compose( RiceyInt obType, const BlockObjectMap &inputs
 { Utf8String obName = dict.nameFromCode( obType );
   BaoSerial err; // empty bao indicates error
   if ( !sendableItemDefs->contains( obType ) )
-    { qWarning( "ProtocolActor::compose( %llx ) not found in sendableIdemDefs.", obType );
+    { qWarning( "ProtocolActor::compose( 0x%llx ) not found in sendableItemDefs.", obType );
       return err;
     }
   BlockValueObject    itemDef( sendableItemDefs->value( obType )             ->bao() );
@@ -258,7 +258,7 @@ BaoSerial  ProtocolActor::compose( RiceyInt obType, const BlockObjectMap &inputs
       if ( !contents.contains( RCD_OpDataLink_C ) )                  qWarning( "unexpected: %s contents[%d] doesn't have an OpDataLink_C", obName.data(), i ); else
         { BlockValueRiceyCodeArray dataLink; dataLink.setBao( contents[RCD_OpDataLink_C]->bao() );
           if ( dataLink.size() < 2 )                                 qWarning( "%s dataLink[%d] size %d", obName.data(), i, dataLink.size() ); else
-            { if ( !inputs.contains( riceToInt( dataLink.at(0) ) ) ) qWarning( "%s dataLink[%d] defined item %llx not found in inputs", obName.data(), i, riceToInt( dataLink.at(0) ) ); else
+            { if ( !inputs.contains( riceToInt( dataLink.at(0) ) ) ) qWarning( "%s dataLink[%d] defined item 0x%llx not found in inputs", obName.data(), i, riceToInt( dataLink.at(0) ) ); else
                 { if ( !populate( ob, dataLink, inputs[riceToInt(dataLink.at(0))] ) )
                     { qWarning( "problem during populate" );
                       return err;
@@ -290,7 +290,7 @@ bool  ProtocolActor::populate( BlockValueObject &ob, const BlockValueRiceyCodeAr
       // TODO2: navigation into array elements
       BlockValueObject *bvp = qobject_cast<BlockValueObject *>(ptr);
       if ( bvp != nullptr )
-        { if ( !bvp->contains( dataLink.at(i) ) ) qWarning( "navigation could not find item %d %llx", i, riceToInt( dataLink.at(i) ) ); else
+        { if ( !bvp->contains( dataLink.at(i) ) ) qWarning( "navigation could not find item %d 0x%llx", i, riceToInt( dataLink.at(i) ) ); else
             ptr = bvp->value( dataLink.at(i) );
         }
       i++;
@@ -314,19 +314,23 @@ bool  ProtocolActor::populate( BlockValueObject &ob, const BlockValueRiceyCodeAr
  * @return map of receivable values, empty if there is a problem
  */
 BlockObjectMap ProtocolActor::extract( BaoSerial bao )
-{ KeyValuePair *kvp = new KeyValuePair( bao, this );
+{ BlockObjectMap bom;
+  if ( bao.size() < 1 )                      { qWarning( "ProtocolActor::extract() received empty bao" );                          return bom; }
+  KeyValuePair *kvp = new KeyValuePair( bao, this );
+  if ( kvp == nullptr )                      { qWarning( "kvp nullptr" );                                                          return bom; }
+  if ( kvp->type() == RDT_NULL )             { qWarning( "kvp type is NULL" );                                 kvp->deleteLater(); return bom; }
   RiceyInt obk = kvp->key();
+  Utf8String ks = intToRice( obk ).toHex(); // Key ricey code hex as a string, more readable...
   BlockValueObject *bob = qobject_cast<BlockValueObject *>(kvp->value());
-  BlockObjectMap bom;
-  if ( bob == nullptr )                      { qWarning( "bob nullptr" );                                  kvp->deleteLater(); return bom; }
-  if ( receivableItemDefs == nullptr )       { qWarning( "receivableItemDefs nullptr" );                   kvp->deleteLater(); return bom; }
-  if ( !receivableObTypes.contains(obk) )    { qWarning( "key %llx not found in receivableObTypes", obk ); kvp->deleteLater(); return bom; }
-  if ( !receivableItemDefs->contains(obk) )  { qWarning( "rid does not contain %llx", obk );               kvp->deleteLater(); return bom; }
+  if ( bob == nullptr )                      { qWarning( "bob nullptr" );                                      kvp->deleteLater(); return bom; }
+  if ( receivableItemDefs == nullptr )       { qWarning( "receivableItemDefs nullptr" );                       kvp->deleteLater(); return bom; }
+  if ( !receivableObTypes.contains(obk) )    { qWarning( "key %s not found in receivableObTypes", ks.data() ); kvp->deleteLater(); return bom; }
+  if ( !receivableItemDefs->contains(obk) )  { qWarning( "rid does not contain %s", ks.data() );               kvp->deleteLater(); return bom; }
   BlockValueObject *ob = qobject_cast<BlockValueObject *>(receivableItemDefs->value(obk));
-  if ( ob == nullptr )                       { qWarning( "%llx ob nullptr", obk );                         kvp->deleteLater(); return bom; }
-  if ( !ob->contains( RCD_ItemContents_O ) ) { qWarning( "ob does not contain ItemContents" );             kvp->deleteLater(); return bom; }
+  if ( ob == nullptr )                       { qWarning( "%s ob nullptr", ks.data() );                         kvp->deleteLater(); return bom; }
+  if ( !ob->contains( RCD_ItemContents_O ) ) { qWarning( "ob does not contain ItemContents" );                 kvp->deleteLater(); return bom; }
   BlockValueObjectArray *ic = qobject_cast<BlockValueObjectArray *>(ob->value( RCD_ItemContents_O ));
-  if ( ic == nullptr )                       { qWarning( "%llx ic nullptr", obk );                         kvp->deleteLater(); return bom; }
+  if ( ic == nullptr )                       { qWarning( "%s ic nullptr", ks.data() );                         kvp->deleteLater(); return bom; }
   if ( ic->size() < 1 )                        qWarning( "ic is empty?" );
   QList<BlockObjectMap> icm = ic->value();  // Work through ItemContents_O
   foreach( BlockObjectMap ici, icm )
@@ -336,7 +340,7 @@ BlockObjectMap ProtocolActor::extract( BaoSerial bao )
           { if ( odl->size() < 2 )             qWarning( "odl size %d?", odl->size() ); else
               { RiceyInt it = riceToInt( odl->at(0) ); // id of the value being extracted
                 ValueBase *vb = extractOne( bob, odl );
-                if ( vb == nullptr )           qWarning( "extractOne failed on %llx", it ); else
+                if ( vb == nullptr )           qWarning( "extractOne failed on 0x%llx", it ); else
                   bom.insert( it, vb );
               }
           }
@@ -360,7 +364,7 @@ ValueBase *ProtocolActor::extractOne( BlockValueObject *bob, BlockValueRiceyCode
     { RiceyInt cid = riceToInt( odl->at(i) );
       // TODO: enable navigation to parents as well as children
       // TODO2: navigation into array elements
-      if ( !bob->contains( cid ) ) { qWarning( "bob doesn't contain %llx", cid ); return nullptr; }
+      if ( !bob->contains( cid ) ) { qWarning( "bob doesn't contain 0x%llx", cid ); return nullptr; }
       if ( i == ( odl->size() - 1 ) )
         return bob->value( cid );
       if ( bob->value( cid )->type() != RDT_OBJECT ) { qWarning( "extractOne only navigates into object trees" ); return nullptr; }

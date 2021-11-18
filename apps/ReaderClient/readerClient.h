@@ -44,6 +44,7 @@ public slots:
         void sendReadRequest();        // catches signal from the ui button
         void receiveResponse( BaoSerial );
         void newProtocolSet();
+        void handleReceived( qint64 );
 
 public:
   QPointer<ProtocolActor> pa;

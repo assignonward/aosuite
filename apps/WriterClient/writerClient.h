@@ -39,6 +39,7 @@ public:
 
 signals:
         void sendRequest( BaoSerial ); // sends request to the server
+        void handleReceived( qint64 );
 
 public slots:
         void sendWriteRequest();       // catches signal from the ui button

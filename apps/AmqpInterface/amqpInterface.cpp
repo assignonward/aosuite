@@ -48,7 +48,7 @@ AmqpInterface::AmqpInterface( QObject *p ) : QObject( p )
   startPending         = false;
   connectButtonPressed = false;
   setToDefaultValues();
-  writeSettings();
+  readSettings();
 }
 
 void AmqpInterface::setToDefaultValues()
@@ -93,42 +93,42 @@ void AmqpInterface::setToDefaultValues()
 void AmqpInterface::readSettings()
 { QSettings settings;
 
-   reqConnectionState      = RI_NOT_STARTED;
-  respConnectionState      = RI_NOT_STARTED;
-   reqReady                = 0;
-  respReady                = 0;
-   reqExchangeName         = "Requests";
-  respExchangeName         = "Responses";
-   reqQueueName            = "requests";
-  respQueueName            = "responses";
-   reqQueueName_set        = false;
-  respQueueName_set        = false;
-   reqConsumerTag          = "reqConsumerTag";
-  respConsumerTag          = "respConsumerTag";
-   reqConsumerTag_set      = false;
-  respConsumerTag_set      = false;
-   reqBindingKey           = "#";
-  respBindingKey           = "#";
-   reqStats_packetCount    = 0;
-  respStats_packetCount    = 0;
-   reqStats_byteCount      = 0;
-  respStats_byteCount      = 0;
-   reqStats_lastPacketSize = 0;
-  respStats_lastPacketSize = 0;
-  startDelay               = 1000;  // milliseconds
-  shuttingDown             = false;
-  shutdownComplete         = false;
-  restartOnDisconnect      = true;
-  restartOnDisconnect_time = 5000;
-  heartbeatDelay           = 10000;
-  username                 = "guest";
-  password                 = "guest";
-  vhost                    = "/";
-  address                  = "localhost";
-  port                     = 5672;
-  echo                     = false;
-  echoHex                  = false;
-  appId                    = "me";
+   reqConnectionState      = settings.value(  "reqConnectionState"      ).toInt();
+  respConnectionState      = settings.value( "respConnectionState"      ).toInt();
+   reqReady                = settings.value(  "reqReady"                ).toInt();
+  respReady                = settings.value( "respReady"                ).toInt();
+   reqExchangeName         = settings.value(  "reqExchangeName"         ).toString();
+  respExchangeName         = settings.value( "respExchangeName"         ).toString();
+   reqQueueName            = settings.value(  "reqQueueName"            ).toString();
+  respQueueName            = settings.value( "respQueueName"            ).toString();
+   reqQueueName_set        = settings.value(  "reqQueueName_set"        ).toBool();
+  respQueueName_set        = settings.value( "respQueueName_set"        ).toBool();
+   reqConsumerTag          = settings.value(  "reqConsumerTag"          ).toString();
+  respConsumerTag          = settings.value( "respConsumerTag"          ).toString();
+   reqConsumerTag_set      = settings.value(  "reqConsumerTag_set"      ).toBool();
+  respConsumerTag_set      = settings.value( "respConsumerTag_set"      ).toBool();
+   reqBindingKey           = settings.value(  "reqBindingKey"           ).toString();
+  respBindingKey           = settings.value( "respBindingKey"           ).toString();
+   reqStats_packetCount    = settings.value(  "reqStats_packetCount"    ).toInt();
+  respStats_packetCount    = settings.value( "respStats_packetCount"    ).toInt();
+   reqStats_byteCount      = settings.value(  "reqStats_byteCount"      ).toInt();
+  respStats_byteCount      = settings.value( "respStats_byteCount"      ).toInt();
+   reqStats_lastPacketSize = settings.value(  "reqStats_lastPacketSize" ).toInt();
+  respStats_lastPacketSize = settings.value( "respStats_lastPacketSize" ).toInt();
+  startDelay               = settings.value( "startDelay"               ).toInt();
+  shuttingDown             = settings.value( "shuttingDown"             ).toBool();
+  shutdownComplete         = settings.value( "shutdownComplete"         ).toBool();
+  restartOnDisconnect      = settings.value( "restartOnDisconnect"      ).toBool();
+  restartOnDisconnect_time = settings.value( "restartOnDisconnect_time" ).toInt();
+  heartbeatDelay           = settings.value( "heartbeatDelay"           ).toInt();
+  username                 = settings.value( "username"                 ).toString();
+  password                 = settings.value( "password"                 ).toString();
+  vhost                    = settings.value( "vhost"                    ).toString();
+  address                  = settings.value( "address"                  ).toString();
+  port                     = settings.value( "port"                     ).toUInt();
+  echo                     = settings.value( "echo"                     ).toBool();
+  echoHex                  = settings.value( "echoHex"                  ).toBool();
+  appId                    = settings.value( "appId"                    ).toByteArray();
 }
 
 void AmqpInterface::writeSettings()
@@ -384,9 +384,9 @@ void AmqpInterface::respExchangeDeclared()
     { emit logMessage( "AmqpInterface client createQueue() failed for respQueue." );
       return;
     }
-  connect(amqpRespQueue, SIGNAL(declared()),        SLOT(reqQueueDeclared())  );
-  connect(amqpRespQueue, SIGNAL(bound()),           SLOT(reqQueueBound())     );
-  connect(amqpRespQueue, SIGNAL(messageReceived()), SLOT(reqMessageReceived()));
+  connect(amqpRespQueue, SIGNAL(declared()),        SLOT(respQueueDeclared())  );
+  connect(amqpRespQueue, SIGNAL(bound()),           SLOT(respQueueBound())     );
+  connect(amqpRespQueue, SIGNAL(messageReceived()), SLOT(respMessageReceived()));
   if ( respQueueName_set ) // checkbox control
     { emit logMessage( "  set resp queue name '"+respQueueName+"'" );
       amqpRespQueue->setName( respQueueName );

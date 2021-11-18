@@ -62,8 +62,6 @@ public:
 signals:
     void  reqReceivedMessage( QByteArray );
     void respReceivedMessage( QByteArray );
-    void  reqReceivedMessage( QString, QByteArray );
-    void respReceivedMessage( QString, QByteArray );
     void logMessage( QString );
     void connected();
     void disconnected();

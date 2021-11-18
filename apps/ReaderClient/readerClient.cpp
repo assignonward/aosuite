@@ -81,7 +81,11 @@ void ReaderClient::sendReadRequest()
  * @param resp - from server
  */
 void ReaderClient::receiveResponse( QByteArray resp )
-{ RiceyInt respTyp = riceToInt( resp );
+{ if ( resp.size() < 1 )
+    { qWarning( "ReaderClient::receiveResponse() received empty bao" );
+      return;
+    }
+  RiceyInt respTyp = riceToInt( resp );
   BlockObjectMap bom = pa->extract( resp );
   Utf8String recordText;
   switch ( respTyp )
@@ -100,11 +104,17 @@ void ReaderClient::receiveResponse( QByteArray resp )
         break;
 
       default:
-        qWarning( "unrecognized response type %llx", respTyp );
+        Utf8String ks = intToRice( respTyp ).toHex();
+        if ( dict.codesContainCode( respTyp ) )
+          qWarning( "unrecognized response type %s %s", ks.data(), dict.nameFromCode( respTyp ).data() );
+         else
+          qWarning( "unrecognized response type %s", ks.data() );
     }
-  QString msg = QString("receiveResponse(%1)" )
-          .arg( QString::fromUtf8(resp.toHex()) );
+  QString msg = QString("receiveResponse(%1)" ).arg( QString::fromUtf8(resp.toHex()) );
   emit pa->transactionRecord( msg );
   if ( resp.size() > 0 )
     ui->rcData->append( recordText );
 }
+
+void ReaderClient::handleReceived( qint64 h )
+{ ui->rcDataHandle->setText( QString::number(h) ); }

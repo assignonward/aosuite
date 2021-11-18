@@ -133,7 +133,7 @@ void  BlockTool::updateValueEditor()
       // qWarning( "selBB nullptr" );
       return;
     }
-  //  qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
+  //  qWarning( "updateValueEditor   type=%x isArray=%d isContainer=%d m_key=0x%llx m_idx=%s",
   //             selBB->type(),selBB->isArray(),selBB->isContainer(),selBB->vKey(),selBB->idx().data() );
   if ( (!selBB->isContainer()) || selBB->isArray() )
     editSelectedElement();
@@ -206,7 +206,7 @@ void  BlockTool::editSelectedElement()
       valueEditorNoNav();
       return;
     }
-  //qWarning( "editSelectedElement type=%x isArray=%d isContainer=%d m_key=%llx m_idx=%s",
+  //qWarning( "editSelectedElement type=%x isArray=%d isContainer=%d m_key=0x%llx m_idx=%s",
   //           vb->type(),vb->isArray(),vb->isContainer(),k,vb->idx().data() );
   ui->key->setVisible( true  );
   ui->key->setEnabled( false );
@@ -318,7 +318,7 @@ RiceyInt BlockTool::removeObjectElement( ValueBase *vb )
 { if ( vb->vbParent->isArray() ) { qWarning( "vb is an array element, how did we get here?" ); return RCD_null_z; }
     BlockValueObject *pbvo = qobject_cast<BlockValueObject *>(vb->vbParent);
     RiceyInt key = vb->vKey();
-    if ( !pbvo->contains( key ) )  { qWarning( "BlockTool::removeObjectElement() key %llx not found in parent object", key ); return RCD_null_z; }
+    if ( !pbvo->contains( key ) )  { qWarning( "BlockTool::removeObjectElement() key 0x%llx not found in parent object", key ); return RCD_null_z; }
     if ( vb != pbvo->remove( key ) ) qWarning( "odd, removed different object than selBB was pointed at..." );
     return key;
 }
@@ -340,7 +340,7 @@ void  BlockTool::on_insert_clicked()
       if ( selBB->type() == RDT_OBJECT )
         { BlockValueObject *bvo = qobject_cast<BlockValueObject *>(selBB);
           if ( bvo->contains(key) )
-            { qWarning( "selected object already contains a member with type %llx", key );
+            { qWarning( "selected object already contains a member with type 0x%llx", key );
               return;
             }
           if ( makeKvb()->isKeyValuePair() )
@@ -355,7 +355,7 @@ void  BlockTool::on_insert_clicked()
         }
        else if ( selBB->isArray() )
         { ValueBaseArray *vba = qobject_cast<ValueBaseArray *>(selBB);
-          if ( (vba->vKey() & RDT_TYPEMASK) != (key & RDT_TYPEMASK) ) { qWarning( "Make item key %llx incompatible with array key %llx", key, vba->vKey() ); return; }
+          if ( (vba->vKey() & RDT_TYPEMASK) != (key & RDT_TYPEMASK) ) { qWarning( "Make item key 0x%llx incompatible with array key 0x%llx", key, vba->vKey() ); return; }
           if ( !makeKvb()->isKeyValuePair() ) { qWarning( "Cannot insert an array directly into another array" ); return; }
           qint32 i = ui->index->value();
           if ( !vba->insertAt( ((KeyValuePair *)makeKvb())->value(), i ) )

@@ -48,6 +48,8 @@ ProtocolDemo::ProtocolDemo( QWidget *cw ) :
   connect( rc  , SIGNAL( sendRequest (BaoSerial) ), rs    , SLOT( receiveRequest (BaoSerial) ) );
   connect( ws  , SIGNAL( sendResponse(BaoSerial) ), wc    , SLOT( receiveResponse(BaoSerial) ) );
   connect( rs  , SIGNAL( sendResponse(BaoSerial) ), rc    , SLOT( receiveResponse(BaoSerial) ) );
+
+  connect( wc  , SIGNAL( handleReceived(qint64)  ), rc    , SLOT( handleReceived(qint64) )     );
 }
 
 ProtocolDemo::~ProtocolDemo()

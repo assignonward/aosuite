@@ -56,7 +56,7 @@ void BlockPanel::setKeyValueBlock( const BaoSerial &b, bool updateNow )
   if ( !ok )
     qWarning( "problem reading key during BlockPanel::setKeyValueBlock" );
    else if ( !dict.codesContainCode( k ) )
-    qWarning( "key %llx not found in dictionary during BlockPanel::setKeyValueBlock", k );
+    qWarning( "key 0x%llx not found in dictionary during BlockPanel::setKeyValueBlock", k );
    else
     { if ( m_kvb )
         m_kvb->deleteLater();

@@ -86,9 +86,19 @@ void WriterClient::sendWriteRequest()
  * @param resp - from server
  */
 void WriterClient::receiveResponse( QByteArray resp )
-{ RiceyInt respTyp = riceToInt( resp );
-  BlockObjectMap bom = pa->extract( resp );
+{ BlockObjectMap bom;
+  if ( resp.size() < 1 )
+    { qWarning( "WriterClient::receiveResponse() received empty bao" );
+      return;
+    }
   qint64 recordHandle = -1;
+  qint32 sz = 0;
+    bool ok = false;
+  RiceyInt respTyp = riceToInt( resp, &sz, &ok );
+  if (!ok)
+    { qWarning( "response type not a valid rice code." ); }
+   else
+    { bom = pa->extract( resp ); }
   switch ( respTyp )
     { case RCD_writeResponse_o:
         if ( !bom.contains( RCD_recordId_i ) )
@@ -105,11 +115,19 @@ void WriterClient::receiveResponse( QByteArray resp )
         break;
 
       default:
-        qWarning( "unrecognized response type %llx", respTyp );
+        Utf8String ks = intToRice( respTyp ).toHex();
+        if ( dict.codesContainCode( respTyp ) )
+          qWarning( "unrecognized response type %s %s", ks.data(), dict.nameFromCode( respTyp ).data() );
+         else
+          qWarning( "unrecognized response type %s", ks.data() );
     }
-  QString msg = QString("receiveResponse(%1) %2 %3")
-          .arg( QString::fromUtf8(resp.toHex()) ).arg( recordHandle )
-          .arg( QDateTime::fromMSecsSinceEpoch(recordHandle/1000).toString() );
+  QString msg = QString("receiveResponse(%1)").arg( QString::fromUtf8(resp.toHex()) );
+  if ( recordHandle > 0 ) // TODO: a more generalized validity check
+    msg.append( QString( " %1 %2" ).arg( recordHandle ).arg( QDateTime::fromMSecsSinceEpoch(recordHandle/1000).toString() ) );
+   else
+    msg.append( " invalid." );
+  if ( recordHandle > 0 )
+    emit handleReceived( recordHandle );
   emit pa->transactionRecord( msg );
 }
 

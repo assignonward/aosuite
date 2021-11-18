@@ -59,7 +59,11 @@ void MainWindow::sendResponse(BaoSerial b)
  * // TODO: maybe a little better destination routing?
  */
 void MainWindow::reqReceivedMessage(QByteArray ba)
-{ rs->receiveRequest(ba);
+{ if ( ba.size() < 1 )
+    { qWarning( "MainWindow::reqReceivedMessage() received empty message" );
+      return;
+    }
+  rs->receiveRequest(ba);
   ws->receiveRequest(ba);
 }
 

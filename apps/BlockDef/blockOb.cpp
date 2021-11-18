@@ -168,7 +168,7 @@ KeyValueBase *KeyValueBase::readBao( const BaoSerial &bs, QObject *parent )
       return kvb;
     }
   if ( !dict.codesContainCode( k ) )
-    { qWarning( "KeyValueBase::readBao() key %llx not found in dictionary",k );
+    { qWarning( "KeyValueBase::readBao() key 0x%llx not found in dictionary",k );
       return kvb;
     }
   if ( k & RDT_ARRAY )
@@ -190,7 +190,7 @@ qint32 KeyValueBase::setKey( const RiceyCode &key )
   bool ok = false;
   RiceyInt k = riceToInt( key, &len, &ok );
   if ( !ok )
-    { qWarning( "problem converting key rice code %s to int", key.toHex().data() ); return -1; }
+    { qWarning( "problem converting key rice code '%s' to int", key.toHex().data() ); return -1; }
   if ( !dict.codesContainCode( k ) )
     { qWarning( "dictionary does not contain key %llu", k ); return -1; }
   setVKey( k );
@@ -748,7 +748,7 @@ bool  ValueBaseArray::append( ValueBase *value )
   value->vbParent = this;
   value->setIdx( "i"+Utf8String::number( size() ) );
   value->setVKey( vKey() & RDT_TYPEMASK );
-  // qWarning( "appending to %s to %llx", m_idx.data(), m_key );
+  // qWarning( "appending to %s to 0x%llx", m_idx.data(), m_key );
   m_values.append( value );
   return true;
 }
@@ -999,11 +999,11 @@ void  ValueBase::setMetaData( RiceyInt k, ValueBase *vbp )
  * @return removed object, nullptr if problem
  */
 ValueBase *BlockValueObject::remove( RiceyInt k )
-{ if ( !contains(k) ) { qWarning( "BlockValueObject::remove(%llx) key not found", k ); return nullptr; }
+{ if ( !contains(k) ) { qWarning( "BlockValueObject::remove(0x%llx) key not found", k ); return nullptr; }
   ValueBase *vb = m_obMap[k];
   m_obMap.remove(k);
   if ( vb == nullptr )
-    qWarning( "BlockValueObject::remove(%llx) key returned nullptr", k );
+    qWarning( "BlockValueObject::remove(0x%llx) key returned nullptr", k );
   return vb;
 }
 
