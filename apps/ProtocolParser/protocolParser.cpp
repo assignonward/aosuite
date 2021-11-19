@@ -270,6 +270,35 @@ bool  ProtocolActor::get( const BlockObjectMap &bom, RiceyInt key, qint64 &v, bo
   return true;
 }
 
+bool  ProtocolActor::get( const BlockObjectMap &bom, RiceyInt key, RiceyInt &v, bool r )
+{ if ( !bom.contains( key ) )
+    { if ( r )
+        { Utf8String kn = dict.nameOrHexFromCode( key );
+          qWarning( "ProtocolActor::get( RiceyInt ) %s not found", kn.data() );
+          return false;
+        }
+      return true; // not present, not required
+    }
+  if ( (key & RDT_OBTYPEMASK) != RDT_RICEYINT )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( RiceyInt ) %s unexpected key type", kn.data() );
+      return false;
+    }
+  if ( bom.value( key ) == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( RiceyInt ) %s nullptr", kn.data() );
+      return false;
+    }
+  BlockValueRiceyInt *rip = qobject_cast<BlockValueRiceyInt *>(bom.value( key ));
+  if ( rip == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( RiceyInt ) %s rip nullptr", kn.data() );
+      return false;
+    }
+  v = rip->value();
+  return true;
+}
+
 bool  ProtocolActor::get( const BlockObjectMap &bom, RiceyInt key, QByteArray &v, bool r )
 { if ( !bom.contains( key ) )
     { if ( r )
@@ -317,6 +346,64 @@ bool  ProtocolActor::get( const BlockObjectMap &bom, RiceyInt key, QByteArray &v
   Utf8String kn = dict.nameOrHexFromCode( key );
   qWarning( "ProtocolActor::get( QByteArray ) %s unhandled key type", kn.data() );
   return false;
+}
+
+bool  ProtocolActor::get( const BlockObjectMap &bom, RiceyInt key, MP_INT &v, bool r )
+{ if ( !bom.contains( key ) )
+    { if ( r )
+        { Utf8String kn = dict.nameOrHexFromCode( key );
+          qWarning( "ProtocolActor::get( MP_INT ) %s not found", kn.data() );
+          return false;
+        }
+      return true; // not present, not required
+    }
+  if ( (key & RDT_OBTYPEMASK) != RDT_MPZ )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( MP_INT ) %s unexpected key type", kn.data() );
+      return false;
+    }
+  if ( bom.value( key ) == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( MP_INT ) %s nullptr", kn.data() );
+      return false;
+    }
+  BlockValueMPZ *mpz = qobject_cast<BlockValueMPZ *>(bom.value( key ));
+  if ( mpz == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( MP_INT ) %s mpz nullptr", kn.data() );
+      return false;
+    }
+  v = mpz->value();
+  return true;
+}
+
+bool  ProtocolActor::get( const BlockObjectMap &bom, RiceyInt key, MP_RAT &v, bool r )
+{ if ( !bom.contains( key ) )
+    { if ( r )
+        { Utf8String kn = dict.nameOrHexFromCode( key );
+          qWarning( "ProtocolActor::get( MP_RAT ) %s not found", kn.data() );
+          return false;
+        }
+      return true; // not present, not required
+    }
+  if ( (key & RDT_OBTYPEMASK) != RDT_MPQ )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( MP_RAT ) %s unexpected key type", kn.data() );
+      return false;
+    }
+  if ( bom.value( key ) == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( MP_RAT ) %s nullptr", kn.data() );
+      return false;
+    }
+  BlockValueMPQ *mpq = qobject_cast<BlockValueMPQ *>(bom.value( key ));
+  if ( mpq == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( MP_RAT ) %s mpq nullptr", kn.data() );
+      return false;
+    }
+  v = mpq->value();
+  return true;
 }
 
 /**

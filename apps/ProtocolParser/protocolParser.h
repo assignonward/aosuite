@@ -80,8 +80,11 @@ public:
    static void  dispose( BlockObjectMap & );
 BlockObjectMap  extract( BaoSerial );
      ValueBase *extractOne( BlockValueObject *, BlockValueRiceyCodeArray * );
-          bool  get( const BlockObjectMap &, RiceyInt, qint64 &    , bool r = true );
-          bool  get( const BlockObjectMap &, RiceyInt, QByteArray &, bool r = true );
+   static bool  get( const BlockObjectMap &, RiceyInt, qint64 &    , bool r = true );
+   static bool  get( const BlockObjectMap &, RiceyInt, RiceyInt &  , bool r = true );
+   static bool  get( const BlockObjectMap &, RiceyInt, QByteArray &, bool r = true );
+   static bool  get( const BlockObjectMap &, RiceyInt, MP_INT &    , bool r = true );
+   static bool  get( const BlockObjectMap &, RiceyInt, MP_RAT &    , bool r = true );
 
 signals:
         void  newProtocolSet();
