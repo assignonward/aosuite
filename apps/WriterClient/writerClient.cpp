@@ -56,29 +56,22 @@ void WriterClient::newProtocolSet()
  * @brief WriterClient::sendWriteRequest - catches signal from the ui button
  */
 void WriterClient::sendWriteRequest()
-{ emit pa->transactionRecord("sendWriteRequest()");
-  if ( pa->pp == nullptr )
-    { emit pa->transactionRecord("protocol not defined.");
-      return;
-    }
+{ if ( pa->pp == nullptr ) { emit pa->transactionRecord("protocol not defined."); return; }
   // Compose bao based on protocol definition and ui contents and send it.
-  // Unneeded components will be ignored by pa->compose
+  // Components not required in the currently selected protocol will be ignored by pa->compose
   BlockObjectMap inputs;
-  BlockValueByteArray  *userId = new BlockValueByteArray( ui->wcId          ->text().toUtf8(), this );
-  BlockValueString *recordText = new BlockValueString   ( ui->wcData ->toPlainText().toUtf8(), this );
-  BlockValueByteArray *chainId = new BlockValueByteArray( ui->wcBlockchainId->text().toUtf8(), this );
-  inputs.insert( RCD_userId_b      , userId     );
-  inputs.insert( RCD_recordText_s  , recordText );
-  inputs.insert( RCD_blockchainId_b, chainId    );
+  pa->prepare( inputs, RCD_userId_b      , ui->wcId          ->text().toUtf8(), this );
+  pa->prepare( inputs, RCD_recordText_s  , ui->wcData ->toPlainText().toUtf8(), this );
+  pa->prepare( inputs, RCD_blockchainId_b, ui->wcBlockchainId->text().toUtf8(), this );
   // more to come
   BaoSerial bao = pa->compose( RCD_writeRequest_o, inputs ); bao.detach();
   if ( bao.size() > 0 )
-    emit sendRequest( bao );
+    { emit pa->transactionRecord( QString("sendWriteRequest(%1)").arg(bao.toHex()) );
+      emit sendRequest( bao );
+    }
    else
     qWarning( "problem when composing writeRequest" );
-  userId    ->deleteLater();
-  recordText->deleteLater();
-  chainId   ->deleteLater();
+  pa->dispose( inputs );
 }
 
 /**

@@ -57,46 +57,20 @@ void ReaderServer::receiveRequest( QByteArray req )
   RiceyInt reqTyp = riceToInt( req );
   BlockObjectMap bom = pa->extract( req );
   BaoSerial resp;
+  qint64 tm = -1;
+  QByteArray cid = "0";
+  QByteArray uid = "";
   switch ( reqTyp )
     { case RCD_readRequest_o:
-        if ( !bom.contains( RCD_recordId_i ) )
-          qWarning( "can not read without recordId" );
-         else
-          { if ( bom.value(RCD_recordId_i) == nullptr )
-              qWarning( "bom recordId nullptr" );
+        if ( pa->get( bom, RCD_recordId_i, tm ) )            // Must get this.
+          { pa->get( bom, RCD_blockchainId_b, cid, false );  // default to "0" if not present, TODO: make required when it is so in the protocol
+            pa->get( bom, RCD_userId_b      , uid, false );  // default to "" if not present , TODO: make required when it is so in the protocol
+            Utf8String recordText = readRecord( tm, cid );
+            if ( recordText.size() > 0 )
+              resp = buildResponse( recordText );
              else
-              { qint64 tm = -1;
-                BlockValueInt64 *bvip = qobject_cast<BlockValueInt64 *>(bom.value(RCD_recordId_i));
-                if ( bvip == nullptr ) qWarning( "ReaderServer::receiveRequest() bvip nullptr" ); else
-                  tm = bvip->value();
-                QByteArray cid = "0";
-                if ( bom.contains( RCD_blockchainId_b ) )
-                  { if ( bom.value(RCD_blockchainId_b) == nullptr )
-                      qWarning( "bom blockchainId nullptr" );
-                     else
-                      { BlockValueByteArray *bvbap = qobject_cast<BlockValueByteArray *>(bom.value(RCD_blockchainId_b));
-                        if ( bvbap == nullptr ) qWarning( "ReaderServer::receiveRequest() bvbap nullptr" ); else
-                          cid = bvbap->value();
-                      }
-                  }
-                QByteArray uid = "";
-                if ( bom.contains( RCD_userId_b ) )
-                  { if ( bom.value(RCD_userId_b) == nullptr )
-                      qWarning( "bom userId nullptr" );
-                     else
-                      { BlockValueByteArray *bvbap2 = qobject_cast<BlockValueByteArray *>(bom.value(RCD_userId_b));
-                        if ( bvbap2 == nullptr ) qWarning( "ReaderServer::receiveRequest() bvbap2 nullptr" ); else
-                          uid = bvbap2->value();
-                      }
-                  }
-                Utf8String recordText = readRecord( tm, cid );
-                if ( recordText.size() > 0 )
-                  resp = buildResponse( recordText );
-                 else
-                  qWarning( "readRecord had a problem." );
-                  // empty resp for the error state
-              } // recordId not null
-          }    // recordId present
+              qWarning( "readRecord had a problem." );
+          } // if recordId present
         break;
 
       default:
@@ -104,6 +78,7 @@ void ReaderServer::receiveRequest( QByteArray req )
         qWarning( "ReaderServer::receiveRequest() unrecognized type %s", ns.data() );
     }
   emit sendResponse( resp );
+  pa->dispose( bom );
 }
 
 #include <QFile>

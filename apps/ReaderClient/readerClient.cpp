@@ -57,23 +57,25 @@ void ReaderClient::newProtocolSet()
  * @brief ReaderClient::sendReadRequest - catches signal from the ui button
  */
 void ReaderClient::sendReadRequest()
-{ emit pa->transactionRecord("sendReadRequest()");
-  if ( pa->pp == nullptr )
+{ if ( pa->pp == nullptr )
     { emit pa->transactionRecord("protocol not defined.");
       return;
     }
   // Compose bao based on protocol definition and ui contents and send it.
   // Unneeded components will be ignored by pa->compose
   BlockObjectMap inputs;
-  BlockValueByteArray  userId( ui->rcId          ->text().toUtf8()     ); inputs.insert( RCD_userId_b      , &userId   );
-  BlockValueInt64    recordId( ui->rcDataHandle  ->text().toLongLong() ); inputs.insert( RCD_recordId_i    , &recordId );
-  BlockValueByteArray chainId( ui->rcBlockchainId->text().toUtf8()     ); inputs.insert( RCD_blockchainId_b, &chainId  );
+  pa->prepare( inputs, RCD_userId_b      , ui->rcId          ->text().toUtf8()    , this );
+  pa->prepare( inputs, RCD_recordId_i    , ui->rcDataHandle  ->text().toLongLong(), this );
+  pa->prepare( inputs, RCD_blockchainId_b, ui->rcBlockchainId->text().toUtf8()    , this );
   // more to come
   BaoSerial bao = pa->compose( RCD_readRequest_o, inputs );
   if ( bao.size() > 0 )
-    emit sendRequest( bao );
+    { emit pa->transactionRecord( QString("sendReadRequest(%1)").arg(bao.toHex()) );
+      emit sendRequest( bao );
+    }
    else
     qWarning( "problem when composing readRequest" );
+  pa->dispose( inputs );
 }
 
 /**
@@ -88,6 +90,7 @@ void ReaderClient::receiveResponse( QByteArray resp )
   RiceyInt respTyp = riceToInt( resp );
   BlockObjectMap bom = pa->extract( resp );
   Utf8String recordText;
+  bool valid = true;
   switch ( respTyp )
     { case RCD_readResponse_o:
         if ( !bom.contains( RCD_recordText_s ) )
@@ -106,8 +109,9 @@ void ReaderClient::receiveResponse( QByteArray resp )
       default:
         Utf8String ns = dict.nameOrHexFromCode( respTyp );
         qWarning( "ReaderClient::receiveResponse() unrecognized type %s", ns.data() );
+        valid = false;
     }
-  QString msg = QString("receiveResponse(%1)" ).arg( QString::fromUtf8(resp.toHex()) );
+  QString msg = QString("receiveResponse(%1)%2" ).arg( QString::fromUtf8(resp.toHex()) ).arg( valid ? "" : " invalid." );
   emit pa->transactionRecord( msg );
   if ( resp.size() > 0 )
     ui->rcData->append( recordText );

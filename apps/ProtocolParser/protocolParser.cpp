@@ -234,6 +234,177 @@ void  ProtocolActor::connectReceivableItems()
 }
 
 /**
+ * @brief ProtocolActor::get
+ * @param bom - map to look for key in
+ * @param key - key to get value for
+ * @param v - qint64 to store value in, if nothing goes wrong
+ * @param r - is this a required parameter?  Controls warning message output
+ * @return true if all goes well
+ */
+bool  ProtocolActor::get( const BlockObjectMap &bom, RiceyInt key, qint64 &v, bool r )
+{ if ( !bom.contains( key ) )
+    { if ( r )
+        { Utf8String kn = dict.nameOrHexFromCode( key );
+          qWarning( "ProtocolActor::get( qint64 ) %s not found", kn.data() );
+          return false;
+        }
+      return true; // not present, not required
+    }
+  if ( (key & RDT_OBTYPEMASK) != RDT_INT64 )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( qint64 ) %s unexpected key type", kn.data() );
+      return false;
+    }
+  if ( bom.value( key ) == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( qint64 ) %s nullptr", kn.data() );
+      return false;
+    }
+  BlockValueInt64 *bvip = qobject_cast<BlockValueInt64 *>(bom.value( key ));
+  if ( bvip == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( qint64 ) %s bvip nullptr", kn.data() );
+      return false;
+    }
+  v = bvip->value();
+  return true;
+}
+
+bool  ProtocolActor::get( const BlockObjectMap &bom, RiceyInt key, QByteArray &v, bool r )
+{ if ( !bom.contains( key ) )
+    { if ( r )
+        { Utf8String kn = dict.nameOrHexFromCode( key );
+          qWarning( "ProtocolActor::get( QByteArray ) %s not found", kn.data() );
+          return false;
+        }
+      return true; // not present, not required
+    }
+  if ( bom.value( key ) == nullptr )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::get( QByteArray ) %s nullptr", kn.data() );
+      return false;
+    }
+  if ( (key & RDT_OBTYPEMASK) == RDT_BYTEARRAY )
+    { BlockValueByteArray *ba = qobject_cast<BlockValueByteArray *>(bom.value( key ));
+      if ( ba == nullptr )
+        { Utf8String kn = dict.nameOrHexFromCode( key );
+          qWarning( "ProtocolActor::get( QByteArray ) %s ba nullptr", kn.data() );
+          return false;
+        }
+      v = ba->value();
+      return true;
+    }
+  if ( (key & RDT_OBTYPEMASK) == RDT_STRING )
+    { BlockValueString *s = qobject_cast<BlockValueString *>(bom.value( key ));
+      if ( s == nullptr )
+        { Utf8String kn = dict.nameOrHexFromCode( key );
+          qWarning( "ProtocolActor::get( QByteArray ) %s s nullptr", kn.data() );
+          return false;
+        }
+      v = s->value();
+      return true;
+    }
+  if ( (key & RDT_OBTYPEMASK) == RDT_RCODE )
+    { BlockValueRiceyCode *rc = qobject_cast<BlockValueRiceyCode *>(bom.value( key ));
+      if ( rc == nullptr )
+        { Utf8String kn = dict.nameOrHexFromCode( key );
+          qWarning( "ProtocolActor::get( QByteArray ) %s rc nullptr", kn.data() );
+          return false;
+        }
+      v = rc->value();
+      return true;
+    }
+  Utf8String kn = dict.nameOrHexFromCode( key );
+  qWarning( "ProtocolActor::get( QByteArray ) %s unhandled key type", kn.data() );
+  return false;
+}
+
+/**
+ * @brief ProtocolActor::prepare - one handler for all byte array types, distinguish by key
+ * @param bom - map to insert new object in
+ * @param key - key type to insert new object under
+ * @param ba - the byte array to copy into an object in the bom
+ * @param parent - parent for the ValueBase object created (optional)
+ */
+void  ProtocolActor::prepare( BlockObjectMap &bom, RiceyInt key, const QByteArray &ba, QObject *parent )
+{ if ( bom.contains( key ) )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( QByteArray ) map already contains key %s", kn.data() );
+      return;
+    }
+  if ( (key & RDT_OBTYPEMASK) == RDT_BYTEARRAY )
+    { bom.insert( key, new BlockValueByteArray( ba, parent ) );
+      return;
+    }
+  if ( (key & RDT_OBTYPEMASK) == RDT_STRING )
+    { bom.insert( key, new BlockValueString( ba, parent ) );
+      return;
+    }
+  if ( (key & RDT_OBTYPEMASK) == RDT_RCODE )
+    { bom.insert( key, new BlockValueRiceyCode( ba, parent ) );
+      return;
+    }
+  Utf8String kn = dict.nameOrHexFromCode( key );
+  qWarning( "ProtocolActor::prepare( QByteArray ) unhandled key type %s", kn.data() );
+}
+
+void  ProtocolActor::prepare( BlockObjectMap &bom, RiceyInt key, qint64 i, QObject *parent )
+{ if ( bom.contains( key ) )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( qint64 ) map already contains key %s, will not create/insert a new one", kn.data() );
+      return;
+    }
+  if ( (key & RDT_OBTYPEMASK) != RDT_INT64 )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( qint64 ) key type mismatch, will not create BlockValueInt64 for %s", kn.data() );
+      return;
+    }
+  bom.insert( key, new BlockValueInt64( i, parent ) );
+}
+
+void  ProtocolActor::prepare( BlockObjectMap &bom, RiceyInt key, RiceyInt ri, QObject *parent )
+{ if ( bom.contains( key ) )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( RiceyInt ) map already contains key %s, will not create/insert a new one", kn.data() );
+      return;
+    }
+  if ( (key & RDT_OBTYPEMASK) != RDT_INT64 )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( RiceyInt ) key type mismatch, will not create BlockValueRiceyInt for %s", kn.data() );
+      return;
+    }
+  bom.insert( key, new BlockValueRiceyInt( ri, parent ) );
+}
+
+void  ProtocolActor::prepare( BlockObjectMap &bom, RiceyInt key, const MP_INT &mpi, QObject *parent )
+{ if ( bom.contains( key ) )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( MP_INT ) map already contains key %s, will not create/insert a new one", kn.data() );
+      return;
+    }
+  if ( (key & RDT_OBTYPEMASK) != RDT_INT64 )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( MP_INT ) key type mismatch, will not create BlockValueMPZ for %s", kn.data() );
+      return;
+    }
+  bom.insert( key, new BlockValueMPZ( mpi, parent ) );
+}
+
+void  ProtocolActor::prepare( BlockObjectMap &bom, RiceyInt key, const MP_RAT &mpr, QObject *parent )
+{ if ( bom.contains( key ) )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( MP_RAT ) map already contains key %s, will not create/insert a new one", kn.data() );
+      return;
+    }
+  if ( (key & RDT_OBTYPEMASK) != RDT_INT64 )
+    { Utf8String kn = dict.nameOrHexFromCode( key );
+      qWarning( "ProtocolActor::prepare( MP_RAT ) key type mismatch, will not create BlockValueMPQ for %s", kn.data() );
+      return;
+    }
+  bom.insert( key, new BlockValueMPQ( mpr, parent ) );
+}
+
+/**
  * @brief ProtocolActor::compose - organize inputs into an obType packet according to the currently set protocol.
  *   Composed items are for sending, so they only consider sendable items.
  *   TODO: a logical nesting structure that works with the inputs map
@@ -306,6 +477,17 @@ bool  ProtocolActor::populate( BlockValueObject &ob, const BlockValueRiceyCodeAr
   ptr->setBao( v->bao() );
   return true;
 }
+
+/**
+ * @brief ProtocolActor::dispose - done with all Value objects, free the memory at next event loop idle point
+ * @param bom - map of objects to deleteLater..
+ */
+void  ProtocolActor::dispose( BlockObjectMap &bom )
+{ foreach( ValueBase *vb, bom )
+    vb->deleteLater();
+  bom.clear();
+}
+
 
 
 /**

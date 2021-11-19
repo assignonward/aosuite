@@ -58,52 +58,20 @@ void WriterServer::receiveRequest( QByteArray req )
   BlockObjectMap bom = pa->extract( req );
   BaoSerial resp;
   qint64 recordHandle = -1;
+  QByteArray rt;
+  QByteArray cid = "0";
+  QByteArray uid = "";
   switch ( reqTyp )
     { case RCD_writeRequest_o:
-        if ( !bom.contains( RCD_recordText_s ) )
-          qWarning( "will not write without recordText" );
-         else
-          { if ( bom.value(RCD_recordText_s) == nullptr )
-              qWarning( "bom recordText nullptr" );
+        if ( pa->get( bom, RCD_recordText_s, rt ) )          // Must get this.
+          { pa->get( bom, RCD_blockchainId_b, cid, false );  // default to "0" if not present, TODO: make required when it is so in the protocol
+            pa->get( bom, RCD_userId_b      , uid, false );  // default to "" if not present , TODO: make required when it is so in the protocol
+            recordHandle = writeRecord( rt, cid );
+            if ( recordHandle > 0 )
+              resp = buildResponse( recordHandle );
              else
-              { QByteArray rt;
-                BlockValueString *rtp = qobject_cast<BlockValueString *>(bom.value(RCD_recordText_s));
-                if ( rtp == nullptr ) qWarning( "rtp is nullptr" ); else
-                  {  rt = rtp->value();
-                    rt.detach();
-                  }
-                QByteArray cid = "0";
-                if ( bom.contains( RCD_blockchainId_b ) )
-                  { if ( bom.value(RCD_blockchainId_b) == nullptr )
-                      qWarning( "bom blockchainId nullptr" );
-                     else
-                      { BlockValueByteArray *cip = qobject_cast<BlockValueByteArray *>(bom.value(RCD_blockchainId_b));
-                        if ( cip == nullptr ) qWarning( "cip is nullptr" ); else
-                          { cid = cip->value();
-                            cid.detach();
-                          }
-                      }
-                  }
-                QByteArray uid = "";
-                if ( bom.contains( RCD_userId_b ) )
-                  { if ( bom.value(RCD_userId_b) == nullptr )
-                      qWarning( "bom userId nullptr" );
-                     else
-                      { BlockValueByteArray *uip = qobject_cast<BlockValueByteArray *>(bom.value(RCD_userId_b));
-                        if ( uip == nullptr ) qWarning( "uip is nullptr" ); else
-                          { uid = uip->value();
-                            uid.detach();
-                          }
-                      }
-                  }
-                recordHandle = writeRecord( rt, cid );
-                if ( recordHandle > 0 )
-                  resp = buildResponse( recordHandle );
-                 else
-                  qWarning( "writeRecord had a problem." );
-                  // empty resp for the error state
-              } // recordText not null
-          }    // recordText present
+              qWarning( "writeRecord had a problem." );
+          } // recordText present
         break;
 
       default:
@@ -111,6 +79,7 @@ void WriterServer::receiveRequest( QByteArray req )
         qWarning( "WriterServer::receiveRequest() unrecognized type %s", ns.data() );
     }
   emit sendResponse( resp );
+  pa->dispose( bom );
 }
 
 #include <QFile>

@@ -70,10 +70,18 @@ public:
   virtual void  protocolSet();
           void  connectSendableItems();
           void  connectReceivableItems();
+   static void  prepare( BlockObjectMap &, RiceyInt, qint64            , QObject *p = nullptr );
+   static void  prepare( BlockObjectMap &, RiceyInt, RiceyInt          , QObject *p = nullptr );
+   static void  prepare( BlockObjectMap &, RiceyInt, const QByteArray &, QObject *p = nullptr );
+   static void  prepare( BlockObjectMap &, RiceyInt, const MP_INT &    , QObject *p = nullptr );
+   static void  prepare( BlockObjectMap &, RiceyInt, const MP_RAT &    , QObject *p = nullptr );
      BaoSerial  compose( RiceyInt, const BlockObjectMap & );
           bool  populate( BlockValueObject &, const BlockValueRiceyCodeArray &, ValueBase *v );
+   static void  dispose( BlockObjectMap & );
 BlockObjectMap  extract( BaoSerial );
      ValueBase *extractOne( BlockValueObject *, BlockValueRiceyCodeArray * );
+          bool  get( const BlockObjectMap &, RiceyInt, qint64 &    , bool r = true );
+          bool  get( const BlockObjectMap &, RiceyInt, QByteArray &, bool r = true );
 
 signals:
         void  newProtocolSet();
