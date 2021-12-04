@@ -105,7 +105,7 @@ Floating point numbers may be used in user interface representations of rational
 
 <h2>Storage</h2>
 
-Both 64 bit integers and GMP integers are stored in key-value form where a 64 bit key<div class="tooltip"><sup>*</sup><span class="tooltiptext">stored as variable byte code</span></div> preceeds the data<div class="tooltip"><sup>*</sup><span class="tooltiptext">In arrays, a single key preceeds a count of how many values are in the array followed by all the values in the array.</span></div>, with the data format indicated by the key value: 64 bit integers are stored as 8 byte signed quantities, while 63 bit unsigned integers are stored using <a href="VariableByteCoding.html">variable byte code</a>, GMP integers and fractions use <a href="GmpIntegerStorage.html">a different</a><div class="tooltip"><sup>*</sup><span class="tooltiptext">more compact for larger numbers</span></div> encoding.<br/><br/>
+Both 64 bit integers and GMP integers are stored in key-value form where a 63 bit key<div class="tooltip"><sup>*</sup><span class="tooltiptext">stored as variable byte code</span></div> preceeds the data<div class="tooltip"><sup>*</sup><span class="tooltiptext">In arrays, a single key preceeds a count of how many values are in the array followed by all the values in the array.</span></div>, with the data format indicated by the key value: 64 bit integers are stored as 8 byte signed quantities, while 63 bit unsigned integers are stored using <a href="VariableByteCoding.html">variable byte code</a>, GMP integers and fractions use <a href="GmpIntegerStorage.html">a different</a><div class="tooltip"><sup>*</sup><span class="tooltiptext">Binary Coded Decimal</span></div> encoding.<br/><br/>
 
 <h1><a name="Time">Time</a></h1>
 
