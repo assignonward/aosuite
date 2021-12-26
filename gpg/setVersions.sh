@@ -31,7 +31,7 @@ git checkout gnupg-2.2.29
 popd
 
 pushd gpgme
-git checkout gpgme-1.16.0
+git checkout master
 popd
 
 set +x
