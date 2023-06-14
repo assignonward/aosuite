@@ -1,12 +1,15 @@
 #!/bin/bash
 #
 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob;f=README
+# https://gist.github.com/RogueScholar/cdade8709bb392dbe112f2d60d0763fd
 
 set -e
 echo ""
-echo "build.sh"
+echo "build-2004.sh"
 echo ""
 set -x
+
+./wipe-2004.sh
 
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
@@ -72,4 +75,4 @@ popd
 sudo ldconfig
 
 set +x
-echo "build.sh complete."
+echo "build-2004.sh complete."
